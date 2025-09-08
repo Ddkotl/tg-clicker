@@ -1,0 +1,34 @@
+{
+  "name": "35-telegram-miniapp-quickstart",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "webhook:setup": "tsx scripts/setup-webhook.ts",
+    "webhook:info": "tsx scripts/webhook-info.ts",
+    "webhook:delete": "tsx scripts/delete-webhook.ts",
+    "bot:setup": "npm run webhook:setup",
+    "ngrok": "tsx scripts/ngrok.ts"
+  },
+  "dependencies": {
+    "@twa-dev/sdk": "^8.0.2",
+    "dotenv": "^17.2.0",
+    "lucide-react": "^0.525.0",
+    "next": "15.4.1",
+    "ngrok": "^5.0.0-beta.2",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tailwindcss": "^4",
+    "tsx": "^4.20.3",
+    "typescript": "^5"
+  }
+}
