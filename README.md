@@ -1,116 +1,161 @@
-# Paws Telegram Mini App Clone
+# Telegram Mini App Starter
+
+A simple Next.js 15 project demonstrating how to build a Telegram Mini App with bot integration and Telegram Stars payments.
 
 <div align="center">
-  <img src="https://nikandr.com/og-image.jpg" alt="Nikandr - Premium Telegram Development Resources" width="600"/>
-  
-  🚀 **Looking to master Telegram Mini App development?**  
-  Visit [nikandr.com](https://nikandr.com) for the best premium content and courses for Telegram developers.
+
+[![Next.js](https://img.shields.io/badge/Next.js-15.4.1-black?style=for-the-badge&logo=next.js)](https://nextjs.org) [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org) [![Telegram](https://img.shields.io/badge/Telegram-Mini_App-26A5E4?style=for-the-badge&logo=telegram)](https://core.telegram.org/bots/webapps)
+
 </div>
 
----
+## 🚀 Features
 
-This repository contains both the initial setup and the final version of the Paws Telegram mini app clone project. The repository includes the basic project structure, necessary images, icons, and styling.
+- **Telegram Mini App** with points game
+- **Telegram Bot** with commands
+- **Telegram Stars** payment integration
+- **Daily rewards** with countdown timer
+- **In-memory storage** (no database needed)
+- **TypeScript** for type safety
+- **Tailwind CSS** for styling
 
-## Overview
+## 📋 Prerequisites
 
-This project is a clone of the popular Telegram mini app, Paws. The repository provides two branches:
+- Node.js 18+ 
+- Telegram account
+- ngrok (for local development)
 
-1. **Initial Setup**: Contains the foundational Next.js 14 project structure with:
-   - Configured Tailwind CSS
-   - All necessary icons and images
-   - Type definitions
-   - Required fonts
+## 🛠️ Quick Start
 
-2. **Final Version**: The completed application featuring:
-   - Tab-based navigation
-   - Home screen with wallet connection and balance display
-   - Leaderboard with rankings
-   - Friends invitation system
-   - Tasks management system
-   - Animated UI elements
+### 1. Clone and Install
 
-## Getting Started
+```bash
+git clone https://github.com/nikandr-surkov/telegram-miniapp-quickstart.git
+cd telegram-miniapp-quickstart
+npm install
+```
 
-Follow these instructions to get started with either version of the project:
+### 2. Create Telegram Bot
 
-### Cloning the Repository
+1. Message [@BotFather](https://t.me/botfather)
+2. Send `/newbot` and follow instructions
+3. Save your bot token
 
-1. **Clone the Repository**:
-    ```bash
-    git clone https://github.com/nikandr-surkov/Paws-Telegram-Mini-App-Clone.git
-    cd Paws-Telegram-Mini-App-Clone
-    ```
+### 3. Start Development Server
 
-### Initial Setup
+```bash
+npm run dev
+```
 
-2. **Switch to the `initial-setup` Branch**:
-    ```bash
-    git checkout initial-setup
-    ```
+### 4. Set Up ngrok
 
-3. **Install Dependencies**:
-    ```bash
-    npm install
-    ```
+In a new terminal:
 
-4. **Run the Development Server**:
-    ```bash
-    npm run dev
-    ```
+```bash
+ngrok http 3000
+```
 
-5. **Open Your Browser**:
-    Navigate to http://localhost:3000 to see the initial setup.
+Copy the HTTPS URL (e.g., `https://abc123.ngrok-free.app`)
 
-### Final Version
+### 5. Configure Environment
 
-2. **Switch to the `final-version` Branch**:
-    ```bash
-    git checkout final-version
-    ```
+Create `.env.local`:
 
-3. **Install Dependencies**:
-    ```bash
-    npm install
-    ```
+```env
+TELEGRAM_BOT_TOKEN=your_bot_token_here
+NEXT_PUBLIC_APP_URL=https://your-ngrok-url.ngrok-free.app
+```
 
-4. **Run the Development Server**:
-    ```bash
-    npm run dev
-    ```
+**Important:** Restart your Next.js server after updating `.env.local`!
 
-5. **Open Your Browser**:
-    Navigate to http://localhost:3000 to see the final version of the application.
+### 6. Setup Webhook
 
-## Technologies Used
+```bash
+npm run webhook:setup
+```
 
-- Next.js 14
-- TypeScript
-- Tailwind CSS
+### 7. Configure Bot
 
-## Project Structure
+In [@BotFather](https://t.me/botfather):
+1. Send `/mybots` and select your bot
+2. Go to Bot Settings → Menu Button
+3. Click "Edit menu button title" and type "Play Game" 
+4. Click "Edit menu button URL" and enter your ngrok URL from `.env.local`
+
+### 8. Test Your App
+
+Open your bot and click the menu button to launch the mini app!
+
+## 📁 Project Structure
 
 ```
 ├── app/
-│   ├── globals.css
-│   ├── layout.tsx
-│   └── page.tsx
-├── components/
-│   ├── CheckFootprint.tsx
-│   ├── NavigationBar.tsx
-│   ├── TabContainer.tsx
-│   ├── HomeTab.tsx
-│   ├── LeaderboardTab.tsx
-│   ├── FriendsTab.tsx
-│   └── TasksTab.tsx
-├── contexts/
-│   └── TabContext.tsx
-├── icons/
-│   └── [icon files]
-├── images/
-│   └── [image files]
-└── utils/
-    └── types.ts
+│   ├── api/
+│   │   ├── buy-points/      # Stars payment
+│   │   ├── claim-daily/     # Daily rewards
+│   │   └── telegram-webhook/ # Bot webhook
+│   ├── page.tsx             # Mini app UI
+│   └── layout.tsx           # App layout
+├── scripts/
+│   ├── setup-webhook.ts     # Webhook setup
+│   ├── webhook-info.ts      # Check webhook status
+│   └── delete-webhook.ts    # Remove webhook
+└── .env.local              # Your config
 ```
+
+## 🎯 What You Can Learn
+
+- ✅ Setting up a Telegram Mini App
+- ✅ Creating a Telegram Bot
+- ✅ Implementing Telegram Stars payments
+- ✅ Handling webhooks in Next.js
+- ✅ Building responsive Telegram UI
+
+## 💎 Key Features Explained
+
+### Daily Claims
+Users can claim 100 points every 24 hours. The countdown timer shows when the next claim is available.
+
+### Telegram Stars Payments
+Real payment integration with test refunds. Users can buy points packages:
+- 1,000 points = 50 Stars
+- 5,000 points = 200 Stars  
+- 10,000 points = 350 Stars
+
+### Bot Commands
+- `/start` - Welcome message with mini app button
+- `/help` - Instructions
+- `/refund RECEIPT_ID` - Test refund system
+
+## 🔧 Development Tips
+
+**When ngrok restarts:**
+1. Copy new ngrok URL
+2. Update `NEXT_PUBLIC_APP_URL` in `.env.local`
+3. Restart Next.js server
+4. Run `npm run webhook:setup`
+5. Update URL in BotFather
+
+## 🔧 Common Issues
+
+**Bot not responding?**
+- Check webhook is set correctly: `npm run webhook:info`
+- Verify bot token is correct
+- Make sure ngrok is running
+
+**Mini app not loading?**
+- Must use HTTPS (that's why we use ngrok)
+- Open through Telegram, not regular browser
+- Check `.env.local` has correct ngrok URL
+
+**"WebApp is not defined" error?**
+- You must open the app through Telegram
+- This won't work in regular browsers
+
+## 📚 Resources
+
+- [Telegram Mini Apps Docs](https://core.telegram.org/bots/webapps)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Telegram Bot API](https://core.telegram.org/bots/api)
 
 ## Author
 ### Nikandr Surkov
