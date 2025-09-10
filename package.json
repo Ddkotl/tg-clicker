@@ -7,11 +7,16 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "ngrok": "tsx scripts/ngrok.ts"
+    "lint:types": "tsc --noEmit",
+    "prettier": "prettier -w .",
+    "ngrok": "tsx scripts/ngrok.ts",
+    "prepare": "git config core.hooksPath .git-hooks && chmod +x .git-hooks/pre-commit || echo 'Not in a git repo'"
   },
   "dependencies": {
     "@twa-dev/sdk": "^8.0.2",
+    "crypto": "^1.0.1",
     "dotenv": "^17.2.2",
+    "jose": "^6.1.0",
     "next": "15.5.2",
     "ngrok": "^5.0.0-beta.2",
     "react": "19.1.0",
@@ -25,6 +30,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
+    "prettier": "^3.6.2",
     "tailwindcss": "^4",
     "tsx": "^4.20.5",
     "typescript": "^5"
