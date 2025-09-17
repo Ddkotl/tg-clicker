@@ -43,3 +43,8 @@ export async function updateSession(request: NextRequest) {
   });
   return res;
 }
+
+export async function deleteSession() {
+  const cookies_store = await cookies();
+  cookies_store.delete("session");
+}

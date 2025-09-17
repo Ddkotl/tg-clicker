@@ -1,21 +1,28 @@
 import { NextResponse } from "next/server";
 import { validateTelegramWebAppData } from "@/utils/telegramAuth";
 import { encrypt, SESSION_DURATION } from "@/utils/session";
+import { CreateUser } from "@/repositories/user_repository";
 
 export async function POST(request: Request) {
   const { initData } = await request.json();
 
   const validationResult = validateTelegramWebAppData(initData);
+  if (validationResult.validatedData && validationResult.user.id) {
+    const is_user_created = await CreateUser({
+      telegram_id: +validationResult.user.id,
+      ...validationResult.user,
+    });
+    if (!is_user_created) {
+      return NextResponse.json(
+        { message: "user not created" },
+        { status: 401 },
+      );
+    }
+    const user = { telegram_id: validationResult.user.id };
 
-  if (validationResult.validatedData) {
-    console.log("Validation result: ", validationResult);
-    const user = { telegramId: validationResult.user.id };
-
-    // Create a new session
     const expires = new Date(Date.now() + SESSION_DURATION);
     const session = await encrypt({ user, expires });
 
-    // Save the session in a cookie
     const response = NextResponse.json({
       message: "Authentication successful",
     });
