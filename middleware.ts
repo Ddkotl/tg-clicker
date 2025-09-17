@@ -3,10 +3,8 @@ import type { NextRequest } from "next/server";
 import { getSession, updateSession } from "./utils/session";
 
 export async function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname.startsWith("/protected")) {
+  if (request.nextUrl.pathname.startsWith("/game")) {
     const session = await getSession();
-    console.log("Session: ", session);
-
     if (!session) {
       return NextResponse.redirect(new URL("/", request.url));
     }
@@ -16,5 +14,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/protected/:path*", "/api/:path*"],
+  matcher: ["/game/:path*", "/api/:path*"],
 };

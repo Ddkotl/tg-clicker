@@ -1,4 +1,4 @@
-import { jwtVerify, SignJWT } from "jose";
+import { JWTPayload, jwtVerify, SignJWT } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -6,8 +6,7 @@ const key = new TextEncoder().encode(process.env.JWT_SECRET);
 
 export const SESSION_DURATION = 60 * 60 * 1000; // 1 hour
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function encrypt(payload: any) {
+export async function encrypt(payload: JWTPayload) {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
@@ -15,8 +14,7 @@ export async function encrypt(payload: any) {
     .sign(key);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function decrypt(input: string): Promise<any> {
+export async function decrypt(input: string): Promise<JWTPayload> {
   const { payload } = await jwtVerify(input, key, {
     algorithms: ["HS256"],
   });
@@ -26,25 +24,22 @@ export async function decrypt(input: string): Promise<any> {
 export async function getSession() {
   const cookies_store = await cookies();
   const session = cookies_store.get("session")?.value;
-  console.log("Session value in getSession ", session);
   if (!session) return null;
   return await decrypt(session);
 }
 
 export async function updateSession(request: NextRequest) {
   const session = request.cookies.get("session")?.value;
-  console.log("Session value in request ", session);
   if (!session) return;
-
-  // Refresh the session so it doesn't expire
   const parsed = await decrypt(session);
-  parsed.expires = new Date(Date.now() + SESSION_DURATION);
   const res = NextResponse.next();
   res.cookies.set({
     name: "session",
     value: await encrypt(parsed),
     httpOnly: true,
-    expires: parsed.expires,
+    maxAge: SESSION_DURATION / 1000,
+    sameSite: "none",
+    secure: true,
   });
   return res;
 }

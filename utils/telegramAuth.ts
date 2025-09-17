@@ -30,8 +30,8 @@ export function validateTelegramWebAppData(
     return { message: "BOT_TOKEN is not set", validatedData: null, user: {} };
   }
 
-  const initData = new URLSearchParams(telegramInitData);
-  const hash = initData.get("hash");
+  const initData: URLSearchParams = new URLSearchParams(telegramInitData);
+  const hash: string | null = initData.get("hash");
 
   if (!hash) {
     return {

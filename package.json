@@ -13,10 +13,12 @@
     "prepare": "git config core.hooksPath .git-hooks && chmod +x .git-hooks/pre-commit || echo 'Not in a git repo'"
   },
   "dependencies": {
+    "@telegram-apps/sdk": "^3.11.5",
     "@twa-dev/sdk": "^8.0.2",
     "crypto": "^1.0.1",
     "dotenv": "^17.2.2",
     "jose": "^6.1.0",
+    "lucide-react": "^0.544.0",
     "next": "15.5.2",
     "ngrok": "^5.0.0-beta.2",
     "react": "19.1.0",
