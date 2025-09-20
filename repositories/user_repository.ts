@@ -2,7 +2,6 @@ import { CreateUserType } from "@/types/user_types";
 import { dataBase } from "@/utils/db_connect";
 
 export async function CreateUser(user: CreateUserType) {
-  console.log(user);
   try {
     await dataBase.user.upsert({
       where: { telegram_id: user.telegram_id },

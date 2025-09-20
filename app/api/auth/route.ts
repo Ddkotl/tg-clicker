@@ -9,8 +9,8 @@ export async function POST(request: Request) {
   const validationResult = validateTelegramWebAppData(initData);
   if (validationResult.validatedData && validationResult.user.id) {
     const is_user_created = await CreateUser({
-      telegram_id: +validationResult.user.id,
       ...validationResult.user,
+      telegram_id: +validationResult.user.id,
     });
     if (!is_user_created) {
       return NextResponse.json(

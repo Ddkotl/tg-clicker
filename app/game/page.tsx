@@ -1,10 +1,9 @@
+import { Game } from "@/components/Game";
+
 export default function GamePage() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-500">
-      <h1 className="text-3xl font-bold mb-4">Protected Page</h1>
-      <p className="text-xl">
-        Welcome to the game page! Only authenticated users can see this.
-      </p>
-    </div>
+    <main>
+      <Game />
+    </main>
   );
 }
