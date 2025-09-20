@@ -3,17 +3,28 @@ import { useEffect, useState } from "react";
 import { Arrow } from "./icons/arrow";
 import Image from "next/image";
 import { bear, coin, highVoltage, notcoin, rocket, trophy } from "./images";
+import { User } from "@/app/generated/prisma";
+import { UserResponse } from "@/app/api/user/route";
 
 export function Game() {
+  const [user, setUser] = useState<User | null>(null);
   const [points, setPoints] = useState(0);
   const [energy, setEnergy] = useState(1000);
-  const [clicks, setClicks] = useState<{ id: number; x: number; y: number }[]>(
-    [],
-  );
+  const [clicks, setClicks] = useState<{ id: number; x: number; y: number }[]>([]);
   const pointsToAdd = 1;
   const energyToReduce = 1;
 
-  const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  useEffect(() => {
+    async function getUserBySession() {
+      const sessionRes = await fetch("api/user", { cache: "no-store" });
+      const data: UserResponse = await sessionRes.json();
+      if ("user" in data) {
+        setUser(data.user);
+      }
+    }
+    getUserBySession();
+  }, []);
+  const handleClick = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (energy - energyToReduce < 0) {
       return;
     }
@@ -21,9 +32,18 @@ export function Game() {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    setPoints(points + pointsToAdd);
-    setEnergy(energy - energyToReduce < 0 ? 0 : energy - energyToReduce);
-    setClicks([...clicks, { id: Date.now(), x, y }]);
+    const res = await fetch("api/user/points", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ points: pointsToAdd }),
+      cache: "no-store",
+    });
+    const data = await res.json();
+    if (data.points) {
+      setPoints(points + pointsToAdd);
+      setEnergy(energy - energyToReduce < 0 ? 0 : energy - energyToReduce);
+      setClicks([...clicks, { id: Date.now(), x, y }]);
+    }
   };
 
   const handleAnimationEnd = (id: number) => {
@@ -51,7 +71,7 @@ export function Game() {
           <div className="w-full cursor-pointer">
             <div className="bg-[#1f1f1f] text-center py-2 rounded-xl">
               <p className="text-lg">
-                Join squad{" "}
+                {user?.first_name}
                 <Arrow size={18} className="ml-0 mb-1 inline-block" />
               </p>
             </div>
@@ -72,19 +92,10 @@ export function Game() {
           <div className="w-full flex justify-between gap-2">
             <div className="w-1/3 flex items-center justify-start max-w-32">
               <div className="flex items-center justify-center">
-                <Image
-                  src={highVoltage}
-                  width={44}
-                  height={44}
-                  alt="High Voltage"
-                />
+                <Image src={highVoltage} width={44} height={44} alt="High Voltage" />
                 <div className="ml-2 text-left">
-                  <span className="text-white text-2xl font-bold block">
-                    {energy}
-                  </span>
-                  <span className="text-white text-large opacity-75">
-                    / 6500
-                  </span>
+                  <span className="text-white text-2xl font-bold block">{energy}</span>
+                  <span className="text-white text-large opacity-75">/ 6500</span>
                 </div>
               </div>
             </div>
@@ -101,12 +112,7 @@ export function Game() {
                 </button>
                 <div className="h-[48px] w-[2px] bg-[#fddb6d]"></div>
                 <button className="flex flex-col items-center gap-1">
-                  <Image
-                    src={rocket}
-                    width={24}
-                    height={24}
-                    alt="High Voltage"
-                  />
+                  <Image src={rocket} width={24} height={24} alt="High Voltage" />
                   <span>Boosts</span>
                 </button>
               </div>

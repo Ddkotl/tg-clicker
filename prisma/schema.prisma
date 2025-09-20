@@ -9,14 +9,19 @@ datasource db {
 }
 
 model User {
-  id            String   @id @default(cuid()) @map("_id")
-  telegram_id   BigInt   @unique
+  id            String  @id @default(cuid()) @map("_id")
+  telegram_id   String  @unique
   username      String?
   first_name    String?
   last_name     String?
   language_code String?
   photo_url     String?
-  points        BigInt   @default(0)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+
+  points         Int @default(0)
+  energy_lvl     Int @default(0)
+  click_lvl      Int @default(0)
+  pasiv_farm_lvl Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

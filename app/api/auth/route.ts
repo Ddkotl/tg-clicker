@@ -1,27 +1,37 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { validateTelegramWebAppData } from "@/utils/telegramAuth";
 import { encrypt, SESSION_DURATION } from "@/utils/session";
 import { CreateUser } from "@/repositories/user_repository";
+import { JWTPayload } from "jose";
 
-export async function POST(request: Request) {
+export interface AppJWTPayload extends JWTPayload {
+  user: {
+    telegram_id: string;
+  };
+  expires: string;
+}
+export async function POST(request: NextRequest) {
   const { initData } = await request.json();
 
   const validationResult = validateTelegramWebAppData(initData);
   if (validationResult.validatedData && validationResult.user.id) {
     const is_user_created = await CreateUser({
       ...validationResult.user,
-      telegram_id: +validationResult.user.id,
+      telegram_id: validationResult.user.id,
     });
     if (!is_user_created) {
-      return NextResponse.json(
-        { message: "user not created" },
-        { status: 401 },
-      );
+      return NextResponse.json({ message: "user not created" }, { status: 401 });
     }
     const user = { telegram_id: validationResult.user.id };
 
-    const expires = new Date(Date.now() + SESSION_DURATION);
-    const session = await encrypt({ user, expires });
+    const expiresData = new Date(Date.now() + SESSION_DURATION);
+    const expiresString = new Date(Date.now() + SESSION_DURATION).toISOString();
+
+    const payload: AppJWTPayload = {
+      user,
+      expires: expiresString,
+    };
+    const session = await encrypt(payload);
 
     const response = NextResponse.json({
       message: "Authentication successful",
@@ -29,7 +39,7 @@ export async function POST(request: Request) {
     response.cookies.set({
       name: "session",
       value: session,
-      expires,
+      expires: expiresData,
       httpOnly: true,
       sameSite: "none",
       secure: true,
@@ -37,9 +47,6 @@ export async function POST(request: Request) {
 
     return response;
   } else {
-    return NextResponse.json(
-      { message: validationResult.message },
-      { status: 401 },
-    );
+    return NextResponse.json({ message: validationResult.message }, { status: 401 });
   }
 }

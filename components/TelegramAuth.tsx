@@ -12,11 +12,11 @@ export default function TelegramAuth() {
   useEffect(() => {
     const checkAndAuth = async () => {
       try {
-        const sessionRes = await fetch("/api/session", { cache: "no-store" });
-        if (sessionRes.ok) {
-          router.push("/game");
-          return;
-        }
+        // const sessionRes = await fetch("/api/session", { cache: "no-store" });
+        // if (sessionRes.ok) {
+        //   router.push("/game");
+        //   return;
+        // }
         const { default: WebApp } = await import("@twa-dev/sdk");
         WebApp.ready();
         const initData = WebApp.initData;
