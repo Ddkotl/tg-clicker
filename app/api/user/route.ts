@@ -9,13 +9,11 @@ export type UserResponse = { user: User } | { isAuthenticated: false };
 export async function GET() {
   const session: AppJWTPayload | null = await getSession();
   if (session) {
-    console.log(session);
     const user = await getUserByTgId(session.user.telegram_id);
-    console.log(user);
     if (user) {
       return NextResponse.json<UserResponse>({ user });
     } else {
-      return NextResponse.json<UserResponse>({ isAuthenticated: false }, { status: 404 });
+      return NextResponse.json<UserResponse>({ isAuthenticated: false }, { status: 401 });
     }
   } else {
     return NextResponse.json<UserResponse>({ isAuthenticated: false }, { status: 401 });

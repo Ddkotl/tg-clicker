@@ -1,64 +1,104 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Arrow } from "./icons/arrow";
 import Image from "next/image";
 import { bear, coin, highVoltage, notcoin, rocket, trophy } from "./images";
-import { User } from "@/app/generated/prisma";
-import { UserResponse } from "@/app/api/user/route";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function Game() {
-  const [user, setUser] = useState<User | null>(null);
-  const [points, setPoints] = useState(0);
+  const queryClient = useQueryClient();
   const [energy, setEnergy] = useState(1000);
   const [clicks, setClicks] = useState<{ id: number; x: number; y: number }[]>([]);
+  const [pendingPoints, setPendingPoints] = useState(0);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const pendingRef = useRef(0);
   const pointsToAdd = 1;
   const energyToReduce = 1;
+  const { data } = useQuery({
+    queryKey: ["user"],
+    queryFn: async () => {
+      const res = await fetch("/api/user", { cache: "no-store" });
+      return res.json();
+    },
+  });
+  const addPointsMutation = useMutation({
+    mutationFn: async (points: number) => {
+      const res = await fetch("/api/user/points", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ points }),
+      });
+      return res.json();
+    },
+    onMutate: async (points) => {
+      await queryClient.cancelQueries({ queryKey: ["user"] });
 
-  useEffect(() => {
-    async function getUserBySession() {
-      const sessionRes = await fetch("api/user", { cache: "no-store" });
-      const data: UserResponse = await sessionRes.json();
-      if ("user" in data) {
-        setUser(data.user);
+      const prevUser = queryClient.getQueryData<{ user: { points: number } }>(["user"]);
+
+      if (prevUser?.user) {
+        queryClient.setQueryData(["user"], {
+          ...prevUser,
+          user: {
+            ...prevUser.user,
+            points: prevUser.user.points + points,
+          },
+        });
       }
+
+      return { prevUser };
+    },
+    onError: (_err, _points, context) => {
+      if (context?.prevUser) {
+        queryClient.setQueryData(["user"], context.prevUser);
+      }
+    },
+    // onSettled: () => {
+    //   queryClient.invalidateQueries({ queryKey: ["user"] });
+    // },
+  });
+  const flushPoints = () => {
+    if (pendingRef.current > 0) {
+      addPointsMutation.mutate(pendingRef.current);
+      pendingRef.current = 0;
+      setPendingPoints(0);
     }
-    getUserBySession();
-  }, []);
-  const handleClick = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (energy - energyToReduce < 0) {
-      return;
-    }
+  };
+  const handleClick = async (e: React.MouseEvent<HTMLDivElement>) => {
+    if (energy - energyToReduce < 0) return;
+
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    const res = await fetch("api/user/points", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ points: pointsToAdd }),
-      cache: "no-store",
+    setPendingPoints((prev) => {
+      const next = prev + pointsToAdd;
+      pendingRef.current = next; // синхронизируем ref
+      return next;
     });
-    const data = await res.json();
-    if (data.points) {
-      setPoints(points + pointsToAdd);
-      setEnergy(energy - energyToReduce < 0 ? 0 : energy - energyToReduce);
-      setClicks([...clicks, { id: Date.now(), x, y }]);
-    }
+
+    setEnergy((prev) => (prev - energyToReduce < 0 ? 0 : prev - energyToReduce));
+    setClicks([...clicks, { id: Date.now(), x, y }]);
+
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      console.log(pendingPoints);
+      console.log(pendingRef.current);
+      flushPoints();
+    }, 400);
   };
 
   const handleAnimationEnd = (id: number) => {
     setClicks((prevClicks) => prevClicks.filter((click) => click.id !== id));
   };
 
-  // useEffect hook to restore energy over time
+  // Восстановление энергии
   useEffect(() => {
     const interval = setInterval(() => {
-      setEnergy((prevEnergy) => Math.min(prevEnergy + 1, 6500));
-    }, 100); // Restore 10 energy points every second
-
-    return () => clearInterval(interval); // Clear interval on component unmount
+      setEnergy((prev) => Math.min(prev + 1, 6500));
+    }, 100);
+    return () => clearInterval(interval);
   }, []);
-
+  const user = "user" in (data || {}) ? data.user : null;
   return (
     <div className="bg-gradient-main min-h-screen px-4 flex flex-col items-center text-white font-medium">
       <div className="absolute inset-0 h-1/2 bg-gradient-overlay z-0"></div>
@@ -78,7 +118,7 @@ export function Game() {
           </div>
           <div className="mt-12 text-5xl font-bold flex items-center">
             <Image alt="coin" src={coin} width={44} height={44} />
-            <span className="ml-2">{points.toLocaleString()}</span>
+            <span className="ml-2"> {((user?.points ?? 0) + pendingPoints).toLocaleString()}</span>
           </div>
           <div className="text-base mt-2 flex items-center">
             <Image alt="trophy" src={trophy} width={24} height={24} />
@@ -140,7 +180,7 @@ export function Game() {
                 }}
                 onAnimationEnd={() => handleAnimationEnd(click.id)}
               >
-                12
+                +{pointsToAdd}
               </div>
             ))}
           </div>
