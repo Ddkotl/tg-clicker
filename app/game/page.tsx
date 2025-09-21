@@ -1,9 +1,16 @@
-import { Game } from "@/components/Game";
+import CheckFootprint from "@/components/CheckFootprint";
+import NavigationBar from "@/components/NavigationBar";
+import TabContainer from "@/components/TabContainer";
+import { TabProvider } from "@/contexts/TabContext";
 
-export default function GamePage() {
+export default function Game() {
   return (
-    <main>
-      <Game />
-    </main>
+    <TabProvider>
+      <main className="min-h-screen bg-black text-white">
+        <CheckFootprint />
+        <TabContainer />
+        <NavigationBar />
+      </main>
+    </TabProvider>
   );
 }

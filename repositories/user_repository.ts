@@ -1,4 +1,4 @@
-import { User } from "@/app/generated/prisma";
+import { User } from "@/prisma/_generated/prisma";
 import { CreateUserType } from "@/types/user_types";
 import { dataBase } from "@/utils/db_connect";
 

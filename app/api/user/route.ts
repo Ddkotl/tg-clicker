@@ -1,8 +1,8 @@
 import { getSession } from "@/utils/session";
 import { NextResponse } from "next/server";
-import { User } from "@/app/generated/prisma";
 import { getUserByTgId } from "@/repositories/user_repository";
 import { AppJWTPayload } from "../auth/route";
+import { User } from "@/prisma/_generated/prisma";
 
 export type UserResponse = { user: User } | { isAuthenticated: false };
 
