@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Loader } from "./ui/loader";
+import { Loader } from "./custom_ui/loader";
 
 export default function TelegramAuth() {
   const [loading, setLoading] = useState(true);

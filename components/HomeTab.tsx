@@ -1,59 +1,53 @@
 "use client";
 
-import Image from "next/image";
-import PawsLogo from "./icons/PawsLogo";
-import Wallet from "./icons/Wallet";
-import Community from "./icons/Community";
-import ArrowRight from "./icons/ArrowRight";
-import Star from "./icons/Star";
-import { sparkles } from "./images";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
-const HomeTab = () => {
+export default function HomeTab() {
   return (
-    <div className={`home-tab-con transition-all duration-300`}>
-      {/* Connect Wallet Button */}
-      <button className="w-full flex justify-center mt-8">
-        <div className="bg-[#007aff] text-white px-3 py-0.5 rounded-full flex items-center gap-2">
-          <Wallet className="w-5 h-5" />
-          <span>Connect wallet</span>
-        </div>
-      </button>
+    <div className="friends-tab-con  flex flex-col gap-2 transition-all duration-300">
+      {/* Блок боя */}
+      <Card className="p-1 gap-2 bg-card border border-border shadow-lg">
+        <CardHeader className="px-1">
+          <CardTitle className="text-blue-400 text-lg font-bold">⚔️ Готов к бою?</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3 px-1 text-sm leading-relaxed">
+          <p>
+            <b>Архидемон:</b> С возвращением, демон <b className="text-red-400">викинг15</b>! Сражайся сегодня так, как
+            в последний раз! Соотношение сил: демоны – <span className="text-red-400 font-semibold">698</span>, ангелы –{" "}
+            <span className="text-blue-400 font-semibold">709</span>.
+          </p>
 
-      {/* PAWS Balance */}
-      <div className="flex flex-col items-center mt-8">
-        <PawsLogo className="w-28 h-28 mb-4" />
-        <div className="flex items-center gap-1 text-center">
-          <div className="text-6xl font-bold mb-1">4,646</div>
-          <div className="text-white text-2xl">PAWS</div>
-        </div>
-        <div className="flex items-center gap-1 text-[#868686] rounded-full px-4 py-1.5 mt-2 cursor-pointer">
-          <span>NEWCOMER</span>
-          <Image src={sparkles} alt="sparkles" width={18} height={18} />
-          <span>RANK</span>
-          <ArrowRight className="w-6 h-6" />
-        </div>
-      </div>
+          <p>
+            Силы ангелов и демонов в стране{" "}
+            <a href="#" className="underline text-blue-400 hover:text-blue-300">
+              Эритрея
+            </a>{" "}
+            равны, ведётся война.
+          </p>
 
-      {/* Action Buttons */}
-      <div className="space-y-3 px-4 mt-8 mb-8">
-        <button className="shine-effect w-full bg-[#ffffff0d] border-[1px] border-[#2d2d2e] rounded-lg px-4 py-2 flex items-center justify-between">
-          <div className="flex items-center gap-3 font-medium">
-            <Community className="w-8 h-8" />
-            <span>Join our community</span>
+          <div className="grid grid-cols-2 gap-2 text-sm">
+            <div className="p-2 bg-muted rounded-lg text-center">
+              Потери ангелов: <b>0</b>
+            </div>
+            <div className="p-2 bg-muted rounded-lg text-center">
+              Потери демонов: <b>0</b>
+            </div>
           </div>
-          <ArrowRight className="w-6 h-6 text-gray-400" />
-        </button>
+        </CardContent>
+      </Card>
 
-        <button className="w-full bg-[#ffffff0d] border-[1px] border-[#2d2d2e] rounded-lg px-4 py-2 flex items-center justify-between">
-          <div className="flex items-center gap-3 font-medium">
-            <Star className="w-8 h-8" />
-            <span>Check your rewards</span>
-          </div>
-          <ArrowRight className="w-6 h-6 text-gray-400" />
-        </button>
+      {/* Навигация */}
+      <div className="grid grid-cols-2 gap-3 ">
+        {["Факты", "Бой", "Штаб", "Город", "Агент", "Рейтинг"].map((item) => (
+          <Button
+            key={item}
+            className="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-semibold py-6 rounded-xl shadow-md transition-all duration-200"
+          >
+            {item}
+          </Button>
+        ))}
       </div>
     </div>
   );
-};
-
-export default HomeTab;
+}

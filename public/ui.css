@@ -1,0 +1,122 @@
+body {
+  line-height: 1.2;
+}
+li {
+  line-height: 1.6;
+}
+div.desc {
+  line-height: 1.4;
+}
+.notifications_block .notification {
+  line-height: 1.5;
+}
+#content div.footer_icons {
+  line-height: 1.4;
+}
+
+#header img {
+  margin: 4px 0 0 0;
+}
+
+#header {
+  padding: 2px;
+}
+
+#header img {
+  margin: 2px 0 0 0;
+}
+
+@media (max-width: 768px) {
+  #header {
+    padding: 0px;
+  }
+
+  #header img {
+    margin: 5px 0 0 0;
+  }
+}
+#content div.page div.navigation_body {
+  margin-bottom: -2px;
+}
+
+#content .page div.list_header_block {
+  border-bottom: none;
+  border-top: none;
+}
+
+#content .page div.list_header_block {
+  background-color: #000000;
+  position: relative;
+  margin: 4px 4px 0;
+  padding: 2px;
+}
+
+#content .page div.list_header_block::before,
+#content .page div.list_header_block::after {
+  content: "";
+  position: absolute;
+  height: 1px;
+  width: calc(100% - 2px);
+  border-top: 1px dashed #820000;
+  top: 0;
+  left: 1px;
+}
+
+#content .page div.list_header_block::after {
+  top: auto;
+  bottom: 0;
+}
+
+.desc h1 {
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 8px;
+  line-height: 1.4;
+  letter-spacing: 0.5px;
+}
+
+.desc p {
+  color: #555555;
+  line-height: 1.8;
+  margin: 0;
+}
+.desc {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 2px;
+  max-width: 600px;
+  margin: auto;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.block {
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.filter_panel a {
+  font-size: 13.5px;
+  border-radius: 3px;
+  margin: 3px;
+}
+.filter_panel strong {
+  font-size: 13.5px;
+  background-color: #e32119;
+  border-radius: 3px;
+  margin: 3px;
+}
+.sort strong {
+  padding: 3px 0.33rem;
+}
+#content .tile_images img {
+  margin: 2px 4px 3px 3px !important;
+}
+#content .page #content_block .center-content .tile_images a span.level,
+#content .page #content_block .center-content .count_wrap span.level {
+  top: 3px !important;
+}
+a.button_medium,
+div.buttons a,
+.links_action a {
+  padding-top: 2px;
+}

@@ -1,4 +1,3 @@
-import CheckFootprint from "@/components/CheckFootprint";
 import NavigationBar from "@/components/NavigationBar";
 import TabContainer from "@/components/TabContainer";
 import { TabProvider } from "@/contexts/TabContext";
@@ -6,8 +5,7 @@ import { TabProvider } from "@/contexts/TabContext";
 export default function Game() {
   return (
     <TabProvider>
-      <main className="min-h-screen bg-black text-white">
-        <CheckFootprint />
+      <main className="min-h-screen bg-background text-foreground ">
         <TabContainer />
         <NavigationBar />
       </main>

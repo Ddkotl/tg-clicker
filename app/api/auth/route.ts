@@ -1,24 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateTelegramWebAppData } from "@/utils/telegramAuth";
-import { encrypt, SESSION_DURATION } from "@/utils/session";
+import { AppJWTPayload, encrypt, SESSION_DURATION } from "@/utils/session";
 import { CreateUser } from "@/repositories/user_repository";
-import { JWTPayload } from "jose";
 
-export interface AppJWTPayload extends JWTPayload {
-  user: {
-    telegram_id: string;
-  };
-  expires: string;
-}
 export async function POST(request: NextRequest) {
-  const { initData } = await request.json();
+  const { initData, ref } = await request.json();
 
   const validationResult = validateTelegramWebAppData(initData);
   if (validationResult.validatedData && validationResult.user.id) {
-    const is_user_created = await CreateUser({
-      ...validationResult.user,
-      telegram_id: validationResult.user.id,
-    });
+    const is_user_created = await CreateUser(
+      {
+        ...validationResult.user,
+        telegram_id: validationResult.user.id,
+      },
+      ref,
+    );
     if (!is_user_created) {
       return NextResponse.json({ message: "user not created" }, { status: 401 });
     }

@@ -1,9 +1,8 @@
-import { getSession } from "@/utils/session";
+import { AppJWTPayload, getSession } from "@/utils/session";
 import { NextResponse } from "next/server";
 import { getUserByTgId } from "@/repositories/user_repository";
-import { AppJWTPayload } from "../auth/route";
 import { User } from "@/prisma/_generated/prisma";
-
+import { serializeBigInts } from "@/utils/serialize_bigint";
 export type UserResponse = { user: User } | { isAuthenticated: false };
 
 export async function GET() {
@@ -11,7 +10,7 @@ export async function GET() {
   if (session) {
     const user = await getUserByTgId(session.user.telegram_id);
     if (user) {
-      return NextResponse.json<UserResponse>({ user });
+      return NextResponse.json<UserResponse>({ user: serializeBigInts(user) });
     } else {
       return NextResponse.json<UserResponse>({ isAuthenticated: false }, { status: 401 });
     }

@@ -1,5 +1,4 @@
-import { AppJWTPayload } from "@/app/api/auth/route";
-import { jwtVerify, SignJWT } from "jose";
+import { JWTPayload, jwtVerify, SignJWT } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -7,11 +6,18 @@ const key = new TextEncoder().encode(process.env.JWT_SECRET);
 
 export const SESSION_DURATION = 60 * 60 * 1000; // 1 hour
 
+export interface AppJWTPayload extends JWTPayload {
+  user: {
+    telegram_id: string;
+  };
+  expires: string;
+}
+
 export async function encrypt(payload: AppJWTPayload) {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("1 hour")
+    .setExpirationTime("1h")
     .sign(key);
 }
 
@@ -26,7 +32,11 @@ export async function getSession(): Promise<AppJWTPayload | null> {
   const cookies_store = await cookies();
   const session = cookies_store.get("session")?.value;
   if (!session) return null;
-  return await decrypt(session);
+  try {
+    return await decrypt(session);
+  } catch {
+    return null;
+  }
 }
 
 export async function updateSession(request: NextRequest) {
