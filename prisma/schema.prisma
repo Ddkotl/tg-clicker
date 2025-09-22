@@ -9,21 +9,33 @@ datasource db {
 }
 
 model User {
-  id                   String   @id @default(cuid())
-  telegram_id          BigInt   @unique
-  username             String?
-  first_name           String?
-  last_name            String?
-  photo_url            String?
-  points               BigInt   @default(0)   // main currency
-  passiveIncomePerHour Int      @default(10)   // points per hour
-  passiveLevel         Int      @default(0)    // level of passive upgrade
-  lastPassiveUpdate    DateTime @default(now())
-  lastDailyClaimAt     DateTime?
-  dailyStreak          Int      @default(0)
-  referrerId           String?  // FK to User.id
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+  id          String  @id @default(cuid())
+  telegram_id String  @unique
+  username    String?
+  first_name  String?
+  last_name   String?
+  photo_url   String?
+
+  referrerId String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  profile Profile?
 
   @@map("users")
+}
+
+model Profile {
+  userId String @id
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  nikname          String?   @unique
+  lvl              Int       @default(1)
+  exp              Int       @default(0)
+  mana             Int       @default(100)
+  gold             Int       @default(50)
+  diamond          Int       @default(50)
+  fight            Int       @default(30)
+  last_fight_time  DateTime?
+  glory            Int       @default(0)
 }

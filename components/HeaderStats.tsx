@@ -1,13 +1,29 @@
 "use client";
 
+import { getUserByTgIdType } from "@/repositories/user_repository";
+import { useQuery } from "@tanstack/react-query";
 import { User, Skull, Flame, Gem, Sword, Shield, Package, Heart, Clock } from "lucide-react";
 
 export function HeaderStats() {
+  const { data, isLoading } = useQuery<{ user: getUserByTgIdType }>({
+    queryKey: ["user"],
+    queryFn: async () => {
+      const res = await fetch("api/user");
+      if (!res.ok) {
+        throw new Error("Failed to fetch user");
+      }
+      return res.json();
+    },
+  });
+  if (isLoading) {
+    return <div>loading</div>;
+  }
+  console.log(data);
   return (
     <div className="flex flex-wrap gap-3 justify-self-auto items-center bg-card border border-border shadow-md rounded-lg p-2">
       <div className="flex items-center gap-2 font-semibold">
         <User className="h-4 w-4 text-muted-foreground" />
-        викинг15[20]
+        {`${data?.user?.profile?.nikname ? data?.user?.profile?.nikname : "безымянный"}[${data?.user?.profile?.lvl}]`}
       </div>
       <div className="flex items-center gap-1">
         <Skull className="h-4 w-4 text-red-500" /> 3 957

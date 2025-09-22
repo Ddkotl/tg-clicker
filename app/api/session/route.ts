@@ -1,4 +1,3 @@
-import { serializeBigInts } from "@/utils/serialize_bigint";
 import { AppJWTPayload, getSession } from "@/utils/session";
 import { NextResponse } from "next/server";
 
@@ -9,7 +8,7 @@ export async function GET() {
   if (session) {
     return NextResponse.json<SessionResponse>({
       isAuthenticated: true,
-      session: serializeBigInts(session),
+      session: session,
     });
   } else {
     return NextResponse.json<SessionResponse>({ isAuthenticated: false }, { status: 401 });
