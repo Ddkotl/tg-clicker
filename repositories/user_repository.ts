@@ -32,13 +32,20 @@ export async function getUserByTgId(telegram_id: string) {
   try {
     const user = await dataBase.user.findUnique({
       where: { telegram_id: telegram_id },
-      omit: {
-        referrerId: true,
-        telegram_id: true,
-        first_name: true,
-        last_name: true,
-      },
-      include: {
+    });
+    return user;
+  } catch (error) {
+    console.error("не удалось найти пользователя", error);
+    return null;
+  }
+}
+export type getUserByTgIdType = Awaited<ReturnType<typeof getUserByTgId>>;
+
+export async function getUserProfileByTgId(telegram_id: string) {
+  try {
+    const user = await dataBase.user.findUnique({
+      where: { telegram_id: telegram_id },
+      select: {
         profile: true,
       },
     });
@@ -48,4 +55,4 @@ export async function getUserByTgId(telegram_id: string) {
     return null;
   }
 }
-export type getUserByTgIdType = Awaited<ReturnType<typeof getUserByTgId>>;
+export type getUserProfileByTgIdType = Awaited<ReturnType<typeof getUserProfileByTgId>>;

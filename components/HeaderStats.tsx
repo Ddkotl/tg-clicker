@@ -1,14 +1,17 @@
 "use client";
 
-import { getUserByTgIdType } from "@/repositories/user_repository";
+import { generated_fight_limit } from "@/config/energy_lvl";
+import { getUserProfileByTgIdType } from "@/repositories/user_repository";
 import { useQuery } from "@tanstack/react-query";
-import { User, Skull, Flame, Gem, Sword, Shield, Package, Heart, Clock } from "lucide-react";
+import { User, Gem, Clock, Backpack, HeartPulse, Droplet, Coins, Swords } from "lucide-react";
+import Link from "next/link";
+import { Notifications } from "./Notification";
 
 export function HeaderStats() {
-  const { data, isLoading } = useQuery<{ user: getUserByTgIdType }>({
-    queryKey: ["user"],
+  const { data, isLoading } = useQuery<{ profile: getUserProfileByTgIdType }>({
+    queryKey: ["getUserProfileByTgId"],
     queryFn: async () => {
-      const res = await fetch("api/user");
+      const res = await fetch("api/user/profile");
       if (!res.ok) {
         throw new Error("Failed to fetch user");
       }
@@ -18,36 +21,43 @@ export function HeaderStats() {
   if (isLoading) {
     return <div>loading</div>;
   }
-  console.log(data);
+
   return (
-    <div className="flex flex-wrap gap-3 justify-self-auto items-center bg-card border border-border shadow-md rounded-lg p-2">
-      <div className="flex items-center gap-2 font-semibold">
-        <User className="h-4 w-4 text-muted-foreground" />
-        {`${data?.user?.profile?.nikname ? data?.user?.profile?.nikname : "безымянный"}[${data?.user?.profile?.lvl}]`}
-      </div>
-      <div className="flex items-center gap-1">
-        <Skull className="h-4 w-4 text-red-500" /> 3 957
-      </div>
-      <div className="flex items-center gap-1">
-        <Flame className="h-4 w-4 text-orange-500" /> 8 037
-      </div>
-      <div className="flex items-center gap-1">
-        <Gem className="h-4 w-4 text-cyan-400" /> 61 208
-      </div>
-      <div className="flex items-center gap-1">
-        <Sword className="h-4 w-4 text-yellow-400" /> 7 561
-      </div>
-      <div className="flex items-center gap-1">
-        <Shield className="h-4 w-4 text-blue-400" /> 4 177
-      </div>
-      <div className="flex items-center gap-1">
-        <Package className="h-4 w-4 text-emerald-400" /> 2 076
-      </div>
-      <div className="flex items-center gap-1">
-        <Heart className="h-4 w-4 text-pink-500" /> 14/24
-      </div>
-      <div className="flex items-center gap-1">
-        <Clock className="h-4 w-4 text-gray-400" /> 08:38
+    <div className="flex justify-center w-full">
+      <div className="sticky top-0 bg-background/90 border-b border-foreground/60 w-full max-w-md">
+        <div className="flex flex-wrap gap-3 justify-self-auto items-center  p-2">
+          <Link href="game/profile" className="flex items-center gap-1 font-semibold">
+            <User className="h-4 w-4 text-muted-foreground" />
+            {`${data?.profile?.profile?.nikname ? data?.profile?.profile?.nikname : "безымянный"}[${data?.profile?.profile?.lvl}]`}
+          </Link>
+          <div className="flex items-center gap-1">
+            <Backpack className="h-4 w-4 text-red-500" />
+          </div>
+
+          <div className="flex items-center gap-1">
+            <HeartPulse className="h-4 w-4 text-red-400" /> 61 208
+          </div>
+          <div className="flex items-center gap-1">
+            <Droplet className="h-4 w-4 text-blue-400" /> {data?.profile?.profile?.mana}
+          </div>
+          <div className="flex items-center gap-1">
+            <Coins className="h-4 w-4 text-yellow-400" />
+            {data?.profile?.profile?.gold}
+          </div>
+          <div className="flex items-center gap-1">
+            <Gem className="h-4 w-4 text-purple-500" />
+            {data?.profile?.profile?.diamond}
+          </div>
+          <div className="flex items-center gap-1">
+            <Swords className="h-4 w-4 text-shadow-gray-900" />
+            {`${data?.profile?.profile?.fight}/${generated_fight_limit}`}
+          </div>
+          <div className="flex items-center gap-1">
+            <Clock className="h-4 w-4 text-gray-400" />{" "}
+            {data?.profile?.profile?.last_fight_time?.toISOString() ?? "00.00"}
+          </div>
+        </div>
+        <Notifications />
       </div>
     </div>
   );
