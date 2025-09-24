@@ -22,9 +22,9 @@ export function HeaderStats() {
   }
 
   return (
-    <div className=" flex justify-center w-full">
-      <div className="fixed top-0 bg-background/90 border-b border-foreground/60 w-full max-w-md">
-        <div className="flex flex-wrap gap-3 justify-self-auto items-center  p-2">
+    <div className="flex justify-center w-full">
+      <div className="fixed top-0 z-50 bg-background/90 border-b border-foreground/60 w-full max-w-md">
+        <div className="flex flex-wrap gap-3  items-center  p-2">
           <Link href="game/profile" className="flex items-center gap-1 font-semibold">
             <User className="h-4 w-4 text-muted-foreground" />
             {`${data?.profile?.profile?.nikname ? data?.profile?.profile?.nikname : "безымянный"}[${data?.profile?.profile?.lvl}]`}

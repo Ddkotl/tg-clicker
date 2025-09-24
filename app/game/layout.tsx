@@ -8,13 +8,13 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="w-full h-full">
+    <main className="min-h-screen bg-background text-foreground flex flex-col items-center ">
       <HeaderStats />
-      <div className="py-[82px] px-2 flex flex-col gap-2 justify-start">
+      <div className="max-w-md py-22 px-2 flex flex-col gap-2 justify-start">
         <Notifications />
         {children}
       </div>
       <NavigationBar />
-    </div>
+    </main>
   );
 }

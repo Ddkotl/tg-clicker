@@ -49,7 +49,7 @@ export default function TelegramAuth() {
   }, [router]);
 
   if (loading) {
-    return <Image src="/loading.jpg" width={300} height={300} alt="ззагрузка" />;
+    return <Image src="/loading.jpg" width={300} height={300} alt="загрузка" />;
   }
 
   if (error) {

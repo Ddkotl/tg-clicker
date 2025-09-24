@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Nunito } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
 import { AppProvider } from "./_providers/app-provider";
@@ -9,8 +9,8 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const geistMono = Nunito({
+  variable: "--font-geist-nunito",
   subsets: ["latin"],
 });
 
@@ -25,16 +25,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html suppressHydrationWarning>
       <head>
         <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}>
-        <AppProvider>
-          <main className="min-h-screen bg-background text-foreground flex  flex-col items-center justify-center ">
-            {children}
-          </main>
-        </AppProvider>
+        <AppProvider>{children}</AppProvider>
       </body>
     </html>
   );

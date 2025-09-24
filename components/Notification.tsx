@@ -12,12 +12,9 @@ export function Notifications() {
   if (!visible) return null;
 
   return (
-    <Alert className="p-2 shine-effect relative flex items-start gap-2 bg-card border border-border shadow-md rounded-lg">
-      {/* Иконка */}
-      <Bell className="h-5 w-5 text-blue-500 shrink-0 mt-1" />
-
-      {/* Текст */}
+    <Alert className="px-2 py-1 shine-effect relative flex items-start gap-2 bg-card border border-border shadow-md rounded-lg">
       <div className="flex-1 flex gap-3">
+        <Bell className="h-5 w-5 text-blue-500 shrink-0 " />
         <AlertTitle className="font-semibold">Новые миссии</AlertTitle>
         <AlertDescription className="text-sm text-muted-foreground">
           <Link href="#" className="text-blue-500 hover:text-blue-400 font-medium underline underline-offset-2">
@@ -26,11 +23,10 @@ export function Notifications() {
         </AlertDescription>
       </div>
 
-      {/* Кнопка закрытия */}
       <Button
         variant="ghost"
         size="icon"
-        className="absolute top-2 right-2 h-6 w-6 text-muted-foreground hover:text-foreground cursor-pointer"
+        className="h-5 w-5 text-muted-foreground hover:text-foreground cursor-pointer"
         onClick={() => setVisible(false)}
       >
         <X className="h-4 w-4" />

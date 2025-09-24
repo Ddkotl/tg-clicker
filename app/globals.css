@@ -11,6 +11,7 @@
   -ms-overflow-style: none;
 }
 body {
+  font-family: var(--font-geist-nunito);
   -webkit-overflow-scrolling: touch;
 }
 
