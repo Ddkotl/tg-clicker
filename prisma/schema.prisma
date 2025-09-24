@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "./_generated/prisma"
+  output   = "../_generated/prisma"
 }
 
 datasource db {
@@ -9,12 +9,15 @@ datasource db {
 }
 
 model User {
-  id          String  @id @default(cuid())
-  telegram_id String  @unique
-  username    String?
-  first_name  String?
-  last_name   String?
-  photo_url   String?
+  id                 String   @id @default(cuid())
+  telegram_id        String   @unique
+  username           String?
+  first_name         String?
+  last_name          String?
+  photo_url          String?
+  language_code      String?
+  allows_write_to_pm Boolean?
+  auth_date          String?
 
   referrerId String?
   createdAt  DateTime @default(now())
@@ -29,13 +32,13 @@ model Profile {
   userId String @id
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  nikname          String?   @unique
-  lvl              Int       @default(1)
-  exp              Int       @default(0)
-  mana             Int       @default(100)
-  gold             Int       @default(50)
-  diamond          Int       @default(50)
-  fight            Int       @default(30)
-  last_fight_time  DateTime?
-  glory            Int       @default(0)
+  nikname         String?   @unique
+  lvl             Int       @default(1)
+  exp             Int       @default(0)
+  mana            Int       @default(100)
+  gold            Int       @default(50)
+  diamond         Int       @default(50)
+  fight           Int       @default(30)
+  last_fight_time DateTime?
+  glory           Int       @default(0)
 }

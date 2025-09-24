@@ -5,4 +5,6 @@ export type CreateUserType = {
   last_name?: string;
   language_code?: string;
   photo_url?: string;
+  allows_write_to_pm?: boolean;
+  auth_date?: string;
 };
