@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Loader } from "./custom_ui/loader";
+import Image from "next/image";
 
 export default function TelegramAuth() {
   const [loading, setLoading] = useState(true);
@@ -49,7 +49,7 @@ export default function TelegramAuth() {
   }, [router]);
 
   if (loading) {
-    return <Loader />;
+    return <Image src="/loading.jpg" width={300} height={300} alt="ззагрузка" />;
   }
 
   if (error) {

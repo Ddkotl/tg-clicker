@@ -5,7 +5,6 @@ import { getUserProfileByTgIdType } from "@/repositories/user_repository";
 import { useQuery } from "@tanstack/react-query";
 import { User, Gem, Clock, Backpack, HeartPulse, Droplet, Coins, Swords } from "lucide-react";
 import Link from "next/link";
-import { Notifications } from "./Notification";
 
 export function HeaderStats() {
   const { data, isLoading } = useQuery<{ profile: getUserProfileByTgIdType }>({
@@ -23,8 +22,8 @@ export function HeaderStats() {
   }
 
   return (
-    <div className="flex justify-center w-full">
-      <div className="sticky top-0 bg-background/90 border-b border-foreground/60 w-full max-w-md">
+    <div className=" flex justify-center w-full">
+      <div className="fixed top-0 bg-background/90 border-b border-foreground/60 w-full max-w-md">
         <div className="flex flex-wrap gap-3 justify-self-auto items-center  p-2">
           <Link href="game/profile" className="flex items-center gap-1 font-semibold">
             <User className="h-4 w-4 text-muted-foreground" />
@@ -57,7 +56,6 @@ export function HeaderStats() {
             {data?.profile?.profile?.last_fight_time?.toISOString() ?? "00.00"}
           </div>
         </div>
-        <Notifications />
       </div>
     </div>
   );

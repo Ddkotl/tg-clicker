@@ -17,7 +17,7 @@ export function Notifications() {
       <Bell className="h-5 w-5 text-blue-500 shrink-0 mt-1" />
 
       {/* Текст */}
-      <div className="flex-1">
+      <div className="flex-1 flex gap-3">
         <AlertTitle className="font-semibold">Новые миссии</AlertTitle>
         <AlertDescription className="text-sm text-muted-foreground">
           <Link href="#" className="text-blue-500 hover:text-blue-400 font-medium underline underline-offset-2">
