@@ -7,8 +7,8 @@ import { User, Gem, Clock, Backpack, HeartPulse, Droplet, Coins, Swords } from "
 import Link from "next/link";
 
 export function HeaderStats() {
-  const { data, isLoading } = useQuery<{ profile: getUserProfileByTgIdType }>({
-    queryKey: ["getUserProfileByTgId"],
+  const { data, isLoading } = useQuery<getUserProfileByTgIdType>({
+    queryKey: ["profile"],
     queryFn: async () => {
       const res = await fetch("api/user/profile");
       if (!res.ok) {
@@ -27,7 +27,7 @@ export function HeaderStats() {
         <div className="flex flex-wrap gap-3  items-center  p-2">
           <Link href="game/profile" className="flex items-center gap-1 font-semibold">
             <User className="h-4 w-4 text-muted-foreground" />
-            {`${data?.profile?.profile?.nikname ? data?.profile?.profile?.nikname : "безымянный"}[${data?.profile?.profile?.lvl}]`}
+            {`${data?.profile?.nikname ? data?.profile?.nikname : "безымянный"}[${data?.profile?.lvl}]`}
           </Link>
           <div className="flex items-center gap-1">
             <Backpack className="h-4 w-4 text-red-500" />
@@ -37,23 +37,22 @@ export function HeaderStats() {
             <HeartPulse className="h-4 w-4 text-red-400" /> 61 208
           </div>
           <div className="flex items-center gap-1">
-            <Droplet className="h-4 w-4 text-blue-400" /> {data?.profile?.profile?.mana}
+            <Droplet className="h-4 w-4 text-blue-400" /> {data?.profile?.mana}
           </div>
           <div className="flex items-center gap-1">
             <Coins className="h-4 w-4 text-yellow-400" />
-            {data?.profile?.profile?.gold}
+            {data?.profile?.gold}
           </div>
           <div className="flex items-center gap-1">
             <Gem className="h-4 w-4 text-purple-500" />
-            {data?.profile?.profile?.diamond}
+            {data?.profile?.diamond}
           </div>
           <div className="flex items-center gap-1">
             <Swords className="h-4 w-4 text-shadow-gray-900" />
-            {`${data?.profile?.profile?.fight}/${generated_fight_limit}`}
+            {`${data?.profile?.fight}/${generated_fight_limit}`}
           </div>
           <div className="flex items-center gap-1">
-            <Clock className="h-4 w-4 text-gray-400" />{" "}
-            {data?.profile?.profile?.last_fight_time?.toISOString() ?? "00.00"}
+            <Clock className="h-4 w-4 text-gray-400" /> {data?.profile?.last_fight_time?.toISOString() ?? "00.00"}
           </div>
         </div>
       </div>

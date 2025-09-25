@@ -40,11 +40,10 @@ export default function TelegramAuth() {
       return res.json();
     },
     retry: 2,
-    staleTime: 2 * 60 * 60 * 1000,
-    gcTime: 2 * 60 * 60 * 1000,
+    staleTime: 1000,
+    gcTime: 1000,
   });
   useEffect(() => {
-    console.log(data);
     if (data && data.nikname && data.language_code) {
       router.push("/game");
     } else {
