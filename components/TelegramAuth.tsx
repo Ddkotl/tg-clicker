@@ -9,7 +9,6 @@ interface AuthResponse {
   message: string;
   language_code?: string;
   nikname?: string;
-  telegram_id: string;
 }
 
 export default function TelegramAuth() {

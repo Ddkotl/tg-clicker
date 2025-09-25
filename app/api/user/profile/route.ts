@@ -7,7 +7,7 @@ export async function GET() {
   if (session) {
     const profile = await getUserProfileByTgId(session.user.telegram_id);
     if (profile) {
-      return NextResponse.json({ profile: profile });
+      return NextResponse.json(profile);
     } else {
       return NextResponse.json({ isAuthenticated: false }, { status: 401 });
     }

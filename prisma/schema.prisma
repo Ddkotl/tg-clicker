@@ -32,6 +32,7 @@ model Profile {
   userId String @id
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  fraktion        Fraktion?
   nikname         String?   @unique
   lvl             Int       @default(1)
   exp             Int       @default(0)
@@ -41,4 +42,9 @@ model Profile {
   fight           Int       @default(30)
   last_fight_time DateTime?
   glory           Int       @default(0)
+}
+
+enum Fraktion {
+  ADEPT
+  NOVICE
 }

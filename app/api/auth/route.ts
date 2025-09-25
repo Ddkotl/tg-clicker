@@ -32,7 +32,6 @@ export async function POST(request: NextRequest) {
       message: "Authentication successful",
       language_code: updated_user.language_code,
       nikname: updated_user.profile?.nikname,
-      telegram_id: validationResult.user.id,
     });
     response.cookies.set({
       name: "session",
