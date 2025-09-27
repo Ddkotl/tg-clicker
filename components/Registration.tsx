@@ -9,13 +9,17 @@ import { Button } from "@/components/ui/button";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import Image from "next/image";
-import { Fraktion, Profile } from "@/_generated/prisma";
+import { Fraktion, Gender, Profile } from "@/_generated/prisma";
 import { toast } from "sonner";
+import { useTranslation } from "@/hooks/use_translation";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import { cn } from "@/lib/utils";
 interface CheckNicknameResponse {
   available: boolean;
 }
 
 export function Registration() {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const router = useRouter();
   const { data: profile, isLoading } = useQuery<getUserProfileByTgIdType>({
@@ -27,15 +31,17 @@ export function Registration() {
     },
   });
 
-  const [nickname, setNickname] = useState("");
-  const [fraktion, setFraktion] = useState("");
+  const [nickname, setNickname] = useState<string>("");
+  const [fraktion, setFraktion] = useState<Fraktion | null>(null);
+  const [gender, setGender] = useState<Gender>("MALE");
   const [isNicknameValid, setIsNicknameValid] = useState<boolean | null>(null);
   const [isChecking, setIsChecking] = useState(false);
 
   useEffect(() => {
     if (profile) {
       setNickname(profile.profile?.nikname || "");
-      setFraktion(profile.profile?.fraktion || "");
+      setFraktion(profile.profile?.fraktion || null);
+      setGender(profile.profile?.gender || "MALE");
     }
   }, [profile]);
 
@@ -56,7 +62,7 @@ export function Registration() {
       } finally {
         setIsChecking(false);
       }
-    }, 1000);
+    }, 700);
 
     return () => clearTimeout(timeout);
   }, [nickname]);
@@ -70,13 +76,14 @@ export function Registration() {
           userId: profile?.profile?.userId,
           nikname: nickname,
           fraktion: fraktion,
+          gender: gender,
         }),
       });
       if (!res.ok) throw new Error("Не удалось сохранить профиль");
       return res.json();
     },
     onSuccess: (data) => {
-      toast(`${data.nikname}, поздравляю с успешной регистрацией`);
+      toast(t("auth_congratulation", { nikname: `${data.nikname}` }));
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       router.push("/game");
     },
@@ -84,73 +91,119 @@ export function Registration() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!nickname || !fraktion || !isNicknameValid) return;
+    if (!nickname || !fraktion || !gender || !isNicknameValid) return;
     mutation.mutate();
   };
 
   if (isLoading) {
-    return <Image src="/loading.jpg" width={300} height={300} alt="загрузка" />;
+    return <Image src="/loading.jpg" width={300} height={300} alt={t("loading")} />;
   }
 
   if (!profile) {
-    return <div className="text-center p-8 text-red-500">Пользователь не найден</div>;
+    return <div className="text-center p-8 text-red-500">{t("auth_error")}</div>;
   }
 
   return (
     <div className="flex justify-center items-center h-screen ">
       <Card className="w-[400px] shadow-lg">
         <CardHeader>
-          <CardTitle className="text-center">Регистрация</CardTitle>
+          <CardTitle className="text-center">{t("registration.title")}</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             {/* Никнейм */}
             <div className="flex flex-col gap-2">
-              <Label htmlFor="nickname">Никнейм персонажа</Label>
+              <Label htmlFor="nickname">{t("registration.nickname")}</Label>
               <Input
                 id="nickname"
                 type="text"
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
-                placeholder="Введите никнейм"
                 minLength={3}
                 maxLength={20}
                 required
+                className={cn(
+                  nickname.length >= 3 &&
+                    isNicknameValid === true &&
+                    "border-green-500 focus-visible:border-green-500 focus-visible:ring-green-500/50",
+                  nickname.length > 0 &&
+                    nickname.length < 3 &&
+                    "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/50",
+                  nickname.length >= 3 &&
+                    isChecking &&
+                    "border-blue-500 focus-visible:border-blue-500 focus-visible:ring-blue-500/50",
+                )}
               />
               <div className="min-h-5 w-full ">
                 {nickname.length > 0 && nickname.length < 3 && (
-                  <p className="text-red-500 text-sm ">Минимум 3 символа</p>
+                  <p className="text-red-500 text-sm ">{t("validation.min", { number: "3" })}</p>
                 )}
-                {nickname.length >= 3 && isChecking && <p className="text-blue-500 text-sm">Проверка...</p>}
+                {nickname.length >= 3 && isChecking && <p className="text-blue-500 text-sm">{t("validation.check")}</p>}
                 {nickname.length >= 3 && isNicknameValid === false && !isChecking && (
-                  <p className="text-red-500 text-sm">Никнейм уже занят</p>
+                  <p className="text-red-500 text-sm">
+                    {t("validation.nickname_taken", { nickname: `${profile.profile?.nikname}` })}
+                  </p>
                 )}
                 {nickname.length >= 3 && isNicknameValid === true && !isChecking && (
-                  <p className="text-green-500 text-sm">Никнейм свободен</p>
+                  <p className="text-green-500 text-sm">
+                    {t("validation.nickname_free", { nickname: `${profile.profile?.nikname}` })}
+                  </p>
                 )}
               </div>
             </div>
 
-            {/* Фракция — картинки */}
+            {/* Пол */}
             <div className="flex flex-col gap-2">
-              <Label>Выберите фракцию</Label>
-              <div className="flex justify-around gap-4">
+              <Label>{t("gender.gender")}</Label>
+              <RadioGroup
+                defaultValue="MALE"
+                defaultChecked
+                value={gender}
+                onValueChange={(value) => setGender(value as Gender)}
+                className="flex gap-4"
+              >
+                <div className="flex items-center gap-2">
+                  <RadioGroupItem value="MALE" id="male" className="cursor-pointer" />
+                  <Label htmlFor="male">{t("gender.male")}</Label>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <RadioGroupItem value="FEMALE" id="female" className="cursor-pointer" />
+                  <Label htmlFor="female">{t("gender.female")}</Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            {/* Фракция */}
+            <div className="flex flex-col gap-2">
+              <Label>{t("registration.faction")}</Label>
+              <div className="flex justify-around gap-2">
                 {Object.values(Fraktion).map((f) => (
                   <div
                     key={f}
                     onClick={() => setFraktion(f)}
-                    className={`  duration-500 transform  cursor-pointer rounded-xl border-2 p-2 ${
-                      fraktion === f ? "border-green-500 scale-105 shadow-lg" : "border-gray-300"
+                    className={`duration-500 transform cursor-pointer rounded-xl border-2 max-w-[120px]  ${
+                      fraktion === f ? "border-green-500 scale-105 shadow-lg" : "border-background"
                     }`}
                   >
                     <Image
-                      src={f === Fraktion.ADEPT ? "/adept.png" : "/novice.png"}
+                      src={
+                        gender === "FEMALE"
+                          ? f === Fraktion.ADEPT
+                            ? "/adept_f.png"
+                            : "/novice_f.jpg"
+                          : f === Fraktion.ADEPT
+                            ? "/adept_m.jpg"
+                            : "/novice_m.png"
+                      }
                       alt={f}
                       width={120}
                       height={120}
-                      className="rounded-lg"
+                      className="rounded-lg h-[120px] w-[120px]"
                     />
-                    <p className="text-center mt-2 font-medium">{f === Fraktion.ADEPT ? "🧙‍♂️ Adept" : "⚔️ Novice"}</p>
+                    <p className="flex  justify-center items-center text-center p-2 font-medium">
+                      {f === Fraktion.ADEPT ? `${t("fraction.adept")}` : `${t("fraction.novice")}`}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -162,7 +215,7 @@ export function Registration() {
               className="cursor-pointer"
               disabled={mutation.isPending || mutation.isSuccess || !isNicknameValid || !fraktion}
             >
-              {mutation.isPending ? "Сохранение..." : "Сохранить"}
+              {mutation.isPending ? `${t("button.saving")}` : `${t("button.save")}`}
             </Button>
           </form>
         </CardContent>

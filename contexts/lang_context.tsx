@@ -1,16 +1,17 @@
 "use client";
 
+import { SupportedLang } from "@/types/translate_type";
 import { createContext, useContext, useState, ReactNode } from "react";
 
 interface LanguageContextType {
-  language: string;
-  setLanguage: (lang: string) => void;
+  language: SupportedLang;
+  setLanguage: (lang: SupportedLang) => void;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<string>("ru");
+  const [language, setLanguage] = useState<SupportedLang>("ru");
 
   return <LanguageContext.Provider value={{ language, setLanguage }}>{children}</LanguageContext.Provider>;
 }

@@ -34,6 +34,7 @@ model Profile {
 
   fraktion        Fraktion?
   nikname         String?   @unique
+  gender          Gender?
   lvl             Int       @default(1)
   exp             Int       @default(0)
   mana            Int       @default(100)
@@ -47,4 +48,9 @@ model Profile {
 enum Fraktion {
   ADEPT
   NOVICE
+}
+
+enum Gender {
+  MALE
+  FEMALE
 }

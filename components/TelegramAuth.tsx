@@ -4,6 +4,9 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
+import { useLanguage } from "@/contexts/lang_context";
+import { useTranslation } from "@/hooks/use_translation";
+import { Loader } from "./custom_ui/loader";
 
 interface AuthResponse {
   message: string;
@@ -13,6 +16,8 @@ interface AuthResponse {
 
 export default function TelegramAuth() {
   const router = useRouter();
+  const { setLanguage } = useLanguage();
+  const { t } = useTranslation();
 
   const { isLoading, isError, data } = useQuery<AuthResponse, Error>({
     queryKey: ["telegramAuth"],
@@ -33,6 +38,7 @@ export default function TelegramAuth() {
       });
 
       if (!res.ok) {
+        setLanguage("en");
         const json = await res.json();
         throw new Error(json?.message || "Authentication failed");
       }
@@ -43,30 +49,41 @@ export default function TelegramAuth() {
     staleTime: 1000,
     gcTime: 1000,
   });
+
   useEffect(() => {
-    if (data && data.nikname && data.language_code) {
-      router.push("/game");
-    } else {
-      router.push("/registration");
+    if (data) {
+      if (data.language_code) {
+        const lang = data.language_code.startsWith("ru") ? "ru" : "en";
+        setLanguage(lang);
+        // setLanguage("en");
+      } else {
+        setLanguage("en");
+      }
+      if (data.nikname) {
+        router.push("/game");
+      } else {
+        router.push("/registration");
+      }
     }
-  }, [data, router]);
+  }, [data, router, setLanguage]);
+
   if (isLoading) {
-    return <Image src="/loading.jpg" width={300} height={300} alt="загрузка" />;
+    return <Image src="/loading.jpg" width={300} height={300} alt={t("loading")} />;
   }
 
   if (isError) {
     return (
       <div className="flex flex-col items-center space-y-4 p-8 text-red-500">
-        <p>Произошла ошибка аутентификации</p>
+        <p>{t("auth_error")}</p>
         <button
           onClick={() => window.location.reload()}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
-          Перезагрузить
+          {t("auth_error")}
         </button>
       </div>
     );
   }
 
-  return null;
+  return <Image src="/loading.jpg" width={300} height={300} alt={t("loading")} />;
 }
