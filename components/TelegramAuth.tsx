@@ -78,7 +78,7 @@ export default function TelegramAuth() {
         router.push("/registration");
       }
     }
-  }, [data, router, setLanguage, setTheme]);
+  }, [data, router, setLanguage, setTheme, theme]);
 
   if (isLoading) {
     return (
