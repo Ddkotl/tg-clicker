@@ -15,7 +15,10 @@ export async function POST(request: NextRequest) {
       ref,
     );
     if (!updated_user) {
-      return NextResponse.json({ message: "user not created" }, { status: 401 });
+      return NextResponse.json(
+        { message: "user not created" },
+        { status: 401 },
+      );
     }
     const user = { telegram_id: validationResult.user.id };
 
@@ -45,6 +48,9 @@ export async function POST(request: NextRequest) {
 
     return response;
   } else {
-    return NextResponse.json({ message: validationResult.message }, { status: 401 });
+    return NextResponse.json(
+      { message: validationResult.message },
+      { status: 401 },
+    );
   }
 }

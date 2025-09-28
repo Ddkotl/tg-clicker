@@ -9,12 +9,16 @@ export default function HomeTab() {
       {/* Блок боя */}
       <Card className="p-1 gap-2 bg-card border border-border shadow-lg">
         <CardHeader className="px-1">
-          <CardTitle className="text-blue-400 text-lg font-bold">⚔️ Готов к бою?</CardTitle>
+          <CardTitle className="text-blue-400 text-lg font-bold">
+            ⚔️ Готов к бою?
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 px-1 text-sm leading-relaxed">
           <p>
-            <b>Архидемон:</b> С возвращением, демон <b className="text-red-400">викинг15</b>! Сражайся сегодня так, как
-            в последний раз! Соотношение сил: демоны – <span className="text-red-400 font-semibold">698</span>, ангелы –{" "}
+            <b>Архидемон:</b> С возвращением, демон{" "}
+            <b className="text-red-400">викинг15</b>! Сражайся сегодня так, как
+            в последний раз! Соотношение сил: демоны –{" "}
+            <span className="text-red-400 font-semibold">698</span>, ангелы –{" "}
             <span className="text-blue-400 font-semibold">709</span>.
           </p>
 

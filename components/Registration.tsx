@@ -56,7 +56,9 @@ export function Registration() {
     const timeout = setTimeout(async () => {
       try {
         setIsChecking(true);
-        const res = await fetch(`/api/user/check-nickname?nickname=${nickname}`);
+        const res = await fetch(
+          `/api/user/check-nickname?nickname=${nickname}`,
+        );
         const data: CheckNicknameResponse = await res.json();
         setIsNicknameValid(data.available);
       } catch {
@@ -99,18 +101,24 @@ export function Registration() {
   };
 
   if (isLoading) {
-    return <Image src="/loading.jpg" width={300} height={300} alt={t("loading")} />;
+    return (
+      <Image src="/loading.jpg" width={300} height={300} alt={t("loading")} />
+    );
   }
 
   if (!profile) {
-    return <div className="text-center p-8 text-red-500">{t("auth_error")}</div>;
+    return (
+      <div className="text-center p-8 text-red-500">{t("auth_error")}</div>
+    );
   }
 
   return (
     <div className="flex justify-center items-center h-screen ">
       <Card className="w-[400px] shadow-lg">
         <CardHeader>
-          <CardTitle className="text-center">{t("registration.title")}</CardTitle>
+          <CardTitle className="text-center">
+            {t("registration.title")}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -139,15 +147,33 @@ export function Registration() {
               />
               <div className="min-h-5 w-full ">
                 {nickname.length > 0 && nickname.length < 3 && (
-                  <p className="text-red-500 text-sm ">{t("validation.min", { number: "3" })}</p>
+                  <p className="text-red-500 text-sm ">
+                    {t("validation.min", { number: "3" })}
+                  </p>
                 )}
-                {nickname.length >= 3 && isChecking && <p className="text-blue-500 text-sm">{t("validation.check")}</p>}
-                {nickname.length >= 3 && isNicknameValid === false && !isChecking && (
-                  <p className="text-red-500 text-sm">{t("validation.nickname_taken", { nickname: `${nickname}` })}</p>
+                {nickname.length >= 3 && isChecking && (
+                  <p className="text-blue-500 text-sm">
+                    {t("validation.check")}
+                  </p>
                 )}
-                {nickname.length >= 3 && isNicknameValid === true && !isChecking && (
-                  <p className="text-green-500 text-sm">{t("validation.nickname_free", { nickname: `${nickname}` })}</p>
-                )}
+                {nickname.length >= 3 &&
+                  isNicknameValid === false &&
+                  !isChecking && (
+                    <p className="text-red-500 text-sm">
+                      {t("validation.nickname_taken", {
+                        nickname: `${nickname}`,
+                      })}
+                    </p>
+                  )}
+                {nickname.length >= 3 &&
+                  isNicknameValid === true &&
+                  !isChecking && (
+                    <p className="text-green-500 text-sm">
+                      {t("validation.nickname_free", {
+                        nickname: `${nickname}`,
+                      })}
+                    </p>
+                  )}
               </div>
             </div>
 
@@ -171,8 +197,15 @@ export function Registration() {
               >
                 {color_themes.map((theme) => (
                   <div key={theme.value} className="flex items-center gap-2">
-                    <RadioGroupItem value={theme.value} id={theme.value} className="cursor-pointer" />
-                    <Label htmlFor={theme.value} className="flex items-center gap-2 cursor-pointer">
+                    <RadioGroupItem
+                      value={theme.value}
+                      id={theme.value}
+                      className="cursor-pointer"
+                    />
+                    <Label
+                      htmlFor={theme.value}
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
                       <span className={`w-4 h-4  ${theme.color}`}></span>
                     </Label>
                   </div>
@@ -190,12 +223,20 @@ export function Registration() {
                 className="flex gap-4"
               >
                 <div className="flex items-center gap-2">
-                  <RadioGroupItem value="MALE" id="male" className="cursor-pointer" />
+                  <RadioGroupItem
+                    value="MALE"
+                    id="male"
+                    className="cursor-pointer"
+                  />
                   <Label htmlFor="male">{t("gender.male")}</Label>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <RadioGroupItem value="FEMALE" id="female" className="cursor-pointer" />
+                  <RadioGroupItem
+                    value="FEMALE"
+                    id="female"
+                    className="cursor-pointer"
+                  />
                   <Label htmlFor="female">{t("gender.female")}</Label>
                 </div>
               </RadioGroup>
@@ -210,7 +251,9 @@ export function Registration() {
                     key={f}
                     onClick={() => setFraktion(f)}
                     className={`duration-500 transform cursor-pointer rounded-xl border-2 max-w-[120px]  ${
-                      fraktion === f ? "border-ring scale-105 shadow-lg" : "border-background"
+                      fraktion === f
+                        ? "border-ring scale-105 shadow-lg"
+                        : "border-background"
                     }`}
                   >
                     <Image
@@ -229,7 +272,9 @@ export function Registration() {
                       className="rounded-lg h-[120px] w-[120px]"
                     />
                     <p className="flex  justify-center items-center text-center p-2 font-medium">
-                      {f === Fraktion.ADEPT ? `${t("fraction.adept")}` : `${t("fraction.novice")}`}
+                      {f === Fraktion.ADEPT
+                        ? `${t("fraction.adept")}`
+                        : `${t("fraction.novice")}`}
                     </p>
                   </div>
                 ))}
@@ -240,9 +285,16 @@ export function Registration() {
             <Button
               type="submit"
               className="cursor-pointer"
-              disabled={mutation.isPending || mutation.isSuccess || !isNicknameValid || !fraktion}
+              disabled={
+                mutation.isPending ||
+                mutation.isSuccess ||
+                !isNicknameValid ||
+                !fraktion
+              }
             >
-              {mutation.isPending ? `${t("button.saving")}` : `${t("button.save")}`}
+              {mutation.isPending
+                ? `${t("button.saving")}`
+                : `${t("button.save")}`}
             </Button>
           </form>
         </CardContent>

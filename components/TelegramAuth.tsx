@@ -18,7 +18,7 @@ interface AuthResponse {
 export default function TelegramAuth() {
   const router = useRouter();
   const { setLanguage } = useLanguage();
-  const { setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const { t } = useTranslation();
 
   const { isLoading, isError, data } = useQuery<AuthResponse, Error>({
@@ -56,6 +56,14 @@ export default function TelegramAuth() {
     if (data) {
       if (data.color_theme) {
         setTheme(data.color_theme);
+        document.documentElement.classList.remove(
+          "theme-red",
+          "theme-purple",
+          "theme-green",
+          "theme-yellow",
+          "theme-blue",
+        );
+        document.documentElement.classList.add(`theme-${theme}`);
       }
       if (data.language_code) {
         const lang = data.language_code.startsWith("ru") ? "ru" : "en";
@@ -73,7 +81,9 @@ export default function TelegramAuth() {
   }, [data, router, setLanguage, setTheme]);
 
   if (isLoading) {
-    return <Image src="/loading.jpg" width={300} height={300} alt={t("loading")} />;
+    return (
+      <Image src="/loading.jpg" width={300} height={300} alt={t("loading")} />
+    );
   }
 
   if (isError) {
@@ -90,5 +100,7 @@ export default function TelegramAuth() {
     );
   }
 
-  return <Image src="/loading.jpg" width={300} height={300} alt={t("loading")} />;
+  return (
+    <Image src="/loading.jpg" width={300} height={300} alt={t("loading")} />
+  );
 }

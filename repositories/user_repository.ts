@@ -1,7 +1,10 @@
 import { CreateUserType } from "@/types/user_types";
 import { dataBase } from "@/utils/db_connect";
 
-export async function UpdateOrCreateUser(user: CreateUserType, referer_id?: string) {
+export async function UpdateOrCreateUser(
+  user: CreateUserType,
+  referer_id?: string,
+) {
   try {
     const updated_user = await dataBase.user.upsert({
       where: { telegram_id: user.telegram_id },
@@ -42,7 +45,9 @@ export async function UpdateOrCreateUser(user: CreateUserType, referer_id?: stri
     return null;
   }
 }
-export type UpdateOrCreateUserType = Awaited<ReturnType<typeof UpdateOrCreateUser>>;
+export type UpdateOrCreateUserType = Awaited<
+  ReturnType<typeof UpdateOrCreateUser>
+>;
 export async function getUserByTgId(telegram_id: string) {
   try {
     const user = await dataBase.user.findUnique({
@@ -70,4 +75,6 @@ export async function getUserProfileByTgId(telegram_id: string) {
     return null;
   }
 }
-export type getUserProfileByTgIdType = Awaited<ReturnType<typeof getUserProfileByTgId>>;
+export type getUserProfileByTgIdType = Awaited<
+  ReturnType<typeof getUserProfileByTgId>
+>;

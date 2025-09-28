@@ -28,7 +28,13 @@ const LeaderboardTab = () => {
       {/* Header */}
       <div className="px-4">
         <div className="flex flex-col items-center mt-4">
-          <Image src={trophy} alt="Trophy" width={80} height={80} className="mb-2" />
+          <Image
+            src={trophy}
+            alt="Trophy"
+            width={80}
+            height={80}
+            className="mb-2"
+          />
           <h1 className="text-2xl font-bold mb-2">Leaderboard</h1>
           <div className="w-full mt-2 px-6 py-1 flex justify-between rounded-lg text-sm font-medium text-[#fefefe] bg-[#151516]">
             <span>Total</span>
@@ -73,12 +79,16 @@ const LeaderboardTab = () => {
                 </div>
                 <div>
                   <div className="text-base font-medium">{item.wallet}</div>
-                  <div className="text-sm font-medium text-[#7c7c7c]">{item.balance} PAWS</div>
+                  <div className="text-sm font-medium text-[#7c7c7c]">
+                    {item.balance} PAWS
+                  </div>
                 </div>
               </div>
               <div
                 className={`text-base font-medium ${
-                  typeof item.place === "string" && item.place.startsWith("#") ? "text-white" : ""
+                  typeof item.place === "string" && item.place.startsWith("#")
+                    ? "text-white"
+                    : ""
                 }`}
               >
                 {item.place}

@@ -3,7 +3,16 @@
 import { generated_fight_limit } from "@/config/energy_lvl";
 import { getUserProfileByTgIdType } from "@/repositories/user_repository";
 import { useQuery } from "@tanstack/react-query";
-import { User, Gem, Clock, Backpack, HeartPulse, Droplet, Coins, Swords } from "lucide-react";
+import {
+  User,
+  Gem,
+  Clock,
+  Backpack,
+  HeartPulse,
+  Droplet,
+  Coins,
+  Swords,
+} from "lucide-react";
 import Link from "next/link";
 
 export function HeaderStats() {
@@ -25,7 +34,10 @@ export function HeaderStats() {
     <div className="flex justify-center w-full">
       <div className="fixed top-0 z-50 bg-background/90 border-b border-foreground/60 w-full max-w-md">
         <div className="flex flex-wrap gap-3  items-center  p-2">
-          <Link href="game/profile" className="flex items-center gap-1 font-semibold">
+          <Link
+            href="game/profile"
+            className="flex items-center gap-1 font-semibold"
+          >
             <User className="h-4 w-4 text-muted-foreground" />
             {`${data?.profile?.nikname ? data?.profile?.nikname : "безымянный"}[${data?.profile?.lvl}]`}
           </Link>
@@ -52,7 +64,8 @@ export function HeaderStats() {
             {`${data?.profile?.fight}/${generated_fight_limit}`}
           </div>
           <div className="flex items-center gap-1">
-            <Clock className="h-4 w-4 text-gray-400" /> {data?.profile?.last_fight_time?.toISOString() ?? "00.00"}
+            <Clock className="h-4 w-4 text-gray-400" />{" "}
+            {data?.profile?.last_fight_time?.toISOString() ?? "00.00"}
           </div>
         </div>
       </div>

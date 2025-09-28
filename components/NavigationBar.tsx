@@ -7,7 +7,12 @@ import Earn from "./icons/Earn";
 import Link from "next/link";
 
 const NavigationBar = () => {
-  const tabs: { id: string; url: string; label: string; Icon: React.FC<{ className?: string }> }[] = [
+  const tabs: {
+    id: string;
+    url: string;
+    label: string;
+    Icon: React.FC<{ className?: string }>;
+  }[] = [
     { id: "home", url: "/game", label: "Главная", Icon: Home },
     { id: "leaderboard", url: "#", label: "Рейтинги", Icon: Leaderboard },
     { id: "friends", url: "#", label: "Почта", Icon: Friends },
@@ -20,9 +25,15 @@ const NavigationBar = () => {
         <div className="flex justify-between px-4 py-2">
           {tabs.map((tab) => {
             return (
-              <Link key={tab.id} href={tab.url} className={`flex flex-col items-center`}>
+              <Link
+                key={tab.id}
+                href={tab.url}
+                className={`flex flex-col items-center`}
+              >
                 <tab.Icon className={`w-10 h-10 text-foreground/60`} />
-                <span className={`text-xs font-medium text-foreground/60`}>{tab.label}</span>
+                <span className={`text-xs font-medium text-foreground/60`}>
+                  {tab.label}
+                </span>
               </Link>
             );
           })}

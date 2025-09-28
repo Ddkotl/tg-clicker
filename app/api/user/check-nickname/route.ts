@@ -6,7 +6,9 @@ export async function GET(req: NextRequest) {
     const nickname = req.nextUrl.searchParams.get("nickname");
     if (!nickname) return NextResponse.json({ available: false });
 
-    const exists = await dataBase.user.findFirst({ where: { profile: { nikname: nickname } } });
+    const exists = await dataBase.user.findFirst({
+      where: { profile: { nikname: nickname } },
+    });
 
     return NextResponse.json({ available: !exists });
   } catch (error) {
