@@ -26,4 +26,7 @@ export const ru_lang: Messages = {
     adept: "Адепт горы",
     novice: "Послушник долины",
   },
+  theme: {
+    select: "Выберите цветовую тему",
+  },
 };

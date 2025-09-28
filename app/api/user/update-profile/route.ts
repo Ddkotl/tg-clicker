@@ -3,9 +3,9 @@ import { dataBase } from "@/utils/db_connect";
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId, nikname, fraktion, gender } = await req.json();
+    const { userId, nikname, fraktion, gender, color_theme } = await req.json();
 
-    if (!userId || !nikname || !fraktion) {
+    if (!userId || !nikname || !fraktion || !color_theme) {
       return NextResponse.json({ message: "Неверные данные" }, { status: 400 });
     }
 
@@ -15,6 +15,7 @@ export async function POST(req: NextRequest) {
         nikname: nikname,
         fraktion: fraktion,
         gender: gender,
+        color_theme: color_theme,
       },
     });
 

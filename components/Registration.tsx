@@ -14,6 +14,8 @@ import { toast } from "sonner";
 import { useTranslation } from "@/hooks/use_translation";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { cn } from "@/lib/utils";
+import { Theme, useTheme } from "@/contexts/theme_context";
+import { color_themes } from "@/config/color_thems";
 interface CheckNicknameResponse {
   available: boolean;
 }
@@ -21,6 +23,12 @@ interface CheckNicknameResponse {
 export function Registration() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const [nickname, setNickname] = useState("");
+  const [fraktion, setFraktion] = useState<Fraktion | null>(null);
+  const [gender, setGender] = useState<Gender>("MALE");
+  const [isNicknameValid, setIsNicknameValid] = useState<boolean | null>(null);
+  const [isChecking, setIsChecking] = useState(false);
+  const { theme, setTheme } = useTheme();
   const router = useRouter();
   const { data: profile, isLoading } = useQuery<getUserProfileByTgIdType>({
     queryKey: ["profile"],
@@ -30,12 +38,6 @@ export function Registration() {
       return res.json();
     },
   });
-
-  const [nickname, setNickname] = useState<string>("");
-  const [fraktion, setFraktion] = useState<Fraktion | null>(null);
-  const [gender, setGender] = useState<Gender>("MALE");
-  const [isNicknameValid, setIsNicknameValid] = useState<boolean | null>(null);
-  const [isChecking, setIsChecking] = useState(false);
 
   useEffect(() => {
     if (profile) {
@@ -77,6 +79,7 @@ export function Registration() {
           nikname: nickname,
           fraktion: fraktion,
           gender: gender,
+          color_theme: theme,
         }),
       });
       if (!res.ok) throw new Error("Не удалось сохранить профиль");
@@ -140,18 +143,42 @@ export function Registration() {
                 )}
                 {nickname.length >= 3 && isChecking && <p className="text-blue-500 text-sm">{t("validation.check")}</p>}
                 {nickname.length >= 3 && isNicknameValid === false && !isChecking && (
-                  <p className="text-red-500 text-sm">
-                    {t("validation.nickname_taken", { nickname: `${profile.profile?.nikname}` })}
-                  </p>
+                  <p className="text-red-500 text-sm">{t("validation.nickname_taken", { nickname: `${nickname}` })}</p>
                 )}
                 {nickname.length >= 3 && isNicknameValid === true && !isChecking && (
-                  <p className="text-green-500 text-sm">
-                    {t("validation.nickname_free", { nickname: `${profile.profile?.nikname}` })}
-                  </p>
+                  <p className="text-green-500 text-sm">{t("validation.nickname_free", { nickname: `${nickname}` })}</p>
                 )}
               </div>
             </div>
 
+            {/* Тема */}
+            <div className="flex flex-col gap-2">
+              <Label>{t("theme.select")}</Label>
+              <RadioGroup
+                defaultValue={theme}
+                onValueChange={(value) => {
+                  document.documentElement.classList.remove(
+                    "theme-red",
+                    "theme-purple",
+                    "theme-green",
+                    "theme-yellow",
+                    "theme-blue",
+                  );
+                  document.documentElement.classList.add(`theme-${value}`);
+                  setTheme(value as Theme);
+                }}
+                className="flex gap-6  justify-between"
+              >
+                {color_themes.map((theme) => (
+                  <div key={theme.value} className="flex items-center gap-2">
+                    <RadioGroupItem value={theme.value} id={theme.value} className="cursor-pointer" />
+                    <Label htmlFor={theme.value} className="flex items-center gap-2 cursor-pointer">
+                      <span className={`w-4 h-4  ${theme.color}`}></span>
+                    </Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
             {/* Пол */}
             <div className="flex flex-col gap-2">
               <Label>{t("gender.gender")}</Label>
@@ -183,7 +210,7 @@ export function Registration() {
                     key={f}
                     onClick={() => setFraktion(f)}
                     className={`duration-500 transform cursor-pointer rounded-xl border-2 max-w-[120px]  ${
-                      fraktion === f ? "border-green-500 scale-105 shadow-lg" : "border-background"
+                      fraktion === f ? "border-ring scale-105 shadow-lg" : "border-background"
                     }`}
                   >
                     <Image

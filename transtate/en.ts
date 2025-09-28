@@ -28,4 +28,7 @@ export const en_lang = {
     adept: "Adept of the mountain",
     novice: "Novice of the Valley",
   },
+  theme: {
+    select: "Select color theme",
+  },
 };

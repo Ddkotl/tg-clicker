@@ -32,6 +32,7 @@ export async function POST(request: NextRequest) {
       message: "Authentication successful",
       language_code: updated_user.language_code,
       nikname: updated_user.profile?.nikname,
+      color_theme: updated_user.profile?.color_theme,
     });
     response.cookies.set({
       name: "session",

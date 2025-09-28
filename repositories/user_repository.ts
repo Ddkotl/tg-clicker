@@ -31,6 +31,7 @@ export async function UpdateOrCreateUser(user: CreateUserType, referer_id?: stri
         profile: {
           select: {
             nikname: true,
+            color_theme: true,
           },
         },
       },

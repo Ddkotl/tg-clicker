@@ -6,17 +6,19 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useLanguage } from "@/contexts/lang_context";
 import { useTranslation } from "@/hooks/use_translation";
-import { Loader } from "./custom_ui/loader";
+import { Theme, useTheme } from "@/contexts/theme_context";
 
 interface AuthResponse {
   message: string;
   language_code?: string;
   nikname?: string;
+  color_theme?: Theme;
 }
 
 export default function TelegramAuth() {
   const router = useRouter();
   const { setLanguage } = useLanguage();
+  const { setTheme } = useTheme();
   const { t } = useTranslation();
 
   const { isLoading, isError, data } = useQuery<AuthResponse, Error>({
@@ -52,6 +54,9 @@ export default function TelegramAuth() {
 
   useEffect(() => {
     if (data) {
+      if (data.color_theme) {
+        setTheme(data.color_theme);
+      }
       if (data.language_code) {
         const lang = data.language_code.startsWith("ru") ? "ru" : "en";
         setLanguage(lang);
@@ -65,7 +70,7 @@ export default function TelegramAuth() {
         router.push("/registration");
       }
     }
-  }, [data, router, setLanguage]);
+  }, [data, router, setLanguage, setTheme]);
 
   if (isLoading) {
     return <Image src="/loading.jpg" width={300} height={300} alt={t("loading")} />;

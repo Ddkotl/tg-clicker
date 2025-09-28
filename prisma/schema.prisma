@@ -35,6 +35,7 @@ model Profile {
   fraktion        Fraktion?
   nikname         String?   @unique
   gender          Gender?
+  color_theme     String?
   lvl             Int       @default(1)
   exp             Int       @default(0)
   mana            Int       @default(100)
