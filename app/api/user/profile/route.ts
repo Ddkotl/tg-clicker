@@ -4,11 +4,13 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 const profileResponseSchema = z.object({
-  userId: z.string(),
-  nikname: z.string().nullable(),
-  fraktion: z.string().nullable(),
-  gender: z.string().nullable(),
-  color_theme: z.string().nullable(),
+  profile: z.object({
+    userId: z.string(),
+    nikname: z.string().nullable(),
+    fraktion: z.string().nullable(),
+    gender: z.string().nullable(),
+    color_theme: z.string().nullable(),
+  }),
 });
 
 const unauthenticatedResponseSchema = z.object({

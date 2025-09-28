@@ -1,3 +1,4 @@
+"use client";
 import { useLanguage } from "@/contexts/lang_context";
 import { en_lang } from "@/transtate/en";
 import { ru_lang } from "@/transtate/ru";
