@@ -2,9 +2,25 @@ import { NextRequest, NextResponse } from "next/server";
 import { validateTelegramWebAppData } from "@/utils/telegramAuth";
 import { AppJWTPayload, encrypt, SESSION_DURATION } from "@/utils/session";
 import { UpdateOrCreateUser } from "@/repositories/user_repository";
+import { z } from "zod";
+
+const authSchema = z.object({
+  initData: z.string(),
+  ref: z.string().optional(),
+});
 
 export async function POST(request: NextRequest) {
-  const { initData, ref } = await request.json();
+  const body = await request.json();
+
+  const parsedBody = authSchema.safeParse(body);
+  if (!parsedBody.success) {
+    return NextResponse.json(
+      { message: "Invalid request data", errors: parsedBody.error },
+      { status: 400 },
+    );
+  }
+
+  const { initData, ref } = parsedBody.data;
   const validationResult = validateTelegramWebAppData(initData);
   if (validationResult.validatedData && validationResult.user.id) {
     const updated_user = await UpdateOrCreateUser(
