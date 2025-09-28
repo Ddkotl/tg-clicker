@@ -1,4 +1,5 @@
 #!/bin/sh
+echo "Running pre-commit hook..."
 npm run prettier
 npm run lint
 npm run lint:types
