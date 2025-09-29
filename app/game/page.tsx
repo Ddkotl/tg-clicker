@@ -1,5 +1,5 @@
-import HomeTab from "@/components/HomeTab";
+import Home from "@/components/Home";
 
 export default function Game() {
-  return <HomeTab />;
+  return <Home />;
 }

@@ -12,14 +12,14 @@ export function Notifications() {
   if (!visible) return null;
 
   return (
-    <Alert className="px-2 py-1 shine-effect relative flex items-start gap-2 bg-card border border-border shadow-md rounded-lg">
+    <Alert className="px-2 w-full py-1 shine-effect relative flex items-start gap-2 bg-card border border-border shadow-md rounded-lg">
       <div className="flex-1 flex gap-3">
-        <Bell className="h-5 w-5 text-blue-500 shrink-0 " />
+        <Bell className="h-5 w-5 text-primary shrink-0 " />
         <AlertTitle className="font-semibold">Новые миссии</AlertTitle>
         <AlertDescription className="text-sm text-muted-foreground">
           <Link
             href="#"
-            className="text-blue-500 hover:text-blue-400 font-medium underline underline-offset-2"
+            className="text-primary hover:text-primar/80 font-medium underline underline-offset-2"
           >
             Проверь.
           </Link>

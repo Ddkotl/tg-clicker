@@ -41,7 +41,7 @@ body::-webkit-scrollbar {
 
 @keyframes shine {
   0%,
-  80% {
+  60% {
     transform: translateX(-100%);
   }
 
@@ -65,7 +65,7 @@ body::-webkit-scrollbar {
   background: linear-gradient(
     to right,
     transparent 0%,
-    rgba(0, 122, 255, 0.3) 50%,
+    var(--primary) 50%,
     transparent 100%
   );
   animation: shine 7s infinite;
@@ -204,9 +204,9 @@ body::-webkit-scrollbar {
 }
 
 .theme-blue {
-  --primary: oklch(0.65 0.25 240); /* синий */
-  --accent: oklch(0.65 0.25 240);
-  --ring: oklch(0.65 0.25 240);
+  --primary: oklch(59.667% 0.22126 258.047); /* синий */
+  --accent: oklch(59.667% 0.22126 258.047);
+  --ring: oklch(59.667% 0.22126 258.047);
 }
 
 @layer base {

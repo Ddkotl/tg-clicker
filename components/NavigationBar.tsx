@@ -14,9 +14,9 @@ const NavigationBar = () => {
     Icon: React.FC<{ className?: string }>;
   }[] = [
     { id: "home", url: "/game", label: "Главная", Icon: Home },
-    { id: "leaderboard", url: "#", label: "Рейтинги", Icon: Leaderboard },
     { id: "friends", url: "#", label: "Почта", Icon: Friends },
     { id: "earn", url: "#", label: "Задания", Icon: Earn },
+    { id: "leaderboard", url: "#", label: "Рейтинги", Icon: Leaderboard },
   ];
 
   return (
