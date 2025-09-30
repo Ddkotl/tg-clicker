@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import {
   createContext,
   useContext,
@@ -19,16 +20,29 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>("blue");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const stored_theme = localStorage.getItem("theme");
     if (stored_theme) {
       setTheme(stored_theme as Theme);
     }
+    setLoading(false);
   }, []);
+
   useEffect(() => {
-    localStorage.setItem("theme", theme);
+    if (theme) {
+      localStorage.setItem("theme", theme);
+    }
   }, [theme]);
+
+  if (loading) {
+    return (
+      <div className="bg-black w-full h-screen flex items-center justify-center">
+        <Image src="/loading.jpg" width={300} height={300} alt="loading..." />
+      </div>
+    );
+  }
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
       <div className={`theme-${theme} min-h-screen`}>{children}</div>
