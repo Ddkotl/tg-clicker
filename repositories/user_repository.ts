@@ -1,3 +1,4 @@
+import { Fraktion } from "@/_generated/prisma";
 import { CreateUserType } from "@/types/user_types";
 import { dataBase } from "@/utils/db_connect";
 
@@ -77,4 +78,30 @@ export async function getUserProfileByTgId(telegram_id: string) {
 }
 export type getUserProfileByTgIdType = Awaited<
   ReturnType<typeof getUserProfileByTgId>
+>;
+
+export async function getUserCountsInFractions() {
+  try {
+    const adepts = await dataBase.user.count({
+      where: {
+        profile: {
+          fraktion: Fraktion.ADEPT,
+        },
+      },
+    });
+    const novices = await dataBase.user.count({
+      where: {
+        profile: {
+          fraktion: Fraktion.NOVICE,
+        },
+      },
+    });
+    return { adepts: adepts, novices: novices };
+  } catch (error) {
+    console.error("not found users", error);
+    return {};
+  }
+}
+export type getUserCountsInFractionsType = Awaited<
+  ReturnType<typeof getUserCountsInFractions>
 >;
