@@ -15,7 +15,7 @@ const NavigationBar = () => {
   }[] = [
     { id: "home", url: "/game", label: "Главная", Icon: Home },
     { id: "friends", url: "#", label: "Почта", Icon: Friends },
-    { id: "earn", url: "#", label: "Задания", Icon: Earn },
+    { id: "earn", url: "game/tasks", label: "Задания", Icon: Earn },
     { id: "leaderboard", url: "#", label: "Рейтинги", Icon: Leaderboard },
   ];
 

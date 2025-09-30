@@ -27,7 +27,7 @@ export default function TelegramAuth() {
       const { default: WebApp } = await import("@twa-dev/sdk");
       WebApp.ready();
       const initData = WebApp.initData;
-
+      const start_param = WebApp.initDataUnsafe.start_param;
       if (!initData) {
         throw new Error("No initData from Telegram WebApp");
       }
@@ -35,7 +35,7 @@ export default function TelegramAuth() {
       const res = await fetch("/api/auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ initData }),
+        body: JSON.stringify({ initData, start_param }),
         cache: "no-store",
       });
 
