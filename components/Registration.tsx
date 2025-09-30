@@ -260,11 +260,11 @@ export function Registration() {
                       src={
                         gender === "FEMALE"
                           ? f === Fraktion.ADEPT
-                            ? "/adept_f.png"
+                            ? "/adept_f.jpg"
                             : "/novice_f.jpg"
                           : f === Fraktion.ADEPT
                             ? "/adept_m.jpg"
-                            : "/novice_m.png"
+                            : "/novice_m.jpg"
                       }
                       alt={f}
                       width={120}
