@@ -1,12 +1,18 @@
-"use cleint";
+"use client";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 export function useTelegramBack() {
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     import("@twa-dev/sdk").then(({ default: WebApp }) => {
+      if (["/", "/game", "/registration"].includes(pathname)) {
+        WebApp.BackButton.hide();
+        return;
+      }
+
       WebApp.BackButton.show();
 
       const handleBack = () => {
@@ -20,5 +26,5 @@ export function useTelegramBack() {
         WebApp.BackButton.hide();
       };
     });
-  }, [router]);
+  }, [router, pathname]);
 }

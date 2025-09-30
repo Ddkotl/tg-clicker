@@ -28,8 +28,27 @@ export const en_lang = {
   fraction: {
     adept: "Adept of the mountain",
     novice: "Novice of the Valley",
+    adepts: "Adept of the mountain",
+    novices: "Novice of the Valley",
   },
   theme: {
     select: "Select color theme",
+  },
+  home: {
+    ready_to_battle: "⚔️ Ready for battle?",
+    mentor: "Mentor:",
+    welcome_wanderer: "Welcome, wanderer",
+    balance_of_pover:
+      "Today your path will lead to great achievements! Balance of power:",
+    adepts_loses: "Adept Losses:",
+    novise_loses: "Novice Losses:",
+    navigation: {
+      chronicles: "Chronicles",
+      battle: "Battle",
+      headquarters: "Headquarters",
+      city: "City",
+      secret_agent: "Secret Agent",
+      rating: "Rating",
+    },
   },
 };

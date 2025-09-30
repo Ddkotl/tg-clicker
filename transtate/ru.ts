@@ -25,8 +25,27 @@ export const ru_lang: Messages = {
   fraction: {
     adept: "Адепт горы",
     novice: "Послушник долины",
+    adepts: "Адепты горы",
+    novices: "Послушники долины",
   },
   theme: {
     select: "Выберите цветовую тему",
+  },
+  home: {
+    ready_to_battle: "⚔️ Готов к битве?",
+    mentor: "Наставник:",
+    welcome_wanderer: "Добро пожаловать, странник",
+    balance_of_pover:
+      "Сегодня твой путь приведёт к великим свершениям! Баланс сил:",
+    adepts_loses: "Потери Адептов:",
+    novise_loses: "Потери Послушников:",
+    navigation: {
+      chronicles: "Хроники",
+      battle: "Схватка",
+      headquarters: "Штаб",
+      city: "Город",
+      secret_agent: "Тайный агент",
+      rating: "Рейтинг",
+    },
   },
 };

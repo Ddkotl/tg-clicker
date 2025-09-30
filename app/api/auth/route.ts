@@ -6,7 +6,7 @@ import { z } from "zod";
 
 const authSchema = z.object({
   initData: z.string(),
-  referer_id: z.string().optional(),
+  ref: z.string().optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { initData, referer_id } = parsedBody.data;
+  const { initData, ref } = parsedBody.data;
   const validationResult = validateTelegramWebAppData(initData);
   if (validationResult.validatedData && validationResult.user.id) {
     const updated_user = await UpdateOrCreateUser(
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
         ...validationResult.user,
         telegram_id: validationResult.user.id,
       },
-      referer_id,
+      ref,
     );
     if (!updated_user) {
       return NextResponse.json(
