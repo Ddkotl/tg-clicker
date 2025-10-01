@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "start": "next -p 3004 start",
+    "start": "next start -p 3004",
     "lint": "eslint",
     "lint:types": "tsc --noEmit",
     "prettier": "prettier -w .",
