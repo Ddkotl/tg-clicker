@@ -48,4 +48,16 @@ export const ru_lang: Messages = {
       rating: "Рейтинг",
     },
   },
+  profile: {
+    no_motto_adept: "Скала не дрогнет – и я тоже.",
+    no_motto_novice: "Ветер перемен лишь помогает моему пути.",
+    lvl: "Уровень",
+    development: "Развитие",
+    equipment: "Снаряжение",
+    friends: "Друзья",
+    questionnaire: "Анкета",
+    description: "Описание",
+    avatars: "Аватары",
+    invite: "Пригласить друга",
+  },
 };

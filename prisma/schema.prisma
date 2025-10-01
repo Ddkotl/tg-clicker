@@ -36,6 +36,8 @@ model Profile {
   nikname         String?   @unique
   gender          Gender?
   color_theme     String?
+  avatar_url      String?
+  player_motto    String?
   lvl             Int       @default(1)
   exp             Int       @default(0)
   mana            Int       @default(100)

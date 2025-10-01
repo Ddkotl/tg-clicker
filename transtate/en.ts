@@ -51,4 +51,16 @@ export const en_lang = {
       rating: "Rating",
     },
   },
+  profile: {
+    no_motto_adept: "The rock will not shake - and neither will I.",
+    no_motto_novice: "The wind of change only helps my path.",
+    lvl: "Level",
+    development: "Development",
+    equipment: "Equipment",
+    friends: "Friends",
+    questionnaire: "Questionnaire",
+    description: "Description",
+    avatars: "Avatars",
+    invite: "Invite",
+  },
 };

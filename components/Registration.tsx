@@ -82,6 +82,14 @@ export function Registration() {
           fraktion: fraktion,
           gender: gender,
           color_theme: theme,
+          avatar_url:
+            gender === "FEMALE"
+              ? fraktion === Fraktion.ADEPT
+                ? "/adept_f.jpg"
+                : "/novice_f.jpg"
+              : fraktion === Fraktion.ADEPT
+                ? "/adept_m.jpg"
+                : "/novice_m.jpg",
         }),
       });
       if (!res.ok) throw new Error("Не удалось сохранить профиль");

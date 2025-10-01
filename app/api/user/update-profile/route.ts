@@ -9,6 +9,7 @@ const updateProfileSchema = z.object({
   fraktion: z.enum(Fraktion),
   gender: z.enum(Gender),
   color_theme: z.string(),
+  avatar_url: z.string().optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -23,7 +24,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { userId, nikname, fraktion, gender, color_theme } = parsed.data;
+    const { userId, nikname, fraktion, gender, color_theme, avatar_url } =
+      parsed.data;
 
     const updated = await dataBase.profile.update({
       where: { userId: userId },
@@ -32,6 +34,7 @@ export async function POST(req: NextRequest) {
         fraktion: fraktion,
         gender: gender,
         color_theme: color_theme,
+        avatar_url: avatar_url,
       },
     });
 

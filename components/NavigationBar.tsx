@@ -5,6 +5,7 @@ import Leaderboard from "./icons/Leaderboard";
 import Friends from "./icons/Friends";
 import Earn from "./icons/Earn";
 import Link from "next/link";
+import { Settings } from "lucide-react";
 
 const NavigationBar = () => {
   const tabs: {
@@ -14,9 +15,20 @@ const NavigationBar = () => {
     Icon: React.FC<{ className?: string }>;
   }[] = [
     { id: "home", url: "/game", label: "Главная", Icon: Home },
-    { id: "friends", url: "#", label: "Почта", Icon: Friends },
-    { id: "earn", url: "game/tasks", label: "Задания", Icon: Earn },
-    { id: "leaderboard", url: "#", label: "Рейтинги", Icon: Leaderboard },
+    { id: "friends", url: "profile/friends", label: "Почта", Icon: Friends },
+    { id: "tasks", url: "game/tasks", label: "Задания", Icon: Earn },
+    {
+      id: "leaderboard",
+      url: "game/leaderboard",
+      label: "Рейтинги",
+      Icon: Leaderboard,
+    },
+    {
+      id: "settings",
+      url: "game/settings",
+      label: "Настройки",
+      Icon: Settings,
+    },
   ];
 
   return (
