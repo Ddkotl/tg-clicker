@@ -20,7 +20,7 @@ export function useTelegramBack() {
       };
 
       WebApp.BackButton.onClick(handleBack);
-
+      WebApp.disableVerticalSwipes();
       return () => {
         WebApp.BackButton.offClick(handleBack);
         WebApp.BackButton.hide();

@@ -5,7 +5,7 @@ import Leaderboard from "./icons/Leaderboard";
 import Friends from "./icons/Friends";
 import Earn from "./icons/Earn";
 import Link from "next/link";
-import { Settings } from "lucide-react";
+import Settings from "./icons/Settings";
 
 const NavigationBar = () => {
   const tabs: {
