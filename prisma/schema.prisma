@@ -24,12 +24,14 @@ model User {
   updatedAt  DateTime @updatedAt
 
   profile Profile?
+  user_statistic UserStatistic?
 
   @@map("users")
 }
 
 model Profile {
-  userId String @id
+id String @id @default(cuid())
+  userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   fraktion        Fraktion?
@@ -46,6 +48,25 @@ model Profile {
   fight           Int       @default(30)
   last_fight_time DateTime?
   glory           Int       @default(0)
+
+  atack Int @default(1)
+  def  Int @default(1)
+  speed Int @default(1)
+  accuracy Int @default(1)
+  qi Int @default(1)
+
+current_hitpoint Int @default(100)
+  max_hitpoint  Int @default(100)
+}
+
+model UserStatistic {
+  id String @id @default(cuid())
+  user User @relation(fields:[userId], references: [id],onDelete: Cascade)
+  userId String @unique
+
+wins Int @default(0)
+loses Int @default(0)
+
 }
 
 enum Fraktion {
