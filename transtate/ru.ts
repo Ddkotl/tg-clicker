@@ -55,6 +55,7 @@ export const ru_lang: Messages = {
     development: "Развитие",
     equipment: "Снаряжение",
     friends: "Друзья",
+    statistics: "Статистика",
     questionnaire: "Анкета",
     description: "Описание",
     avatars: "Аватары",

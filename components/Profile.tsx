@@ -8,7 +8,9 @@ import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "./ui/button";
+import { useParams } from "next/navigation";
 export function Profile() {
+  const params = useParams<{ userId: string }>();
   const { t } = useTranslation();
   const { data: profile, isLoading } = useQuery<getUserProfileByTgIdType>({
     queryKey: ["profile"],
@@ -18,9 +20,9 @@ export function Profile() {
       return res.json();
     },
   });
-  if (isLoading) return <div>Loading...</div>;
-  if (!profile) return <div>No profile data</div>;
 
+  if (!profile) return <div>No profile data</div>;
+  const isMyProfile = profile?.profile?.userId === params.userId;
   return (
     <div className="max-w-md space-y-4">
       {/* Хедер */}
@@ -59,47 +61,64 @@ export function Profile() {
 
       <div className="flex flex-col gap-2">
         {[
-          { label: `${t("profile.development")}`, href: "/profile/training" },
-          { label: `${t("profile.equipment")}`, href: "/profile/equipment" },
-          { label: `${t("profile.friends")}`, href: "/profile/friends" },
+          ...(isMyProfile
+            ? [
+                {
+                  label: t("profile.development"),
+                  href: `/game/profile/training/${profile.profile?.userId}`,
+                },
+                {
+                  label: `${t("profile.equipment")}`,
+                  href: "/game/profile/equipment",
+                },
+                {
+                  label: `${t("profile.friends")}`,
+                  href: "/game/profile/friends",
+                },
+              ]
+            : []),
+          {
+            label: `${t("profile.statistics")}`,
+            href: "/game/profile/statistics",
+          },
           {
             label: `${t("profile.questionnaire")}`,
-            href: "/profile/questionnaire",
+            href: "/game/profile/questionnaire",
           },
-          {
-            label: `${t("profile.description")}`,
-            href: "/profile/description",
-          },
-          { label: `${t("profile.avatars")}`, href: "/profile/avatars" },
-          { label: `${t("profile.invite")}`, href: "/profile/invite" },
-        ].map((item) => (
-          <Link key={item.href} href={item.href} passHref>
-            <Button asChild className="w-full bg-primary/70" size="lg">
-              <span>{item.label}</span>
-            </Button>
-          </Link>
-        ))}
+
+          ...(isMyProfile
+            ? [
+                {
+                  label: `${t("profile.description")}`,
+                  href: "/game/profile/description",
+                },
+                {
+                  label: `${t("profile.avatars")}`,
+                  href: "/game/profile/avatars",
+                },
+                {
+                  label: `${t("profile.invite")}`,
+                  href: "/game/profile/invite",
+                },
+              ]
+            : []),
+        ].map((item) =>
+          isLoading ? (
+            <Button
+              disabled
+              key={item.href}
+              className="w-full bg-primary/40 shine"
+              size="lg"
+            ></Button>
+          ) : (
+            <Link key={item.href} href={item.href} passHref>
+              <Button asChild className="w-full bg-primary/70" size="lg">
+                <span>{item.label}</span>
+              </Button>
+            </Link>
+          ),
+        )}
       </div>
-      {/* Доп. инфо */}
-      {/* <div className="grid grid-cols-2 gap-3 text-sm">
-        <div>
-          <span className="text-muted-foreground">Сторона:</span> {profile.side}
-        </div>
-        <div>
-          <span className="text-muted-foreground">Звание:</span> {profile.rank}
-        </div>
-        <div>
-          <span className="text-muted-foreground">Отряд:</span> {profile.squad}
-        </div>
-        <div>
-          <span className="text-muted-foreground">Альянс:</span>{" "}
-          {profile.alliance}
-        </div>
-        <div>
-          <span className="text-muted-foreground">Страна:</span>{" "}
-          {profile.country}
-        </div>
-      </div> */}
     </div>
   );
 }

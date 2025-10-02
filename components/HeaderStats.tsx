@@ -14,6 +14,7 @@ import {
   Swords,
 } from "lucide-react";
 import Link from "next/link";
+import { Skeleton } from "./ui/skeleton";
 
 export function HeaderStats() {
   const { data, isLoading } = useQuery<getUserProfileByTgIdType>({
@@ -26,21 +27,27 @@ export function HeaderStats() {
       return res.json();
     },
   });
-  if (isLoading) {
-    return <div>loading</div>;
-  }
 
   return (
     <div className="flex justify-center w-full">
       <div className="fixed top-0 z-50 bg-background/90 border-b border-foreground/60 w-full max-w-md">
         <div className="flex flex-wrap gap-3  items-center  p-2">
-          <Link
-            href="game/profile"
-            className="flex items-center gap-1 font-semibold"
-          >
-            <User className="h-4 w-4 text-muted-foreground" />
-            {`${data?.profile?.nikname ? data?.profile?.nikname : "безымянный"}[${data?.profile?.lvl}]`}
-          </Link>
+          {isLoading ? (
+            <div className="flex items-center gap-1 font-semibold">
+              <User className="h-4 w-4 text-primary" />
+              <Skeleton className="w-14 h-3" />[<Skeleton className="w-5 h-3" />
+              ]
+            </div>
+          ) : (
+            <Link
+              href={`game/profile/${data?.profile?.userId}`}
+              className="flex items-center gap-1 font-semibold"
+            >
+              <User className="h-4 w-4 text-primary" />
+              {`${data?.profile?.nikname}[${data?.profile?.lvl}]`}
+            </Link>
+          )}
+
           <div className="flex items-center gap-1">
             <Backpack className="h-4 w-4 text-red-500" />
           </div>

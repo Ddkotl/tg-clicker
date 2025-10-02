@@ -58,6 +58,7 @@ export const en_lang = {
     development: "Development",
     equipment: "Equipment",
     friends: "Friends",
+    statistics: "Statistics",
     questionnaire: "Questionnaire",
     description: "Description",
     avatars: "Avatars",

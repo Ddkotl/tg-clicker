@@ -1,17 +1,8 @@
-/*
-  Warnings:
-
-  - You are about to drop the `User` table. If the table is not empty, all the data it contains will be lost.
-
-*/
 -- CreateEnum
 CREATE TYPE "public"."Fraktion" AS ENUM ('ADEPT', 'NOVICE');
 
 -- CreateEnum
 CREATE TYPE "public"."Gender" AS ENUM ('MALE', 'FEMALE');
-
--- DropTable
-DROP TABLE "public"."User";
 
 -- CreateTable
 CREATE TABLE "public"."users" (
@@ -33,12 +24,14 @@ CREATE TABLE "public"."users" (
 
 -- CreateTable
 CREATE TABLE "public"."Profile" (
+    "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "fraktion" "public"."Fraktion",
     "nikname" TEXT,
     "gender" "public"."Gender",
     "color_theme" TEXT,
     "avatar_url" TEXT,
+    "player_motto" TEXT,
     "lvl" INTEGER NOT NULL DEFAULT 1,
     "exp" INTEGER NOT NULL DEFAULT 0,
     "mana" INTEGER NOT NULL DEFAULT 100,
@@ -47,15 +40,41 @@ CREATE TABLE "public"."Profile" (
     "fight" INTEGER NOT NULL DEFAULT 30,
     "last_fight_time" TIMESTAMP(3),
     "glory" INTEGER NOT NULL DEFAULT 0,
+    "power" INTEGER NOT NULL DEFAULT 1,
+    "protection" INTEGER NOT NULL DEFAULT 1,
+    "speed" INTEGER NOT NULL DEFAULT 1,
+    "skill" INTEGER NOT NULL DEFAULT 1,
+    "qi" INTEGER NOT NULL DEFAULT 1,
+    "current_hitpoint" INTEGER NOT NULL DEFAULT 100,
+    "max_hitpoint" INTEGER NOT NULL DEFAULT 100,
 
-    CONSTRAINT "Profile_pkey" PRIMARY KEY ("userId")
+    CONSTRAINT "Profile_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."UserStatistic" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "wins" INTEGER NOT NULL DEFAULT 0,
+    "loses" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "UserStatistic_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_telegram_id_key" ON "public"."users"("telegram_id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Profile_userId_key" ON "public"."Profile"("userId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Profile_nikname_key" ON "public"."Profile"("nikname");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "UserStatistic_userId_key" ON "public"."UserStatistic"("userId");
 
 -- AddForeignKey
 ALTER TABLE "public"."Profile" ADD CONSTRAINT "Profile_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."UserStatistic" ADD CONSTRAINT "UserStatistic_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
