@@ -42,8 +42,8 @@ const NavigationBar = () => {
                 href={tab.url}
                 className={`flex flex-col items-center`}
               >
-                <tab.Icon className={`w-10 h-10 text-foreground/60`} />
-                <span className={`text-xs font-medium text-foreground/60`}>
+                <tab.Icon className={`w-10 h-10 text-primary/70`} />
+                <span className={`text-xs font-medium text-primary/70`}>
                   {tab.label}
                 </span>
               </Link>
