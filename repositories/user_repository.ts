@@ -62,10 +62,10 @@ export async function getUserByTgId(telegram_id: string) {
 }
 export type getUserByTgIdType = Awaited<ReturnType<typeof getUserByTgId>>;
 
-export async function getUserProfileByTgId(telegram_id: string) {
+export async function getUserProfileByUserId(userId: string) {
   try {
     const user = await dataBase.user.findUnique({
-      where: { telegram_id: telegram_id },
+      where: { id: userId },
       select: {
         profile: true,
       },
@@ -76,8 +76,8 @@ export async function getUserProfileByTgId(telegram_id: string) {
     return null;
   }
 }
-export type getUserProfileByTgIdType = Awaited<
-  ReturnType<typeof getUserProfileByTgId>
+export type getUserProfileByUserIdType = Awaited<
+  ReturnType<typeof getUserProfileByUserId>
 >;
 
 export async function getUserCountsInFractions() {

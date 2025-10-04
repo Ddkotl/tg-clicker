@@ -122,7 +122,7 @@ export function Registration() {
 
   return (
     <div className="flex justify-center items-center h-screen ">
-      <Card className="w-[400px] shadow-lg">
+      <Card className=" shadow-lg">
         <CardHeader>
           <CardTitle className="text-center">
             {t("registration.title")}

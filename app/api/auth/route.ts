@@ -36,7 +36,10 @@ export async function POST(request: NextRequest) {
         { status: 401 },
       );
     }
-    const user = { telegram_id: validationResult.user.id };
+    const user = {
+      telegram_id: updated_user.telegram_id,
+      userId: updated_user.id,
+    };
 
     const expiresData = new Date(Date.now() + SESSION_DURATION);
     const expiresString = new Date(Date.now() + SESSION_DURATION).toISOString();

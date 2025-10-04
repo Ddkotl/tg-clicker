@@ -1,7 +1,6 @@
 "use client";
 
 import { generated_fight_limit } from "@/config/energy_lvl";
-import { getUserProfileByTgIdType } from "@/repositories/user_repository";
 import { useQuery } from "@tanstack/react-query";
 import {
   User,
@@ -15,9 +14,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Skeleton } from "./ui/skeleton";
+import { Button } from "./ui/button";
+import { cn } from "@/lib/utils";
+import { getUserProfileByUserIdType } from "@/repositories/user_repository";
 
 export function HeaderStats() {
-  const { data, isLoading } = useQuery<getUserProfileByTgIdType>({
+  const { data, isFetching } = useQuery<getUserProfileByUserIdType>({
     queryKey: ["profile"],
     queryFn: async () => {
       const res = await fetch("api/user/profile");
@@ -32,21 +34,18 @@ export function HeaderStats() {
     <div className="flex justify-center w-full">
       <div className="fixed top-0 z-50 bg-background/90 border-b border-foreground/60 w-full max-w-md">
         <div className="flex flex-wrap gap-3  items-center  p-2">
-          {isLoading ? (
-            <div className="flex items-center gap-1 font-semibold">
-              <User className="h-4 w-4 text-primary" />
-              <Skeleton className="w-14 h-3" />[<Skeleton className="w-5 h-3" />
-              ]
-            </div>
-          ) : (
+          {
             <Link
-              href={`game/profile/${data?.profile?.userId}`}
-              className="flex items-center gap-1 font-semibold"
+              href={`/game/profile/${data?.profile?.userId}`}
+              className={cn(
+                "flex items-center gap-1 font-semibold",
+                `${isFetching && "opacity-50 pointer-events-none"}`,
+              )}
             >
               <User className="h-4 w-4 text-primary" />
               {`${data?.profile?.nikname}[${data?.profile?.lvl}]`}
             </Link>
-          )}
+          }
 
           <div className="flex items-center gap-1">
             <Backpack className="h-4 w-4 text-red-500" />

@@ -8,6 +8,7 @@ export const SESSION_DURATION = 60 * 60 * 1000; // 1 hour
 
 export interface AppJWTPayload extends JWTPayload {
   user: {
+    userId: string;
     telegram_id: string;
   };
   expires: string;

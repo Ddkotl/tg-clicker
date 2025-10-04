@@ -1,9 +1,9 @@
 import { useQueryClient } from "@tanstack/react-query";
 
-export const getProfileQuery = () => ({
-  queryKey: ["profile"],
-  queryFn: async () => {
-    const res = await fetch("api/user/profile");
+export const getProfileQuery = (userId: string) => ({
+  queryKey: ["profile", userId],
+  queryFn: async ({ signal }: { signal: AbortSignal }) => {
+    const res = await fetch(`api/user/profile?userId=${userId}`, { signal });
     if (!res.ok) {
       throw new Error("Failed to fetch user");
     }
@@ -14,8 +14,8 @@ export const getProfileQuery = () => ({
 export const useInvalidateProfile = () => {
   const queryClient = useQueryClient();
 
-  return () =>
+  return (userId: string) =>
     queryClient.invalidateQueries({
-      queryKey: ["profile"],
+      queryKey: ["profile", userId],
     });
 };
