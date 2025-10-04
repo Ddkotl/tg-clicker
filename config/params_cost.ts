@@ -4,7 +4,7 @@ type ParamConfig = {
   exp: number;
 };
 
-const PARAMS: Record<string, ParamConfig> = {
+export const PARAMS: Record<string, ParamConfig> = {
   power: { base: 10, factor: 1.8, exp: 2 },
   protection: { base: 10, factor: 1.7, exp: 1.4 },
   speed: { base: 10, factor: 1.5, exp: 1.2 },

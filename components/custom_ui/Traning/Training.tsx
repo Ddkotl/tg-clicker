@@ -1,28 +1,48 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getProfileQuery } from "@/querys/profile_queries";
 import { getUserProfileByUserIdType } from "@/repositories/user_repository";
 import { TrainingParam } from "./TrainingParam";
+import { updateUserParamType } from "@/repositories/update_user_param";
+import { PARAMS } from "@/config/params_cost";
+import { Profile } from "@/_generated/prisma";
 
 export function Training() {
+  const queryClient = useQueryClient();
   const params = useParams<{ userId: string }>();
-  const { data, isLoading } = useQuery<getUserProfileByUserIdType>({
+  const { data: profile, isLoading } = useQuery<getUserProfileByUserIdType>({
     ...getProfileQuery(params.userId),
   });
 
-  if (isLoading) return <p>Загрузка...</p>;
-  if (!data?.profile) return <p>Профиль не найден</p>;
-
-  const profile = data.profile;
+  const mutation = useMutation({
+    mutationFn: async (paramName: string) => {
+      const res = await fetch("/api/user/train", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ paramName }),
+      });
+      if (!res.ok) throw new Error("Не удалось обновить параметр");
+      return res.json();
+    },
+    onSuccess: (data: updateUserParamType) => {
+      queryClient.setQueryData(["profile", params.userId], data);
+    },
+  });
 
   const handleUpgrade = (paramName: string) => {
-    console.log(`Улучшить ${paramName}`);
-    // Здесь можно вызвать API для повышения параметра
+    mutation.mutate(paramName);
   };
 
-  const trainingParams = [
+  type ProfileKeys = keyof typeof PARAMS;
+
+  const trainingParams: {
+    name: ProfileKeys;
+    title: string;
+    description: string;
+    icon: string;
+  }[] = [
     {
       name: "power",
       title: "Сила",
@@ -54,7 +74,8 @@ export function Training() {
       icon: "/adept_m.jpg",
     },
   ];
-
+  if (isLoading) return <p>Загрузка...</p>;
+  if (!profile?.profile) return <p>Профиль не найден</p>;
   return (
     <div className="max-w-md space-y-4">
       <h1 className="text-xl font-bold">Тренировка</h1>
@@ -66,9 +87,10 @@ export function Training() {
             title={param.title}
             description={param.description}
             icon={param.icon}
-            value={profile[param.name as keyof typeof profile] as number}
+            value={profile.profile?.[param.name as keyof Profile] as number}
             paramName={param.name}
             onUpgrade={handleUpgrade}
+            hero_mana={profile.profile?.mana as number}
           />
         ))}
       </div>
