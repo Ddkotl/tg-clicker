@@ -1,6 +1,6 @@
-import { HeaderStats } from "@/components/HeaderStats";
-import NavigationBar from "@/components/NavigationBar";
-import { Notifications } from "@/components/Notification";
+import { HeaderStats } from "@/components/custom_ui/HeaderStats";
+import NavigationBar from "@/components/custom_ui/NavigationBar";
+import { Notifications } from "@/components/custom_ui/Notification";
 
 export default function Layout({
   children,

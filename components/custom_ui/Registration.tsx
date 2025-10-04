@@ -2,20 +2,21 @@
 
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getUserProfileByTgIdType } from "@/repositories/user_repository";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
 import Image from "next/image";
 import { Fraktion, Gender, Profile } from "@/_generated/prisma";
 import { toast } from "sonner";
 import { useTranslation } from "@/hooks/use_translation";
-import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { cn } from "@/lib/utils";
 import { Theme, useTheme } from "@/contexts/theme_context";
 import { color_themes } from "@/config/color_thems";
+import { getUserProfileByUserIdType } from "@/repositories/user_repository";
+import { getProfileQuery } from "@/querys/profile_queries";
 interface CheckNicknameResponse {
   available: boolean;
 }
@@ -30,13 +31,8 @@ export function Registration() {
   const [isChecking, setIsChecking] = useState(false);
   const { theme, setTheme } = useTheme();
   const router = useRouter();
-  const { data: profile, isLoading } = useQuery<getUserProfileByTgIdType>({
-    queryKey: ["profile"],
-    queryFn: async () => {
-      const res = await fetch("/api/user/profile", { cache: "no-store" });
-      if (!res.ok) throw new Error("Не удалось загрузить пользователя");
-      return res.json();
-    },
+  const { data: profile, isLoading } = useQuery<getUserProfileByUserIdType>({
+    ...getProfileQuery(),
   });
 
   useEffect(() => {
@@ -114,21 +110,15 @@ export function Registration() {
     );
   }
 
-  if (!profile) {
-    return (
-      <div className="text-center p-8 text-red-500">{t("auth_error")}</div>
-    );
-  }
-
   return (
     <div className="flex justify-center items-center h-screen ">
-      <Card className=" shadow-lg">
-        <CardHeader>
+      <Card className=" shadow-lg px-2">
+        <CardHeader className="px-1">
           <CardTitle className="text-center">
             {t("registration.title")}
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-1">
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             {/* Никнейм */}
             <div className="flex flex-col gap-2">
@@ -201,7 +191,7 @@ export function Registration() {
                   document.documentElement.classList.add(`theme-${value}`);
                   setTheme(value as Theme);
                 }}
-                className="flex gap-6  justify-between"
+                className="flex gap-4 justify-between"
               >
                 {color_themes.map((theme) => (
                   <div key={theme.value} className="flex items-center gap-2">

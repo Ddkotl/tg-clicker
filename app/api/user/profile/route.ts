@@ -23,7 +23,6 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const requestedUserId = searchParams.get("userId");
 
-  // Если запросили конкретного юзера
   if (requestedUserId && session) {
     const profile = await getUserProfileByUserId(requestedUserId);
     if (profile) {

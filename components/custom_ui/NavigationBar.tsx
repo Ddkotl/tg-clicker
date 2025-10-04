@@ -1,13 +1,19 @@
 "use client";
 
-import Home from "./icons/Home";
-import Leaderboard from "./icons/Leaderboard";
-import Friends from "./icons/Friends";
-import Earn from "./icons/Earn";
+import Home from "../icons/Home";
+import Leaderboard from "../icons/Leaderboard";
+import Friends from "../icons/Friends";
+import Earn from "../icons/Earn";
 import Link from "next/link";
-import Settings from "./icons/Settings";
+import Settings from "../icons/Settings";
+import { useQuery } from "@tanstack/react-query";
+import { getSessionQuery } from "@/querys/session_queries";
+import { SessionResponse } from "@/app/api/session/route";
 
 const NavigationBar = () => {
+  const { data: session, isFetching } = useQuery<SessionResponse>({
+    ...getSessionQuery(),
+  });
   const tabs: {
     id: string;
     url: string;
@@ -15,8 +21,18 @@ const NavigationBar = () => {
     Icon: React.FC<{ className?: string }>;
   }[] = [
     { id: "home", url: "/game", label: "Главная", Icon: Home },
-    { id: "friends", url: "profile/friends", label: "Почта", Icon: Friends },
-    { id: "tasks", url: "game/tasks", label: "Задания", Icon: Earn },
+    {
+      id: "friends",
+      url: `profile/friends/${session?.isAuthenticated ? session.session.user.userId : ""}`,
+      label: "Почта",
+      Icon: Friends,
+    },
+    {
+      id: "tasks",
+      url: `game/tasks/${session?.isAuthenticated ? session.session.user.userId : ""}`,
+      label: "Задания",
+      Icon: Earn,
+    },
     {
       id: "leaderboard",
       url: "game/leaderboard",

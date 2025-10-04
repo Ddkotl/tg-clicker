@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { X, Bell } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
-import { Button } from "./ui/button";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { Button } from "../ui/button";
 import Link from "next/link";
 
 export function Notifications() {

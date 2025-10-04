@@ -3,7 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 export const getUserCountsInFractionsQuery = () => ({
   queryKey: ["getUserCountsInFractions"],
   queryFn: async ({ signal }: { signal: AbortSignal }) => {
-    const res = await fetch("api/statistics/user_count_in_fraktion", {
+    const res = await fetch("/api/statistics/user_count_in_fraktion", {
       signal,
     });
     if (!res.ok) {

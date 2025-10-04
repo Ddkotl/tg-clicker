@@ -1,4 +1,4 @@
-import { Registration } from "@/components/Registration";
+import { Registration } from "@/components/custom_ui/Registration";
 
 export default function RegistrationPage() {
   return (

@@ -4,18 +4,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import {
   getUserCountsInFractionsType,
-  getUserProfileByTgIdType,
+  getUserProfileByUserIdType,
 } from "@/repositories/user_repository";
 import { getProfileQuery } from "@/querys/profile_queries";
-import { Skeleton } from "./ui/skeleton";
+import { Skeleton } from "../ui/skeleton";
 import { useTranslation } from "@/hooks/use_translation";
 import Link from "next/link";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { getUserCountsInFractionsQuery } from "@/querys/user_in_fraktion_count_querys";
 
 export default function Home() {
   const { t } = useTranslation();
-  const { data, isLoading } = useQuery<getUserProfileByTgIdType>({
+  const { data, isLoading } = useQuery<getUserProfileByUserIdType>({
     ...getProfileQuery(),
   });
   const { data: dataFraktionCounts, isLoading: isLoadingFractionCounts } =
@@ -36,7 +36,7 @@ export default function Home() {
             {t("home.welcome_wanderer")}
             <b className="text-primary">
               {isLoading ? (
-                <Skeleton className="mx-2 h-3 w-8 bg-primary/40 inline-block align-middle" />
+                <Skeleton className="mx-2 h-3 w-8  inline-block align-middle" />
               ) : (
                 ` ${data?.profile?.nikname} !`
               )}
@@ -45,7 +45,7 @@ export default function Home() {
             <span className="text-primary font-semibold">
               {t("fraction.adepts")} –{" "}
               {isLoadingFractionCounts ? (
-                <Skeleton className="mx-2 h-3 w-8 bg-primary/40 inline-block align-middle" />
+                <Skeleton className="mx-2 h-3 w-8  inline-block align-middle" />
               ) : (
                 ` ${dataFraktionCounts?.adepts} ,`
               )}
@@ -53,7 +53,7 @@ export default function Home() {
             <span className="text-primary font-semibold">
               {t("fraction.novices")} –{" "}
               {isLoadingFractionCounts ? (
-                <Skeleton className="mx-2 h-3 w-8 bg-primary/40 inline-block align-middle" />
+                <Skeleton className="mx-2 h-3 w-8  inline-block align-middle" />
               ) : (
                 ` ${dataFraktionCounts?.novices} .`
               )}

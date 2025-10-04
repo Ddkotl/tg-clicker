@@ -13,28 +13,26 @@ import {
   Swords,
 } from "lucide-react";
 import Link from "next/link";
-import { Skeleton } from "./ui/skeleton";
-import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { getUserProfileByUserIdType } from "@/repositories/user_repository";
+import { getProfileQuery } from "@/querys/profile_queries";
+import { Skeleton } from "../ui/skeleton";
 
 export function HeaderStats() {
-  const { data, isFetching } = useQuery<getUserProfileByUserIdType>({
-    queryKey: ["profile"],
-    queryFn: async () => {
-      const res = await fetch("api/user/profile");
-      if (!res.ok) {
-        throw new Error("Failed to fetch user");
-      }
-      return res.json();
-    },
+  const { data, isFetching, isLoading } = useQuery<getUserProfileByUserIdType>({
+    ...getProfileQuery(),
   });
 
   return (
     <div className="flex justify-center w-full">
       <div className="fixed top-0 z-50 bg-background/90 border-b border-foreground/60 w-full max-w-md">
         <div className="flex flex-wrap gap-3  items-center  p-2">
-          {
+          {isLoading ? (
+            <>
+              <Skeleton className="h-4 w-10 rounded-md" />[
+              <Skeleton className="h-4 w-6 rounded-md" />]
+            </>
+          ) : (
             <Link
               href={`/game/profile/${data?.profile?.userId}`}
               className={cn(
@@ -45,7 +43,7 @@ export function HeaderStats() {
               <User className="h-4 w-4 text-primary" />
               {`${data?.profile?.nikname}[${data?.profile?.lvl}]`}
             </Link>
-          }
+          )}
 
           <div className="flex items-center gap-1">
             <Backpack className="h-4 w-4 text-red-500" />

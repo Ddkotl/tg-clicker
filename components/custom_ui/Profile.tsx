@@ -3,25 +3,20 @@ import { Fraktion } from "@/_generated/prisma";
 import { Progress } from "@/components/ui/progress";
 import { lvl_exp } from "@/config/lvl_exp";
 import { useTranslation } from "@/hooks/use_translation";
-import { getUserProfileByTgIdType } from "@/repositories/user_repository";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { useParams } from "next/navigation";
+import { getUserProfileByUserIdType } from "@/repositories/user_repository";
+import { getProfileQuery } from "@/querys/profile_queries";
 export function Profile() {
   const params = useParams<{ userId: string }>();
   const { t } = useTranslation();
-  const { data: profile, isLoading } = useQuery<getUserProfileByTgIdType>({
-    queryKey: ["profile"],
-    queryFn: async () => {
-      const res = await fetch("/api/user/profile", { cache: "no-store" });
-      if (!res.ok) throw new Error("Не удалось загрузить пользователя");
-      return res.json();
-    },
+  const { data: profile, isLoading } = useQuery<getUserProfileByUserIdType>({
+    ...getProfileQuery(params.userId),
   });
-
-  if (!profile) return <div>No profile data</div>;
+  if (isLoading) return <div>Loading...</div>;
   const isMyProfile = profile?.profile?.userId === params.userId;
   return (
     <div className="max-w-md space-y-4">
