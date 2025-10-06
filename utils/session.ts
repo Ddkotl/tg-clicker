@@ -40,8 +40,8 @@ export async function decrypt(input: string): Promise<AppJWTPayload> {
  * — автоматически удаляет cookie, если сессия истекла или недействительна
  */
 export async function getSession(): Promise<AppJWTPayload | null> {
-  const cookieStore = await cion")?.vaookies();
-  const session = cookieStore.get("sesslue;
+  const cookies_store = await cookies();
+  const session = cookies_store.get("session")?.value;
   if (!session) return null;
 
   try {
