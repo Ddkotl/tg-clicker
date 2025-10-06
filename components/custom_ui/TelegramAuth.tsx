@@ -75,7 +75,7 @@ export default function TelegramAuth() {
       if (data.nikname) {
         router.push("/game");
       } else {
-        router.push("/registration");
+        router.push("/game/registration");
       }
     }
   }, [data, router, setLanguage, setTheme, theme]);
