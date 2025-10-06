@@ -9,63 +9,97 @@ const authSchema = z.object({
   ref: z.string().optional(),
 });
 
+const authResponseSchema = z.object({
+  data: z.object({
+    language_code: z.string().optional(),
+    nikname: z.string().optional(),
+    color_theme: z.string().optional(),
+  }),
+  message: z.string(),
+});
+
+const errorResponseSchema = z.object({
+  data: z.object({}).optional(),
+  message: z.string(),
+});
+export type AuthResponse = z.infer<typeof authResponseSchema>;
+
+export type AuthErrorResponse = z.infer<typeof errorResponseSchema>;
+
 export async function POST(request: NextRequest) {
-  const body = await request.json();
-  const parsedBody = authSchema.safeParse(body);
+  try {
+    const body = await request.json();
+    const parsedBody = authSchema.safeParse(body);
 
-  if (!parsedBody.success) {
-    return NextResponse.json(
-      { message: "Invalid request data", errors: parsedBody.error },
-      { status: 400 },
+    if (!parsedBody.success) {
+      const response = {
+        message: "Invalid request data",
+        data: {},
+      };
+      errorResponseSchema.parse(response);
+      return NextResponse.json(response, { status: 400 });
+    }
+
+    const { initData, ref } = parsedBody.data;
+    const validationResult = validateTelegramWebAppData(initData);
+
+    if (!validationResult.validatedData || !validationResult.user.id) {
+      const response = { message: validationResult.message, data: {} };
+      errorResponseSchema.parse(response);
+      return NextResponse.json(response, { status: 401 });
+    }
+
+    const updated_user = await UpdateOrCreateUser(
+      {
+        ...validationResult.user,
+        telegram_id: validationResult.user.id,
+      },
+      ref,
     );
+
+    if (!updated_user) {
+      const response = { message: "User not created", data: {} };
+      errorResponseSchema.parse(response);
+      return NextResponse.json(response, { status: 401 });
+    }
+
+    const payload: AppJWTPayload = {
+      user: {
+        telegram_id: updated_user.telegram_id,
+        userId: updated_user.id,
+      },
+      exp: Math.floor(Date.now() / 1000) + SESSION_DURATION / 1000,
+    };
+
+    const session = await encrypt(payload);
+
+    const response: AuthResponse = {
+      message: "ok",
+      data: {
+        language_code: updated_user.language_code ?? undefined,
+        nikname: updated_user.profile?.nikname ?? undefined,
+        color_theme: updated_user.profile?.color_theme ?? undefined,
+      },
+    };
+    authResponseSchema.parse(response);
+
+    const res = NextResponse.json(response);
+    res.cookies.set({
+      name: "session",
+      value: session,
+      httpOnly: true,
+      sameSite: "none",
+      secure: true,
+    });
+
+    return res;
+  } catch (error) {
+    console.error("POST /auth error:", error);
+    const response: AuthErrorResponse = {
+      message: "Internal server error",
+      data: {},
+    };
+    errorResponseSchema.parse(response);
+    return NextResponse.json(response, { status: 500 });
   }
-
-  const { initData, ref } = parsedBody.data;
-  const validationResult = validateTelegramWebAppData(initData);
-
-  if (!validationResult.validatedData || !validationResult.user.id) {
-    return NextResponse.json(
-      { message: validationResult.message },
-      { status: 401 },
-    );
-  }
-
-  const updated_user = await UpdateOrCreateUser(
-    {
-      ...validationResult.user,
-      telegram_id: validationResult.user.id,
-    },
-    ref,
-  );
-
-  if (!updated_user) {
-    return NextResponse.json({ message: "User not created" }, { status: 401 });
-  }
-
-  const payload: AppJWTPayload = {
-    user: {
-      telegram_id: updated_user.telegram_id,
-      userId: updated_user.id,
-    },
-    exp: Math.floor(Date.now() / 1000) + SESSION_DURATION / 1000, // JWT exp
-  };
-
-  const session = await encrypt(payload);
-
-  const response = NextResponse.json({
-    message: "Authentication successful",
-    language_code: updated_user.language_code,
-    nikname: updated_user.profile?.nikname,
-    color_theme: updated_user.profile?.color_theme,
-  });
-
-  response.cookies.set({
-    name: "session",
-    value: session,
-    httpOnly: true,
-    sameSite: "none",
-    secure: true,
-  });
-
-  return response;
 }

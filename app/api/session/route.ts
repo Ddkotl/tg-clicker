@@ -1,33 +1,52 @@
-import { AppJWTPayload, getSession } from "@/utils/session";
 import { NextResponse } from "next/server";
+import { getSession, AppJWTPayload } from "@/utils/session";
 import { z } from "zod";
 
-export type SessionResponse =
-  | { isAuthenticated: true; session: AppJWTPayload }
-  | { isAuthenticated: false };
-
-const sessionResponseSchema = z.union([
-  z.object({
-    isAuthenticated: z.literal(true),
-    session: z.object({
-      user: z.object({ telegram_id: z.string() }),
-      expires: z.string(),
+const sessionResponseSchema = z.object({
+  data: z.object({
+    user: z.object({
+      telegram_id: z.string(),
+      userId: z.string(),
     }),
+    exp: z.number(),
   }),
-  z.object({
-    isAuthenticated: z.literal(false),
-  }),
-]);
+  message: z.string(),
+});
+
+const errorResponseSchema = z.object({
+  data: z.object({}).optional(),
+  message: z.string(),
+});
+
+export type SessionResponse = z.infer<typeof sessionResponseSchema>;
+export type SessionErrorResponse = z.infer<typeof errorResponseSchema>;
 
 export async function GET() {
-  const session: AppJWTPayload | null = await getSession();
-  if (session) {
-    const response = { isAuthenticated: true, session: session };
+  try {
+    const session: AppJWTPayload | null = await getSession();
+
+    if (!session) {
+      const response = { data: {}, message: "No active session" };
+      errorResponseSchema.parse(response);
+      return NextResponse.json(response, { status: 401 });
+    }
+
+    const response: SessionResponse = {
+      data: {
+        user: session.user,
+        exp: session.exp ?? 0,
+      },
+      message: "ok",
+    };
     sessionResponseSchema.parse(response);
     return NextResponse.json(response);
-  } else {
-    const response = { isAuthenticated: false };
-    sessionResponseSchema.parse(response);
-    return NextResponse.json(response, { status: 401 });
+  } catch (error) {
+    console.error("GET /session error:", error);
+    const response: SessionErrorResponse = {
+      data: {},
+      message: "Internal server error",
+    };
+    errorResponseSchema.parse(response);
+    return NextResponse.json(response, { status: 500 });
   }
 }

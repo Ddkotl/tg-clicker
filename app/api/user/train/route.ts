@@ -1,28 +1,87 @@
-import { updateUserParam } from "@/repositories/update_user_param";
-import { getSession } from "@/utils/session";
-import { NextResponse } from "next/server";
-import z from "zod";
+import {
+  ParamNameType,
+  updateUserParam,
+} from "@/repositories/update_user_param";
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 
 const trainSchema = z.object({
-  paramName: z.string(),
+  paramName: z.enum(["power", "protection", "speed", "skill", "qi"]),
 });
 
-export async function POST(req: Request) {
-  const session = await getSession();
-  if (session) {
-    const body = await req.json();
-    const parsed = trainSchema.parse(body);
-    const paramName = parsed.paramName;
-    const userId = session.user.userId;
-    if (!["power", "protection", "speed", "skill", "qi"].includes(paramName)) {
-      return NextResponse.json(
-        { message: "Invalid param name" },
-        { status: 400 },
-      );
+const trainResponseSchema = z.object({
+  data: z.object({
+    userId: z.string(),
+    paramName: z.enum(["power", "protection", "speed", "skill", "qi"]),
+    newValue: z.number(),
+  }),
+  message: z.string(),
+});
+
+const errorResponseSchema = z.object({
+  data: z.object({}).optional(),
+  message: z.string(),
+});
+
+export type TrainResponse = z.infer<typeof trainResponseSchema>;
+export type TrainErrorResponse = z.infer<typeof errorResponseSchema>;
+
+export async function POST(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId");
+
+    if (!userId) {
+      const errorResponse: TrainErrorResponse = {
+        data: {},
+        message: "Missing userId in URL",
+      };
+      errorResponseSchema.parse(errorResponse);
+      return NextResponse.json(errorResponse, { status: 400 });
     }
+
+    const body = await req.json();
+    const parsed = trainSchema.safeParse(body);
+
+    if (!parsed.success) {
+      const errorResponse: TrainErrorResponse = {
+        data: {},
+        message: "Invalid request body",
+      };
+      errorResponseSchema.parse(errorResponse);
+      return NextResponse.json(errorResponse, { status: 400 });
+    }
+
+    const paramName: ParamNameType = parsed.data.paramName;
     const updated_profile = await updateUserParam(userId, paramName);
-    return NextResponse.json(updated_profile);
-  } else {
-    return NextResponse.json({ isAuthenticated: false }, { status: 401 });
+
+    if (!updated_profile || !updated_profile.profile) {
+      const errorResponse: TrainErrorResponse = {
+        data: {},
+        message: "Failed to update parameter",
+      };
+      errorResponseSchema.parse(errorResponse);
+      return NextResponse.json(errorResponse, { status: 400 });
+    }
+
+    const newValue = updated_profile.profile[paramName];
+
+    const response: TrainResponse = {
+      data: {
+        userId,
+        paramName,
+        newValue,
+      },
+      message: "Parameter updated successfully",
+    };
+    trainResponseSchema.parse(response);
+    return NextResponse.json(response);
+  } catch (error) {
+    console.error("POST /train error:", error);
+    const errorResponse: TrainErrorResponse = {
+      data: {},
+      message: "Internal server error",
+    };
+    return NextResponse.json(errorResponse, { status: 500 });
   }
 }

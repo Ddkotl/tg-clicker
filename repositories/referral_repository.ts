@@ -18,8 +18,8 @@ export async function getReferrals(userId: string) {
   try {
     return await dataBase.user.findMany({
       where: { referrerId: userId },
-      include: {
-        profile: true,
+      select: {
+        id: true,
       },
     });
   } catch (e) {

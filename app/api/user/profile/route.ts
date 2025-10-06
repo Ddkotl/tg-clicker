@@ -4,43 +4,76 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 const profileResponseSchema = z.object({
-  profile: z.object({
+  data: z.object({
     userId: z.string(),
     nikname: z.string().nullable(),
     fraktion: z.string().nullable(),
     gender: z.string().nullable(),
     color_theme: z.string().nullable(),
   }),
+  message: z.string(),
 });
 
 const unauthenticatedResponseSchema = z.object({
-  isAuthenticated: z.literal(false),
+  data: z.object({}).optional(),
+  message: z.string(),
 });
 
+export type ProfileResponse = z.infer<typeof profileResponseSchema>;
+export type ProfileUnauthenticatedResponse = z.infer<
+  typeof unauthenticatedResponseSchema
+>;
+
 export async function GET(req: NextRequest) {
-  const session: AppJWTPayload | null = await getSession();
+  try {
+    const session: AppJWTPayload | null = await getSession();
+    const { searchParams } = new URL(req.url);
+    const requestedUserId = searchParams.get("userId");
 
-  const { searchParams } = new URL(req.url);
-  const requestedUserId = searchParams.get("userId");
+    let userIdToFetch: string | null = null;
 
-  if (requestedUserId && session) {
-    const profile = await getUserProfileByUserId(requestedUserId);
-    if (profile) {
-      profileResponseSchema.parse(profile);
-      return NextResponse.json(profile);
+    if (requestedUserId) {
+      userIdToFetch = requestedUserId;
+    } else if (session) {
+      userIdToFetch = session.user.userId;
     }
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
-  }
 
-  if (session) {
-    const profile = await getUserProfileByUserId(session.user.userId);
-    if (profile) {
-      profileResponseSchema.parse(profile);
-      return NextResponse.json(profile);
+    if (!userIdToFetch) {
+      const response: ProfileUnauthenticatedResponse = {
+        data: {},
+        message: "User not authenticated",
+      };
+      unauthenticatedResponseSchema.parse(response);
+      return NextResponse.json(response, { status: 401 });
     }
-  }
 
-  const response = { isAuthenticated: false };
-  unauthenticatedResponseSchema.parse(response);
-  return NextResponse.json(response, { status: 401 });
+    const profile = await getUserProfileByUserId(userIdToFetch);
+    if (!profile || !profile.profile) {
+      return NextResponse.json(
+        { data: {}, message: "User not found" },
+        { status: 404 },
+      );
+    }
+
+    const response: ProfileResponse = {
+      data: {
+        userId: profile.profile.userId,
+        nikname: profile.profile.nikname,
+        fraktion: profile.profile.fraktion,
+        gender: profile.profile.gender,
+        color_theme: profile.profile.color_theme,
+      },
+      message: "Profile fetched successfully",
+    };
+
+    profileResponseSchema.parse(response);
+    return NextResponse.json(response);
+  } catch (error) {
+    console.error("GET /user/profile error:", error);
+    const response: ProfileUnauthenticatedResponse = {
+      data: {},
+      message: "Internal server error",
+    };
+    return NextResponse.json(response, { status: 500 });
+  }
 }
