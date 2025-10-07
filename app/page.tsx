@@ -1,4 +1,4 @@
-import TelegramAuth from "@/components/custom_ui/TelegramAuth";
+import { TelegramAuth } from "@/components/custom_ui/TelegramAuth";
 
 export default async function Home() {
   return (

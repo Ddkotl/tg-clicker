@@ -4,6 +4,7 @@ export const ru_lang: Messages = {
   loading: "загрузка",
   reboot: "Перезагрузить",
   auth_error: "Произошла ошибка аутентификации",
+  auth_retry: "Повторить",
   auth_congratulation: "{nikname}, поздравляю с успешной регистрацией.",
   greeting: "Привет, {name}!",
   registration: {

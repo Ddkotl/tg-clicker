@@ -2,6 +2,7 @@ export const en_lang = {
   loading: "loading",
   reboot: "Reboot",
   auth_error: "An authentication error occurred",
+  auth_retry: "Retry",
   auth_congratulation:
     "{nikname}, congratulations on your successful registration.",
   greeting: "Hello, {name}!",

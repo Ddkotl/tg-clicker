@@ -7,21 +7,17 @@ import { useEffect } from "react";
 import { useLanguage } from "@/contexts/lang_context";
 import { useTranslation } from "@/hooks/use_translation";
 import { Theme, useTheme } from "@/contexts/theme_context";
+import { AuthErrorResponse, AuthResponse } from "@/app/api/auth/route";
 
-interface AuthResponse {
-  message: string;
-  language_code?: string;
-  nikname?: string;
-  color_theme?: Theme;
-}
-
-export default function TelegramAuth() {
+export function TelegramAuth() {
   const router = useRouter();
   const { setLanguage } = useLanguage();
   const { theme, setTheme } = useTheme();
   const { t } = useTranslation();
 
-  const { isLoading, isError, data } = useQuery<AuthResponse, Error>({
+  const { isLoading, isError, data } = useQuery<
+    AuthResponse | AuthErrorResponse
+  >({
     queryKey: ["telegramAuth"],
     queryFn: async () => {
       const { default: WebApp } = await import("@twa-dev/sdk");
@@ -35,7 +31,7 @@ export default function TelegramAuth() {
       const res = await fetch("/api/auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ initData, start_param }),
+        body: JSON.stringify({ initData, ref: start_param }),
         cache: "no-store",
       });
 
@@ -54,8 +50,8 @@ export default function TelegramAuth() {
 
   useEffect(() => {
     if (data) {
-      if (data.color_theme) {
-        setTheme(data.color_theme);
+      if (data.data?.color_theme) {
+        setTheme(data.data?.color_theme as Theme);
         document.documentElement.classList.remove(
           "theme-red",
           "theme-purple",
@@ -65,17 +61,17 @@ export default function TelegramAuth() {
         );
         document.documentElement.classList.add(`theme-${theme}`);
       }
-      if (data.language_code) {
-        const lang = data.language_code.startsWith("ru") ? "ru" : "en";
+      if (data.data?.language_code) {
+        const lang = data.data?.language_code.startsWith("ru") ? "ru" : "en";
         setLanguage(lang);
         // setLanguage("en");
       } else {
         setLanguage("en");
       }
-      if (data.nikname) {
+      if (data.data?.nikname) {
         router.push("/game");
       } else {
-        router.push("/game/registration");
+        router.push("/registration");
       }
     }
   }, [data, router, setLanguage, setTheme, theme]);
@@ -94,7 +90,7 @@ export default function TelegramAuth() {
           onClick={() => window.location.reload()}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
-          {t("auth_error")}
+          {t("auth_retry")}
         </button>
       </div>
     );

@@ -111,8 +111,8 @@ export function Registration() {
   }
 
   return (
-    <div className="flex justify-center items-center h-screen ">
-      <Card className=" shadow-lg px-2">
+    <div className="flex justify-center items-center  w-11/12  ">
+      <Card className="py-4 shadow-lg px-2 w-full  max-w-md">
         <CardHeader className="px-1">
           <CardTitle className="text-center">
             {t("registration.title")}
@@ -191,10 +191,13 @@ export function Registration() {
                   document.documentElement.classList.add(`theme-${value}`);
                   setTheme(value as Theme);
                 }}
-                className="flex gap-4 justify-between"
+                className="flex gap-2 justify-between"
               >
                 {color_themes.map((theme) => (
-                  <div key={theme.value} className="flex items-center gap-2">
+                  <div
+                    key={theme.value}
+                    className="flex flex-col items-center gap-2"
+                  >
                     <RadioGroupItem
                       value={theme.value}
                       id={theme.value}
@@ -202,9 +205,9 @@ export function Registration() {
                     />
                     <Label
                       htmlFor={theme.value}
-                      className="flex items-center gap-2 cursor-pointer"
+                      className="flex items-center  cursor-pointer"
                     >
-                      <span className={`w-4 h-4  ${theme.color}`}></span>
+                      <span className={`w-10 h-1  ${theme.color}`}></span>
                     </Label>
                   </div>
                 ))}

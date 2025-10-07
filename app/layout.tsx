@@ -33,7 +33,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased dark theme-purple`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased dark theme-purple  `}
       >
         <AppProvider>{children}</AppProvider>
       </body>

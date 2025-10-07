@@ -3,7 +3,6 @@ import { dataBase } from "@/utils/db_connect";
 import { z } from "zod";
 import { Fraktion, Gender } from "@/_generated/prisma";
 
-// Схема запроса
 const updateProfileSchema = z.object({
   userId: z.string(),
   nikname: z.string().min(3, "Nickname must be at least 3 characters long"),

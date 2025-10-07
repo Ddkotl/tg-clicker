@@ -3,6 +3,12 @@ import type { NextRequest } from "next/server";
 import { getSession, updateSession } from "./utils/session";
 
 export async function middleware(request: NextRequest) {
+  if (
+    // request.nextUrl.pathname === "/api/test" ||
+    request.nextUrl.pathname === "/api/auth"
+  ) {
+    return NextResponse.next();
+  }
   const session = await getSession();
   if (!session) {
     return NextResponse.redirect(new URL("/", request.url));
@@ -12,5 +18,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/game/:path*", "/api/:path*"],
+  matcher: ["/registration", "/game/:path*", "/api/:path*"],
 };

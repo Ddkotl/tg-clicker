@@ -3,6 +3,7 @@ import { validateTelegramWebAppData } from "@/utils/telegramAuth";
 import { AppJWTPayload, encrypt, SESSION_DURATION } from "@/utils/session";
 import { UpdateOrCreateUser } from "@/repositories/user_repository";
 import { z } from "zod";
+console.log("✅ /api/auth route file loaded");
 
 const authSchema = z.object({
   initData: z.string(),
@@ -30,7 +31,6 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const parsedBody = authSchema.safeParse(body);
-
     if (!parsedBody.success) {
       const response = {
         message: "Invalid request data",
@@ -39,10 +39,8 @@ export async function POST(request: NextRequest) {
       errorResponseSchema.parse(response);
       return NextResponse.json(response, { status: 400 });
     }
-
     const { initData, ref } = parsedBody.data;
     const validationResult = validateTelegramWebAppData(initData);
-
     if (!validationResult.validatedData || !validationResult.user.id) {
       const response = { message: validationResult.message, data: {} };
       errorResponseSchema.parse(response);
