@@ -1,5 +1,4 @@
 import { getUserCountsInFractions } from "@/repositories/user_repository";
-import { AppJWTPayload, getSession } from "@/utils/session";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -16,7 +15,6 @@ const errorResponseSchema = z.object({
   message: z.string(),
 });
 
-// Типы
 export type FractionsResponse = z.infer<typeof fractionsResponseSchema>;
 export type FractionsErrorResponse = z.infer<typeof errorResponseSchema>;
 

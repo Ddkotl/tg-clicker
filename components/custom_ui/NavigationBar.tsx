@@ -8,10 +8,12 @@ import Link from "next/link";
 import Settings from "../icons/Settings";
 import { useQuery } from "@tanstack/react-query";
 import { getSessionQuery } from "@/querys/session_queries";
-import { SessionResponse } from "@/app/api/session/route";
+import { SessionErrorResponse, SessionResponse } from "@/app/api/session/route";
 
 const NavigationBar = () => {
-  const { data: session, isFetching } = useQuery<SessionResponse>({
+  const { data: session, isFetching } = useQuery<
+    SessionResponse | SessionErrorResponse
+  >({
     ...getSessionQuery(),
   });
   const tabs: {
@@ -23,13 +25,13 @@ const NavigationBar = () => {
     { id: "home", url: "/game", label: "Главная", Icon: Home },
     {
       id: "friends",
-      url: `profile/friends/${session?.isAuthenticated ? session.session.user.userId : ""}`,
+      url: `profile/friends/${session?.data?.user ? session.data.user.userId : ""}`,
       label: "Почта",
       Icon: Friends,
     },
     {
       id: "tasks",
-      url: `game/tasks/${session?.isAuthenticated ? session.session.user.userId : ""}`,
+      url: `game/tasks/${session?.data?.user ? session.data.user.userId : ""}`,
       label: "Задания",
       Icon: Earn,
     },
@@ -56,7 +58,7 @@ const NavigationBar = () => {
               <Link
                 key={tab.id}
                 href={tab.url}
-                className={`flex flex-col items-center`}
+                className={`flex flex-col items-center ${isFetching ? "pointer-events-none" : ""}`}
               >
                 <tab.Icon className={`w-10 h-10 text-primary/70`} />
                 <span className={`text-xs font-medium text-primary/70`}>

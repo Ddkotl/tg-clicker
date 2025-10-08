@@ -2,24 +2,37 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
-import {
-  getUserCountsInFractionsType,
-  getUserProfileByUserIdType,
-} from "@/repositories/user_repository";
+import { getUserCountsInFractionsType } from "@/repositories/user_repository";
 import { getProfileQuery } from "@/querys/profile_queries";
 import { Skeleton } from "../ui/skeleton";
 import { useTranslation } from "@/hooks/use_translation";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { getUserCountsInFractionsQuery } from "@/querys/user_in_fraktion_count_querys";
+import { SessionErrorResponse, SessionResponse } from "@/app/api/session/route";
+import { getSessionQuery } from "@/querys/session_queries";
+import {
+  ProfileErrorResponse,
+  ProfileResponse,
+} from "@/app/api/user/profile/route";
+import {
+  FractionsErrorResponse,
+  FractionsResponse,
+} from "@/app/api/statistics/user_count_in_fraktion/route";
 
 export default function Home() {
   const { t } = useTranslation();
-  const { data, isLoading } = useQuery<getUserProfileByUserIdType>({
-    ...getProfileQuery(),
+  const { data: session } = useQuery<SessionResponse | SessionErrorResponse>({
+    ...getSessionQuery(),
+  });
+  const { data: profile, isLoading: isLoadingProfile } = useQuery<
+    ProfileResponse | ProfileErrorResponse
+  >({
+    ...getProfileQuery(session?.data?.user.userId ?? ""),
+    enabled: !!session?.data?.user.userId,
   });
   const { data: dataFraktionCounts, isLoading: isLoadingFractionCounts } =
-    useQuery<getUserCountsInFractionsType>({
+    useQuery<FractionsResponse | FractionsErrorResponse>({
       ...getUserCountsInFractionsQuery(),
     });
   return (
@@ -35,10 +48,10 @@ export default function Home() {
             <b>{t("home.mentor")}</b>
             {t("home.welcome_wanderer")}
             <b className="text-primary">
-              {isLoading ? (
+              {isLoadingProfile ? (
                 <Skeleton className="mx-2 h-3 w-8  inline-block align-middle" />
               ) : (
-                ` ${data?.profile?.nikname} !`
+                ` ${profile?.data?.nikname} !`
               )}
             </b>
             {t("home.balance_of_pover")}
@@ -47,7 +60,7 @@ export default function Home() {
               {isLoadingFractionCounts ? (
                 <Skeleton className="mx-2 h-3 w-8  inline-block align-middle" />
               ) : (
-                ` ${dataFraktionCounts?.adepts} ,`
+                ` ${dataFraktionCounts?.data?.adepts} ,`
               )}
             </span>
             <span className="text-primary font-semibold">
@@ -55,7 +68,7 @@ export default function Home() {
               {isLoadingFractionCounts ? (
                 <Skeleton className="mx-2 h-3 w-8  inline-block align-middle" />
               ) : (
-                ` ${dataFraktionCounts?.novices} .`
+                ` ${dataFraktionCounts?.data?.novices} .`
               )}
             </span>
             {/* {!isLoadingFractionCounts && dataFraktionCounts !== undefined && (
