@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 
-export const getProfileQuery = (userId?: string) => ({
+export const getProfileQuery = (userId: string) => ({
   queryKey: ["profile", userId],
   queryFn: async ({ signal }: { signal: AbortSignal }) => {
     const res = await fetch(

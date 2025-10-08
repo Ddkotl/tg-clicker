@@ -53,7 +53,7 @@ export async function GET(req: NextRequest) {
     nicknameResponseSchema.parse(response);
     return NextResponse.json(response);
   } catch (error) {
-    console.error("GET /user/check-nickname error:", error);
+    console.error("GET /user/check/nickname error:", error);
 
     const errorResponse: NicknameErrorResponse = {
       data: {},

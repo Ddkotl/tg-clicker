@@ -8,18 +8,28 @@ import { Button } from "@/components/ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import Image from "next/image";
-import { Fraktion, Gender, Profile } from "@/_generated/prisma";
+import { Fraktion, Gender } from "@/_generated/prisma";
 import { toast } from "sonner";
 import { useTranslation } from "@/hooks/use_translation";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { cn } from "@/lib/utils";
 import { Theme, useTheme } from "@/contexts/theme_context";
 import { color_themes } from "@/config/color_thems";
-import { getUserProfileByUserIdType } from "@/repositories/user_repository";
 import { getProfileQuery } from "@/querys/profile_queries";
-interface CheckNicknameResponse {
-  available: boolean;
-}
+import { getSessionQuery } from "@/querys/session_queries";
+import {
+  ProfileErrorResponse,
+  ProfileResponse,
+} from "@/app/api/user/profile/route";
+import { SessionErrorResponse, SessionResponse } from "@/app/api/session/route";
+import {
+  UpdateProfileErrorResponse,
+  UpdateProfileResponse,
+} from "@/app/api/user/profile/settings/route";
+import {
+  NicknameErrorResponse,
+  NicknameResponse,
+} from "@/app/api/user/check/nickname/route";
 
 export function Registration() {
   const { t } = useTranslation();
@@ -31,15 +41,21 @@ export function Registration() {
   const [isChecking, setIsChecking] = useState(false);
   const { theme, setTheme } = useTheme();
   const router = useRouter();
-  const { data: profile, isLoading } = useQuery<getUserProfileByUserIdType>({
-    ...getProfileQuery(),
+  const { data: session } = useQuery<SessionResponse | SessionErrorResponse>({
+    ...getSessionQuery(),
+  });
+  const { data: profile, isLoading } = useQuery<
+    ProfileResponse | ProfileErrorResponse
+  >({
+    ...getProfileQuery(session?.data?.user.userId || ""),
+    enabled: !!session?.data?.user.userId,
   });
 
   useEffect(() => {
     if (profile) {
-      setNickname(profile.profile?.nikname || "");
-      setFraktion(profile.profile?.fraktion || null);
-      setGender(profile.profile?.gender || "MALE");
+      setNickname(profile?.data?.nikname || "");
+      setFraktion(profile.data?.fraktion || null);
+      setGender(profile.data?.gender || "MALE");
     }
   }, [profile]);
 
@@ -53,10 +69,10 @@ export function Registration() {
       try {
         setIsChecking(true);
         const res = await fetch(
-          `/api/user/check-nickname?nickname=${nickname}`,
+          `/api/user/check/nickname?nickname=${nickname}`,
         );
-        const data: CheckNicknameResponse = await res.json();
-        setIsNicknameValid(data.available);
+        const data: NicknameResponse | NicknameErrorResponse = await res.json();
+        setIsNicknameValid(data.data?.available || false);
       } catch {
         setIsNicknameValid(false);
       } finally {
@@ -67,13 +83,15 @@ export function Registration() {
     return () => clearTimeout(timeout);
   }, [nickname]);
 
-  const mutation = useMutation<Profile>({
+  const mutation = useMutation<
+    UpdateProfileResponse | UpdateProfileErrorResponse
+  >({
     mutationFn: async () => {
-      const res = await fetch("/api/user/update-profile", {
+      const res = await fetch("/api/user/profile/settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: profile?.profile?.userId,
+          userId: profile?.data?.userId,
           nikname: nickname,
           fraktion: fraktion,
           gender: gender,
@@ -92,8 +110,10 @@ export function Registration() {
       return res.json();
     },
     onSuccess: (data) => {
-      toast(t("auth_congratulation", { nikname: `${data.nikname}` }));
-      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      toast(t("auth_congratulation", { nikname: `${data.data?.nikname}` }));
+      queryClient.invalidateQueries({
+        queryKey: ["profile", data.data?.userId],
+      });
       router.push("/game");
     },
   });

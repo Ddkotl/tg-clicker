@@ -9,7 +9,7 @@ export function useTelegramBack() {
   useEffect(() => {
     import("@twa-dev/sdk").then(({ default: WebApp }) => {
       WebApp.disableVerticalSwipes();
-      if (["/", "/game"].includes(pathname)) {
+      if (["/", "/registration", "/game"].includes(pathname)) {
         WebApp.BackButton.hide();
         return;
       }

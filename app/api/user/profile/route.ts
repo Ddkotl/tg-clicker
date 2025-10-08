@@ -1,3 +1,4 @@
+import { Fraktion, Gender } from "@/_generated/prisma";
 import { getUserProfileByUserId } from "@/repositories/user_repository";
 import { AppJWTPayload, getSession } from "@/utils/session";
 import { NextRequest, NextResponse } from "next/server";
@@ -7,22 +8,20 @@ const profileResponseSchema = z.object({
   data: z.object({
     userId: z.string(),
     nikname: z.string().nullable(),
-    fraktion: z.string().nullable(),
-    gender: z.string().nullable(),
+    fraktion: z.enum(Fraktion).nullable(),
+    gender: z.enum(Gender).nullable(),
     color_theme: z.string().nullable(),
   }),
   message: z.string(),
 });
 
-const unauthenticatedResponseSchema = z.object({
+const errorResponseSchema = z.object({
   data: z.object({}).optional(),
   message: z.string(),
 });
 
 export type ProfileResponse = z.infer<typeof profileResponseSchema>;
-export type ProfileUnauthenticatedResponse = z.infer<
-  typeof unauthenticatedResponseSchema
->;
+export type ProfileErrorResponse = z.infer<typeof errorResponseSchema>;
 
 export async function GET(req: NextRequest) {
   try {
@@ -39,11 +38,11 @@ export async function GET(req: NextRequest) {
     }
 
     if (!userIdToFetch) {
-      const response: ProfileUnauthenticatedResponse = {
+      const response: ProfileErrorResponse = {
         data: {},
         message: "User not authenticated",
       };
-      unauthenticatedResponseSchema.parse(response);
+      errorResponseSchema.parse(response);
       return NextResponse.json(response, { status: 401 });
     }
 
@@ -70,7 +69,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(response);
   } catch (error) {
     console.error("GET /user/profile error:", error);
-    const response: ProfileUnauthenticatedResponse = {
+    const response: ProfileErrorResponse = {
       data: {},
       message: "Internal server error",
     };
