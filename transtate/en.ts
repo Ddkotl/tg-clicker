@@ -1,6 +1,9 @@
 export const en_lang = {
   loading: "loading",
+  error: "anithing went wrong",
   reboot: "Reboot",
+  lvl: "Level",
+  price: "Price",
   auth_error: "An authentication error occurred",
   auth_retry: "Retry",
   auth_congratulation:
@@ -55,7 +58,6 @@ export const en_lang = {
   profile: {
     no_motto_adept: "The rock will not shake - and neither will I.",
     no_motto_novice: "The wind of change only helps my path.",
-    lvl: "Level",
     development: "Development",
     equipment: "Equipment",
     friends: "Friends",
@@ -64,5 +66,19 @@ export const en_lang = {
     description: "Description",
     avatars: "Avatars",
     invite: "Invite",
+  },
+  training: {
+    title: "Training",
+    upgrade: "Upgrade",
+    power: "Power",
+    power_desc: "Increases damage",
+    protection: "Protection",
+    protection_desc: "Reduces incoming damage",
+    speed: "Speed",
+    speed_desc: "Increases evasion chance",
+    skill: "Skill",
+    skill_desc: "Increases critical hit chance",
+    qi: "Qi",
+    qi_desc: "Gives superiority in battle",
   },
 };

@@ -8,32 +8,37 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { useParams } from "next/navigation";
-import { getUserProfileByUserIdType } from "@/repositories/user_repository";
 import { getProfileQuery } from "@/querys/profile_queries";
+import {
+  ProfileErrorResponse,
+  ProfileResponse,
+} from "@/app/api/user/profile/route";
 export function Profile() {
   const params = useParams<{ userId: string }>();
   const { t } = useTranslation();
-  const { data: profile, isLoading } = useQuery<getUserProfileByUserIdType>({
+  const { data: profile, isLoading: isLoadingProfile } = useQuery<
+    ProfileResponse | ProfileErrorResponse
+  >({
     ...getProfileQuery(params.userId),
   });
-  if (isLoading) return <div>Loading...</div>;
-  const isMyProfile = profile?.profile?.userId === params.userId;
+  if (isLoadingProfile) return <div>Loading...</div>;
+  const isMyProfile = profile?.data?.userId === params.userId;
   return (
     <div className="max-w-md space-y-4">
       {/* Хедер */}
       <div className="flex  space-x-4">
         <Image
-          src={profile?.profile?.avatar_url as string}
+          src={profile?.data?.avatar_url as string}
           alt="Аватар"
           width={120}
           height={120}
           className="w-30 h-30 rounded-xl shadow-md"
         />
         <div>
-          <h1 className="text-xl font-bold">{profile?.profile?.nikname}</h1>
+          <h1 className="text-xl font-bold">{profile?.data?.nikname}</h1>
           <p className="text-sm text-muted-foreground">
-            {profile?.profile?.player_motto ||
-            profile?.profile?.fraktion === Fraktion.ADEPT
+            {profile?.data?.player_motto ||
+            profile?.data?.fraktion === Fraktion.ADEPT
               ? t("profile.no_motto_adept")
               : t("profile.no_motto_novice")}
           </p>
@@ -43,14 +48,14 @@ export function Profile() {
       {/* Характеристики */}
       <div className="space-y-3">
         <ProfileStat
-          label={t("profile.lvl")}
-          value={profile?.profile?.lvl.toString() as string}
+          label={t("lvl")}
+          value={profile?.data?.lvl.toString() as string}
           progress={
-            ((profile?.profile?.exp as number) /
-              lvl_exp[profile?.profile?.lvl as number]) *
+            ((profile?.data?.exp as number) /
+              lvl_exp[profile?.data?.lvl as number]) *
             100
           }
-          extra={`${profile?.profile?.exp} / ${lvl_exp[(profile?.profile?.lvl as number) + 1]}`}
+          extra={`${profile?.data?.exp} / ${lvl_exp[(profile?.data?.lvl as number) + 1]}`}
         />
       </div>
 
@@ -60,7 +65,7 @@ export function Profile() {
             ? [
                 {
                   label: t("profile.development"),
-                  href: `/game/profile/training/${profile.profile?.userId}`,
+                  href: `/game/profile/training/${profile.data?.userId}`,
                 },
                 {
                   label: `${t("profile.equipment")}`,
@@ -98,7 +103,7 @@ export function Profile() {
               ]
             : []),
         ].map((item) =>
-          isLoading ? (
+          isLoadingProfile ? (
             <Button
               disabled
               key={item.href}

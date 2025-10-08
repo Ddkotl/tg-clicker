@@ -14,6 +14,7 @@ const trainResponseSchema = z.object({
     userId: z.string(),
     paramName: z.enum(["power", "protection", "speed", "skill", "qi"]),
     newValue: z.number(),
+    mana: z.number(),
   }),
   message: z.string(),
 });
@@ -71,6 +72,7 @@ export async function POST(req: NextRequest) {
         userId,
         paramName,
         newValue,
+        mana: updated_profile.profile.mana,
       },
       message: "Parameter updated successfully",
     };

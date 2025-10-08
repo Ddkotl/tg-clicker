@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { calcParamCost } from "@/config/params_cost";
+import { useTranslation } from "@/hooks/use_translation";
 
 type TrainingParamProps = {
   title: string;
@@ -24,6 +25,7 @@ export function TrainingParam({
   hero_mana,
   onUpgrade,
 }: TrainingParamProps) {
+  const { t } = useTranslation();
   const nextCost = calcParamCost(paramName, value);
 
   const progress = Math.min(Math.floor((hero_mana / nextCost) * 100), 100);
@@ -37,13 +39,17 @@ export function TrainingParam({
           height={55}
           className="rounded-md"
         />
-        <div>
+        <div className="flex-1 ">
           <h4 className="font-semibold">{title}</h4>
           <p className="text-sm text-muted-foreground">{description}</p>
 
-          <div className="flex justify-between text-xs">
-            <span>Уровень: {value}</span>
-            <span className="text-muted-foreground">Цена: {nextCost}</span>
+          <div className="flex justify-between text-md">
+            <span className="text-md font-semibold">
+              {t("price")}: {nextCost}
+            </span>
+            <span>
+              {value} {t("lvl").toLowerCase()}
+            </span>
           </div>
         </div>
       </div>
@@ -55,7 +61,7 @@ export function TrainingParam({
         disabled={hero_mana < nextCost}
         onClick={() => onUpgrade(paramName)}
       >
-        Улучшить
+        {t("training.upgrade")}
       </Button>
     </div>
   );

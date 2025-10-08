@@ -2,6 +2,9 @@ import { Messages } from "@/types/translate_type";
 
 export const ru_lang: Messages = {
   loading: "загрузка",
+  error: "что-то пошло не так",
+  lvl: "Уровень",
+  price: "Цена",
   reboot: "Перезагрузить",
   auth_error: "Произошла ошибка аутентификации",
   auth_retry: "Повторить",
@@ -52,7 +55,6 @@ export const ru_lang: Messages = {
   profile: {
     no_motto_adept: "Скала не дрогнет – и я тоже.",
     no_motto_novice: "Ветер перемен лишь помогает моему пути.",
-    lvl: "Уровень",
     development: "Развитие",
     equipment: "Снаряжение",
     friends: "Друзья",
@@ -61,5 +63,19 @@ export const ru_lang: Messages = {
     description: "Описание",
     avatars: "Аватары",
     invite: "Пригласить друга",
+  },
+  training: {
+    title: "Тренировка",
+    upgrade: "Улучшить",
+    power: "Сила",
+    power_desc: "Увеличивает урон",
+    protection: "Защита",
+    protection_desc: "Уменьшает получаемый урон",
+    speed: "Скорость",
+    speed_desc: "Увеличивает шанс уклонения",
+    skill: "Навык",
+    skill_desc: "Увеличивает шанс критического удара",
+    qi: "Ци",
+    qi_desc: "Дает превосходство в бою",
   },
 };
