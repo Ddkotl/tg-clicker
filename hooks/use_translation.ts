@@ -1,7 +1,7 @@
 "use client";
+import { en_lang } from "@/config/transtate/en";
+import { ru_lang } from "@/config/transtate/ru";
 import { useLanguage } from "@/contexts/lang_context";
-import { en_lang } from "@/transtate/en";
-import { ru_lang } from "@/transtate/ru";
 import { TranslationKey } from "@/types/translate_type";
 import { useMemo } from "react";
 

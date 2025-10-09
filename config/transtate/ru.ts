@@ -10,6 +10,8 @@ export const ru_lang: Messages = {
   auth_retry: "Повторить",
   auth_congratulation: "{nikname}, поздравляю с успешной регистрацией.",
   greeting: "Привет, {name}!",
+  mentor: "Наставник:",
+
   registration: {
     title: "Завершите настройку профиля",
     nickname: "Введите имя персонажа",
@@ -37,7 +39,6 @@ export const ru_lang: Messages = {
   },
   home: {
     ready_to_battle: "⚔️ Готов к битве?",
-    mentor: "Наставник:",
     welcome_wanderer: "Добро пожаловать, странник",
     balance_of_pover:
       "Сегодня твой путь приведёт к великим свершениям! Баланс сил:",
@@ -77,5 +78,16 @@ export const ru_lang: Messages = {
     skill_desc: "Увеличивает шанс критического удара",
     qi: "Ци",
     qi_desc: "Дает превосходство в бою",
+  },
+  headquarter: {
+    headquarter_title: "Штаб",
+    headquarter_welcome:
+      "В штабе проходят важные мероприятия, которые могут пополнить запасы вашей маны и золота. Выберите действие, чтобы продолжить.",
+    meditation: "Медитация",
+    meditation_desc:
+      "Медитация — это постижение тайн вселенной. Во время медитации вы находите покой и накапливаете ману.",
+    meditation_revard_promise:
+      "Чем выше уровень вашей характеристики, тем больше маны вы накопите во время медитации. Вы заработаете {mana} маны за один час.",
+    meditation_went_message: "Ты начал медитировать {time}",
   },
 };

@@ -9,6 +9,7 @@ export const en_lang = {
   auth_congratulation:
     "{nikname}, congratulations on your successful registration.",
   greeting: "Hello, {name}!",
+  mentor: "Mentor:",
   registration: {
     title: "Complete profile setup",
     nickname: "Enter the character's name",
@@ -40,7 +41,7 @@ export const en_lang = {
   },
   home: {
     ready_to_battle: "⚔️ Ready for battle?",
-    mentor: "Mentor:",
+
     welcome_wanderer: "Welcome, wanderer",
     balance_of_pover:
       "Today your path will lead to great achievements! Balance of power:",
@@ -80,5 +81,16 @@ export const en_lang = {
     skill_desc: "Increases critical hit chance",
     qi: "Qi",
     qi_desc: "Gives superiority in battle",
+  },
+  headquarter: {
+    headquarter_title: "Headquarters",
+    headquarter_welcome:
+      "The headquarters hosts important events that can replenish your mana and gold reserves. Choose an action to proceed.",
+    meditation: "Meditation",
+    meditation_desc:
+      "Meditation is the unraveling of the universe's mysteries. During meditation, you find peace and accumulate mana.",
+    meditation_revard_promise:
+      "The higher your stat level, the more mana you'll accumulate during meditation. You'll earn {mana} mana in one hour.",
+    meditation_went_message: "You started meditating {time}",
   },
 };

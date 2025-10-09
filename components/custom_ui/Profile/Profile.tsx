@@ -5,14 +5,13 @@ import { lvl_exp } from "@/config/lvl_exp";
 import { useTranslation } from "@/hooks/use_translation";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import Link from "next/link";
-import { Button } from "../ui/button";
 import { useParams } from "next/navigation";
 import { getProfileQuery } from "@/querys/profile_queries";
 import {
   ProfileErrorResponse,
   ProfileResponse,
 } from "@/app/api/user/profile/route";
+import { MainButton } from "../main-button";
 export function Profile() {
   const params = useParams<{ userId: string }>();
   const { t } = useTranslation();
@@ -24,7 +23,7 @@ export function Profile() {
   if (isLoadingProfile) return <div>Loading...</div>;
   const isMyProfile = profile?.data?.userId === params.userId;
   return (
-    <div className="max-w-md space-y-4">
+    <>
       {/* Хедер */}
       <div className="flex  space-x-4">
         <Image
@@ -102,24 +101,15 @@ export function Profile() {
                 },
               ]
             : []),
-        ].map((item) =>
-          isLoadingProfile ? (
-            <Button
-              disabled
-              key={item.href}
-              className="w-full bg-primary/40 shine"
-              size="lg"
-            ></Button>
-          ) : (
-            <Link key={item.href} href={item.href} passHref>
-              <Button asChild className="w-full bg-primary/70" size="lg">
-                <span>{item.label}</span>
-              </Button>
-            </Link>
-          ),
-        )}
+        ].map((item) => (
+          <MainButton
+            key={item.href}
+            item={item}
+            isLoading={isLoadingProfile}
+          />
+        ))}
       </div>
-    </div>
+    </>
   );
 }
 
