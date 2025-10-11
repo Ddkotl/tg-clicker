@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-import { useTranslation } from "@/hooks/use_translation";
+import { useTranslation } from "@/features/translations/use_translation";
 import { MeditationForm } from "./meditation-form";
 
 export function Meditation() {

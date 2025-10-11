@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useTranslation } from "@/hooks/use_translation";
+import { useTranslation } from "@/features/translations/use_translation";
 import {
   goMeditationErrorResponseType,
   goMeditationRequestType,

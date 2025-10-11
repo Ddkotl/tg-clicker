@@ -1,5 +1,5 @@
 import { Fraktion, Gender } from "@/_generated/prisma";
-import { getUserProfileByUserId } from "@/repositories/user_repository";
+import { getUserProfileByUserId } from "@/entities/auth/_repositories/user_repository";
 import { AppJWTPayload, getSession } from "@/shared/utils/session";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";

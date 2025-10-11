@@ -20,7 +20,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { useTranslation } from "@/hooks/use_translation";
+import { useTranslation } from "@/features/translations/use_translation";
 import { getHoursString } from "./getHoursString";
 import { MeditatonFormSchema } from "../_domain/schemas";
 import { useQuery } from "@tanstack/react-query";

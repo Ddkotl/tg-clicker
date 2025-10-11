@@ -1,4 +1,4 @@
-import { getUserCountsInFractions } from "@/repositories/user_repository";
+import { getUserCountsInFractions } from "@/entities/auth/_repositories/user_repository";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 

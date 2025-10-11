@@ -1,52 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
-import { UpdateOrCreateUser } from "@/repositories/user_repository";
-import { z } from "zod";
+import { UpdateOrCreateUser } from "@/entities/auth/_repositories/user_repository";
 import { validateTelegramWebAppData } from "@/shared/utils/telegramAuth";
 import {
   AppJWTPayload,
   encrypt,
   SESSION_DURATION,
 } from "@/shared/utils/session";
-
-const authSchema = z.object({
-  initData: z.string(),
-  ref: z.string().optional(),
-});
-
-const authResponseSchema = z.object({
-  data: z.object({
-    language_code: z.string().optional(),
-    nikname: z.string().optional(),
-    color_theme: z.string().optional(),
-  }),
-  message: z.string(),
-});
-
-const errorResponseSchema = z.object({
-  data: z.object({}).optional(),
-  message: z.string(),
-});
-export type AuthResponse = z.infer<typeof authResponseSchema>;
-
-export type AuthErrorResponse = z.infer<typeof errorResponseSchema>;
+import {
+  AuthErrorResponseType,
+  authRequestSchema,
+  authResponseSchema,
+  AuthResponseType,
+} from "@/entities/auth";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const parsedBody = authSchema.safeParse(body);
+    const parsedBody = authRequestSchema.safeParse(body);
     if (!parsedBody.success) {
       const response = {
         message: "Invalid request data",
         data: {},
       };
-      errorResponseSchema.parse(response);
       return NextResponse.json(response, { status: 400 });
     }
     const { initData, ref } = parsedBody.data;
     const validationResult = validateTelegramWebAppData(initData);
     if (!validationResult.validatedData || !validationResult.user.id) {
       const response = { message: validationResult.message, data: {} };
-      errorResponseSchema.parse(response);
       return NextResponse.json(response, { status: 401 });
     }
 
@@ -60,7 +41,6 @@ export async function POST(request: NextRequest) {
 
     if (!updated_user) {
       const response = { message: "User not created", data: {} };
-      errorResponseSchema.parse(response);
       return NextResponse.json(response, { status: 401 });
     }
 
@@ -74,8 +54,8 @@ export async function POST(request: NextRequest) {
 
     const session = await encrypt(payload);
 
-    const response: AuthResponse = {
-      message: "ok",
+    const response: AuthResponseType = {
+      message: "Successfully auth",
       data: {
         language_code: updated_user.language_code ?? undefined,
         nikname: updated_user.profile?.nikname ?? undefined,
@@ -96,11 +76,10 @@ export async function POST(request: NextRequest) {
     return res;
   } catch (error) {
     console.error("POST /auth error:", error);
-    const response: AuthErrorResponse = {
+    const response: AuthErrorResponseType = {
       message: "Internal server error",
       data: {},
     };
-    errorResponseSchema.parse(response);
     return NextResponse.json(response, { status: 500 });
   }
 }

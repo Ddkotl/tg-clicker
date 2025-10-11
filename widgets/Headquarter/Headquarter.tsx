@@ -1,7 +1,7 @@
 "use client";
 import { MainButton } from "@/components/custom_ui/main-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useTranslation } from "@/hooks/use_translation";
+import { useTranslation } from "@/features/translations/use_translation";
 
 export function Headquarter() {
   const { t } = useTranslation();
