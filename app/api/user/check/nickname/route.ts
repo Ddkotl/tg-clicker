@@ -1,5 +1,5 @@
+import { dataBase } from "@/shared/utils/db_connect";
 import { NextRequest, NextResponse } from "next/server";
-import { dataBase } from "@/utils/db_connect";
 import { z } from "zod";
 
 const querySchema = z.object({

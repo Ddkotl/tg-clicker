@@ -1,6 +1,6 @@
 import { Fraktion, Gender } from "@/_generated/prisma";
 import { getUserProfileByUserId } from "@/repositories/user_repository";
-import { AppJWTPayload, getSession } from "@/utils/session";
+import { AppJWTPayload, getSession } from "@/shared/utils/session";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 const ProfileSchema = z.object({

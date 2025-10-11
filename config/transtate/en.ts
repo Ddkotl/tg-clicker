@@ -10,6 +10,11 @@ export const en_lang = {
     "{nikname}, congratulations on your successful registration.",
   greeting: "Hello, {name}!",
   mentor: "Mentor:",
+  hour: {
+    one: "hour",
+    few: "hours",
+    many: "hours",
+  },
   registration: {
     title: "Complete profile setup",
     nickname: "Enter the character's name",
@@ -91,6 +96,8 @@ export const en_lang = {
       "Meditation is the unraveling of the universe's mysteries. During meditation, you find peace and accumulate mana.",
     meditation_revard_promise:
       "The higher your stat level, the more mana you'll accumulate during meditation. You'll earn {mana} mana in one hour.",
+    meditation_time: "Select meditation time",
     meditation_went_message: "You started meditating {time}",
+    meditate: "Meditate",
   },
 };

@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { validateTelegramWebAppData } from "@/utils/telegramAuth";
-import { AppJWTPayload, encrypt, SESSION_DURATION } from "@/utils/session";
 import { UpdateOrCreateUser } from "@/repositories/user_repository";
 import { z } from "zod";
-console.log("✅ /api/auth route file loaded");
+import { validateTelegramWebAppData } from "@/shared/utils/telegramAuth";
+import {
+  AppJWTPayload,
+  encrypt,
+  SESSION_DURATION,
+} from "@/shared/utils/session";
 
 const authSchema = z.object({
   initData: z.string(),

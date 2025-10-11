@@ -13,7 +13,6 @@ import {
   Swords,
 } from "lucide-react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
 import { getProfileQuery } from "@/querys/profile_queries";
 import { Skeleton } from "../ui/skeleton";
 import { SessionErrorResponse, SessionResponse } from "@/app/api/session/route";
@@ -22,6 +21,7 @@ import {
   ProfileErrorResponse,
   ProfileResponse,
 } from "@/app/api/user/profile/route";
+import { cn } from "@/shared/lib/utils";
 
 export function HeaderStats() {
   const { data: session } = useQuery<SessionResponse | SessionErrorResponse>({

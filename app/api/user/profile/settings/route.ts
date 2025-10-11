@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { dataBase } from "@/utils/db_connect";
 import { z } from "zod";
 import { Fraktion, Gender } from "@/_generated/prisma";
+import { dataBase } from "@/shared/utils/db_connect";
 
 const updateProfileSchema = z.object({
   userId: z.string(),

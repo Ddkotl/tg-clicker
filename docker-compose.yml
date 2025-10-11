@@ -12,10 +12,22 @@ services:
     volumes:
       - postgres_tg_clicker_volume:/var/lib/postgresql/data
     networks:
-      - postgres_tg_clicker_net
+      - tg_clicker_net
+
+  redis:
+    container_name: ${REDIS_CONTAINER}
+    image: redis:7
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_tg_clicker_volume:/data
+    networks:
+      - tg_clicker_net
 
 volumes:
   postgres_tg_clicker_volume:
+  redis_tg_clicker_volume:
 
 networks:
-  postgres_tg_clicker_net:
+  tg_clicker_net:

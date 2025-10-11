@@ -1,0 +1,12 @@
+{
+    "compilerOptions":{
+        "target":"ES2020",
+        "module":"CommonJS",
+        "outDir":"dist/worker",
+        "rootDir":"worker",
+        "strict:true,
+        "esModuleInterop":true,
+        "skipLibCheck":true,
+    },
+    "include":["worker/**/*"]
+}

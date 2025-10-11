@@ -12,7 +12,6 @@ import { Fraktion, Gender } from "@/_generated/prisma";
 import { toast } from "sonner";
 import { useTranslation } from "@/hooks/use_translation";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { cn } from "@/lib/utils";
 import { Theme, useTheme } from "@/contexts/theme_context";
 import { color_themes } from "@/config/color_thems";
 import { getProfileQuery } from "@/querys/profile_queries";
@@ -30,6 +29,7 @@ import {
   NicknameErrorResponse,
   NicknameResponse,
 } from "@/app/api/user/check/nickname/route";
+import { cn } from "@/shared/lib/utils";
 
 export function Registration() {
   const { t } = useTranslation();

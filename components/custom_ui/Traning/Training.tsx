@@ -83,7 +83,7 @@ export function Training() {
       name: "power",
       title: `${t("training.power")}`,
       description: `${t("training.power_desc")}`,
-      icon: "/adept_m.jpg",
+      icon: "/power.png",
     },
     {
       name: "protection",

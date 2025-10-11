@@ -1,4 +1,4 @@
-import { Headquarter } from "@/components/custom_ui/Headquarter/Headquarter";
+import { Headquarter } from "@/widgets/Headquarter/Headquarter";
 
 export default function HeadquartersPage() {
   return <Headquarter />;

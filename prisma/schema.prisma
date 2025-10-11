@@ -25,6 +25,7 @@ model User {
 
   profile        Profile?
   user_statistic UserStatistic?
+  meditation     Meditation?
 
   @@map("users")
 }
@@ -64,8 +65,19 @@ model UserStatistic {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique
 
-  wins  Int @default(0)
-  loses Int @default(0)
+  wins                   Int @default(0)
+  loses                  Int @default(0)
+  meditation_hours_count Int @default(0)
+}
+
+model Meditation {
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique
+
+  on_meditation    Boolean   @default(false)
+  start_meditation DateTime?
+  meditation_hours Int?
 }
 
 enum Fraktion {

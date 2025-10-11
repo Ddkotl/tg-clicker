@@ -1,6 +1,6 @@
 import { Fraktion } from "@/_generated/prisma";
+import { dataBase } from "@/shared/utils/db_connect";
 import { CreateUserType } from "@/types/user_types";
-import { dataBase } from "@/utils/db_connect";
 
 export async function UpdateOrCreateUser(
   user: CreateUserType,
@@ -20,6 +20,8 @@ export async function UpdateOrCreateUser(
         allows_write_to_pm: user.allows_write_to_pm || null,
         referrerId: referer_id || null,
         profile: { create: {} },
+        user_statistic: { create: {} },
+        meditation: { create: {} },
       },
       update: {
         telegram_id: user.telegram_id,

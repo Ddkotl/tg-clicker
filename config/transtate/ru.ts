@@ -11,7 +11,11 @@ export const ru_lang: Messages = {
   auth_congratulation: "{nikname}, поздравляю с успешной регистрацией.",
   greeting: "Привет, {name}!",
   mentor: "Наставник:",
-
+  hour: {
+    one: "час",
+    few: "часа",
+    many: "часов",
+  },
   registration: {
     title: "Завершите настройку профиля",
     nickname: "Введите имя персонажа",
@@ -88,6 +92,8 @@ export const ru_lang: Messages = {
       "Медитация — это постижение тайн вселенной. Во время медитации вы находите покой и накапливаете ману.",
     meditation_revard_promise:
       "Чем выше уровень вашей характеристики, тем больше маны вы накопите во время медитации. Вы заработаете {mana} маны за один час.",
+    meditation_time: "Выбери время медитации",
     meditation_went_message: "Ты начал медитировать {time}",
+    meditate: "Медитировать",
   },
 };

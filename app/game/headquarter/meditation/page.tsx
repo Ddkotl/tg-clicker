@@ -1,4 +1,4 @@
-import { Meditation } from "@/components/custom_ui/Meditation/Meditation";
+import { Meditation } from "@/entities/meditation/_ui/Meditation";
 
 export default function MeditationPage() {
   return <Meditation />;

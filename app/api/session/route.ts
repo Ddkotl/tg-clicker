@@ -1,5 +1,5 @@
+import { AppJWTPayload, getSession } from "@/shared/utils/session";
 import { NextResponse } from "next/server";
-import { getSession, AppJWTPayload } from "@/utils/session";
 import { z } from "zod";
 
 const sessionResponseSchema = z.object({
