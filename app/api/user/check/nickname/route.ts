@@ -5,7 +5,7 @@ import {
   checkNicknameResponseSchema,
   CheckNicknameResponseType,
 } from "@/entities/auth";
-import { dataBase } from "@/shared/utils/db_connect";
+import { dataBase } from "@/shared/connect/db_connect";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {

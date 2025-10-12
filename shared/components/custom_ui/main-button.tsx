@@ -19,13 +19,13 @@ export function MainButton({
       asChild
       size="lg"
       className={cn(
-        "w-full bg-primary/80 flex gap-2 transition-opacity",
+        "w-full bg-primary/60 flex gap-2 transition-opacity",
         isLoading && "pointer-events-none opacity-50",
       )}
     >
       <Link href={href} aria-disabled={isLoading} tabIndex={isLoading ? -1 : 0}>
         {isLoading && <Spinner className="w-4 h-4" />}
-        <span>{label}</span>
+        <span className="text-foreground/80">{label}</span>
       </Link>
     </Button>
   );

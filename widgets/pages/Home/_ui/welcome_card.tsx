@@ -35,7 +35,7 @@ export function WelcomeCard({
 
       <CardContent className="space-y-3 px-2 text-sm leading-relaxed text-card-foreground text-justify">
         <div>
-          <b>{t("mentor")}</b>
+          <b className="text-base text-primary">{t("mentor")}</b>{" "}
           {t("home.welcome_wanderer")}
           <b className="text-primary">
             {isLoadingProfile ? (
