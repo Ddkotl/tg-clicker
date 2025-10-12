@@ -28,7 +28,7 @@ export const ru_lang: Messages = {
   validation: {
     check: "идет проверка",
     min: "минимом {number} символа",
-    nickname_taken: "имя {nickname} уже занято",
+    nickname_taken: "имя {nickname} не доступно",
     nickname_free: "имя {nickname} свободно",
   },
   gender: { gender: "Пол", male: "мужской", female: "женский" },

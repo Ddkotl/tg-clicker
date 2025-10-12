@@ -27,7 +27,7 @@ export const en_lang = {
   validation: {
     check: "a check is in progress",
     min: "minimum {number} characters",
-    nickname_taken: "the nickname {nickname} is already taken",
+    nickname_taken: "the nickname {nickname} is not available",
     nickname_free: "nickname {nickname} is free",
   },
   gender: {

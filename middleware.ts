@@ -4,7 +4,7 @@ import {
   AppJWTPayload,
   getSession,
   updateSession,
-} from "./shared/utils/session";
+} from "./entities/auth/_vm/session";
 
 export async function middleware(request: NextRequest) {
   if (

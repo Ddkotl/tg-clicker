@@ -16,7 +16,7 @@ import Link from "next/link";
 import { getProfileQuery } from "@/querys/profile_queries";
 import { Skeleton } from "../ui/skeleton";
 import { SessionErrorResponse, SessionResponse } from "@/app/api/session/route";
-import { getSessionQuery } from "@/querys/session_queries";
+import { getSessionQuery } from "@/entities/auth/_queries/session_queries";
 import {
   ProfileErrorResponse,
   ProfileResponse,

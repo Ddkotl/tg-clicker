@@ -15,7 +15,8 @@
     "lint:types": "tsc --noEmit",
     "prettier": "prettier -w .",
     "ngrok": "tsx scripts/ngrok.ts",
-    "prepare": "git config core.hooksPath .git-hooks && chmod +x .git-hooks/pre-commit || echo 'Not in a git repo'"
+    "prepare": "git config core.hooksPath .git-hooks && chmod +x .git-hooks/pre-commit",
+    "test": "jest --passWithNoTests"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -43,24 +44,29 @@
     "react-hook-form": "^7.64.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
+    "ts-node": "^10.9.2",
     "zod": "^4.1.12"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@tanstack/eslint-plugin-query": "^5.89.0",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "concurrently": "^9.2.1",
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
+    "jest": "^30.2.0",
     "ngrok": "^5.0.0-beta.2",
     "prettier": "^3.6.2",
     "prisma": "^6.16.2",
     "tailwindcss": "^4",
+    "ts-jest": "^29.4.5",
     "tsx": "^4.20.6",
     "tw-animate-css": "^1.3.8",
-    "typescript": "^5"
+    "typescript": "^5",
+    "whatwg-fetch": "^3.6.20"
   }
 }

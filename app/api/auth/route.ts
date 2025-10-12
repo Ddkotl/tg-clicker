@@ -1,17 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import { UpdateOrCreateUser } from "@/entities/auth/_repositories/user_repository";
-import { validateTelegramWebAppData } from "@/shared/utils/telegramAuth";
+import { validateTelegramWebAppData } from "@/entities/auth/_vm/telegramAuth";
 import {
   AppJWTPayload,
   encrypt,
   SESSION_DURATION,
-} from "@/shared/utils/session";
+} from "@/entities/auth/_vm/session";
 import {
   AuthErrorResponseType,
   authRequestSchema,
   authResponseSchema,
   AuthResponseType,
+  errorResponseSchema,
 } from "@/entities/auth";
+import { UpdateOrCreateUser } from "@/entities/auth/index.server";
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,12 +23,14 @@ export async function POST(request: NextRequest) {
         message: "Invalid request data",
         data: {},
       };
+      errorResponseSchema.parse(response);
       return NextResponse.json(response, { status: 400 });
     }
     const { initData, ref } = parsedBody.data;
     const validationResult = validateTelegramWebAppData(initData);
     if (!validationResult.validatedData || !validationResult.user.id) {
       const response = { message: validationResult.message, data: {} };
+      errorResponseSchema.parse(response);
       return NextResponse.json(response, { status: 401 });
     }
 
@@ -41,6 +44,7 @@ export async function POST(request: NextRequest) {
 
     if (!updated_user) {
       const response = { message: "User not created", data: {} };
+      errorResponseSchema.parse(response);
       return NextResponse.json(response, { status: 401 });
     }
 
@@ -80,6 +84,7 @@ export async function POST(request: NextRequest) {
       message: "Internal server error",
       data: {},
     };
+    errorResponseSchema.parse(response);
     return NextResponse.json(response, { status: 500 });
   }
 }

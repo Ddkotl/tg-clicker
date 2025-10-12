@@ -9,7 +9,7 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { getUserCountsInFractionsQuery } from "@/querys/user_in_fraktion_count_querys";
 import { SessionErrorResponse, SessionResponse } from "@/app/api/session/route";
-import { getSessionQuery } from "@/querys/session_queries";
+import { getSessionQuery } from "@/entities/auth/_queries/session_queries";
 import {
   ProfileErrorResponse,
   ProfileResponse,

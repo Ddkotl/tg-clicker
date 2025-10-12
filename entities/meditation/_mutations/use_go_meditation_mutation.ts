@@ -8,7 +8,7 @@ import {
 } from "../_domain/types";
 import { getHoursString } from "../_ui/getHoursString";
 
-export function useGoMeditation() {
+export function useGoMeditationMutation() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
 

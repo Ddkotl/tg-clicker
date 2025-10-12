@@ -7,7 +7,7 @@ import Earn from "../icons/Earn";
 import Link from "next/link";
 import Settings from "../icons/Settings";
 import { useQuery } from "@tanstack/react-query";
-import { getSessionQuery } from "@/querys/session_queries";
+import { getSessionQuery } from "@/entities/auth/_queries/session_queries";
 import { SessionErrorResponse, SessionResponse } from "@/app/api/session/route";
 
 const NavigationBar = () => {

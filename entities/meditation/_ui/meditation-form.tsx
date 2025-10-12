@@ -24,7 +24,7 @@ import { useTranslation } from "@/features/translations/use_translation";
 import { getHoursString } from "./getHoursString";
 import { MeditatonFormSchema } from "../_domain/schemas";
 import { useQuery } from "@tanstack/react-query";
-import { getSessionQuery } from "@/querys/session_queries";
+import { getSessionQuery } from "@/entities/auth/_queries/session_queries";
 import { useGoMeditation } from "../_mutations/use_go_meditation_mutation";
 import { getMeditationInfoQuery } from "../_queries/get_meditation_info_query";
 import { Loader2 } from "lucide-react";
