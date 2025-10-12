@@ -18,8 +18,10 @@ export function FooterItem({
         disabled && "pointer-events-none opacity-50",
       )}
     >
-      <item.Icon className="w-6 h-6 text-primary/80" />
-      <span className="text-xs font-medium text-primary/70">{item.label}</span>
+      <item.Icon className="w-7 h-7 xs:h-8 xs:w-8 text-foreground/70" />
+      <span className="text-xs xs:text-base font-medium text-foreground/70">
+        {item.label}
+      </span>
     </Link>
   );
 }

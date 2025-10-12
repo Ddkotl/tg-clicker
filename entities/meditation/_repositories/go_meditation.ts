@@ -1,4 +1,4 @@
-import { dataBase } from "@/shared/utils/db_connect";
+import { dataBase } from "@/shared/connect/db_connect";
 
 export async function goMeditation(userId: string, hours: number) {
   try {

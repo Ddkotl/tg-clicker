@@ -1,4 +1,4 @@
-import { dataBase } from "@/shared/utils/db_connect";
+import { dataBase } from "@/shared/connect/db_connect";
 import { Fraktion, Gender } from "@/_generated/prisma";
 
 export async function RegistrationUser({

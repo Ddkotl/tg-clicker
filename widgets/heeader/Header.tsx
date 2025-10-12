@@ -1,6 +1,5 @@
 "use client";
 
-import { generated_fight_limit } from "@/config/energy_lvl";
 import { useQuery } from "@tanstack/react-query";
 import {
   User,
@@ -12,13 +11,10 @@ import {
   Coins,
   Swords,
 } from "lucide-react";
-import {
-  ProfileErrorResponse,
-  ProfileResponse,
-} from "@/app/api/user/profile/route";
 import { useGetSessionQuery } from "@/entities/auth/_queries/session_queries";
 import { HeaderItem } from "./_ui/header_item";
-import { getProfileQuery } from "@/entities/profile";
+import { getProfileQuery, ProfileResponse } from "@/entities/profile";
+import { generated_fight_limit } from "@/shared/game_config/energy_lvl";
 
 export function Header() {
   const { data: session, isLoading: isLoadingSession } = useGetSessionQuery();
@@ -26,7 +22,7 @@ export function Header() {
     data: profile,
     isLoading: isLoadingProfile,
     isFetching: isFetchingProfile,
-  } = useQuery<ProfileResponse | ProfileErrorResponse>({
+  } = useQuery<ProfileResponse>({
     ...getProfileQuery(session?.data?.user.userId ?? ""),
     enabled: !!session?.data?.user.userId,
   });
@@ -38,8 +34,8 @@ export function Header() {
 
   return (
     <div className="flex justify-center w-full">
-      <div className="fixed top-0 z-50 bg-background/90 border-b border-foreground/60 w-full max-w-md">
-        <div className="flex flex-wrap gap-3  items-center  p-2">
+      <div className="fixed top-0 z-50 bg-header-gradient border-b border-foreground/60 w-full max-w-md">
+        <div className="flex flex-wrap gap-2 justify-evenly w-full  items-center  p-2">
           <HeaderItem
             icon={User}
             color="text-primary"

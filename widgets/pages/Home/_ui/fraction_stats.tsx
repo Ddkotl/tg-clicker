@@ -16,6 +16,7 @@ export function FractionStats({
   return (
     <>
       <span className="text-primary font-semibold">
+        {" "}
         {t("fraction.adepts")} –{" "}
         {isLoadingFractionCounts ? (
           <Skeleton className="mx-2 h-3 w-8 inline-block align-middle" />
@@ -24,6 +25,7 @@ export function FractionStats({
         )}
       </span>
       <span className="text-primary font-semibold">
+        {" "}
         {t("fraction.novices")} –{" "}
         {isLoadingFractionCounts ? (
           <Skeleton className="mx-2 h-3 w-8 inline-block align-middle" />

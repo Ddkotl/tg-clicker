@@ -73,6 +73,7 @@ body::-webkit-scrollbar {
 }
 
 @theme inline {
+  --breakpoint-xs: 400px;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -216,4 +217,31 @@ body::-webkit-scrollbar {
   body {
     @apply bg-background text-foreground;
   }
+}
+.bg-radial-primary {
+  background: radial-gradient(
+    circle at center,
+    color-mix(in oklch, var(--primary) 25%, transparent) 20%,
+    color-mix(in oklch, var(--primary) 10%, transparent) 60%,
+    var(--background) 100%
+  );
+}
+
+.bg-header-gradient {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklch, var(--primary) 25%, transparent) 10%,
+    color-mix(in oklch, var(--primary) 10%, transparent) 50%,
+    transparent 100%
+  );
+  backdrop-filter: blur(8px);
+}
+.bg-footer-gradient {
+  background: linear-gradient(
+    to top,
+    color-mix(in oklch, var(--primary) 25%, transparent) 10%,
+    color-mix(in oklch, var(--primary) 10%, transparent) 50%,
+    transparent 100%
+  );
+  backdrop-filter: blur(8px);
 }

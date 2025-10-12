@@ -1,4 +1,4 @@
-import { dataBase } from "@/utils/db_connect";
+import { dataBase } from "@/shared/connect/db_connect";
 
 export async function getReferrer(userId: string) {
   try {

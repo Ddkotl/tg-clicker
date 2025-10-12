@@ -1,5 +1,4 @@
-import { Fraktion } from "@/_generated/prisma";
-import { dataBase } from "@/shared/utils/db_connect";
+import { dataBase } from "@/shared/connect/db_connect";
 
 export async function getUserByTgId(telegram_id: string) {
   try {

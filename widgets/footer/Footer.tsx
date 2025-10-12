@@ -44,7 +44,7 @@ export function Footer() {
   const isDisabled = isLoading || isFetching;
   return (
     <div className="flex justify-center w-full">
-      <div className="fixed bottom-0 bg-background/90 border-t border-foreground/60 w-full max-w-md">
+      <div className="fixed bottom-0 bg-footer-gradient border-t border-foreground/60 w-full max-w-md">
         <div className="flex justify-between px-4 py-2">
           {items.map((item) => {
             return (

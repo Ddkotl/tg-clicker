@@ -1,5 +1,5 @@
-import { calcParamCost } from "@/config/params_cost";
-import { dataBase } from "@/utils/db_connect";
+import { dataBase } from "@/shared/connect/db_connect";
+import { calcParamCost } from "@/shared/game_config/params_cost";
 
 export type ParamNameType = "power" | "protection" | "speed" | "skill" | "qi";
 

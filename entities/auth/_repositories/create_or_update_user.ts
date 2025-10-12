@@ -1,4 +1,4 @@
-import { dataBase } from "@/shared/utils/db_connect";
+import { dataBase } from "@/shared/connect/db_connect";
 import { CreateUserType } from "../_domain/types";
 
 export async function UpdateOrCreateUser(

@@ -21,17 +21,16 @@ export function HeaderItem({
     <Link
       href={href}
       className={cn(
-        "flex justify-center items-center gap-1 transition-colors duration-200 hover:opacity-80 cursor-pointer",
+        "flex justify-center items-center  transition-colors duration-200 hover:opacity-80 cursor-pointer",
         isDisabled && "pointer-events-none opacity-50",
+        value && "gap-1",
       )}
     >
-      <Icon className={cn("h-4 w-4", color)} />
+      <Icon className={cn("h-4 w-4 xs:h-5 xs:w-5", color)} />
       {isLoading && value ? (
         <Skeleton className="h-3 w-8 rounded-md" />
       ) : (
-        <>
-          <span className="text-sm font-medium">{value ?? 0}</span>
-        </>
+        <span className="text-sm xs:text-base  font-medium">{value}</span>
       )}
     </Link>
   );
