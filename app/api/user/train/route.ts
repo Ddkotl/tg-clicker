@@ -1,7 +1,7 @@
 import {
   ParamNameType,
   updateUserParam,
-} from "@/repositories/update_user_param";
+} from "@/entities/user/_repositories/update_user_param";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 

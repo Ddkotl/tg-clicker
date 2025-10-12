@@ -31,29 +31,3 @@ export async function getUserProfileByUserId(userId: string) {
 export type getUserProfileByUserIdType = Awaited<
   ReturnType<typeof getUserProfileByUserId>
 >;
-
-export async function getUserCountsInFractions() {
-  try {
-    const adepts = await dataBase.user.count({
-      where: {
-        profile: {
-          fraktion: Fraktion.ADEPT,
-        },
-      },
-    });
-    const novices = await dataBase.user.count({
-      where: {
-        profile: {
-          fraktion: Fraktion.NOVICE,
-        },
-      },
-    });
-    return { adepts: adepts, novices: novices };
-  } catch (error) {
-    console.error("not found users", error);
-    return {};
-  }
-}
-export type getUserCountsInFractionsType = Awaited<
-  ReturnType<typeof getUserCountsInFractions>
->;

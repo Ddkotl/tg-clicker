@@ -2,33 +2,31 @@
 
 import Link from "next/link";
 import { Button } from "../ui/button";
+import { Spinner } from "../ui/spinner";
+import { cn } from "@/shared/lib/utils";
 
 export function MainButton({
-  item,
-  isLoading,
+  label,
+  href,
+  isLoading = false,
 }: {
-  item: {
-    label: string;
-    href: string;
-  };
+  label: string;
+  href: string;
   isLoading?: boolean;
 }) {
   return (
-    <>
-      {isLoading ? (
-        <Button
-          disabled
-          key={item.href}
-          className="w-full bg-primary/40 shine"
-          size="lg"
-        />
-      ) : (
-        <Link key={item.href} href={item.href}>
-          <Button asChild className="w-full bg-primary/80" size="lg">
-            <span>{item.label}</span>
-          </Button>
-        </Link>
+    <Button
+      asChild
+      size="lg"
+      className={cn(
+        "w-full bg-primary/80 flex gap-2 transition-opacity",
+        isLoading && "pointer-events-none opacity-50",
       )}
-    </>
+    >
+      <Link href={href} aria-disabled={isLoading} tabIndex={isLoading ? -1 : 0}>
+        {isLoading && <Spinner className="w-4 h-4" />}
+        <span>{label}</span>
+      </Link>
+    </Button>
   );
 }
