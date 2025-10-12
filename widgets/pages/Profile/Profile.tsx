@@ -6,7 +6,7 @@ import { useTranslation } from "@/features/translations/use_translation";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { getProfileQuery } from "@/querys/profile_queries";
+import { getProfileQuery } from "@/entities/profile/_queries/profile_query";
 import {
   ProfileErrorResponse,
   ProfileResponse,

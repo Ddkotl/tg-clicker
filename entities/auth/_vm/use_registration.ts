@@ -8,7 +8,7 @@ import {
   ProfileErrorResponse,
   ProfileResponse,
 } from "@/app/api/user/profile/route";
-import { getProfileQuery } from "@/querys/profile_queries";
+import { getProfileQuery } from "@/entities/profile/_queries/profile_query";
 import { useGetSessionQuery } from "@/entities/auth/_queries/session_queries";
 
 export function useRegistration() {

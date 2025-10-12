@@ -1,6 +1,6 @@
-import { HeaderStats } from "@/components/custom_ui/HeaderStats";
-import NavigationBar from "@/components/custom_ui/NavigationBar";
-import { Notifications } from "@/components/custom_ui/Notification";
+import { Notifications } from "@/shared/components/custom_ui/Notification";
+import { Footer } from "@/widgets/footer/Footer";
+import { Header } from "@/widgets/heeader/Header";
 
 export default function Layout({
   children,
@@ -9,12 +9,12 @@ export default function Layout({
 }>) {
   return (
     <main className="min-h-screen bg-background text-foreground flex flex-col items-center ">
-      <HeaderStats />
+      <Header />
       <div className="max-w-md w-full py-22 px-2 flex flex-col gap-2 justify-start">
         <Notifications />
         {children}
       </div>
-      <NavigationBar />
+      <Footer />
     </main>
   );
 }

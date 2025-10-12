@@ -1,4 +1,4 @@
-import { IconProps } from "@/types/icon_type";
+import { IconProps } from "@/shared/lib/types/icon_type";
 
 const ArrowRight: React.FC<IconProps> = ({ size = 24, className = "" }) => {
   const svgSize = `${size}px`;

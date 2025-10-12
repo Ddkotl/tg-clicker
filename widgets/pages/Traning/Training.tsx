@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getProfileQuery } from "@/querys/profile_queries";
+import { getProfileQuery } from "@/entities/profile/_queries/profile_query";
 import { TrainingParam } from "./TrainingParam";
 import { PARAMS } from "@/config/params_cost";
 import { Profile } from "@/_generated/prisma";

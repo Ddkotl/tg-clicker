@@ -9,6 +9,13 @@ export const en_lang = {
   auth_congratulation:
     "{nikname}, congratulations on your successful registration.",
   greeting: "Hello, {name}!",
+  footer: {
+    home: "Home",
+    messages: "Messages",
+    tasks: "Tasks",
+    ratings: "Raitings",
+    settings: "Settings",
+  },
   mentor: "Mentor:",
   hour: {
     one: "hour",

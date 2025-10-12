@@ -2,11 +2,11 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
-import { getProfileQuery } from "@/querys/profile_queries";
-import { Skeleton } from "../ui/skeleton";
+import { getProfileQuery } from "@/entities/profile/_queries/profile_query";
+import { Skeleton } from "../../shared/components/ui/skeleton";
 import { useTranslation } from "@/features/translations/use_translation";
 import Link from "next/link";
-import { Button } from "../ui/button";
+import { Button } from "../../shared/components/ui/button";
 import { getUserCountsInFractionsQuery } from "@/querys/user_in_fraktion_count_querys";
 import { SessionErrorResponse, SessionResponse } from "@/app/api/session/route";
 import { getSessionQuery } from "@/entities/auth/_queries/session_queries";

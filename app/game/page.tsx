@@ -1,4 +1,4 @@
-import Home from "@/components/custom_ui/Home";
+import Home from "@/widgets/pages/Home/Home";
 
 export default function Game() {
   return <Home />;

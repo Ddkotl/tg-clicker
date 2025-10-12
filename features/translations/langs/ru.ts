@@ -10,6 +10,13 @@ export const ru_lang: Messages = {
   auth_retry: "Повторить",
   auth_congratulation: "{nikname}, поздравляю с успешной регистрацией.",
   greeting: "Привет, {name}!",
+  footer: {
+    home: "Главная",
+    messages: "Почта",
+    tasks: "Задания",
+    ratings: "Рейтинги",
+    settings: "Настройки",
+  },
   mentor: "Наставник:",
   hour: {
     one: "час",
