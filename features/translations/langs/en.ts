@@ -102,9 +102,12 @@ export const en_lang = {
     meditation_desc:
       "Meditation is the unraveling of the universe's mysteries. During meditation, you find peace and accumulate mana.",
     meditation_revard_promise:
-      "The higher your stat level, the more mana you'll accumulate during meditation. You'll earn {mana} mana in one hour.",
+      "The higher your stat level, the more mana you'll accumulate during meditation. You'll earn {mana} mana in {time}.",
     meditation_time: "Select meditation time",
     meditation_went_message: "You started meditating {time}",
     meditate: "Meditate",
+    meditation_in_progress: "Meditation in progress",
+    remaining: "remaining",
+    wait: "wait...",
   },
 };

@@ -75,9 +75,10 @@ model Meditation {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique
 
-  on_meditation    Boolean   @default(false)
-  start_meditation DateTime?
-  meditation_hours Int?
+  on_meditation     Boolean   @default(false)
+  start_meditation  DateTime?
+  meditation_hours  Int?
+  meditation_revard Int?
 }
 
 enum Fraktion {

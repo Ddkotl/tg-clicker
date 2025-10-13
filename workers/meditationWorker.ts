@@ -1,5 +1,5 @@
-import { giveMeditationReward } from "@/entitys/meditation/index.server";
-import { redis_connect } from "@/shared/utils/queue";
+import { giveMeditationReward } from "@/entities/meditation/index.server";
+import { redis_connect } from "@/shared/connect/queue";
 import { Worker } from "bullmq";
 
 const meditation_worker = new Worker(

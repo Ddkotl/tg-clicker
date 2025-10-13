@@ -12,7 +12,7 @@ import {
   getMeditationInfo,
   goMeditation,
 } from "@/entities/meditation/index.server";
-import { meditationQueue } from "@/shared/utils/queue";
+import { meditationQueue } from "@/shared/connect/queue";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -47,7 +47,7 @@ export async function GET(req: NextRequest) {
     meditationInfoResponseSchema.parse(response);
     return NextResponse.json(response);
   } catch (error) {
-    console.error("GET /user/profile error:", error);
+    console.error("GET /api/headquarter/meditation error:", error);
     const response: MeditationInfoErrorResponse = {
       data: {},
       message: "Internal server error",
@@ -87,6 +87,7 @@ export async function POST(req: NextRequest) {
         meditation_hours: meditate.meditation_hours,
         on_meditation: meditate.on_meditation,
         start_meditation: meditate.start_meditation,
+        meditation_revard: meditate.meditation_revard,
       },
       message: "goMeditation updated successfully",
     };

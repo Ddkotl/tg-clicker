@@ -11,3 +11,4 @@ export {
   meditationInfoResponseSchema,
   meditationInfoErrorResponseSchema,
 } from "./_domain/schemas";
+export { Meditation } from "./_ui/Meditation";

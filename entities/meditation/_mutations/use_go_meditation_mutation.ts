@@ -2,21 +2,17 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useTranslation } from "@/features/translations/use_translation";
 import {
-  goMeditationErrorResponseType,
   goMeditationRequestType,
   goMeditationResponseType,
 } from "../_domain/types";
 import { getHoursString } from "../_ui/getHoursString";
+import { TranslationKey } from "@/features/translations/translate_type";
 
 export function useGoMeditationMutation() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
 
-  return useMutation<
-    goMeditationResponseType | goMeditationErrorResponseType,
-    Error,
-    goMeditationRequestType
-  >({
+  return useMutation<goMeditationResponseType, Error, goMeditationRequestType>({
     mutationFn: async (data) => {
       const res = await fetch("/api/headquarter/meditation", {
         method: "POST",
@@ -28,14 +24,18 @@ export function useGoMeditationMutation() {
       return result;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["profile"] });
-      queryClient.invalidateQueries({ queryKey: ["meditation"] });
+      queryClient.invalidateQueries({
+        queryKey: ["profile", data.data.userId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["meditation", data.data.userId],
+      });
 
       if (data.data?.meditation_hours) {
-        toast(
+        toast.success(
           t("headquarter.meditation_went_message", {
             time: `${data.data.meditation_hours} ${t(
-              `hour.${getHoursString(data.data.meditation_hours)}`,
+              `hour.${getHoursString(data.data.meditation_hours)}` as TranslationKey,
             )}`,
           }),
         );

@@ -1,4 +1,4 @@
-import { Meditation } from "@/entities/meditation/_ui/Meditation";
+import { Meditation } from "@/entities/meditation";
 
 export default function MeditationPage() {
   return <Meditation />;

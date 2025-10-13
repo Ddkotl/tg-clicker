@@ -28,6 +28,7 @@ export const goMeditationResponseSchema = z.object({
     on_meditation: z.boolean(),
     start_meditation: z.date().nullable(),
     meditation_hours: z.number().nullable(),
+    meditation_revard: z.number().nullable(),
   }),
   message: z.string(),
 });
