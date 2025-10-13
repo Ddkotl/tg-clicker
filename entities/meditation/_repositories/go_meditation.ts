@@ -1,6 +1,10 @@
 import { dataBase } from "@/shared/connect/db_connect";
 
-export async function goMeditation(userId: string, hours: number) {
+export async function goMeditation(
+  userId: string,
+  hours: number,
+  meditation_revard: number,
+) {
   try {
     const meditate = await dataBase.meditation.findUnique({
       where: {
@@ -14,6 +18,7 @@ export async function goMeditation(userId: string, hours: number) {
         meditation_hours: hours,
         on_meditation: true,
         start_meditation: new Date(),
+        meditation_revard: meditation_revard,
       },
     });
   } catch (error) {

@@ -8,12 +8,12 @@ export async function giveMeditationReward(userId: string) {
     if (
       meditation === null ||
       meditation?.on_meditation === false ||
-      meditation.meditation_hours === null
+      meditation.meditation_hours === null ||
+      meditation.meditation_revard === null
     ) {
       return null;
     }
-    //изменить позже
-    const meditation_reward = 1000 * meditation.meditation_hours;
+    const meditation_reward = meditation.meditation_revard;
     const res = await dataBase.$transaction([
       dataBase.meditation.update({
         where: { userId },
@@ -21,6 +21,7 @@ export async function giveMeditationReward(userId: string) {
           meditation_hours: 0,
           on_meditation: false,
           start_meditation: null,
+          meditation_revard: null,
         },
       }),
       dataBase.profile.update({

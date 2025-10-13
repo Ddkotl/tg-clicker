@@ -1,25 +1,19 @@
 "use client";
 import { Fraktion } from "@/_generated/prisma";
-import { Progress } from "@/components/ui/progress";
-import { lvl_exp } from "@/config/lvl_exp";
 import { useTranslation } from "@/features/translations/use_translation";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { getProfileQuery } from "@/entities/profile/_queries/profile_query";
-import {
-  ProfileErrorResponse,
-  ProfileResponse,
-} from "@/app/api/user/profile/route";
-import { MainButton } from "../main-button";
+import { ProfileResponse } from "@/entities/profile";
+
 export function Profile() {
   const params = useParams<{ userId: string }>();
   const { t } = useTranslation();
-  const { data: profile, isLoading: isLoadingProfile } = useQuery<
-    ProfileResponse | ProfileErrorResponse
-  >({
-    ...getProfileQuery(params.userId),
-  });
+  const { data: profile, isLoading: isLoadingProfile } =
+    useQuery<ProfileResponse>({
+      ...getProfileQuery(params.userId),
+    });
   if (isLoadingProfile) return <div>Loading...</div>;
   const isMyProfile = profile?.data?.userId === params.userId;
   return (

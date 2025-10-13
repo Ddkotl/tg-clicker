@@ -1,4 +1,4 @@
-import { Profile } from "@/components/custom_ui/Profile/Profile";
+import { Profile } from "@/widgets/pages/Profile/Profile";
 
 export default function ProfilePage() {
   return <Profile />;
