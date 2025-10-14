@@ -13,6 +13,19 @@ export function calcMeditationReward({
   qi: number;
   hours: number;
 }) {
-  //изменить позже
-  return (1000 + power + protection + speed + skill + qi) * hours;
+  // Рассчитываем стоимость улучшения каждого параметра до следующего уровня
+  const powerCost = calcParamCost("power", power + 1); // Стоимость прокачки power
+  const protectionCost = calcParamCost("protection", protection + 1); // Стоимость прокачки protection
+  const speedCost = calcParamCost("speed", speed + 1); // Стоимость прокачки speed
+  const skillCost = calcParamCost("skill", skill + 1); // Стоимость прокачки skill
+  const qiCost = calcParamCost("qi", qi + 1); // Стоимость прокачки qi
+
+  // Суммируем все стоимости прокачки параметров
+  const totalCost = powerCost + protectionCost + speedCost + skillCost + qiCost;
+
+  // Коэффициент, который определяет размер награды относительно стоимости улучшений
+  const rewardCoefficient = 0.5; // 0.5 означает, что награда будет половиной стоимости прокачки
+
+  // Итоговая награда = общая стоимость прокачки * коэффициент * количество часов
+  return Math.floor(totalCost * rewardCoefficient * hours);
 }
