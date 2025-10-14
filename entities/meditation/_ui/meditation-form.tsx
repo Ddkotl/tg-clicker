@@ -9,7 +9,10 @@ import { useTranslation } from "@/features/translations/use_translation";
 import { getHoursString } from "./getHoursString";
 import { MeditatonFormSchema } from "../_domain/schemas";
 import { useQuery } from "@tanstack/react-query";
-import { getMeditationInfoQuery } from "../_queries/get_meditation_info_query";
+import {
+  getMeditationInfoQuery,
+  useInvalidateMeditation,
+} from "../_queries/get_meditation_info_query";
 import { cn } from "@/shared/lib/utils";
 import { useGetSessionQuery } from "@/entities/auth";
 import { useGoMeditationMutation } from "../_mutations/use_go_meditation_mutation";
@@ -34,6 +37,7 @@ import { TranslationKey } from "@/features/translations/translate_type";
 import { useEffect } from "react";
 import { Spinner } from "@/shared/components/ui/spinner";
 import { CountdownTimer } from "@/shared/components/custom_ui/timer";
+import { useGetMeditationReward } from "../_mutations/use_get_meditation_reward";
 
 export function MeditationForm({
   onTimeChange,
@@ -41,7 +45,7 @@ export function MeditationForm({
   onTimeChange?: (time: string) => void;
 }) {
   const { t } = useTranslation();
-
+  const invalidateMeditation = useInvalidateMeditation();
   const { data: session, isLoading: isSessionLoading } = useGetSessionQuery();
 
   const {
@@ -52,7 +56,7 @@ export function MeditationForm({
     ...getMeditationInfoQuery(session?.data?.user.userId ?? ""),
     enabled: !!session?.data?.user.userId,
   });
-
+  const mutation = useGetMeditationReward();
   const form = useForm<z.infer<typeof MeditatonFormSchema>>({
     resolver: zodResolver(MeditatonFormSchema),
     defaultValues: {
@@ -62,10 +66,29 @@ export function MeditationForm({
   const timeValue = form.watch("time");
 
   useEffect(() => {
+    if (!meditation_info?.data) return;
+
+    const meditation = meditation_info.data;
+    const start = meditation.start_meditation
+      ? new Date(meditation.start_meditation).getTime()
+      : 0;
+    const end = start + (meditation.meditation_hours ?? 0) * 60 * 60 * 1000;
+    const now = Date.now();
+
+    if (meditation.on_meditation && now >= end && meditation.userId) {
+      (async () => {
+        mutation.mutate({ userId: meditation.userId });
+        invalidateMeditation(meditation.userId);
+      })();
+    }
+  }, [meditation_info, invalidateMeditation, mutation]);
+
+  useEffect(() => {
     if (onTimeChange) {
       onTimeChange(timeValue);
     }
   }, [timeValue, onTimeChange]);
+
   const meditationMutation = useGoMeditationMutation();
 
   const onSubmit = (data: z.infer<typeof MeditatonFormSchema>) => {

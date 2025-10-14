@@ -41,3 +41,24 @@ export const goMeditationErrorResponseSchema = z.object({
 export const MeditatonFormSchema = z.object({
   time: z.enum(["1", "2", "3", "4", "5", "6", "7", "8"]),
 });
+
+export const getMeditationRewardRequestSchema = z.object({
+  userId: z.string(),
+});
+
+export const getMeditationRewardResponseSchema = z.object({
+  data: z.object({
+    userId: z.string(),
+    reward: z.number(),
+    hours: z.number(),
+    current_mana: z.number(),
+  }),
+  message: z.string(),
+  type: z.literal("success"),
+});
+
+export const getMeditationRewardErrorResponseSchema = z.object({
+  data: z.object({}).optional(),
+  message: z.string(),
+  type: z.literal("error"),
+});

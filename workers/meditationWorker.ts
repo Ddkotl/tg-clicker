@@ -10,6 +10,9 @@ const meditation_worker = new Worker(
   },
   {
     connection: redis_connect,
+    autorun: true,
+    stalledInterval: 5000,
+    maxStalledCount: 2,
   },
 );
 
