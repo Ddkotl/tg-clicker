@@ -4,10 +4,14 @@ import {
   sessionResponseSchema,
   SessionResponseType,
 } from "@/entities/auth";
-import { AppJWTPayload, getSession } from "@/entities/auth/_vm/session";
-import { NextResponse } from "next/server";
+import {
+  AppJWTPayload,
+  getSession,
+  updateSession,
+} from "@/entities/auth/_vm/session";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const session: AppJWTPayload | null = await getSession();
 
@@ -16,11 +20,16 @@ export async function GET() {
       errorSessionResponseSchema.parse(response);
       return NextResponse.json(response, { status: 401 });
     }
-
+    const updated_session = await updateSession(request);
+    if (!updated_session) {
+      const response = { data: {}, message: "No updated_session" };
+      errorSessionResponseSchema.parse(response);
+      return NextResponse.json(response, { status: 401 });
+    }
     const response: SessionResponseType = {
       data: {
-        user: session.user,
-        exp: session.exp ?? 0,
+        user: updated_session?.user,
+        exp: updated_session.exp ?? 0,
       },
       message: "ok",
     };

@@ -49,13 +49,11 @@ export async function getSession(): Promise<AppJWTPayload | null> {
 
     // Проверка истечения exp
     if (payload.exp && Date.now() >= payload.exp * 1000) {
-      cookieStore.delete("session");
       return null;
     }
 
     return payload;
   } catch {
-    cookieStore.delete("session");
     return null;
   }
 }
@@ -79,8 +77,15 @@ export async function updateSession(request: NextRequest) {
     return;
   }
 
+  const payload: AppJWTPayload = {
+    user: {
+      telegram_id: parsed.user.telegram_id,
+      userId: parsed.user.userId,
+    },
+    exp: Math.floor(Date.now() / 1000) + SESSION_DURATION / 1000,
+  };
   // Пересоздаём токен с новым exp
-  const newToken = await encrypt(parsed);
+  const newToken = await encrypt(payload);
   const expiresDate = new Date(Date.now() + SESSION_DURATION);
 
   const res = NextResponse.next();
@@ -92,6 +97,7 @@ export async function updateSession(request: NextRequest) {
     sameSite: "none",
     secure: true,
   });
+  const decrypted_token = await decrypt(newToken);
 
-  return res;
+  return decrypted_token;
 }

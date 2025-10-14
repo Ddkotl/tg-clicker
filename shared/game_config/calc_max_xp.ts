@@ -1,6 +1,6 @@
 // Параметры с их коэффициентами влияния на здоровье
 export const PARAMS: Record<string, number> = {
-  power: 1.5,     // коэффициент влияния параметра на здоровье
+  power: 1.5, // коэффициент влияния параметра на здоровье
   protection: 1.2,
   speed: 1.0,
   skill: 1.3,
@@ -37,5 +37,13 @@ export function calcMaxHP({
   const levelBonus = level * 10; // Например, 10 хп за каждый уровень
 
   // Итоговое максимальное здоровье
-  return baseHealth + powerHealth + protectionHealth + speedHealth + skillHealth + qiHealth + levelBonus;
+  return (
+    baseHealth +
+    powerHealth +
+    protectionHealth +
+    speedHealth +
+    skillHealth +
+    qiHealth +
+    levelBonus
+  );
 }

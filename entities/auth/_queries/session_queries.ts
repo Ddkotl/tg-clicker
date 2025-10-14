@@ -14,6 +14,8 @@ export function useGetSessionQuery() {
       }
       return res.json();
     },
+    gcTime: 30 * 60 * 1000,
+    staleTime: 30 * 60 * 1000,
   });
 }
 export const useInvalidateGetSessionQuery = () => {

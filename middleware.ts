@@ -1,10 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import {
-  AppJWTPayload,
-  getSession,
-  updateSession,
-} from "./entities/auth/_vm/session";
+import { AppJWTPayload, getSession } from "./entities/auth/_vm/session";
 
 export async function middleware(request: NextRequest) {
   if (
@@ -17,8 +13,6 @@ export async function middleware(request: NextRequest) {
   if (!session) {
     return NextResponse.redirect(new URL("/", request.url));
   }
-
-  return updateSession(request);
 }
 
 export const config = {

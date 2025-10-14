@@ -1,3 +1,4 @@
+import { getUserProfileByUserId } from "@/entities/auth/_repositories/user_repository";
 import {
   goMeditationErrorResponseSchema,
   goMeditationErrorResponseType,
@@ -8,6 +9,7 @@ import {
   MeditationInfoResponse,
   meditationInfoResponseSchema,
 } from "@/entities/meditation";
+import { calcMeditationReward } from "@/entities/meditation/_vm/calc_meditation_reward";
 import {
   getMeditationInfo,
   goMeditation,
@@ -70,7 +72,31 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(errorResponse, { status: 400 });
     }
     const { userId, hours } = parsed.data;
-    const meditate = await goMeditation(userId, hours);
+    const user_params = await getUserProfileByUserId(userId);
+    if (
+      !user_params ||
+      user_params.profile?.power === undefined ||
+      user_params.profile?.protection === undefined ||
+      user_params.profile?.speed === undefined ||
+      user_params.profile?.skill === undefined ||
+      user_params.profile?.qi === undefined
+    ) {
+      const errorResponse: goMeditationErrorResponseType = {
+        data: {},
+        message: "getUserProfileByUserId error",
+      };
+      goMeditationErrorResponseSchema.parse(errorResponse);
+      return NextResponse.json(errorResponse, { status: 400 });
+    }
+    const meditation_revard = calcMeditationReward({
+      power: user_params.profile.power,
+      protection: user_params.profile.protection,
+      speed: user_params.profile.speed,
+      skill: user_params.profile.skill,
+      qi: user_params.profile.qi,
+      hours,
+    });
+    const meditate = await goMeditation(userId, hours, meditation_revard);
     if (!meditate) {
       const errorResponse: goMeditationErrorResponseType = {
         data: {},
