@@ -1,4 +1,4 @@
-import { Training } from "@/components/custom_ui/Traning/Training";
+import { Training } from "@/widgets/pages/Traning/Training";
 
 export default function ProfilePage() {
   return <Training />;

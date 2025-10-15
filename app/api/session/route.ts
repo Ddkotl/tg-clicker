@@ -1,35 +1,40 @@
-import {
-  errorSessionResponseSchema,
-  SessionErrorResponseType,
-  sessionResponseSchema,
-  SessionResponseType,
-} from "@/entities/auth";
-import {
-  AppJWTPayload,
-  getSession,
-  updateSession,
-} from "@/entities/auth/_vm/session";
-import { NextRequest, NextResponse } from "next/server";
+import { AppJWTPayload, getSession } from "@/shared/utils/session";
+import { NextResponse } from "next/server";
+import { z } from "zod";
 
-export async function GET(request: NextRequest) {
+const sessionResponseSchema = z.object({
+  data: z.object({
+    user: z.object({
+      telegram_id: z.string(),
+      userId: z.string(),
+    }),
+    exp: z.number(),
+  }),
+  message: z.string(),
+});
+
+const errorResponseSchema = z.object({
+  data: z.object({}).optional(),
+  message: z.string(),
+});
+
+export type SessionResponse = z.infer<typeof sessionResponseSchema>;
+export type SessionErrorResponse = z.infer<typeof errorResponseSchema>;
+
+export async function GET() {
   try {
     const session: AppJWTPayload | null = await getSession();
 
     if (!session) {
       const response = { data: {}, message: "No active session" };
-      errorSessionResponseSchema.parse(response);
+      errorResponseSchema.parse(response);
       return NextResponse.json(response, { status: 401 });
     }
-    const updated_session = await updateSession(request);
-    if (!updated_session) {
-      const response = { data: {}, message: "No updated_session" };
-      errorSessionResponseSchema.parse(response);
-      return NextResponse.json(response, { status: 401 });
-    }
-    const response: SessionResponseType = {
+
+    const response: SessionResponse = {
       data: {
-        user: updated_session?.user,
-        exp: updated_session.exp ?? 0,
+        user: session.user,
+        exp: session.exp ?? 0,
       },
       message: "ok",
     };
@@ -37,11 +42,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(response);
   } catch (error) {
     console.error("GET /session error:", error);
-    const response: SessionErrorResponseType = {
+    const response: SessionErrorResponse = {
       data: {},
       message: "Internal server error",
     };
-    errorSessionResponseSchema.parse(response);
+    errorResponseSchema.parse(response);
     return NextResponse.json(response, { status: 500 });
   }
 }

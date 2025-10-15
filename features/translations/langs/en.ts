@@ -71,6 +71,8 @@ export const en_lang = {
   profile: {
     no_motto_adept: "The rock will not shake - and neither will I.",
     no_motto_novice: "The wind of change only helps my path.",
+    not_found: "Profile not found",
+    avatar_alt: "Avatar of {nikname}",
     development: "Development",
     equipment: "Equipment",
     friends: "Friends",

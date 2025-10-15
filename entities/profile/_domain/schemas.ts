@@ -35,3 +35,23 @@ export const profileErrorResponseSchema = z.object({
   data: z.object({}).optional(),
   message: z.string(),
 });
+
+export const trainSchema = z.object({
+  paramName: z.enum(["power", "protection", "speed", "skill", "qi"]),
+});
+
+export const trainResponseSchema = z.object({
+  data: z.object({
+    userId: z.string(),
+    paramName: trainSchema.shape.paramName,
+    newValue: z.number(),
+    mana: z.number(),
+    max_hitpoint: z.number(),
+  }),
+  message: z.string(),
+});
+
+export const trainErrorResponseSchema = z.object({
+  data: z.object({}).optional(),
+  message: z.string(),
+});

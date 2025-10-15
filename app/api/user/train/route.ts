@@ -1,31 +1,15 @@
 import {
+  trainErrorResponseSchema,
+  TrainErrorResponseType,
+  trainResponseSchema,
+  TrainResponseType,
+  trainSchema,
+} from "@/entities/profile";
+import {
   ParamNameType,
   updateUserParam,
 } from "@/entities/user/_repositories/update_user_param";
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-
-const trainSchema = z.object({
-  paramName: z.enum(["power", "protection", "speed", "skill", "qi"]),
-});
-
-const trainResponseSchema = z.object({
-  data: z.object({
-    userId: z.string(),
-    paramName: z.enum(["power", "protection", "speed", "skill", "qi"]),
-    newValue: z.number(),
-    mana: z.number(),
-  }),
-  message: z.string(),
-});
-
-const errorResponseSchema = z.object({
-  data: z.object({}).optional(),
-  message: z.string(),
-});
-
-export type TrainResponse = z.infer<typeof trainResponseSchema>;
-export type TrainErrorResponse = z.infer<typeof errorResponseSchema>;
 
 export async function POST(req: NextRequest) {
   try {
@@ -33,11 +17,11 @@ export async function POST(req: NextRequest) {
     const userId = searchParams.get("userId");
 
     if (!userId) {
-      const errorResponse: TrainErrorResponse = {
+      const errorResponse: TrainErrorResponseType = {
         data: {},
         message: "Missing userId in URL",
       };
-      errorResponseSchema.parse(errorResponse);
+      trainErrorResponseSchema.parse(errorResponse);
       return NextResponse.json(errorResponse, { status: 400 });
     }
 
@@ -45,11 +29,11 @@ export async function POST(req: NextRequest) {
     const parsed = trainSchema.safeParse(body);
 
     if (!parsed.success) {
-      const errorResponse: TrainErrorResponse = {
+      const errorResponse: TrainErrorResponseType = {
         data: {},
         message: "Invalid request body",
       };
-      errorResponseSchema.parse(errorResponse);
+      trainErrorResponseSchema.parse(errorResponse);
       return NextResponse.json(errorResponse, { status: 400 });
     }
 
@@ -57,22 +41,23 @@ export async function POST(req: NextRequest) {
     const updated_profile = await updateUserParam(userId, paramName);
 
     if (!updated_profile || !updated_profile.profile) {
-      const errorResponse: TrainErrorResponse = {
+      const errorResponse: TrainErrorResponseType = {
         data: {},
         message: "Failed to update parameter",
       };
-      errorResponseSchema.parse(errorResponse);
+      trainErrorResponseSchema.parse(errorResponse);
       return NextResponse.json(errorResponse, { status: 400 });
     }
 
     const newValue = updated_profile.profile[paramName];
 
-    const response: TrainResponse = {
+    const response: TrainResponseType = {
       data: {
         userId,
         paramName,
         newValue,
         mana: updated_profile.profile.mana,
+        max_hitpoint: updated_profile.profile.max_hitpoint,
       },
       message: "Parameter updated successfully",
     };
@@ -80,7 +65,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(response);
   } catch (error) {
     console.error("POST /train error:", error);
-    const errorResponse: TrainErrorResponse = {
+    const errorResponse: TrainErrorResponseType = {
       data: {},
       message: "Internal server error",
     };

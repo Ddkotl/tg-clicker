@@ -15,7 +15,7 @@ services:
       - tg_clicker_net
 
   redis:
-    container_name: ${REDIS_CONTAINER}
+    container_name: redis_tg_clicker
     image: redis:7
     restart: always
     ports:

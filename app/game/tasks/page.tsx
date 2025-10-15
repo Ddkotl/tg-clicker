@@ -1,4 +1,4 @@
-import { Referral } from "@/components/custom_ui/Referal";
+import { Referral } from "@/widgets/pages/Referals/Referal";
 
 export default function TasksPage() {
   return <Referral />;

@@ -1,134 +1,66 @@
 "use client";
-import { Fraktion } from "@/_generated/prisma";
-import { useTranslation } from "@/features/translations/use_translation";
-import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
+
 import { useParams } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+
+import { useTranslation } from "@/features/translations/use_translation";
 import { getProfileQuery } from "@/entities/profile/_queries/profile_query";
 import { ProfileResponse } from "@/entities/profile";
+import { lvl_exp } from "@/shared/game_config/lvl_exp";
+import { Skeleton } from "@/shared/components/ui/skeleton";
+import { ProfileHeader } from "./_ui/profile_header";
+import { ProfileStat } from "./_ui/profile_stat";
+import { ProfileNav } from "./_ui/profile_nav";
+import { useGetSessionQuery } from "@/entities/auth";
 
 export function Profile() {
-  const params = useParams<{ userId: string }>();
   const { t } = useTranslation();
-  const { data: profile, isLoading: isLoadingProfile } =
-    useQuery<ProfileResponse>({
-      ...getProfileQuery(params.userId),
-    });
-  if (isLoadingProfile) return <div>Loading...</div>;
-  const isMyProfile = profile?.data?.userId === params.userId;
+  const { userId } = useParams<{ userId: string }>();
+  const { data: session, isLoading: isoadingSession } = useGetSessionQuery();
+  const { data: profile, isLoading } = useQuery<ProfileResponse>({
+    ...getProfileQuery(userId),
+  });
+
+  const user = profile?.data;
+  const exp = user?.exp ?? 0;
+  const lvl = user?.lvl ?? 1;
+  const progress = Math.min((exp / (lvl_exp[lvl] ?? 1)) * 100, 100);
+  const nextExp = lvl_exp[lvl + 1] ?? lvl_exp[lvl];
+  const isMyProfile = session?.data?.user.userId === userId;
+
+  if (isLoading || isoadingSession) {
+    return (
+      <div className="space-y-4">
+        <Skeleton className="w-32 h-32 rounded-xl" />
+        <Skeleton className="h-4 w-48" />
+        <Skeleton className="h-2 w-full" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <div>{t("profile.not_found")}</div>;
+  }
+
   return (
-    <>
-      {/* Хедер */}
-      <div className="flex  space-x-4">
-        <Image
-          src={profile?.data?.avatar_url as string}
-          alt="Аватар"
-          width={120}
-          height={120}
-          className="w-30 h-30 rounded-xl shadow-md"
-        />
-        <div>
-          <h1 className="text-xl font-bold">{profile?.data?.nikname}</h1>
-          <p className="text-sm text-muted-foreground">
-            {profile?.data?.player_motto ||
-            profile?.data?.fraktion === Fraktion.ADEPT
-              ? t("profile.no_motto_adept")
-              : t("profile.no_motto_novice")}
-          </p>
-        </div>
-      </div>
-
-      {/* Характеристики */}
-      <div className="space-y-3">
-        <ProfileStat
-          label={t("lvl")}
-          value={profile?.data?.lvl.toString() as string}
-          progress={
-            ((profile?.data?.exp as number) /
-              lvl_exp[profile?.data?.lvl as number]) *
-            100
-          }
-          extra={`${profile?.data?.exp} / ${lvl_exp[(profile?.data?.lvl as number) + 1]}`}
-        />
-      </div>
-
-      <div className="flex flex-col gap-2">
-        {[
-          ...(isMyProfile
-            ? [
-                {
-                  label: t("profile.development"),
-                  href: `/game/profile/training/${profile.data?.userId}`,
-                },
-                {
-                  label: `${t("profile.equipment")}`,
-                  href: "/game/profile/equipment",
-                },
-                {
-                  label: `${t("profile.friends")}`,
-                  href: "/game/profile/friends",
-                },
-              ]
-            : []),
-          {
-            label: `${t("profile.statistics")}`,
-            href: "/game/profile/statistics",
-          },
-          {
-            label: `${t("profile.questionnaire")}`,
-            href: "/game/profile/questionnaire",
-          },
-
-          ...(isMyProfile
-            ? [
-                {
-                  label: `${t("profile.description")}`,
-                  href: "/game/profile/description",
-                },
-                {
-                  label: `${t("profile.avatars")}`,
-                  href: "/game/profile/avatars",
-                },
-                {
-                  label: `${t("profile.invite")}`,
-                  href: "/game/profile/invite",
-                },
-              ]
-            : []),
-        ].map((item) => (
-          <MainButton
-            key={item.href}
-            item={item}
-            isLoading={isLoadingProfile}
-          />
-        ))}
-      </div>
-    </>
-  );
-}
-
-function ProfileStat({
-  label,
-  value,
-  progress,
-  extra,
-}: {
-  label: string;
-  value: string;
-  progress: number;
-  extra?: string;
-}) {
-  return (
-    <div>
-      <div className="flex justify-between text-sm font-medium">
-        <span>
-          {label} {value}
-        </span>
-        <span>
-          {extra && <span className="text-muted-foreground">({extra})</span>}
-        </span>
-      </div>
-      <Progress value={progress} className="h-2 mt-1" />
+    <div className="space-y-6">
+      <ProfileHeader
+        avatarUrl={user.avatar_url ?? undefined}
+        nickname={user.nikname ?? undefined}
+        playerMotto={user.player_motto}
+        fraktion={user.fraktion}
+      />
+      <ProfileStat
+        label={t("lvl")}
+        value={lvl.toString()}
+        progress={progress}
+        extra={`${exp} / ${nextExp}`}
+      />
+      <ProfileNav
+        isMyProfile={isMyProfile}
+        userId={user.userId}
+        isLoading={isLoading}
+      />
     </div>
   );
 }

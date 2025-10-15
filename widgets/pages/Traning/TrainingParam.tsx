@@ -1,10 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
-import { calcParamCost } from "@/config/params_cost";
+
 import { useTranslation } from "@/features/translations/use_translation";
+import { calcParamCost } from "@/shared/game_config/params_cost";
+import { Progress } from "@/shared/components/ui/progress";
+import { Button } from "@/shared/components/ui/button";
 
 type TrainingParamProps = {
   title: string;
@@ -13,6 +14,7 @@ type TrainingParamProps = {
   value: number;
   paramName: string;
   hero_mana: number;
+  isPending: boolean;
   onUpgrade: (paramName: string) => void;
 };
 
@@ -23,6 +25,7 @@ export function TrainingParam({
   value,
   paramName,
   hero_mana,
+  isPending,
   onUpgrade,
 }: TrainingParamProps) {
   const { t } = useTranslation();
@@ -58,7 +61,7 @@ export function TrainingParam({
       <Button
         size="sm"
         className="w-full bg-primary/70"
-        disabled={hero_mana < nextCost}
+        disabled={hero_mana < nextCost || isPending}
         onClick={() => onUpgrade(paramName)}
       >
         {t("training.upgrade")}

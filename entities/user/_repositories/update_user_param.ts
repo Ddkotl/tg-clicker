@@ -1,4 +1,5 @@
 import { dataBase } from "@/shared/connect/db_connect";
+import { calcMaxHP } from "@/shared/game_config/calc_max_xp";
 import { calcParamCost } from "@/shared/game_config/params_cost";
 
 export type ParamNameType = "power" | "protection" | "speed" | "skill" | "qi";
@@ -23,7 +24,14 @@ export async function updateUserParam(
     if (user.profile.mana < updateCost) {
       throw new Error("Not enough mana");
     }
-
+    const new_max_hitpoints = calcMaxHP({
+      power: user.profile.power,
+      protection: user.profile.protection,
+      speed: user.profile.speed,
+      skill: user.profile.skill,
+      qi: user.profile.qi,
+      level: user.profile.lvl,
+    });
     const updated_user = await dataBase.user.update({
       where: { id: userId },
       data: {
@@ -31,6 +39,7 @@ export async function updateUserParam(
           update: {
             [paramName]: { increment: 1 },
             mana: { decrement: updateCost },
+            max_hitpoint: new_max_hitpoints,
           },
         },
       },

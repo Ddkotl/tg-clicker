@@ -7,5 +7,13 @@ export {
   ProfileSchema,
   profileErrorResponseSchema,
   profileResponseSchema,
+  trainErrorResponseSchema,
+  trainResponseSchema,
+  trainSchema,
 } from "./_domain/schemas";
-export type { ProfileErrorResponse, ProfileResponse } from "./_domain/types";
+export type {
+  ProfileErrorResponse,
+  ProfileResponse,
+  TrainErrorResponseType,
+  TrainResponseType,
+} from "./_domain/types";

@@ -26,7 +26,7 @@ export function useAuthQuery() {
 
       return json;
     },
-    gcTime: 30 * 60 * 1000,
-    staleTime: 30 * 60 * 1000,
+    gcTime: 1 * 60 * 1000,
+    staleTime: 1 * 60 * 1000,
   });
 }

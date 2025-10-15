@@ -67,6 +67,8 @@ export const ru_lang: Messages = {
   profile: {
     no_motto_adept: "Скала не дрогнет – и я тоже.",
     no_motto_novice: "Ветер перемен лишь помогает моему пути.",
+    not_found: "Профиль не найден",
+    avatar_alt: "Аватар {nikname}",
     development: "Развитие",
     equipment: "Снаряжение",
     friends: "Друзья",
