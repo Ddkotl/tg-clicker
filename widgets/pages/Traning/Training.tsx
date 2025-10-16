@@ -63,7 +63,7 @@ export function Training() {
       name: "qi",
       title: `${t("training.qi")}`,
       description: `${t("training.qi_desc")}`,
-      icon: "/adept_m.jpg",
+      icon: "/qi.jpg",
     },
   ];
   if (isLoadingProfile) return <p>{t("loading")}</p>;

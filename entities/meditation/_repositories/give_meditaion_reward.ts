@@ -1,4 +1,5 @@
 import { dataBase } from "@/shared/connect/db_connect";
+import { meditation_expirience } from "@/shared/game_config/give_expirience";
 
 export async function giveMeditationReward(userId: string) {
   try {
@@ -28,6 +29,7 @@ export async function giveMeditationReward(userId: string) {
         where: { userId },
         data: {
           mana: { increment: meditation_reward },
+          exp: { increment: meditation_expirience },
         },
       }),
       dataBase.userStatistic.update({
