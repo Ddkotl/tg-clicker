@@ -8,7 +8,7 @@ import {
 import {
   ParamNameType,
   updateUserParam,
-} from "@/entities/user/_repositories/update_user_param";
+} from "@/entities/profile/_repositories/update_user_param";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {

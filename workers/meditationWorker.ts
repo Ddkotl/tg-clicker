@@ -1,25 +1,31 @@
-import amqp from "amqplib";
 import { giveMeditationReward } from "@/entities/meditation/index.server";
-import { EXCHANGE, QUEUE } from "@/shared/connect/rabbitmq";
-
-const RABBITMQ_URL = process.env.RABBITMQ_URL || "amqp://localhost:5672";
+import {
+  MEDITATION_EXCHANGE,
+  MEDITATION_QUEUE,
+} from "@/features/meditation/rabit_meditation_connect";
+import { RABBITMQ_URL } from "@/shared/lib/consts";
+import amqp from "amqplib";
 
 async function startWorker() {
   const connection = await amqp.connect(RABBITMQ_URL);
   const channel = await connection.createChannel();
 
-  await channel.assertExchange(EXCHANGE, "x-delayed-message", {
+  await channel.assertExchange(MEDITATION_EXCHANGE, "x-delayed-message", {
     durable: true,
     arguments: { "x-delayed-type": "direct" },
   });
 
-  await channel.assertQueue(QUEUE, { durable: true });
-  await channel.bindQueue(QUEUE, EXCHANGE, QUEUE);
+  await channel.assertQueue(MEDITATION_QUEUE, { durable: true });
+  await channel.bindQueue(
+    MEDITATION_QUEUE,
+    MEDITATION_EXCHANGE,
+    MEDITATION_QUEUE,
+  );
 
   console.log("⏳ Meditation worker is waiting for messages...");
 
   channel.consume(
-    QUEUE,
+    MEDITATION_QUEUE,
     async (msg) => {
       if (!msg) return;
       try {
