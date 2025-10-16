@@ -12,7 +12,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const body = request.json();
+    const body = await request.json();
     const parsed = getMeditationRewardRequestSchema.safeParse(body);
     if (!parsed.success) {
       const errorResponse: GetMeditationRewardErrorResponseType = {

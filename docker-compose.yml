@@ -14,20 +14,20 @@ services:
     networks:
       - tg_clicker_net
 
-  redis:
-    container_name: redis_tg_clicker
-    image: redis:7
-    restart: always
+  rabbitmq:
+    build: .
+    container_name: rabbitmq
     ports:
-      - 6379:6379
-    volumes:
-      - redis_tg_clicker_volume:/data
-    networks:
-      - tg_clicker_net
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_tg_clicker_volume:
-  redis_tg_clicker_volume:
 
 networks:
   tg_clicker_net:

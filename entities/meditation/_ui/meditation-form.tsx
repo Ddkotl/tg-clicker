@@ -9,10 +9,7 @@ import { useTranslation } from "@/features/translations/use_translation";
 import { getHoursString } from "./getHoursString";
 import { MeditatonFormSchema } from "../_domain/schemas";
 import { useQuery } from "@tanstack/react-query";
-import {
-  getMeditationInfoQuery,
-  useInvalidateMeditation,
-} from "../_queries/get_meditation_info_query";
+import { getMeditationInfoQuery } from "../_queries/get_meditation_info_query";
 import { cn } from "@/shared/lib/utils";
 import { useGetSessionQuery } from "@/entities/auth";
 import { useGoMeditationMutation } from "../_mutations/use_go_meditation_mutation";
@@ -45,7 +42,6 @@ export function MeditationForm({
   onTimeChange?: (time: string) => void;
 }) {
   const { t } = useTranslation();
-  const invalidateMeditation = useInvalidateMeditation();
   const { data: session, isLoading: isSessionLoading } = useGetSessionQuery();
 
   const {
@@ -76,12 +72,9 @@ export function MeditationForm({
     const now = Date.now();
 
     if (meditation.on_meditation && now >= end && meditation.userId) {
-      (async () => {
-        mutation.mutate({ userId: meditation.userId });
-        invalidateMeditation(meditation.userId);
-      })();
+      mutation.mutate({ userId: meditation.userId });
     }
-  }, [meditation_info, invalidateMeditation, mutation]);
+  }, [meditation_info, mutation]);
 
   useEffect(() => {
     if (onTimeChange) {

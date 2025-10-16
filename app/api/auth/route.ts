@@ -1,12 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
-import { UpdateOrCreateUser } from "@/repositories/user_repository";
-import { z } from "zod";
-import { validateTelegramWebAppData } from "@/shared/utils/telegramAuth";
 import {
   AppJWTPayload,
   encrypt,
   SESSION_DURATION,
-} from "@/shared/utils/session";
+} from "@/entities/auth/_vm/session";
+import { validateTelegramWebAppData } from "@/entities/auth/_vm/telegramAuth";
+import { UpdateOrCreateUser } from "@/entities/auth/index.server";
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 
 const authSchema = z.object({
   initData: z.string(),

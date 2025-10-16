@@ -14,7 +14,11 @@ import {
   getMeditationInfo,
   goMeditation,
 } from "@/entities/meditation/index.server";
-import { meditationQueue } from "@/shared/connect/queue";
+import {
+  createRabbitConnection,
+  EXCHANGE,
+  QUEUE,
+} from "@/shared/connect/rabbitmq";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -106,7 +110,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(errorResponse, { status: 400 });
     }
     const delay = hours * 60 * 60 * 1000;
-    await meditationQueue.add("reward", { userId }, { delay });
+    const { channel, connection } = await createRabbitConnection();
+    channel.publish(EXCHANGE, QUEUE, Buffer.from(JSON.stringify({ userId })), {
+      headers: { "x-delay": delay },
+      persistent: true,
+    });
+    await channel.close();
+    await connection.close();
     const response: goMeditationResponseType = {
       data: {
         userId: meditate.userId,

@@ -26,6 +26,9 @@ export function useGetMeditationReward() {
       return result;
     },
     onSuccess: (data) => {
+      queryClient.removeQueries({
+        queryKey: ["meditation", data.data.userId],
+      });
       queryClient.invalidateQueries({
         queryKey: ["profile", data.data.userId],
       });

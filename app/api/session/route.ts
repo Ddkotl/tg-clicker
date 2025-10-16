@@ -1,4 +1,4 @@
-import { AppJWTPayload, getSession } from "@/shared/utils/session";
+import { AppJWTPayload, getSession } from "@/entities/auth/_vm/session";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
