@@ -34,6 +34,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const parsedBody = authSchema.safeParse(body);
+    console.log("parsedBody", parsedBody);
     if (!parsedBody.success) {
       const response = {
         message: "Invalid request data",

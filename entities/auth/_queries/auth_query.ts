@@ -10,7 +10,7 @@ export function useAuthQuery() {
 
       const initData = WebApp.initData;
       const start_param = WebApp.initDataUnsafe.start_param;
-
+      console.log("init data", initData);
       if (!initData) throw new Error("No initData from Telegram WebApp");
 
       const res = await fetch("/api/auth", {
