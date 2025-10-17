@@ -53,7 +53,7 @@ export function Registration() {
 
   if (isLoading) {
     return (
-      <Image src="/loading.jpg" width={300} height={300} alt={t("loading")} />
+      <Image src="/loading.png" width={300} height={300} alt={t("loading")} />
     );
   }
 
