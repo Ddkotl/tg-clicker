@@ -112,4 +112,12 @@ export const en_lang = {
     remaining: "remaining",
     wait: "wait...",
   },
+  city: {
+    city_title: "Citadel",
+    city_description:
+      "The Citadel is the key to all Qi lands! Its gates are open to the strong in spirit, but only the wise become its guardians. Our strategy must be flawless!",
+    shop: {
+      shop: "Shop",
+    },
+  },
 };
