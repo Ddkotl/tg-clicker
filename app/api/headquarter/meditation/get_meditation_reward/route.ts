@@ -1,3 +1,5 @@
+import { FactsStatus, FactsType } from "@/_generated/prisma";
+import { createFact } from "@/entities/facts/index.server";
 import {
   GetMeditationRewardErrorResponseType,
   GetMeditationRewardResponseType,
@@ -25,6 +27,14 @@ export async function POST(request: NextRequest) {
     }
     const { userId } = parsed.data;
     const res = await giveMeditationReward(userId);
+    await createFact({
+      fact_type: FactsType.MEDITATION,
+      fact_status: FactsStatus.NO_CHECKED,
+      userId: userId,
+      active_hours: res?.hours,
+      exp_reward: res?.reward_exp,
+      mana_reward: res?.reward_mana,
+    });
     if (!res) {
       const errorResponse: GetMeditationRewardErrorResponseType = {
         data: {},

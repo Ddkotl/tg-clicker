@@ -92,6 +92,14 @@ export const ru_lang: Messages = {
     qi: "Ци",
     qi_desc: "Дает превосходство в бою",
   },
+  facts: {
+    fact_title: "Факты",
+    fact_description:
+      "Здесь храняться события, произошедшие с тобой за последние трое суток.",
+    no_fact: "В последнее время ничего не происходило",
+    meditation_fact:
+      "Ты медитировал {time} и получил {mana} маны и {exp} опыта.",
+  },
   headquarter: {
     headquarter_title: "Штаб",
     headquarter_welcome:

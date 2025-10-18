@@ -81,6 +81,26 @@ model Meditation {
   meditation_revard Int?
 }
 
+model Facts {
+  id           String      @id @default(cuid())
+  userId       String
+  type         FactsType
+  status       FactsStatus
+  mana_reward  Int?
+  exp_reward   Int?
+  active_hours Int?
+  createdAt    DateTime    @default(now())
+}
+
+enum FactsStatus {
+  CHECKED
+  NO_CHECKED
+}
+
+enum FactsType {
+  MEDITATION
+}
+
 enum Fraktion {
   ADEPT
   NOVICE

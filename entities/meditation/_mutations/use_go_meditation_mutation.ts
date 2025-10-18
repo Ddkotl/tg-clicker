@@ -5,7 +5,7 @@ import {
   goMeditationRequestType,
   goMeditationResponseType,
 } from "../_domain/types";
-import { getHoursString } from "../_ui/getHoursString";
+import { getHoursString } from "../_vm/getHoursString";
 import { TranslationKey } from "@/features/translations/translate_type";
 
 export function useGoMeditationMutation() {

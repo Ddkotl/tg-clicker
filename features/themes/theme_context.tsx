@@ -38,7 +38,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   if (loading) {
     return (
-      <Image src="/loading.png" width={300} height={300} alt="loading..." />
+      <div className="flex justify-center items-center h-screen">
+        <Image src="/loading.png" width={300} height={300} alt="loading" />
+      </div>
     );
   }
   return (
