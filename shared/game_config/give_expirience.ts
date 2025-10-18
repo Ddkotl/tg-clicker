@@ -4,4 +4,6 @@ function giveExperience(min: number, max: number): number {
   return Math.floor(Math.random() * (maxInt - minInt + 1)) + minInt;
 }
 
-export const meditation_expirience = giveExperience(10, 20);
+export function getMeditationExperience() {
+  return giveExperience(10, 20);
+}

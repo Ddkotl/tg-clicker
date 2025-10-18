@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 import { TranslationKey } from "@/features/translations/translate_type";
-import { getHoursString } from "./getHoursString";
+import { getHoursString } from "../_vm/getHoursString";
 import { useState } from "react";
 import { calcMeditationReward } from "../_vm/calc_meditation_reward";
 import { useGetSessionQuery } from "@/entities/auth";

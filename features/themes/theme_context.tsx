@@ -38,8 +38,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   if (loading) {
     return (
-      <div className="bg-black w-full h-screen flex items-center justify-center">
-        <Image src="/loading.jpg" width={300} height={300} alt="loading..." />
+      <div className="flex justify-center items-center h-screen">
+        <Image src="/loading.png" width={300} height={300} alt="loading" />
       </div>
     );
   }

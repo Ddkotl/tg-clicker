@@ -1,4 +1,11 @@
 import {
+  AuthErrorResponseType,
+  authRequestSchema,
+  authResponseSchema,
+  AuthResponseType,
+  errorResponseSchema,
+} from "@/entities/auth";
+import {
   AppJWTPayload,
   encrypt,
   SESSION_DURATION,
@@ -6,35 +13,11 @@ import {
 import { validateTelegramWebAppData } from "@/entities/auth/_vm/telegramAuth";
 import { UpdateOrCreateUser } from "@/entities/auth/index.server";
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-
-const authSchema = z.object({
-  initData: z.string(),
-  ref: z.string().optional(),
-});
-
-const authResponseSchema = z.object({
-  data: z.object({
-    language_code: z.string().optional(),
-    nikname: z.string().optional(),
-    color_theme: z.string().optional(),
-  }),
-  message: z.string(),
-});
-
-const errorResponseSchema = z.object({
-  data: z.object({}).optional(),
-  message: z.string(),
-});
-export type AuthResponse = z.infer<typeof authResponseSchema>;
-
-export type AuthErrorResponse = z.infer<typeof errorResponseSchema>;
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const parsedBody = authSchema.safeParse(body);
-    console.log("parsedBody", parsedBody);
+    const parsedBody = authRequestSchema.safeParse(body);
     if (!parsedBody.success) {
       const response = {
         message: "Invalid request data",
@@ -75,7 +58,7 @@ export async function POST(request: NextRequest) {
 
     const session = await encrypt(payload);
 
-    const response: AuthResponse = {
+    const response: AuthResponseType = {
       message: "ok",
       data: {
         language_code: updated_user.language_code ?? undefined,
@@ -97,7 +80,7 @@ export async function POST(request: NextRequest) {
     return res;
   } catch (error) {
     console.error("POST /auth error:", error);
-    const response: AuthErrorResponse = {
+    const response: AuthErrorResponseType = {
       message: "Internal server error",
       data: {},
     };

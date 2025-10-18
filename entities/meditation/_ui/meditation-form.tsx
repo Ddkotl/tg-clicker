@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
 import { useTranslation } from "@/features/translations/use_translation";
-import { getHoursString } from "./getHoursString";
+import { getHoursString } from "../_vm/getHoursString";
 import { MeditatonFormSchema } from "../_domain/schemas";
 import { useQuery } from "@tanstack/react-query";
 import { getMeditationInfoQuery } from "../_queries/get_meditation_info_query";

@@ -96,6 +96,14 @@ export const en_lang = {
     qi: "Qi",
     qi_desc: "Gives superiority in battle",
   },
+  facts: {
+    fact_title: "Facts",
+    fact_description:
+      "Events that happened to you over the last three days are stored here.",
+    no_fact: "Nothing has happened lately",
+    meditation_fact:
+      "You meditated for {time} and received {mana} mana and {exp} experience.",
+  },
   headquarter: {
     headquarter_title: "Headquarters",
     headquarter_welcome:

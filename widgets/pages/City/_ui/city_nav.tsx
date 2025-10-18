@@ -3,7 +3,7 @@
 import { TranslationKey } from "@/features/translations/translate_type";
 import { MainButton } from "@/shared/components/custom_ui/main-button";
 import { CityNavItem } from "../_domain/types";
-import { routes } from "@/shared/lib/routes";
+import { ui_path } from "@/shared/lib/paths";
 
 export function CityNav({
   t,
@@ -13,7 +13,7 @@ export function CityNav({
   const cityMenuItems: CityNavItem[] = [
     {
       label: t("city.shop.shop"),
-      href: routes.city_shop(),
+      href: ui_path.city_shop_page(),
     },
   ];
   return (

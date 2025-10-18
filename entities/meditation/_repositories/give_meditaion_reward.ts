@@ -1,5 +1,5 @@
 import { dataBase } from "@/shared/connect/db_connect";
-import { meditation_expirience } from "@/shared/game_config/give_expirience";
+import { getMeditationExperience } from "@/shared/game_config/give_expirience";
 
 export async function giveMeditationReward(userId: string) {
   try {
@@ -14,6 +14,8 @@ export async function giveMeditationReward(userId: string) {
     ) {
       return null;
     }
+    const meditation_expirience = getMeditationExperience();
+
     const meditation_reward = meditation.meditation_revard;
     const res = await dataBase.$transaction([
       dataBase.meditation.update({
@@ -41,9 +43,11 @@ export async function giveMeditationReward(userId: string) {
     ]);
     return {
       userId,
-      reward: meditation_reward,
+      reward_mana: meditation_reward,
+      reward_exp: meditation_expirience,
       hours: meditation.meditation_hours,
       current_mana: res[1].mana,
+      current_exp: res[1].exp,
     };
   } catch (error) {
     console.error("giveMeditationReward error", error);
