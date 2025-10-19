@@ -41,10 +41,7 @@ export const checkNicknameRequestSchema = z.object({
     .string()
     .min(3, "Nickname must be at least 3 characters long")
     .max(20, "Nickname must be at most 20 characters long")
-    .regex(
-      /^[а-яА-Яa-zA-Z0-9_]+$/,
-      "Nickname can only contain letters, numbers, and underscores",
-    ),
+    .regex(/^[а-яА-Яa-zA-Z0-9_]+$/, "Nickname can only contain letters, numbers, and underscores"),
 });
 
 export const checkNicknameResponseSchema = z.object({

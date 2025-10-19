@@ -10,10 +10,7 @@ import {
   meditationInfoResponseSchema,
 } from "@/entities/meditation";
 import { calcMeditationReward } from "@/entities/meditation/_vm/calc_meditation_reward";
-import {
-  getMeditationInfo,
-  goMeditation,
-} from "@/entities/meditation/index.server";
+import { getMeditationInfo, goMeditation } from "@/entities/meditation/index.server";
 import {
   createRabbitMeditationConnection,
   MEDITATION_EXCHANGE,
@@ -37,10 +34,7 @@ export async function GET(req: NextRequest) {
 
     const meditation_info = await getMeditationInfo(requestedUserId);
     if (!meditation_info || meditation_info === null) {
-      return NextResponse.json(
-        { data: {}, message: "Meditation info not found" },
-        { status: 404 },
-      );
+      return NextResponse.json({ data: {}, message: "Meditation info not found" }, { status: 404 });
     }
 
     const response: MeditationInfoResponse = {
@@ -109,18 +103,13 @@ export async function POST(req: NextRequest) {
       goMeditationErrorResponseSchema.parse(errorResponse);
       return NextResponse.json(errorResponse, { status: 400 });
     }
-    // const delay = hours * 60 * 60 * 1000;
-    const delay = hours * 1000;
+    const delay = hours * 60 * 60 * 1000;
+    // const delay = hours * 1000;
     const { channel, connection } = await createRabbitMeditationConnection();
-    channel.publish(
-      MEDITATION_EXCHANGE,
-      MEDITATION_QUEUE,
-      Buffer.from(JSON.stringify({ userId })),
-      {
-        headers: { "x-delay": delay },
-        persistent: true,
-      },
-    );
+    channel.publish(MEDITATION_EXCHANGE, MEDITATION_QUEUE, Buffer.from(JSON.stringify({ userId })), {
+      headers: { "x-delay": delay },
+      persistent: true,
+    });
     await channel.close();
     await connection.close();
     const response: goMeditationResponseType = {

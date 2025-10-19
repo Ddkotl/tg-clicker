@@ -27,6 +27,4 @@ export async function getUserProfileByUserId(userId: string) {
     return null;
   }
 }
-export type getUserProfileByUserIdType = Awaited<
-  ReturnType<typeof getUserProfileByUserId>
->;
+export type getUserProfileByUserIdType = Awaited<ReturnType<typeof getUserProfileByUserId>>;

@@ -62,12 +62,7 @@ body::-webkit-scrollbar {
   left: 0;
   width: 30%;
   height: 100%;
-  background: linear-gradient(
-    to right,
-    transparent 0%,
-    var(--primary) 50%,
-    transparent 100%
-  );
+  background: linear-gradient(to right, transparent 0%, var(--primary) 50%, transparent 100%);
   animation: shine 7s infinite;
   /* Total animation time: 7s (6s wait + 1s animation) */
 }

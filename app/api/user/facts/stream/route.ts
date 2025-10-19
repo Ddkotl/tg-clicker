@@ -1,8 +1,5 @@
 import { Facts } from "@/_generated/prisma";
-import {
-  factErrorResponseSchema,
-  FactErrorResponseType,
-} from "@/entities/facts";
+import { factErrorResponseSchema, FactErrorResponseType } from "@/entities/facts";
 import { NextRequest, NextResponse } from "next/server";
 import Redis from "ioredis";
 
@@ -18,14 +15,8 @@ const redis = new Redis(redis_conf);
 
 export async function GET(req: NextRequest) {
   console.log("sse route start");
-  console.log(
-    "✅ SSE route loaded, process.versions.node =",
-    process.versions.node,
-  );
-  console.log(
-    "✅ SSE route environment =",
-    process.env.NEXT_RUNTIME ?? "unknown",
-  );
+  console.log("✅ SSE route loaded, process.versions.node =", process.versions.node);
+  console.log("✅ SSE route environment =", process.env.NEXT_RUNTIME ?? "unknown");
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get("userId");
   if (!userId) {
@@ -44,9 +35,7 @@ export async function GET(req: NextRequest) {
 
       const send = (payload: Facts[]) => {
         try {
-          controller.enqueue(
-            encoder.encode(`data: ${JSON.stringify(payload)}\n\n`),
-          );
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify(payload)}\n\n`));
         } catch (e) {
           console.error(e);
         }
@@ -56,8 +45,7 @@ export async function GET(req: NextRequest) {
       const sub = new Redis(redis_conf);
       await sub.subscribe(`user:${userId}`, (err, count) => {
         if (err) console.error("Redis subscribe error:", err);
-        else
-          console.log(`Subscribed to ${count} channel(s) for user ${userId}`);
+        else console.log(`Subscribed to ${count} channel(s) for user ${userId}`);
       });
 
       sub.on("message", (_, message) => {

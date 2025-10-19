@@ -50,17 +50,8 @@ export function Profile() {
         playerMotto={user.player_motto}
         fraktion={user.fraktion}
       />
-      <ProfileStat
-        label={t("lvl")}
-        value={lvl.toString()}
-        progress={progress}
-        extra={`${exp} / ${nextExp}`}
-      />
-      <ProfileNav
-        isMyProfile={isMyProfile}
-        userId={user.userId}
-        isLoading={isLoading}
-      />
+      <ProfileStat label={t("lvl")} value={lvl.toString()} progress={progress} extra={`${exp} / ${nextExp}`} />
+      <ProfileNav isMyProfile={isMyProfile} userId={user.userId} isLoading={isLoading} />
     </div>
   );
 }

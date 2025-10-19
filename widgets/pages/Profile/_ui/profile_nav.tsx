@@ -10,11 +10,7 @@ interface ProfileButtonsProps {
   isLoading?: boolean;
 }
 
-export function ProfileNav({
-  isMyProfile,
-  userId,
-  isLoading,
-}: ProfileButtonsProps) {
+export function ProfileNav({ isMyProfile, userId, isLoading }: ProfileButtonsProps) {
   const { t } = useTranslation();
 
   const buttons = useMemo(() => {
@@ -45,12 +41,7 @@ export function ProfileNav({
   return (
     <div className="flex flex-col gap-2">
       {buttons.map((btn) => (
-        <MainButton
-          key={btn.href}
-          label={btn.label}
-          href={btn.href}
-          isLoading={isLoading}
-        />
+        <MainButton key={btn.href} label={btn.label} href={btn.href} isLoading={isLoading} />
       ))}
     </div>
   );

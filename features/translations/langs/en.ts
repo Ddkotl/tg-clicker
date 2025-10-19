@@ -6,8 +6,7 @@ export const en_lang = {
   price: "Price",
   auth_error: "An authentication error occurred",
   auth_retry: "Retry",
-  auth_congratulation:
-    "{nikname}, congratulations on your successful registration.",
+  auth_congratulation: "{nikname}, congratulations on your successful registration.",
   greeting: "Hello, {name}!",
   footer: {
     home: "Home",
@@ -55,8 +54,7 @@ export const en_lang = {
     ready_to_battle: "⚔️ Ready for battle?",
 
     welcome_wanderer: "Welcome, wanderer",
-    balance_of_pover:
-      "Today your path will lead to great achievements! Balance of power:",
+    balance_of_pover: "Today your path will lead to great achievements! Balance of power:",
     adepts_loses: "Adept Losses:",
     novise_loses: "Novice Losses:",
     navigation: {
@@ -98,11 +96,13 @@ export const en_lang = {
   },
   facts: {
     fact_title: "Facts",
-    fact_description:
-      "Events that happened to you over the last three days are stored here.",
+    fact_description: "Events that happened to you over the last three days are stored here.",
     no_fact: "Nothing has happened lately",
-    meditation_fact:
-      "You meditated for {time} and received {mana} mana and {exp} experience.",
+    meditation_fact: "You meditated for {time} and received {mana} mana and {exp} experience.",
+    notification: {
+      new_events: "There are new events",
+      сheck: "сheck",
+    },
   },
   headquarter: {
     headquarter_title: "Headquarters",

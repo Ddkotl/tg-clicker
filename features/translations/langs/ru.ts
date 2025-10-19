@@ -51,8 +51,7 @@ export const ru_lang: Messages = {
   home: {
     ready_to_battle: "⚔️ Готов к битве?",
     welcome_wanderer: "Добро пожаловать, странник",
-    balance_of_pover:
-      "Сегодня твой путь приведёт к великим свершениям! Баланс сил:",
+    balance_of_pover: "Сегодня твой путь приведёт к великим свершениям! Баланс сил:",
     adepts_loses: "Потери Адептов:",
     novise_loses: "Потери Послушников:",
     navigation: {
@@ -94,11 +93,13 @@ export const ru_lang: Messages = {
   },
   facts: {
     fact_title: "Факты",
-    fact_description:
-      "Здесь храняться события, произошедшие с тобой за последние трое суток.",
+    fact_description: "Здесь храняться события, произошедшие с тобой за последние трое суток.",
     no_fact: "В последнее время ничего не происходило",
-    meditation_fact:
-      "Ты медитировал {time} и получил {mana} маны и {exp} опыта.",
+    meditation_fact: "Ты медитировал {time} и получил {mana} маны и {exp} опыта.",
+    notification: {
+      new_events: "Есть новые события",
+      сheck: "проверить",
+    },
   },
   headquarter: {
     headquarter_title: "Штаб",

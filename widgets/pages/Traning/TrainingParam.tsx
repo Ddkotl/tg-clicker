@@ -35,13 +35,7 @@ export function TrainingParam({
   return (
     <div className="flex-1 space-y-2">
       <div className="flex items-center gap-3">
-        <Image
-          src={icon}
-          alt={`${title} icon`}
-          width={55}
-          height={55}
-          className="rounded-md"
-        />
+        <Image src={icon} alt={`${title} icon`} width={55} height={55} className="rounded-md" />
         <div className="flex-1 ">
           <h4 className="font-semibold">{title}</h4>
           <p className="text-sm text-muted-foreground">{description}</p>

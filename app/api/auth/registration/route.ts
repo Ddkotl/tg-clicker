@@ -22,8 +22,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(errorResponse, { status: 400 });
     }
 
-    const { userId, nikname, fraktion, gender, color_theme, avatar_url } =
-      parsed.data;
+    const { userId, nikname, fraktion, gender, color_theme, avatar_url } = parsed.data;
 
     const updatedProfile = await RegistrationUser({
       userId,

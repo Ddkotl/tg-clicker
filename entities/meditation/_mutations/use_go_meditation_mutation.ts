@@ -1,10 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useTranslation } from "@/features/translations/use_translation";
-import {
-  goMeditationRequestType,
-  goMeditationResponseType,
-} from "../_domain/types";
+import { goMeditationRequestType, goMeditationResponseType } from "../_domain/types";
 import { getHoursString } from "../_vm/getHoursString";
 import { TranslationKey } from "@/features/translations/translate_type";
 

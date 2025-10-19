@@ -47,9 +47,7 @@ export function Footer() {
       <div className="fixed bottom-0 bg-footer-gradient border-t border-foreground/60 w-full max-w-md">
         <div className="flex justify-between px-4 py-2">
           {items.map((item) => {
-            return (
-              <FooterItem key={item.id} item={item} disabled={isDisabled} />
-            );
+            return <FooterItem key={item.id} item={item} disabled={isDisabled} />;
           })}
         </div>
       </div>

@@ -1,10 +1,7 @@
 import { dataBase } from "@/shared/connect/db_connect";
 import { CreateUserType } from "../_domain/types";
 
-export async function UpdateOrCreateUser(
-  user: CreateUserType,
-  referer_id?: string,
-) {
+export async function UpdateOrCreateUser(user: CreateUserType, referer_id?: string) {
   try {
     const updated_user = await dataBase.user.upsert({
       where: { telegram_id: user.telegram_id },

@@ -1,8 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  SessionErrorResponseType,
-  SessionResponseType,
-} from "../_domain/types";
+import { SessionErrorResponseType, SessionResponseType } from "../_domain/types";
 
 export function useGetSessionQuery() {
   return useQuery<SessionResponseType | SessionErrorResponseType>({

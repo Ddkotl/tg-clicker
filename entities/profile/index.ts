@@ -1,7 +1,4 @@
-export {
-  getProfileQuery,
-  useInvalidateProfile,
-} from "./_queries/profile_query";
+export { getProfileQuery, useInvalidateProfile } from "./_queries/profile_query";
 
 export {
   ProfileSchema,
@@ -11,9 +8,4 @@ export {
   trainResponseSchema,
   trainSchema,
 } from "./_domain/schemas";
-export type {
-  ProfileErrorResponse,
-  ProfileResponse,
-  TrainErrorResponseType,
-  TrainResponseType,
-} from "./_domain/types";
+export type { ProfileErrorResponse, ProfileResponse, TrainErrorResponseType, TrainResponseType } from "./_domain/types";

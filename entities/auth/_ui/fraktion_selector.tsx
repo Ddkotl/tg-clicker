@@ -23,9 +23,7 @@ export function FraktionSelector({
             key={f}
             onClick={() => setFraktion(f)}
             className={`duration-500 transform cursor-pointer rounded-xl border-2 max-w-[120px] ${
-              fraktion === f
-                ? "border-ring scale-105 shadow-lg"
-                : "border-background"
+              fraktion === f ? "border-ring scale-105 shadow-lg" : "border-background"
             }`}
           >
             <Image
@@ -36,9 +34,7 @@ export function FraktionSelector({
               className="rounded-lg h-[120px] w-[120px]"
             />
             <p className="flex justify-center items-center text-center p-2 font-medium">
-              {f === Fraktion.ADEPT
-                ? t("fraction.adept")
-                : t("fraction.novice")}
+              {f === Fraktion.ADEPT ? t("fraction.adept") : t("fraction.novice")}
             </p>
           </div>
         ))}

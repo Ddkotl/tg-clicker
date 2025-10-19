@@ -5,11 +5,7 @@ import {
   AuthResponseType,
   errorResponseSchema,
 } from "@/entities/auth";
-import {
-  AppJWTPayload,
-  encrypt,
-  SESSION_DURATION,
-} from "@/entities/auth/_vm/session";
+import { AppJWTPayload, encrypt, SESSION_DURATION } from "@/entities/auth/_vm/session";
 import { validateTelegramWebAppData } from "@/entities/auth/_vm/telegramAuth";
 import { UpdateOrCreateUser } from "@/entities/auth/index.server";
 import { NextRequest, NextResponse } from "next/server";

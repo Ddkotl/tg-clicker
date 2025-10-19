@@ -18,11 +18,10 @@ export function useRegistration() {
 
   const { data: session, isLoading: isLoadingSession } = useGetSessionQuery();
 
-  const { data: profile, isLoading: isLoadingProfile } =
-    useQuery<ProfileResponse>({
-      ...getProfileQuery(session?.data?.user.userId || ""),
-      enabled: !!session?.data?.user.userId,
-    });
+  const { data: profile, isLoading: isLoadingProfile } = useQuery<ProfileResponse>({
+    ...getProfileQuery(session?.data?.user.userId || ""),
+    enabled: !!session?.data?.user.userId,
+  });
 
   useEffect(() => {
     if (profile) {

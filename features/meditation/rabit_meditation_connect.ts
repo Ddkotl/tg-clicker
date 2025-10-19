@@ -16,11 +16,7 @@ export async function createRabbitMeditationConnection() {
 
   // Создаём очередь и биндим её к exchange
   await channel.assertQueue(MEDITATION_QUEUE, { durable: true });
-  await channel.bindQueue(
-    MEDITATION_QUEUE,
-    MEDITATION_EXCHANGE,
-    MEDITATION_QUEUE,
-  );
+  await channel.bindQueue(MEDITATION_QUEUE, MEDITATION_EXCHANGE, MEDITATION_QUEUE);
 
   return { connection, channel };
 }

@@ -70,11 +70,7 @@ export function Referral() {
 
   return (
     <div className="w-full max-w-md">
-      {referrer && (
-        <p className="text-green-500 mb-4">
-          You were referred by user {referrer}
-        </p>
-      )}
+      {referrer && <p className="text-green-500 mb-4">You were referred by user {referrer}</p>}
       <div className="flex flex-col space-y-4">
         <button
           onClick={handleInviteFriend}

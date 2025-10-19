@@ -1,11 +1,7 @@
 import { errorResponseSchema } from "@/entities/auth";
 import { getUserProfileByUserId } from "@/entities/auth/_repositories/user_repository";
 import { AppJWTPayload, getSession } from "@/entities/auth/_vm/session";
-import {
-  ProfileErrorResponse,
-  ProfileResponse,
-  profileResponseSchema,
-} from "@/entities/profile";
+import { ProfileErrorResponse, ProfileResponse, profileResponseSchema } from "@/entities/profile";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -33,10 +29,7 @@ export async function GET(req: NextRequest) {
 
     const profile = await getUserProfileByUserId(userIdToFetch);
     if (!profile || !profile.profile) {
-      return NextResponse.json(
-        { data: {}, message: "User not found" },
-        { status: 404 },
-      );
+      return NextResponse.json({ data: {}, message: "User not found" }, { status: 404 });
     }
 
     const response: ProfileResponse = {

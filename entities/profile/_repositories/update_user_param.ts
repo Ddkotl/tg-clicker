@@ -4,10 +4,7 @@ import { calcParamCost } from "@/shared/game_config/params_cost";
 
 export type ParamNameType = "power" | "protection" | "speed" | "skill" | "qi";
 
-export async function updateUserParam(
-  userId: string,
-  paramName: ParamNameType,
-) {
+export async function updateUserParam(userId: string, paramName: ParamNameType) {
   try {
     const user = await dataBase.user.findUnique({
       where: { id: userId },

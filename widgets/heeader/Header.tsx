@@ -1,16 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import {
-  User,
-  Gem,
-  Clock,
-  Backpack,
-  HeartPulse,
-  Droplet,
-  Coins,
-  Swords,
-} from "lucide-react";
+import { User, Gem, Clock, Backpack, HeartPulse, Droplet, Coins, Swords } from "lucide-react";
 import { useGetSessionQuery } from "@/entities/auth/_queries/session_queries";
 import { HeaderItem } from "./_ui/header_item";
 import { getProfileQuery, ProfileResponse } from "@/entities/profile";

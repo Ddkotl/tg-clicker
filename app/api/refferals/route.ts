@@ -1,8 +1,5 @@
 import { z } from "zod";
-import {
-  getReferrals,
-  getReferrer,
-} from "@/entities/user/_repositories/referral_repository";
+import { getReferrals, getReferrer } from "@/entities/user/_repositories/referral_repository";
 import { NextRequest, NextResponse } from "next/server";
 
 const querySchema = z.object({

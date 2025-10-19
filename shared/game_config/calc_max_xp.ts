@@ -37,13 +37,5 @@ export function calcMaxHP({
   const levelBonus = level * 10; // Например, 10 хп за каждый уровень
 
   // Итоговое максимальное здоровье
-  return (
-    baseHealth +
-    powerHealth +
-    protectionHealth +
-    speedHealth +
-    skillHealth +
-    qiHealth +
-    levelBonus
-  );
+  return baseHealth + powerHealth + protectionHealth + speedHealth + skillHealth + qiHealth + levelBonus;
 }

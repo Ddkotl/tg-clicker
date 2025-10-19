@@ -27,14 +27,9 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning>
       <head>
-        <Script
-          src="https://telegram.org/js/telegram-web-app.js"
-          strategy="beforeInteractive"
-        />
+        <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased dark theme-purple  `}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased dark theme-purple  `}>
         <AppProvider>{children}</AppProvider>
       </body>
     </html>

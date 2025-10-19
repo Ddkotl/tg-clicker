@@ -12,14 +12,12 @@ export default function Home() {
   const { t } = useTranslation();
   const { data: session } = useGetSessionQuery();
 
-  const { data: profile, isLoading: isLoadingProfile } =
-    useQuery<ProfileResponse>({
-      ...getProfileQuery(session?.data?.user.userId ?? ""),
-      enabled: !!session?.data?.user.userId,
-    });
+  const { data: profile, isLoading: isLoadingProfile } = useQuery<ProfileResponse>({
+    ...getProfileQuery(session?.data?.user.userId ?? ""),
+    enabled: !!session?.data?.user.userId,
+  });
 
-  const { data: dataFractionCounts, isLoading: isLoadingFractionCounts } =
-    useGetUsersCountInFractionsQuery();
+  const { data: dataFractionCounts, isLoading: isLoadingFractionCounts } = useGetUsersCountInFractionsQuery();
 
   return (
     <div className="friends-tab-con flex flex-col gap-2 transition-all duration-300">

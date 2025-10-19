@@ -8,12 +8,7 @@ interface ProfileStatProps {
   extra?: string;
 }
 
-export function ProfileStat({
-  label,
-  value,
-  progress,
-  extra,
-}: ProfileStatProps) {
+export function ProfileStat({ label, value, progress, extra }: ProfileStatProps) {
   return (
     <div>
       <div className="flex justify-between text-sm font-medium">

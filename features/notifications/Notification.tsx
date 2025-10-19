@@ -1,76 +1,77 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
-import { Bell, X } from "lucide-react";
-import Link from "next/link";
-import { Facts, FactsStatus } from "@/_generated/prisma";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/shared/components/ui/alert";
-import { Button } from "@/shared/components/ui/button";
+import { useMemo } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { FactsStatus } from "@/_generated/prisma";
 import { useGetSessionQuery } from "@/entities/auth";
-import { api_path } from "@/shared/lib/paths";
+import { FactResponseType, getFactsQuery, useCheckAllFactsMutation } from "@/entities/facts";
+import { queries_keys } from "@/shared/lib/queries_keys";
+import { FactsAlert } from "./_ui/facts_alert";
+import { useFactsSSE } from "./_vm/useFactsSSE";
+import { MeditationInfoResponse } from "@/entities/meditation";
+import { getMeditationInfoQuery } from "@/entities/meditation/_queries/get_meditation_info_query";
+import { ProcessAlert } from "./_ui/process_alert";
+import { useTranslation } from "../translations/use_translation";
+import { ui_path } from "@/shared/lib/paths";
 
 export function Notifications() {
-  const [facts, setFacts] = useState<Facts[]>([]);
-  const { data } = useGetSessionQuery();
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const mutation = useCheckAllFactsMutation();
+  const { data: session, isLoading: isLoadingSession } = useGetSessionQuery();
 
-  useEffect(() => {
-    if (!data?.data?.user.userId) return;
-    const userId = data?.data?.user.userId;
+  const userId = session?.data?.user.userId;
 
-    const sse = new EventSource(api_path.facts_sse(userId));
-    sse.onopen = () => console.log("✅ SSE connected for", userId);
-    sse.onerror = (e) => console.warn("SSE error", e);
-    sse.onmessage = (event) => {
-      console.log("🔥 RAW SSE event:", event.data);
-      const payload: Facts[] = JSON.parse(event.data);
-      setFacts((prev) => [...prev, ...payload]);
-    };
+  const { data: all_facts, isLoading: isLoadingFacts } = useQuery<FactResponseType>({
+    ...getFactsQuery(userId ?? ""),
+    enabled: !!userId,
+  });
 
-    sse.onerror = () => {
-      console.warn("SSE connection closed");
-      sse.close();
-    };
+  const { data: meditation_info } = useQuery<MeditationInfoResponse>({
+    ...getMeditationInfoQuery(userId ?? ""),
+    enabled: !!userId,
+  });
 
-    return () => sse.close();
-  }, [data]);
+  useFactsSSE(userId);
 
-  // фильтруем только новые факты
   const newFacts = useMemo(
-    () => facts.filter((f) => f.status === FactsStatus.NO_CHECKED),
-    [facts],
+    () => (all_facts?.data ?? []).filter((f) => f.status === FactsStatus.NO_CHECKED),
+    [all_facts],
   );
 
-  if (newFacts.length === 0) return null;
+  const handleCloseClick = () => {
+    if (!userId) return;
+    queryClient.removeQueries({ queryKey: queries_keys.facts_userId(userId) });
+    mutation.mutate({ userId });
+  };
+
+  // Медитация
+  const meditation = meditation_info?.data;
+  const isMeditating = meditation?.on_meditation ?? false;
+  let end: number | null = null;
+
+  if (isMeditating && meditation?.start_meditation && meditation?.meditation_hours) {
+    const start = new Date(meditation.start_meditation).getTime();
+    end = start + meditation.meditation_hours * 60 * 60 * 1000;
+  }
+
+  const isLoading = isLoadingSession || isLoadingFacts;
+  if (isLoading) return null;
 
   return (
-    <Alert className="px-2 w-full py-1 shine-effect relative flex items-start gap-2 bg-card border border-border shadow-md rounded-lg">
-      <div className="flex-1 flex gap-3">
-        <Bell className="h-5 w-5 text-primary shrink-0 " />
-        <AlertTitle className="font-semibold">
-          {`Есть новые события (${newFacts.length})`}
-        </AlertTitle>
-        <AlertDescription className="text-sm text-muted-foreground">
-          <Link
-            href="#"
-            className="text-primary hover:text-primar/80 font-medium underline underline-offset-2"
-          >
-            Проверь.
-          </Link>
-        </AlertDescription>
-      </div>
+    <div className="flex flex-col gap-2">
+      {/* Постоянный алерт если игрок медитирует */}
+      {isMeditating && end && (
+        <ProcessAlert
+          endTime={end}
+          href={ui_path.meditation_page()}
+          description={t("headquarter.meditation_in_progress")}
+          label={t("headquarter.remaining")}
+        />
+      )}
 
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-5 w-5 text-muted-foreground hover:text-foreground cursor-pointer"
-        onClick={() => setFacts([])} // очищаем все факты и скрываем компонент
-      >
-        <X className="h-4 w-4" />
-      </Button>
-    </Alert>
+      {/* Уведомления о фактах — показываем только если они есть */}
+      {newFacts.length > 0 && <FactsAlert count={newFacts.length} onClose={handleCloseClick} />}
+    </div>
   );
 }
