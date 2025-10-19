@@ -18,21 +18,16 @@ export function Notifications() {
   const { data } = useGetSessionQuery();
 
   useEffect(() => {
+    if (!data?.data?.user.userId) return;
     const userId = data?.data?.user.userId;
-    if (!userId) return;
 
     const sse = new EventSource(api_path.facts_sse(userId));
-    sse.onopen = () => console.warn("SSE connected");
+    sse.onopen = () => console.log("✅ SSE connected for", userId);
     sse.onerror = (e) => console.warn("SSE error", e);
     sse.onmessage = (event) => {
-      console.warn("🔥 RAW SSE event:", event.data);
-      try {
-        const payload: Facts[] = JSON.parse(event.data);
-        console.warn("📦 Parsed payload:", payload);
-        setFacts((prev) => [...prev, ...payload]);
-      } catch (err) {
-        console.error("SSE parse error:", err);
-      }
+      console.log("🔥 RAW SSE event:", event.data);
+      const payload: Facts[] = JSON.parse(event.data);
+      setFacts((prev) => [...prev, ...payload]);
     };
 
     sse.onerror = () => {

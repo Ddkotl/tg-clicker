@@ -27,8 +27,19 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: redis:7.2
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+
 volumes:
   postgres_tg_clicker_volume:
+  redis_data:
 
 networks:
   tg_clicker_net:
