@@ -4,14 +4,28 @@ import {
   FactErrorResponseType,
 } from "@/entities/facts";
 import { NextRequest, NextResponse } from "next/server";
+import Redis from "ioredis";
 
-type SendFn = (payload: Facts[]) => void;
+const redis_conf = {
+  host: "localhost",
+  port: 6379,
+};
+
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
-const subscribers = new Map<string, Set<SendFn>>();
+const redis = new Redis(redis_conf);
 
 export async function GET(req: NextRequest) {
   console.log("sse route start");
+  console.log(
+    "✅ SSE route loaded, process.versions.node =",
+    process.versions.node,
+  );
+  console.log(
+    "✅ SSE route environment =",
+    process.env.NEXT_RUNTIME ?? "unknown",
+  );
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get("userId");
   if (!userId) {
@@ -28,33 +42,42 @@ export async function GET(req: NextRequest) {
     async start(controller) {
       const encoder = new TextEncoder();
 
-      const send: SendFn = (payload) => {
+      const send = (payload: Facts[]) => {
         try {
           controller.enqueue(
             encoder.encode(`data: ${JSON.stringify(payload)}\n\n`),
           );
         } catch (e) {
-          // ignore enqueue errors
+          console.error(e);
         }
       };
+      // подключаемся к Redis
 
-      // сохраняем отправку для этого user
-      if (!subscribers.has(userId)) {
-        subscribers.set(userId, new Set());
-      }
-      subscribers.get(userId)!.add(send);
-      const interval = setInterval(() => {
+      const sub = new Redis(redis_conf);
+      await sub.subscribe(`user:${userId}`, (err, count) => {
+        if (err) console.error("Redis subscribe error:", err);
+        else
+          console.log(`Subscribed to ${count} channel(s) for user ${userId}`);
+      });
+
+      sub.on("message", (_, message) => {
+        console.log("🔔 SSE received from Redis:", message);
         try {
-          controller.enqueue(encoder.encode(`:ping\n\n`)); // комментарий в SSE
-        } catch {}
+          const payload: Facts[] = JSON.parse(message);
+          send(payload);
+        } catch (e) {
+          console.error("SSE parse error:", e);
+        }
+      });
+      controller.enqueue(encoder.encode(`event: connected\ndata: ok\n\n`));
+      // keep-alive ping
+      const interval = setInterval(() => {
+        controller.enqueue(encoder.encode(`:ping\n\n`));
       }, 30000);
       // при закрытии соединения удаляем подписчика
       req.signal.addEventListener("abort", () => {
-        subscribers.get(userId)?.delete(send);
-        if (subscribers.get(userId)?.size === 0) {
-          subscribers.delete(userId);
-        }
         clearInterval(interval);
+        sub.disconnect();
         controller.close();
       });
     },
@@ -65,15 +88,14 @@ export async function GET(req: NextRequest) {
       "Content-Type": "text/event-stream",
       "Cache-Control": "no-cache, no-transform",
       Connection: "keep-alive",
+      "X-Accel-Buffering": "no",
+      "Transfer-Encoding": "chunked",
     },
   });
 }
 
 export function pushToSubscriber(userId: string, payload: Facts[]) {
-  console.log("pushing facts to subscriber", userId, payload);
-  const set = subscribers.get(userId);
-  if (!set) return;
-  for (const send of set) {
-    send(payload);
-  }
+  console.log("userId", userId);
+  console.log("payload", payload);
+  redis.publish(`user:${userId}`, JSON.stringify(payload));
 }
