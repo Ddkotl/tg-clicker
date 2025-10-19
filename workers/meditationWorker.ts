@@ -10,6 +10,10 @@ if (!process.env.WORKER_SECRET) {
   console.error("❌ WORKER_SECRET is not set in environment");
   process.exit(1);
 }
+if (!process.env.APP_DOMEN) {
+  console.error("❌ APP_DOMEN is not set in environment");
+  process.exit(1);
+}
 
 async function startWorker() {
   const connection = await amqp.connect(RABBITMQ_URL);
@@ -37,7 +41,7 @@ async function startWorker() {
         const { userId } = JSON.parse(msg.content.toString());
         console.log(`💫 Meditation completed for user ${userId}`);
         await fetch(
-          "https://tmp-regulations-horn-scanning.trycloudflare.com/api/headquarter/meditation/get_meditation_reward",
+          `${process.env.APP_DOMEN}/api/headquarter/meditation/get_meditation_reward`,
           {
             method: "POST",
             headers: {
