@@ -1,4 +1,4 @@
-import { Notifications } from "@/shared/components/custom_ui/Notification";
+import { Notifications } from "@/features/notifications/Notification";
 import { Footer } from "@/widgets/footer/Footer";
 import { Header } from "@/widgets/heeader/Header";
 

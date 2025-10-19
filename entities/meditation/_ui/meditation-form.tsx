@@ -34,7 +34,6 @@ import { TranslationKey } from "@/features/translations/translate_type";
 import { useEffect } from "react";
 import { Spinner } from "@/shared/components/ui/spinner";
 import { CountdownTimer } from "@/shared/components/custom_ui/timer";
-import { useGetMeditationReward } from "../_mutations/use_get_meditation_reward";
 
 export function MeditationForm({
   onTimeChange,
@@ -52,7 +51,7 @@ export function MeditationForm({
     ...getMeditationInfoQuery(session?.data?.user.userId ?? ""),
     enabled: !!session?.data?.user.userId,
   });
-  const mutation = useGetMeditationReward();
+  // const mutation = useGetMeditationReward();
   const form = useForm<z.infer<typeof MeditatonFormSchema>>({
     resolver: zodResolver(MeditatonFormSchema),
     defaultValues: {
@@ -61,20 +60,20 @@ export function MeditationForm({
   });
   const timeValue = form.watch("time");
 
-  useEffect(() => {
-    if (!meditation_info?.data) return;
+  // useEffect(() => {
+  //   if (!meditation_info?.data) return;
 
-    const meditation = meditation_info.data;
-    const start = meditation.start_meditation
-      ? new Date(meditation.start_meditation).getTime()
-      : 0;
-    const end = start + (meditation.meditation_hours ?? 0) * 60 * 60 * 1000;
-    const now = Date.now();
+  //   const meditation = meditation_info.data;
+  //   const start = meditation.start_meditation
+  //     ? new Date(meditation.start_meditation).getTime()
+  //     : 0;
+  //   const end = start + (meditation.meditation_hours ?? 0) * 60 * 60 * 1000;
+  //   const now = Date.now();
 
-    if (meditation.on_meditation && now >= end && meditation.userId) {
-      mutation.mutate({ userId: meditation.userId });
-    }
-  }, [meditation_info, mutation]);
+  //   if (meditation.on_meditation && now >= end && meditation.userId) {
+  //     mutation.mutate({ userId: meditation.userId });
+  //   }
+  // }, [meditation_info, mutation]);
 
   useEffect(() => {
     if (onTimeChange) {

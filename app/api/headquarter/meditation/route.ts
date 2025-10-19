@@ -14,10 +14,10 @@ import {
   getMeditationInfo,
   goMeditation,
 } from "@/entities/meditation/index.server";
-import { HP_REGEN_QUEUE } from "@/features/hp_regen/rabit_hp_regen_connect";
 import {
   createRabbitMeditationConnection,
   MEDITATION_EXCHANGE,
+  MEDITATION_QUEUE,
 } from "@/features/meditation/rabit_meditation_connect";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -109,11 +109,12 @@ export async function POST(req: NextRequest) {
       goMeditationErrorResponseSchema.parse(errorResponse);
       return NextResponse.json(errorResponse, { status: 400 });
     }
-    const delay = hours * 60 * 60 * 1000;
+    // const delay = hours * 60 * 60 * 1000;
+    const delay = hours * 1000;
     const { channel, connection } = await createRabbitMeditationConnection();
     channel.publish(
       MEDITATION_EXCHANGE,
-      HP_REGEN_QUEUE,
+      MEDITATION_QUEUE,
       Buffer.from(JSON.stringify({ userId })),
       {
         headers: { "x-delay": delay },
