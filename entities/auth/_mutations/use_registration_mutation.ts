@@ -1,11 +1,7 @@
 import { useTranslation } from "@/features/translations/use_translation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import {
-  RegistrationErrorResponseType,
-  RegistrationRequestType,
-  RegistrationResponseType,
-} from "../_domain/types";
+import { RegistrationErrorResponseType, RegistrationRequestType, RegistrationResponseType } from "../_domain/types";
 import { toast } from "sonner";
 
 export function useRegistrationMutation() {
@@ -13,11 +9,7 @@ export function useRegistrationMutation() {
   const { t } = useTranslation();
   const router = useRouter();
 
-  return useMutation<
-    RegistrationResponseType | RegistrationErrorResponseType,
-    Error,
-    RegistrationRequestType
-  >({
+  return useMutation<RegistrationResponseType, RegistrationErrorResponseType, RegistrationRequestType>({
     mutationFn: async (data) => {
       const res = await fetch("/api/auth/registration", {
         method: "POST",

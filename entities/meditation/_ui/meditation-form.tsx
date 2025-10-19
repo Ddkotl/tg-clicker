@@ -14,32 +14,15 @@ import { cn } from "@/shared/lib/utils";
 import { useGetSessionQuery } from "@/entities/auth";
 import { useGoMeditationMutation } from "../_mutations/use_go_meditation_mutation";
 import { MeditationInfoResponse } from "../_domain/types";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/shared/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/shared/components/ui/select";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";
 import { Button } from "@/shared/components/ui/button";
 import { TranslationKey } from "@/features/translations/translate_type";
 import { useEffect } from "react";
 import { Spinner } from "@/shared/components/ui/spinner";
 import { CountdownTimer } from "@/shared/components/custom_ui/timer";
 
-export function MeditationForm({
-  onTimeChange,
-}: {
-  onTimeChange?: (time: string) => void;
-}) {
+export function MeditationForm({ onTimeChange }: { onTimeChange?: (time: string) => void }) {
   const { t } = useTranslation();
   const { data: session, isLoading: isSessionLoading } = useGetSessionQuery();
 
@@ -89,10 +72,7 @@ export function MeditationForm({
       toast.error(t("auth_error"));
       return;
     }
-    meditationMutation.mutate(
-      { userId, hours: Number(data.time) },
-      { onSuccess: () => refetch() },
-    );
+    meditationMutation.mutate({ userId, hours: Number(data.time) }, { onSuccess: () => refetch() });
   };
 
   const isLoading = isSessionLoading || isMeditationLoading;
@@ -101,11 +81,7 @@ export function MeditationForm({
   const isMeditating = meditation?.on_meditation ?? false;
   let end: number | null = null;
 
-  if (
-    isMeditating &&
-    meditation?.start_meditation &&
-    meditation?.meditation_hours
-  ) {
+  if (isMeditating && meditation?.start_meditation && meditation?.meditation_hours) {
     const start = new Date(meditation.start_meditation).getTime();
     end = start + meditation.meditation_hours * 60 * 60 * 1000;
   }
@@ -123,23 +99,17 @@ export function MeditationForm({
       {isMeditating && (
         <div className="p-3 text-sm shine-effect rounded-md  bg-primary/70  text-foreground/80  flex gap-2 items-center">
           <span>{t("headquarter.meditation_in_progress")}: </span>
-          {end && (
-            <CountdownTimer endTime={end} label={t("headquarter.remaining")} />
-          )}
+          {end && <CountdownTimer endTime={end} label={t("headquarter.remaining")} />}
         </div>
       )}
       <div
         className={cn(
           "relative transition-opacity",
-          (isMeditating || meditationMutation.isPending) &&
-            "opacity-50 pointer-events-none",
+          (isMeditating || meditationMutation.isPending) && "opacity-50 pointer-events-none",
         )}
       >
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col gap-2"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-2">
             <FormField
               control={form.control}
               name="time"
@@ -154,10 +124,7 @@ export function MeditationForm({
                     </FormControl>
                     <SelectContent>
                       {Array.from({ length: 8 }).map((_, i) => (
-                        <SelectItem
-                          key={(i + 1).toString()}
-                          value={(i + 1).toString()}
-                        >
+                        <SelectItem key={(i + 1).toString()} value={(i + 1).toString()}>
                           {`${i + 1} ${t(`hour.${getHoursString(i + 1)}` as TranslationKey)}`}
                         </SelectItem>
                       ))}
@@ -167,10 +134,7 @@ export function MeditationForm({
                 </FormItem>
               )}
             />
-            <Button
-              type="submit"
-              disabled={meditationMutation.isPending || isMeditating}
-            >
+            <Button type="submit" disabled={meditationMutation.isPending || isMeditating}>
               {t("headquarter.meditate")}
             </Button>
           </form>

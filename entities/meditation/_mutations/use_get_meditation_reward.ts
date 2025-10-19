@@ -14,14 +14,11 @@ export function useGetMeditationReward() {
     GetMeditationRewardRequestType
   >({
     mutationFn: async (data) => {
-      const res = await fetch(
-        "/api/headquarter/meditation/get_meditation_reward",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        },
-      );
+      const res = await fetch("/api/headquarter/meditation/get_meditation_reward", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
       const result = await res.json();
       return result;
     },

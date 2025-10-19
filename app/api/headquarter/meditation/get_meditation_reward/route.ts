@@ -1,10 +1,7 @@
 import { FactsStatus, FactsType } from "@/_generated/prisma";
 import { pushToSubscriber } from "@/app/api/user/facts/stream/route";
 import { createFact } from "@/entities/facts/index.server";
-import {
-  GetMeditationRewardErrorResponseType,
-  GetMeditationRewardResponseType,
-} from "@/entities/meditation";
+import { GetMeditationRewardErrorResponseType, GetMeditationRewardResponseType } from "@/entities/meditation";
 import {
   getMeditationRewardErrorResponseSchema,
   getMeditationRewardRequestSchema,
@@ -58,10 +55,7 @@ export async function POST(request: NextRequest) {
     getMeditationRewardResponseSchema.parse(response);
     return NextResponse.json(response);
   } catch (error) {
-    console.error(
-      "POST /headquarer/meditation/get_meditation_reward error:",
-      error,
-    );
+    console.error("POST /headquarer/meditation/get_meditation_reward error:", error);
     const errorResponse: GetMeditationRewardErrorResponseType = {
       data: {},
       type: "error",

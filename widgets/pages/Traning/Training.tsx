@@ -14,10 +14,7 @@ import { useTrainParamMutation } from "@/entities/profile/_mutations/use_train_p
 export function Training() {
   const { t } = useTranslation();
   const params = useParams<{ userId: string }>();
-  const { data: profile, isLoading: isLoadingProfile } = useQuery<
-    ProfileResponse,
-    ProfileErrorResponse
-  >({
+  const { data: profile, isLoading: isLoadingProfile } = useQuery<ProfileResponse, ProfileErrorResponse>({
     ...getProfileQuery(params.userId),
   });
 

@@ -1,9 +1,4 @@
-import {
-  factErrorResponseSchema,
-  FactErrorResponseType,
-  factResponseSchema,
-  FactResponseType,
-} from "@/entities/facts";
+import { factErrorResponseSchema, FactErrorResponseType, factResponseSchema, FactResponseType } from "@/entities/facts";
 import { getUserFacts } from "@/entities/facts/index.server";
 import { NextRequest, NextResponse } from "next/server";
 

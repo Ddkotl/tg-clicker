@@ -11,11 +11,7 @@ interface CountdownTimerProps {
   onComplete?: () => void;
 }
 
-export function CountdownTimer({
-  endTime,
-  label,
-  onComplete,
-}: CountdownTimerProps) {
+export function CountdownTimer({ endTime, label, onComplete }: CountdownTimerProps) {
   const [timeLeft, setTimeLeft] = React.useState(() => endTime - Date.now());
 
   React.useEffect(() => {

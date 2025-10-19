@@ -6,8 +6,7 @@ const workerFiles = glob.sync("workers/**/*.ts");
 
 workerFiles.forEach((file) => {
   // Создаём имя выходного файла по пути
-  const outfile =
-    "dist/" + file.replace(/^workers\//, "").replace(/\.ts$/, ".js");
+  const outfile = "dist/" + file.replace(/^workers\//, "").replace(/\.ts$/, ".js");
 
   esbuild
     .build({

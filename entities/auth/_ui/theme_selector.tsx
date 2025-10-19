@@ -4,13 +4,7 @@ import { Theme } from "@/features/themes/theme_context";
 import { Label } from "@/shared/components/ui/label";
 import { useTranslation } from "@/features/translations/use_translation";
 
-export function ThemeSelector({
-  theme,
-  setTheme,
-}: {
-  theme: Theme;
-  setTheme: (t: Theme) => void;
-}) {
+export function ThemeSelector({ theme, setTheme }: { theme: Theme; setTheme: (t: Theme) => void }) {
   const { t } = useTranslation();
   return (
     <div className="flex flex-col gap-2">

@@ -4,11 +4,7 @@ import { TranslationKey } from "@/features/translations/translate_type";
 import { MainButton } from "@/shared/components/custom_ui/main-button";
 import { HomeNavItemType } from "../_domain/types";
 
-export function HomeNav({
-  t,
-}: {
-  t: (key: TranslationKey, vars?: Record<string, string | number>) => string;
-}) {
+export function HomeNav({ t }: { t: (key: TranslationKey, vars?: Record<string, string | number>) => string }) {
   const home_nav_items: HomeNavItemType[] = [
     { label: `📜 ${t("home.navigation.chronicles")}`, href: "/game/facts" },
     { label: `⚔️ ${t("home.navigation.battle")}`, href: "/game/battle" },

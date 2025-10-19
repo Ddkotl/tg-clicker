@@ -20,3 +20,18 @@ export const factErrorResponseSchema = z.object({
   data: z.object({}).optional(),
   message: z.string(),
 });
+
+export const checkAllFactsRequestSchema = z.object({
+  userId: z.string(),
+});
+
+export const checkAllFactsResponseSchema = z.object({
+  data: z.object({ userId: z.string() }),
+  message: z.string(),
+  type: z.literal("success"),
+});
+export const checkAllFactsErrorResponseSchema = z.object({
+  data: z.object({}),
+  message: z.string(),
+  type: z.literal("error"),
+});

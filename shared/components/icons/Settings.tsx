@@ -4,13 +4,7 @@ const Settings: React.FC<IconProps> = ({ size = 20, className = "" }) => {
   const svgSize = `${size}px`;
 
   return (
-    <svg
-      className={className}
-      xmlns="http://www.w3.org/2000/svg"
-      width={svgSize}
-      height={svgSize}
-      viewBox="0 0 20 20"
-    >
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" width={svgSize} height={svgSize} viewBox="0 0 20 20">
       <g transform="translate(3,3) scale(0.7)">
         <path
           fill="currentColor"

@@ -7,18 +7,12 @@ import { FactsType } from "@/_generated/prisma";
 import { getHoursString } from "@/entities/meditation/_vm/getHoursString";
 import { TranslationKey } from "@/features/translations/translate_type";
 
-export function FactsList({
-  t,
-}: {
-  t: (key: TranslationKey, vars?: Record<string, string | number>) => string;
-}) {
+export function FactsList({ t }: { t: (key: TranslationKey, vars?: Record<string, string | number>) => string }) {
   const { data: session, isLoading: isLoadingSession } = useGetSessionQuery();
-  const { data: facts, isLoading: isLoadingFacts } = useQuery<FactResponseType>(
-    {
-      ...getFactsQuery(session?.data?.user.userId ?? ""),
-      enabled: !!session?.data?.user.userId,
-    },
-  );
+  const { data: facts, isLoading: isLoadingFacts } = useQuery<FactResponseType>({
+    ...getFactsQuery(session?.data?.user.userId ?? ""),
+    enabled: !!session?.data?.user.userId,
+  });
   const isLoading = isLoadingSession || isLoadingFacts;
   if (isLoading) {
     return (
@@ -36,10 +30,7 @@ export function FactsList({
       {facts?.data.map((fact) => {
         if (fact.type === FactsType.MEDITATION) {
           return (
-            <div
-              key={fact.id}
-              className="p-3 bg-card/80 text-foreground/80 rounded-md"
-            >
+            <div key={fact.id} className="p-3 bg-card/80 text-foreground/80 rounded-md">
               {t("facts.meditation_fact", {
                 time: `${fact.active_hours} ${t(`hour.${getHoursString(fact.active_hours ?? 0)}` as TranslationKey)}`,
                 mana: fact.mana_reward ?? 0,

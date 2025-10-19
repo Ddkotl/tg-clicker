@@ -19,9 +19,7 @@ export type AuthErrorResponseType = z.infer<typeof errorResponseSchema>;
 export type AuthRequestType = z.infer<typeof authRequestSchema>;
 
 export type SessionResponseType = z.infer<typeof sessionResponseSchema>;
-export type SessionErrorResponseType = z.infer<
-  typeof errorSessionResponseSchema
->;
+export type SessionErrorResponseType = z.infer<typeof errorSessionResponseSchema>;
 
 export type CreateUserType = {
   telegram_id: string;
@@ -34,16 +32,8 @@ export type CreateUserType = {
   auth_date?: string;
 };
 
-export type CheckNicknameResponseType = z.infer<
-  typeof checkNicknameResponseSchema
->;
-export type CheckNicknameErrorResponseType = z.infer<
-  typeof checkNicknameerrorResponseSchema
->;
-export type RegistrationResponseType = z.infer<
-  typeof registrationResponseSchema
->;
-export type RegistrationErrorResponseType = z.infer<
-  typeof registrationErrorResponseSchema
->;
+export type CheckNicknameResponseType = z.infer<typeof checkNicknameResponseSchema>;
+export type CheckNicknameErrorResponseType = z.infer<typeof checkNicknameerrorResponseSchema>;
+export type RegistrationResponseType = z.infer<typeof registrationResponseSchema>;
+export type RegistrationErrorResponseType = z.infer<typeof registrationErrorResponseSchema>;
 export type RegistrationRequestType = z.infer<typeof registrationRequestSchema>;

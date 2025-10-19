@@ -1,8 +1,5 @@
 import "dotenv/config";
-import {
-  MEDITATION_EXCHANGE,
-  MEDITATION_QUEUE,
-} from "@/features/meditation/rabit_meditation_connect";
+import { MEDITATION_EXCHANGE, MEDITATION_QUEUE } from "@/features/meditation/rabit_meditation_connect";
 import { RABBITMQ_URL } from "@/shared/lib/consts";
 import amqp from "amqplib";
 
@@ -25,11 +22,7 @@ async function startWorker() {
   });
 
   await channel.assertQueue(MEDITATION_QUEUE, { durable: true });
-  await channel.bindQueue(
-    MEDITATION_QUEUE,
-    MEDITATION_EXCHANGE,
-    MEDITATION_QUEUE,
-  );
+  await channel.bindQueue(MEDITATION_QUEUE, MEDITATION_EXCHANGE, MEDITATION_QUEUE);
 
   console.log("⏳ Meditation worker is waiting for messages...");
 
@@ -40,17 +33,14 @@ async function startWorker() {
       try {
         const { userId } = JSON.parse(msg.content.toString());
         console.log(`💫 Meditation completed for user ${userId}`);
-        await fetch(
-          `${process.env.APP_DOMEN}/api/headquarter/meditation/get_meditation_reward`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "x-worker-secret": process.env.WORKER_SECRET!,
-            },
-            body: JSON.stringify({ userId }),
+        await fetch(`${process.env.APP_DOMEN}/api/headquarter/meditation/get_meditation_reward`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-worker-secret": process.env.WORKER_SECRET!,
           },
-        );
+          body: JSON.stringify({ userId }),
+        });
         console.log(`💫 Meditation reward get for user ${userId}`);
         channel.ack(msg);
       } catch (err) {

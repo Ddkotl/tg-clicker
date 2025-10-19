@@ -17,9 +17,7 @@ interface ValidationResult {
   message: string;
 }
 
-export function validateTelegramWebAppData(
-  telegramInitData: string,
-): ValidationResult {
+export function validateTelegramWebAppData(telegramInitData: string): ValidationResult {
   const BOT_TOKEN = process.env.BOT_TOKEN;
 
   let validatedData: ValidatedData | null = null;
@@ -70,14 +68,8 @@ export function validateTelegramWebAppData(
     .map(([key, value]) => `${key}=${value}`)
     .join("\n");
 
-  const secretKey = crypto
-    .createHmac("sha256", "WebAppData")
-    .update(BOT_TOKEN)
-    .digest();
-  const calculatedHash = crypto
-    .createHmac("sha256", secretKey)
-    .update(dataCheckString)
-    .digest("hex");
+  const secretKey = crypto.createHmac("sha256", "WebAppData").update(BOT_TOKEN).digest();
+  const calculatedHash = crypto.createHmac("sha256", secretKey).update(dataCheckString).digest("hex");
 
   if (calculatedHash === hash) {
     validatedData = Object.fromEntries(initData.entries());

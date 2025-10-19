@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/shared/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { FractionStats } from "./fraction_stats";
 import { TranslationKey } from "@/features/translations/translate_type";
@@ -28,15 +23,12 @@ export function WelcomeCard({
   return (
     <Card className="px-1 py-4 gap-2 bg-card border border-border shadow-lg">
       <CardHeader className="px-2">
-        <CardTitle className="text-primary text-lg font-bold">
-          {t("home.ready_to_battle")}
-        </CardTitle>
+        <CardTitle className="text-primary text-lg font-bold">{t("home.ready_to_battle")}</CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-3 px-2 text-sm leading-relaxed text-card-foreground text-justify">
         <div>
-          <b className="text-base text-primary">{t("mentor")}</b>{" "}
-          {t("home.welcome_wanderer")}
+          <b className="text-base text-primary">{t("mentor")}</b> {t("home.welcome_wanderer")}
           <b className="text-primary">
             {isLoadingProfile ? (
               <Skeleton className="mx-2 h-3 w-8 inline-block align-middle" />

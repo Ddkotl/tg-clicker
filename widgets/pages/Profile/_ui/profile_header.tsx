@@ -10,19 +10,11 @@ interface ProfileHeaderProps {
   fraktion?: Fraktion | null;
 }
 
-export function ProfileHeader({
-  avatarUrl,
-  nickname,
-  playerMotto,
-  fraktion,
-}: ProfileHeaderProps) {
+export function ProfileHeader({ avatarUrl, nickname, playerMotto, fraktion }: ProfileHeaderProps) {
   const { t } = useTranslation();
 
   const motto =
-    playerMotto ||
-    (fraktion === Fraktion.ADEPT
-      ? t("profile.no_motto_adept")
-      : t("profile.no_motto_novice"));
+    playerMotto || (fraktion === Fraktion.ADEPT ? t("profile.no_motto_adept") : t("profile.no_motto_novice"));
 
   return (
     <div className="flex items-center space-x-4">

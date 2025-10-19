@@ -5,15 +5,7 @@ import { Button } from "../ui/button";
 import { Spinner } from "../ui/spinner";
 import { cn } from "@/shared/lib/utils";
 
-export function MainButton({
-  label,
-  href,
-  isLoading = false,
-}: {
-  label: string;
-  href: string;
-  isLoading?: boolean;
-}) {
+export function MainButton({ label, href, isLoading = false }: { label: string; href: string; isLoading?: boolean }) {
   return (
     <Button
       asChild

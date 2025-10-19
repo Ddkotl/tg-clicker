@@ -1,13 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  useEffect,
-} from "react";
+import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
 export type Theme = "red" | "blue" | "green" | "purple" | "yellow";
 
