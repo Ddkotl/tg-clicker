@@ -1,10 +1,19 @@
-import { giveMeditationReward } from "@/entities/meditation/index.server";
+import "dotenv/config";
 import {
   MEDITATION_EXCHANGE,
   MEDITATION_QUEUE,
 } from "@/features/meditation/rabit_meditation_connect";
 import { RABBITMQ_URL } from "@/shared/lib/consts";
 import amqp from "amqplib";
+
+if (!process.env.WORKER_SECRET) {
+  console.error("❌ WORKER_SECRET is not set in environment");
+  process.exit(1);
+}
+if (!process.env.APP_DOMEN) {
+  console.error("❌ APP_DOMEN is not set in environment");
+  process.exit(1);
+}
 
 async function startWorker() {
   const connection = await amqp.connect(RABBITMQ_URL);
@@ -31,7 +40,18 @@ async function startWorker() {
       try {
         const { userId } = JSON.parse(msg.content.toString());
         console.log(`💫 Meditation completed for user ${userId}`);
-        await giveMeditationReward(userId);
+        await fetch(
+          `${process.env.APP_DOMEN}/api/headquarter/meditation/get_meditation_reward`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-worker-secret": process.env.WORKER_SECRET!,
+            },
+            body: JSON.stringify({ userId }),
+          },
+        );
+        console.log(`💫 Meditation reward get for user ${userId}`);
         channel.ack(msg);
       } catch (err) {
         console.error("❌ Meditation worker failed:", err);

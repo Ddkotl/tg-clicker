@@ -5,4 +5,5 @@ export const ui_path = {
 
 export const api_path = {
   get_facts: (userId: string) => `/api/user/facts?userId=${userId}`,
+  facts_sse: (userId: string) => `/api/user/facts/stream?userId=${userId}`,
 };
