@@ -7,7 +7,7 @@ export const getFactsQuery = (userId: string) => ({
   queryFn: async ({ signal }: { signal: AbortSignal }) => {
     const res = await fetch(api_path.get_facts(userId), { signal });
     if (!res.ok) {
-      throw new Error("Failed to fetch user");
+      throw new Error("Failed to fetch facts");
     }
     return res.json();
   },

@@ -38,7 +38,7 @@ export function Registration() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <Image src="/loading.png" width={300} height={300} alt={t("loading")} />
+        <Image priority src="/loading.png" width={300} height={300} alt={t("loading")} />
       </div>
     );
   }

@@ -8,7 +8,7 @@ export function useCheckAllFactsMutation() {
 
   return useMutation<CheckAllFactsResponseType, CheckAllFactsErrorResponseType, CheckAllFactsRequestType>({
     mutationFn: async (data) => {
-      const res = await fetch(api_path.check_all_facts(), {
+      const res = await fetch(api_path.check_all_facts(data.userId), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
