@@ -7,7 +7,7 @@ export function useAuthQuery() {
     queryFn: async () => {
       const { default: WebApp } = await import("@twa-dev/sdk");
       WebApp.ready();
-
+      WebApp.disableVerticalSwipes();
       const initData = WebApp.initData;
       const start_param = WebApp.initDataUnsafe.start_param;
       console.log("init data", initData);

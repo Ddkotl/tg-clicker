@@ -95,7 +95,9 @@ export const ru_lang: Messages = {
     fact_title: "Факты",
     fact_description: "Здесь храняться события, произошедшие с тобой за последние трое суток.",
     no_fact: "В последнее время ничего не происходило",
-    meditation_fact: "Ты медитировал {time} и получил {mana} маны и {exp} опыта.",
+    meditation_fact1: "Ты медитировал {time} и получил:",
+    meditation_fact2: "маны и",
+    meditation_fact3: "опыта.",
     notification: {
       new_events: "Есть новые события",
       сheck: "проверить",
