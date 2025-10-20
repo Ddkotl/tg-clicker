@@ -10,9 +10,10 @@ interface ProcessAlertProps {
   href: string;
   description: string;
   label: string;
+  onClose: () => void;
 }
 
-export function ProcessAlert({ endTime, description, label, href }: ProcessAlertProps) {
+export function ProcessAlert({ endTime, description, label, href, onClose }: ProcessAlertProps) {
   return (
     <Alert className="px-2 w-full justify-between py-1 animate-pulse relative flex items-center gap-2 bg-card border border-border shadow-md rounded-lg">
       <div className="flex-1 flex gap-3">
@@ -24,7 +25,11 @@ export function ProcessAlert({ endTime, description, label, href }: ProcessAlert
           </div>
         </AlertDescription>
       </div>
-      <Link href={href} className="text-primary hover:text-primary/80 font-medium underline underline-offset-2">
+      <Link
+        onClick={onClose}
+        href={href}
+        className="text-primary hover:text-primary/80 font-medium underline underline-offset-2"
+      >
         <ArrowRightCircle />
       </Link>
     </Alert>

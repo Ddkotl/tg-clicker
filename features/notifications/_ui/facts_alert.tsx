@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, X } from "lucide-react";
+import { BellPlus, X } from "lucide-react";
 import Link from "next/link";
 import { Alert, AlertDescription, AlertTitle } from "@/shared/components/ui/alert";
 import { Button } from "@/shared/components/ui/button";
@@ -18,7 +18,7 @@ export function FactsAlert({ count, onClose }: FactsAlertProps) {
   return (
     <Alert className="px-2 w-full justify-between py-1 shine-effect relative flex items-start gap-2 bg-card border border-border shadow-md rounded-lg">
       <div className="flex-1 flex gap-3">
-        <Bell className="h-5 w-5 text-primary shrink-0" />
+        <BellPlus className="h-5 w-5 text-primary shrink-0" />
         <AlertTitle className="font-semibold">{`${t("facts.notification.new_events")} (${count})`}</AlertTitle>
         <AlertDescription className="text-sm text-muted-foreground">
           <Link

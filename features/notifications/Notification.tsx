@@ -64,13 +64,13 @@ export function Notifications() {
       {isMeditating && end && (
         <ProcessAlert
           endTime={end}
+          onClose={handleCloseClick}
           href={ui_path.meditation_page()}
           description={t("headquarter.meditation_in_progress")}
           label={t("headquarter.remaining")}
         />
       )}
 
-      {/* Уведомления о фактах — показываем только если они есть */}
       {newFacts.length > 0 && <FactsAlert count={newFacts.length} onClose={handleCloseClick} />}
     </div>
   );

@@ -98,7 +98,9 @@ export const en_lang = {
     fact_title: "Facts",
     fact_description: "Events that happened to you over the last three days are stored here.",
     no_fact: "Nothing has happened lately",
-    meditation_fact: "You meditated for {time} and received {mana} mana and {exp} experience.",
+    meditation_fact1: "You meditated for {time} and received:",
+    meditation_fact2: "mana and",
+    meditation_fact3: "experience.",
     notification: {
       new_events: "There are new events",
       сheck: "сheck",
