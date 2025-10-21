@@ -5,15 +5,25 @@ import { useRouter, usePathname } from "next/navigation";
 export function useTelegramBack() {
   const router = useRouter();
   const pathname = usePathname();
-  const initializedRef = useRef(false); // флаг, чтобы не подписываться повторно
+  const initializedRef = useRef(false);
 
   useEffect(() => {
     let WebApp: any;
     const hideBackPaths = ["/", "/registration"];
+    const blockBackPaths = ["/game"]; // 👈 тут блокируем возврат с game
 
     const handleBack = () => {
       try {
         console.log("🔙 Telegram Back pressed on:", pathname);
+
+        // 🚫 блокируем возврат с /game
+        if (blockBackPaths.includes(pathname)) {
+          console.log("🚫 Возврат с /game запрещён — ничего не делаем");
+          // если хочешь — можно просто закрыть Mini App:
+         // WebApp.close();
+          return;
+        }
+
         router.back();
       } catch (err) {
         console.error("Telegram back handler error:", err);
@@ -25,18 +35,24 @@ export function useTelegramBack() {
       WebApp = sdk.default;
 
       if (hideBackPaths.includes(pathname)) {
-        console.log("🙈 Скрываю кнопку назад на маршруте:", pathname);
+        console.log("🙈 Скрываю Telegram Back на маршруте:", pathname);
         WebApp.BackButton.hide();
+
+        if (initializedRef.current) {
+          WebApp.BackButton.offClick(handleBack);
+          initializedRef.current = false;
+          console.log("🧹 Удалил обработчик Back");
+        }
+
         return;
       }
 
       WebApp.BackButton.show();
 
-      // предотвращаем множественные подписки
       if (!initializedRef.current) {
         WebApp.BackButton.onClick(handleBack);
         initializedRef.current = true;
-        console.log("✅ Telegram Back Button подписан");
+        console.log("✅ Telegram Back Button активна на:", pathname);
       }
     })();
 
@@ -44,7 +60,7 @@ export function useTelegramBack() {
       if (WebApp && initializedRef.current) {
         WebApp.BackButton.offClick(handleBack);
         initializedRef.current = false;
-        console.log("🧹 Очистка подписки Back Button");
+        console.log("🧹 Очистка обработчика Back при размонтировании");
       }
     };
   }, [pathname]);
