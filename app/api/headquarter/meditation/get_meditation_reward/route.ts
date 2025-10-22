@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
       mana_reward: res?.reward_mana,
     });
     if (new_fact !== null) {
-      pushToSubscriber(userId, [new_fact]);
+      pushToSubscriber(userId, new_fact.type);
     }
     if (!res) {
       const errorResponse: GetMeditationRewardErrorResponseType = {

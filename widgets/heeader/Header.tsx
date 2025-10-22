@@ -5,7 +5,7 @@ import { User, Gem, Clock, Backpack, HeartPulse, Droplet, Coins, Swords } from "
 import { useGetSessionQuery } from "@/entities/auth/_queries/session_queries";
 import { HeaderItem } from "./_ui/header_item";
 import { getProfileQuery, ProfileResponse } from "@/entities/profile";
-import { generated_fight_limit } from "@/shared/game_config/energy_lvl";
+import { generated_fight_limit } from "@/shared/game_config/fight/energy_lvl";
 
 export function Header() {
   const { data: session, isLoading: isLoadingSession } = useGetSessionQuery();

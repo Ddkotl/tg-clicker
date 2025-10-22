@@ -18,14 +18,15 @@ model User {
   language_code      String?
   allows_write_to_pm Boolean?
   auth_date          String?
-
-  referrerId String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  referrerId         String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
   profile        Profile?
   user_statistic UserStatistic?
   meditation     Meditation?
+  mine           Mine?
+  facts          Facts[]
 
   @@map("users")
 }
@@ -58,6 +59,19 @@ model Profile {
 
   current_hitpoint Int @default(100)
   max_hitpoint     Int @default(100)
+
+  @@map("profiles")
+}
+
+model Mine {
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String    @unique
+  energy         Int       @default(50)
+  last_mine_at   DateTime?
+  last_energy_at DateTime?
+  updated_at     DateTime  @updatedAt
+
+  @@map("mines")
 }
 
 model UserStatistic {
@@ -65,9 +79,13 @@ model UserStatistic {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique
 
-  wins                   Int @default(0)
-  loses                  Int @default(0)
-  meditation_hours_count Int @default(0)
+  wins            Int @default(0)
+  loses           Int @default(0)
+  meditated_hours Int @default(0)
+  mined_gold      Int @default(0)
+  mined_count     Int @default(0)
+
+  @@map("user_statistics")
 }
 
 model Meditation {
@@ -79,17 +97,24 @@ model Meditation {
   start_meditation  DateTime?
   meditation_hours  Int?
   meditation_revard Int?
+
+  @@map("meditations")
 }
 
 model Facts {
   id           String      @id @default(cuid())
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String
   type         FactsType
   status       FactsStatus
   mana_reward  Int?
+  gold_reward  Int?
   exp_reward   Int?
   active_hours Int?
   createdAt    DateTime    @default(now())
+
+  @@index([userId])
+  @@map("facts")
 }
 
 enum FactsStatus {
@@ -99,6 +124,7 @@ enum FactsStatus {
 
 enum FactsType {
   MEDITATION
+  MINE
 }
 
 enum Fraktion {

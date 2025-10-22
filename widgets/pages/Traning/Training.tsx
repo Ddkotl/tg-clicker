@@ -8,7 +8,7 @@ import { Profile } from "@/_generated/prisma";
 
 import { useTranslation } from "@/features/translations/use_translation";
 import { ProfileErrorResponse, ProfileResponse } from "@/entities/profile";
-import { PARAMS } from "@/shared/game_config/params_cost";
+import { PARAMS } from "@/shared/game_config/params/params_cost";
 import { useTrainParamMutation } from "@/entities/profile/_mutations/use_train_param_mutation";
 
 export function Training() {

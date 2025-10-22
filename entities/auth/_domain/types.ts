@@ -6,6 +6,7 @@ import {
   checkNicknameResponseSchema,
   errorResponseSchema,
   errorSessionResponseSchema,
+  getActionTokenResponseSchema,
   registrationErrorResponseSchema,
   registrationRequestSchema,
   registrationResponseSchema,
@@ -37,3 +38,5 @@ export type CheckNicknameErrorResponseType = z.infer<typeof checkNicknameerrorRe
 export type RegistrationResponseType = z.infer<typeof registrationResponseSchema>;
 export type RegistrationErrorResponseType = z.infer<typeof registrationErrorResponseSchema>;
 export type RegistrationRequestType = z.infer<typeof registrationRequestSchema>;
+
+export type GetActionTokenResponseType = z.infer<typeof getActionTokenResponseSchema>;

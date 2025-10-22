@@ -1,5 +1,5 @@
 import { dataBase } from "@/shared/connect/db_connect";
-import { getMeditationExperience } from "@/shared/game_config/give_expirience";
+import { getMeditationExperience } from "@/shared/game_config/exp/give_expirience";
 
 export async function giveMeditationReward(userId: string) {
   try {
@@ -14,7 +14,7 @@ export async function giveMeditationReward(userId: string) {
     ) {
       return null;
     }
-    const meditation_expirience = getMeditationExperience();
+    const meditation_expirience = getMeditationExperience(meditation.meditation_hours);
 
     const meditation_reward = meditation.meditation_revard;
     const res = await dataBase.$transaction([
@@ -37,7 +37,7 @@ export async function giveMeditationReward(userId: string) {
       dataBase.userStatistic.update({
         where: { userId },
         data: {
-          meditation_hours_count: { increment: meditation.meditation_hours },
+          meditated_hours: { increment: meditation.meditation_hours },
         },
       }),
     ]);

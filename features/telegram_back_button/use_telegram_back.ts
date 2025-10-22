@@ -20,7 +20,7 @@ export function useTelegramBack() {
         if (blockBackPaths.includes(pathname)) {
           console.log("🚫 Возврат с /game запрещён — ничего не делаем");
           // если хочешь — можно просто закрыть Mini App:
-         // WebApp.close();
+          // WebApp.close();
           return;
         }
 

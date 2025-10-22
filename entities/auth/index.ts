@@ -9,6 +9,8 @@ export type {
   SessionResponseType,
   RegistrationErrorResponseType,
   RegistrationResponseType,
+  GetActionTokenResponseType,
+  RegistrationRequestType,
 } from "./_domain/types";
 
 export {
@@ -23,6 +25,7 @@ export {
   registrationErrorResponseSchema,
   registrationRequestSchema,
   registrationResponseSchema,
+  getActionTokenResponseSchema,
 } from "./_domain/schemas";
 
 export { TelegramAuth } from "./_ui/TelegramAuth";

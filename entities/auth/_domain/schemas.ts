@@ -81,3 +81,9 @@ export const registrationErrorResponseSchema = z.object({
   data: z.object({}).optional(),
   message: z.string(),
 });
+export const getActionTokenResponseSchema = z.object({
+  data: z.object({
+    action_token: z.string(),
+  }),
+  message: z.string(),
+});
