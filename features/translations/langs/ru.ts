@@ -10,6 +10,12 @@ export const ru_lang: Messages = {
   auth_retry: "Повторить",
   auth_congratulation: "{nikname}, поздравляю с успешной регистрацией.",
   greeting: "Привет, {name}!",
+  errors: {
+    page_not_found: "Страница не найдена",
+    page_not_found_description: "Упс! Такой страницы не существует.",
+    go_back_to_game: "Вернуться в игру",
+  },
+
   footer: {
     home: "Главная",
     messages: "Почта",
@@ -116,6 +122,7 @@ export const ru_lang: Messages = {
     meditation_went_message: "Ты начал медитировать {time}",
     meditate: "Медитировать",
     meditation_in_progress: "Медитация в процессе",
+    mine: "Шахта",
     remaining: "осталось",
     wait: "ожидание...",
   },

@@ -1,6 +1,6 @@
 import { dataBase } from "@/shared/connect/db_connect";
-import { calcMaxHP } from "@/shared/game_config/calc_max_xp";
-import { calcParamCost } from "@/shared/game_config/params_cost";
+import { calcMaxHP } from "@/shared/game_config/params/calc_max_xp";
+import { calcParamCost } from "@/shared/game_config/params/params_cost";
 
 export type ParamNameType = "power" | "protection" | "speed" | "skill" | "qi";
 

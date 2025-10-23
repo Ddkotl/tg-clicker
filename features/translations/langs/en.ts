@@ -8,6 +8,12 @@ export const en_lang = {
   auth_retry: "Retry",
   auth_congratulation: "{nikname}, congratulations on your successful registration.",
   greeting: "Hello, {name}!",
+  errors: {
+    page_not_found: "Page not found",
+    page_not_found_description: "Oops! This page does not exist.",
+    go_back_to_game: "Go back to game",
+  },
+
   footer: {
     home: "Home",
     messages: "Messages",
@@ -119,6 +125,7 @@ export const en_lang = {
     meditation_went_message: "You started meditating {time}",
     meditate: "Meditate",
     meditation_in_progress: "Meditation in progress",
+    mine: "Mine",
     remaining: "remaining",
     wait: "wait...",
   },

@@ -5,7 +5,8 @@ import { User, Gem, Clock, Backpack, HeartPulse, Droplet, Coins, Swords } from "
 import { useGetSessionQuery } from "@/entities/auth/_queries/session_queries";
 import { HeaderItem } from "./_ui/header_item";
 import { getProfileQuery, ProfileResponse } from "@/entities/profile";
-import { generated_fight_limit } from "@/shared/game_config/energy_lvl";
+import { generated_fight_limit } from "@/shared/game_config/fight/energy_lvl";
+import { HeaderProgressBars } from "./_ui/header_progress";
 
 export function Header() {
   const { data: session, isLoading: isLoadingSession } = useGetSessionQuery();
@@ -17,6 +18,7 @@ export function Header() {
     ...getProfileQuery(session?.data?.user.userId ?? ""),
     enabled: !!session?.data?.user.userId,
   });
+  const userId = profile?.data?.userId;
   const isLoading = isLoadingProfile || isLoadingSession;
   const isDisabled = isFetchingProfile;
   const formattedTime = profile?.data?.last_fight_time
@@ -30,7 +32,7 @@ export function Header() {
           <HeaderItem
             icon={User}
             color="text-primary"
-            href={`/game/profile/${profile?.data?.userId}`}
+            href={`/game/profile/${userId}`}
             isDisabled={isDisabled}
             isLoading={isLoading}
             value={`${profile?.data?.nikname}[${profile?.data?.lvl}]`}
@@ -45,7 +47,7 @@ export function Header() {
           <HeaderItem
             icon={HeartPulse}
             color="text-red-500"
-            href={`/game`}
+            href={`/game/profile/training/${userId}`}
             isDisabled={isDisabled}
             isLoading={isLoading}
             value={`${profile?.data?.current_hitpoint}`}
@@ -91,6 +93,13 @@ export function Header() {
             value={formattedTime}
           />
         </div>
+        <HeaderProgressBars
+          currentHP={profile?.data?.current_hitpoint}
+          maxHP={profile?.data?.max_hitpoint}
+          currentExp={profile?.data?.exp}
+          lvl={profile?.data?.lvl}
+          isLoading={isLoading}
+        />
       </div>
     </div>
   );

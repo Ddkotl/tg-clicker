@@ -1,4 +1,4 @@
-import { calcParamCost } from "@/shared/game_config/params_cost";
+import { calcParamCost } from "@/shared/game_config/params/params_cost";
 
 export function calcMeditationReward({
   power,

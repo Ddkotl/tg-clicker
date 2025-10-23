@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "@/features/translations/use_translation";
 import { getProfileQuery } from "@/entities/profile/_queries/profile_query";
 import { ProfileResponse } from "@/entities/profile";
-import { lvl_exp } from "@/shared/game_config/lvl_exp";
+import { lvl_exp } from "@/shared/game_config/exp/lvl_exp";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { ProfileHeader } from "./_ui/profile_header";
 import { ProfileStat } from "./_ui/profile_stat";

@@ -23,6 +23,7 @@ export function FactsAlert({ count, onClose }: FactsAlertProps) {
         <AlertDescription className="text-sm text-muted-foreground">
           <Link
             href={ui_path.facts_page()}
+            onClick={onClose}
             className="text-primary hover:text-primary/80 font-medium underline underline-offset-2"
           >
             {t("facts.notification.сheck")}

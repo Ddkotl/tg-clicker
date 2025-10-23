@@ -9,6 +9,8 @@ export const getProfileQuery = (userId: string) => ({
     }
     return res.json();
   },
+  staleTime: 5 * 60 * 1000,
+  gcTime: 10 * 60 * 1000,
 });
 
 export const useInvalidateProfile = () => {

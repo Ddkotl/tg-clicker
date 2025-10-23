@@ -8,6 +8,7 @@ export function useTelegramBack() {
   const initializedRef = useRef(false);
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let WebApp: any;
     const hideBackPaths = ["/", "/registration"];
     const blockBackPaths = ["/game"]; // 👈 тут блокируем возврат с game
@@ -20,7 +21,7 @@ export function useTelegramBack() {
         if (blockBackPaths.includes(pathname)) {
           console.log("🚫 Возврат с /game запрещён — ничего не делаем");
           // если хочешь — можно просто закрыть Mini App:
-         // WebApp.close();
+          // WebApp.close();
           return;
         }
 
@@ -63,5 +64,5 @@ export function useTelegramBack() {
         console.log("🧹 Очистка обработчика Back при размонтировании");
       }
     };
-  }, [pathname]);
+  }, [pathname, router]);
 }

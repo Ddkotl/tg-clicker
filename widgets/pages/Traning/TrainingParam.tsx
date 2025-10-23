@@ -3,7 +3,7 @@
 import Image from "next/image";
 
 import { useTranslation } from "@/features/translations/use_translation";
-import { calcParamCost } from "@/shared/game_config/params_cost";
+import { calcParamCost } from "@/shared/game_config/params/params_cost";
 import { Progress } from "@/shared/components/ui/progress";
 import { Button } from "@/shared/components/ui/button";
 
