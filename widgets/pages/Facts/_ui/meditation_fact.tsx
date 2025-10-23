@@ -32,18 +32,18 @@ export function MeditationFact({
         </div>
 
         <div className="flex-1">
-          <CardTitle className="text-sm font-medium leading-tight">
-            {t("facts.meditation_fact1", {
-              time: `${fact.active_hours} ${t(`hour.${getHoursString(fact.active_hours ?? 0)}` as TranslationKey)}`,
-            })}
-          </CardTitle>
-
           {formattedDate && (
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
               <Calendar className="h-3.5 w-3.5" />
               {formattedDate}
             </div>
           )}
+
+          <CardTitle className="text-sm font-medium leading-tight">
+            {t("facts.meditation_fact1", {
+              time: `${fact.active_hours} ${t(`hour.${getHoursString(fact.active_hours ?? 0)}` as TranslationKey)}`,
+            })}
+          </CardTitle>
         </div>
       </CardHeader>
 

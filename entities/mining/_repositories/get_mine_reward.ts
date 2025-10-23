@@ -1,3 +1,4 @@
+import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lvl";
 import { dataBase } from "@/shared/connect/db_connect";
 
 export async function giveMineRevard(userId: string, reward: number, exp: number, last_mine_at: Date) {
@@ -35,7 +36,9 @@ export async function giveMineRevard(userId: string, reward: number, exp: number
       }),
     ]);
 
-    return { mine, profile, stats, fact };
+    const lvl_up = await CheckUpdateLvl(userId);
+
+    return { mine, profile, stats, fact, lvl_up: lvl_up };
   } catch (error) {
     console.error("giveMineRevard error:", error);
     return null;

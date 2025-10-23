@@ -20,7 +20,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const { allowed } = await rateLimitRedis(`rl:mine:${userId}`, 10, 60);
     if (!allowed) return makeError("Rate limit exceeded", 429);
 
-    const tokenError = await validateActionToken(req, "action-auth");
+    const tokenError = await validateActionToken(req, "action-token");
     if (tokenError) return tokenError;
 
     const now = new Date();
@@ -46,13 +46,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const exp = getMineExperience(reward);
 
     const result = await giveMineRevard(userId, reward, exp, now);
-    if (!result) return makeError("giveMineRevard err", 400);
+    if (!result || result === null) return makeError("giveMineRevard err", 400);
 
     await pushToSubscriber(userId, result.fact.type);
 
     const response: MiningResponseType = {
       data: {
         userId,
+        lvl: result.lvl_up ? result.lvl_up : result.profile.lvl,
         energy: result.mine.energy,
         exp_reward: exp,
         gold_reward: reward,

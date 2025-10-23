@@ -6,6 +6,7 @@ export const factSchema = z.object({
   userId: z.string(),
   type: z.enum(FactsType),
   status: z.enum(FactsStatus),
+  gold_reward: z.number().nullable(),
   mana_reward: z.number().nullable(),
   exp_reward: z.number().nullable(),
   active_hours: z.number().nullable(),

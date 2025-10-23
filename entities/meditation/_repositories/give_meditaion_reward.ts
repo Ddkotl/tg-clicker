@@ -1,3 +1,4 @@
+import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lvl";
 import { dataBase } from "@/shared/connect/db_connect";
 import { getMeditationExperience } from "@/shared/game_config/exp/give_expirience";
 
@@ -41,6 +42,7 @@ export async function giveMeditationReward(userId: string) {
         },
       }),
     ]);
+    const lvl_up = await CheckUpdateLvl(userId);
     return {
       userId,
       reward_mana: meditation_reward,
@@ -48,6 +50,7 @@ export async function giveMeditationReward(userId: string) {
       hours: meditation.meditation_hours,
       current_mana: res[1].mana,
       current_exp: res[1].exp,
+      current_lvl: lvl_up ? lvl_up : res[1].lvl,
     };
   } catch (error) {
     console.error("giveMeditationReward error", error);
