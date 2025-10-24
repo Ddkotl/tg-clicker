@@ -126,6 +126,11 @@ export const en_lang = {
     meditate: "Meditate",
     meditation_in_progress: "Meditation in progress",
     mine: "Mine",
+    mine_page: {
+      title: "⛏️ Qi Stone Mine",
+      highlight: "Every breath of the mountain fills you with power.",
+      text: "Mine Qi Stones and infuse your artifacts with vital energy. Energy flows like a river — gather it wisely.",
+    },
     remaining: "remaining",
     wait: "wait...",
   },
