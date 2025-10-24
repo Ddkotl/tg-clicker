@@ -27,7 +27,7 @@ export function Header() {
 
   return (
     <div className="flex justify-center w-full">
-      <div className="fixed top-0 z-50 bg-header-gradient border-b border-foreground/60 w-full max-w-md">
+      <div className="fixed top-0 z-50 bg-header-gradient  w-full max-w-md">
         <div className="flex flex-wrap gap-2 justify-evenly w-full  items-center  p-2">
           <HeaderItem
             icon={User}

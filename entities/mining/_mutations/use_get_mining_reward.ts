@@ -22,10 +22,11 @@ export function useGetMiningReward() {
         body: JSON.stringify(data),
       });
       const payload = await res.json();
+      if (!res.ok) throw payload;
       return payload;
     },
     onSuccess: (data) => {
-      queryClient.setQueryData<ProfileResponse>(queries_keys.profile_userId(data.data.userId), (old) => {
+      queryClient.setQueryData<ProfileResponse>(queries_keys.mine_userId(data.data.userId), (old) => {
         if (!old?.data) return old;
         return {
           ...old,
@@ -49,10 +50,10 @@ export function useGetMiningReward() {
           },
         };
       });
-      toast("mining ok");
+      toast.success(`⛏️ Вы добыли ${data.data.gold_reward} камней и ${data.data.exp_reward} опыта!`);
     },
-    onError: (data) => {
-      toast(`${data.message} add gold: ${data.data?.gold_reward} and exp: ${data.data?.exp_reward}`);
+    onError: (err) => {
+      toast.error(err.message ?? "Ошибка при добыче");
     },
   });
 }

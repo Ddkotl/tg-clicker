@@ -4,74 +4,111 @@ import { useGetSessionQuery } from "@/entities/auth";
 import { getMineInfoQuery } from "@/entities/mining/_queries/get_mine_info_query";
 import { useQuery } from "@tanstack/react-query";
 import { useGetMiningReward } from "../_mutations/use_get_mining_reward";
-import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Progress } from "@/shared/components/ui/progress";
 import { Button } from "@/shared/components/ui/button";
 import { MiningResponseType } from "../_domain/types";
+import { PageDescription } from "@/shared/components/custom_ui/page_description";
+import { CountdownTimer } from "@/shared/components/custom_ui/timer";
+import { useEffect, useState } from "react";
+import { useTranslation } from "@/features/translations/use_translation";
 
 export default function Mine() {
+  const { t } = useTranslation();
   const { data: session } = useGetSessionQuery();
   const userId = session?.data?.user.userId;
 
-  const { data: mine, isLoading } = useQuery<MiningResponseType>({
+  const {
+    data: mine,
+    isLoading,
+    refetch,
+  } = useQuery<MiningResponseType>({
     ...getMineInfoQuery(userId ?? ""),
     enabled: !!userId,
   });
 
   const mutation = useGetMiningReward();
-  const [cooldown, setCooldown] = useState(0);
 
-  // вычисляем оставшееся время кулдауна
-  useEffect(() => {
-    if (!mine?.data.last_mine_at) return;
-    const last = new Date(mine.data.last_mine_at).getTime();
-    const now = Date.now();
-    const remaining = Math.max(0, Math.ceil((30_000 - (now - last)) / 1000));
-    setCooldown(remaining);
-  }, [mine?.data.last_mine_at]);
+  const [mineCooldown, setMineCooldown] = useState(0);
+  const [energyCooldown, setEnergyCooldown] = useState(0);
 
-  // обновляем таймер каждую секунду
+  const now = Date.now();
+  const lastMineAt = mine?.data.last_mine_at ?? 0;
+  const lastEnergyAt = mine?.data.last_energy_at ?? 0;
+
+  const MINE_COOLDOWN = 30_000; // 30 секунд
+  const ENERGY_COOLDOWN = 30 * 60 * 1000; // 30 минут
+
+  // вычисляем оставшееся время кулдауна и восстановления энергии
   useEffect(() => {
-    if (cooldown <= 0) return;
-    const interval = setInterval(() => setCooldown((v) => Math.max(0, v - 1)), 1000);
+    const mineTime = Math.max(0, lastMineAt + MINE_COOLDOWN - now);
+    const energyTime = Math.max(0, lastEnergyAt + ENERGY_COOLDOWN - now);
+    setMineCooldown(Math.ceil(mineTime / 1000));
+    setEnergyCooldown(Math.ceil(energyTime / 1000));
+
+    const interval = setInterval(() => {
+      setMineCooldown((v) => {
+        const next = Math.max(v - 1, 0);
+        if (next === 0) refetch(); // когда кулдаун истёк, рефетчим
+        return next;
+      });
+      setEnergyCooldown((v) => {
+        const next = Math.max(v - 1, 0);
+        if (next === 0) refetch(); // когда энергия восстановилась, рефетчим
+        return next;
+      });
+    }, 1000);
+
     return () => clearInterval(interval);
-  }, [cooldown]);
+  }, [lastMineAt, lastEnergyAt, refetch, now]);
 
-  if (isLoading) return <p>Загрузка...</p>;
+  if (isLoading) return <p className="text-center mt-6 text-sm text-muted-foreground">Загрузка данных шахты...</p>;
+
   const energy = mine?.data.energy ?? 50;
   const percent = (energy / 50) * 100;
 
+  const canMine = energy > 0 && mineCooldown === 0;
+
   return (
-    <div className="max-w-md mx-auto mt-12 space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">⛏️ Шахта камней Ци</CardTitle>
-        </CardHeader>
-        <CardContent className="text-center">
-          <p className="mb-2">Энергия: {energy}/50</p>
-          <Progress value={percent} className="h-2 mb-4" />
+    <div className="flex flex-col gap-3">
+      <PageDescription
+        title={t("headquarter.mine_page.title")}
+        highlight={t("headquarter.mine_page.highlight")}
+        text={t("headquarter.mine_page.text")}
+      />
 
-          <Button
-            className="w-full py-4"
-            onClick={() => mutation.mutate({ userId: userId ?? "" })}
-            disabled={mutation.isPending || cooldown > 0 || energy <= 0}
-          >
-            {mutation.isPending
-              ? "Добываем..."
-              : cooldown > 0
-                ? `Ожидание ${cooldown}s`
-                : energy <= 0
-                  ? "Нет энергии"
-                  : "Добыть камни"}
-          </Button>
+      <div className="max-w-md mx-auto w-full">
+        <Card className="shadow-lg border-border/50 bg-card/70 backdrop-blur">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg font-semibold text-center">Шахта камней Ци</CardTitle>
+          </CardHeader>
 
-          {mutation.isError && <p className="text-red-500 mt-2">{mutation.error?.message ?? "Ошибка добычи"}</p>}
-          {mutation.data?.data.gold_reward !== undefined && (
-            <p className="mt-2">Вы добыли {mutation.data.data.gold_reward} камней!</p>
-          )}
-        </CardContent>
-      </Card>
+          <CardContent className="text-center space-y-3">
+            <div>
+              <p className="text-sm text-muted-foreground mb-1">
+                Энергия: <span className="font-medium text-foreground">{energy}/50</span>
+              </p>
+              <Progress value={percent} className="h-2" />
+            </div>
+
+            <div className="flex justify-between text-xs text-foreground/70 mt-1">
+              {mineCooldown > 0 && <CountdownTimer endTime={Date.now() + mineCooldown * 1000} label="Добыча через:" />}
+              {energyCooldown > 0 && (
+                <CountdownTimer endTime={Date.now() + energyCooldown * 1000} label="Восстановление энергии:" />
+              )}
+            </div>
+
+            <Button
+              size="lg"
+              className="w-full py-5 mt-3"
+              onClick={() => mutation.mutate({ userId: userId ?? "" })}
+              disabled={!canMine || mutation.isPending}
+            >
+              {mutation.isPending ? "⛏️ Добываем..." : canMine ? "Добыть камни" : "⛔ Недоступно"}
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

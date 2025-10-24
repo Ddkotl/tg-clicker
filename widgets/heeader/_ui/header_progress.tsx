@@ -2,7 +2,7 @@
 
 import { Progress } from "@/shared/components/ui/progress";
 import { lvl_exp } from "@/shared/game_config/exp/lvl_exp";
-import clsx from "clsx";
+import { cn } from "@/shared/lib/utils";
 
 interface HeaderProgressBarsProps {
   currentHP?: number;
@@ -28,28 +28,38 @@ export function HeaderProgressBars({
   const expPercent = Math.min((expProgress / expBetweenLevels) * 100, 100);
 
   return (
-    <div className="flex  gap-1 p-2">
+    <div className="flex gap-1">
+      {/* HP */}
       <div className="w-full relative">
         <Progress
           value={hpPercent}
-          className={clsx(
-            "h-2 rounded-full bg-red-950/40",
-            hpPercent < 30 && "bg-red-900/70",
+          className={cn(
+            "h-2  overflow-hidden bg-red-900/50 ",
+            hpPercent < 30 && "animate-pulse",
             isLoading && "opacity-50",
+            "[&>div]:bg-gradient-to-r [&>div]:from-red-600 [&>div]:to-red-400",
           )}
         />
         {!isLoading && (
-          <span className="absolute inset-0 text-xs text-center text-white font-medium">
-            {currentHP}/{maxHP}
+          <span className="absolute inset-0 flex items-center justify-center text-[10px] font-medium text-white select-none">
+            {Math.round(hpPercent)}%
           </span>
         )}
       </div>
 
+      {/* EXP */}
       <div className="w-full relative">
-        <Progress value={expPercent} className={clsx("h-2 rounded-full bg-purple-900/40", isLoading && "opacity-50")} />
+        <Progress
+          value={expPercent}
+          className={cn(
+            "h-2  overflow-hidden bg-primary/40",
+            isLoading && "opacity-50",
+            "[&>div]:bg-gradient-to-r [&>div]:from-primary/60 [&>div]:to-primary",
+          )}
+        />
         {!isLoading && (
-          <span className="absolute inset-0 text-xs text-center text-white font-medium">
-            {currentExp}/{nextLevelExp}
+          <span className="absolute inset-0 flex items-center justify-center text-[10px] font-medium text-white select-none">
+            {Math.round(expPercent)}%
           </span>
         )}
       </div>

@@ -44,7 +44,7 @@ export function TrainingParam({
             <span className="text-md font-semibold">
               {t("price")}: {nextCost}
             </span>
-            <span>
+            <span className="text-xl font-bold text-primary">
               {value} {t("lvl").toLowerCase()}
             </span>
           </div>
