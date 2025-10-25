@@ -26,7 +26,7 @@ export function useGetMiningReward() {
       return payload;
     },
     onSuccess: (data) => {
-      queryClient.setQueryData<ProfileResponse>(queries_keys.mine_userId(data.data.userId), (old) => {
+      queryClient.setQueryData<ProfileResponse>(queries_keys.profile_userId(data.data.userId), (old) => {
         if (!old?.data) return old;
         return {
           ...old,
@@ -38,7 +38,7 @@ export function useGetMiningReward() {
           },
         };
       });
-      queryClient.setQueryData<GetMineResponseType>(queries_keys.profile_userId(data.data.userId), (old) => {
+      queryClient.setQueryData<GetMineResponseType>(queries_keys.mine_userId(data.data.userId), (old) => {
         if (!old?.data) return old;
         return {
           ...old,

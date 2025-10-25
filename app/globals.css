@@ -223,6 +223,15 @@ body::-webkit-scrollbar {
     var(--background) 100%
   );
 }
+.img-top-gradient {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklch, var(--background) 75%, transparent) 10%,
+    color-mix(in oklch, var(--background) 40%, transparent) 50%,
+    color-mix(in oklch, var(--background) 10%, transparent) 70%,
+    transparent 100%
+  );
+}
 
 .bg-header-gradient {
   background: linear-gradient(
