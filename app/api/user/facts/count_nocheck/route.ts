@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
     }
 
     const result = await getFactNocheckCount(userId);
-    if (!result || result === null) {
+    if (result === null || result === undefined) {
       return makeError("Failed to fetch user facts", 500);
     }
 

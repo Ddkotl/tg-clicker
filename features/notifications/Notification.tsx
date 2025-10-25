@@ -3,7 +3,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useGetSessionQuery } from "@/entities/auth";
 import { FactCoutNocheckErrorResponseType, getFactCountNocheckQuery, useCheckAllFactsMutation } from "@/entities/facts";
-import { queries_keys } from "@/shared/lib/queries_keys";
 import { FactsAlert } from "./_ui/facts_alert";
 import { useFactsSSE } from "./_vm/useFactsSSE";
 import { MeditationInfoResponse } from "@/entities/meditation";
@@ -11,6 +10,7 @@ import { getMeditationInfoQuery } from "@/entities/meditation/_queries/get_medit
 import { ProcessAlert } from "./_ui/process_alert";
 import { useTranslation } from "../translations/use_translation";
 import { ui_path } from "@/shared/lib/paths";
+import { queries_keys } from "@/shared/lib/queries_keys";
 
 export function Notifications() {
   const { t } = useTranslation();

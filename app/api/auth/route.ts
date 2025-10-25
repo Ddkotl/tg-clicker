@@ -8,27 +8,19 @@ import {
 import { AppJWTPayload, encrypt, SESSION_DURATION } from "@/entities/auth/_vm/session";
 import { validateTelegramWebAppData } from "@/entities/auth/_vm/telegramAuth";
 import { UpdateOrCreateUser } from "@/entities/auth/index.server";
+import { recalcHp } from "@/features/hp_regen/recalc_hp";
+import { makeError } from "@/shared/lib/api_helpers/make_error";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const parsedBody = authRequestSchema.safeParse(body);
-    if (!parsedBody.success) {
-      const response = {
-        message: "Invalid request data",
-        data: {},
-      };
-      errorResponseSchema.parse(response);
-      return NextResponse.json(response, { status: 400 });
-    }
+    if (!parsedBody.success) return makeError("Invalid request data", 400);
+
     const { initData, ref } = parsedBody.data;
     const validationResult = validateTelegramWebAppData(initData);
-    if (!validationResult.validatedData || !validationResult.user.id) {
-      const response = { message: validationResult.message, data: {} };
-      errorResponseSchema.parse(response);
-      return NextResponse.json(response, { status: 401 });
-    }
+    if (!validationResult.validatedData || !validationResult.user.id) return makeError(validationResult.message, 401);
 
     const updated_user = await UpdateOrCreateUser(
       {
@@ -38,12 +30,9 @@ export async function POST(request: NextRequest) {
       ref,
     );
 
-    if (!updated_user) {
-      const response = { message: "User not created", data: {} };
-      errorResponseSchema.parse(response);
-      return NextResponse.json(response, { status: 401 });
-    }
-
+    if (!updated_user) return makeError("User not created", 401);
+    const hp = await recalcHp(updated_user.id);
+    if (hp === null) return makeError("recalcHp error", 400);
     const payload: AppJWTPayload = {
       user: {
         telegram_id: updated_user.telegram_id,

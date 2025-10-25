@@ -2,6 +2,7 @@ import { api_path } from "@/shared/lib/paths";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CheckAllFactsErrorResponseType, CheckAllFactsRequestType, CheckAllFactsResponseType } from "../_domain/types";
 import { queries_keys } from "@/shared/lib/queries_keys";
+import { pageSize } from "@/shared/game_config/facts/facts_const";
 
 export function useCheckAllFactsMutation() {
   const queryClient = useQueryClient();
@@ -17,9 +18,8 @@ export function useCheckAllFactsMutation() {
       return result;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({
-        queryKey: queries_keys.facts_userId(data.data?.userId),
-      });
+      queryClient.invalidateQueries({ queryKey: queries_keys.facts_userId(data.data.userId) });
+      queryClient.invalidateQueries({ queryKey: [...queries_keys.facts_userId(data.data.userId), pageSize] });
     },
   });
 }
