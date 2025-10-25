@@ -216,10 +216,10 @@ body::-webkit-scrollbar {
 .bg-radial-primary {
   background: radial-gradient(
     circle at center,
-    color-mix(in oklch, var(--primary) 18%, transparent) 0%,
-    color-mix(in oklch, var(--primary) 12%, transparent) 25%,
-    color-mix(in oklch, var(--primary) 8%, transparent) 50%,
-    color-mix(in oklch, var(--primary) 4%, transparent) 75%,
+    color-mix(in oklch, var(--primary) 14%, transparent) 0%,
+    color-mix(in oklch, var(--primary) 10%, transparent) 25%,
+    color-mix(in oklch, var(--primary) 6%, transparent) 50%,
+    color-mix(in oklch, var(--primary) 3%, transparent) 75%,
     var(--background) 100%
   );
 }

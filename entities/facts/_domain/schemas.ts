@@ -15,8 +15,17 @@ export const factSchema = z.object({
 export const factResponseSchema = z.object({
   data: z.array(factSchema),
   message: z.string(),
+  nextPage: z.number().nullable(),
+});
+export const factCoutNocheckResponseSchema = z.object({
+  data: z.number(),
+  message: z.string(),
 });
 
+export const factRequestSchema = z.object({
+  userId: z.string(),
+  pageParam: z.number(),
+});
 export const factErrorResponseSchema = z.object({
   data: z.object({}).optional(),
   message: z.string(),

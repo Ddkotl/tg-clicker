@@ -41,7 +41,11 @@ export default function Mine() {
   }, [mutation.isSuccess, refetch, setNow]);
 
   if (isLoading || isSessionLoading || !mine?.data.last_energy_at || !mine?.data.last_mine_at) {
-    return <p className="text-center mt-6 text-sm text-muted-foreground">Загрузка данных шахты...</p>;
+    return (
+      <div className="flex items-center justify-center h-40">
+        <Spinner className="w-6 h-6 text-muted-foreground" />
+      </div>
+    );
   }
 
   const energy = mine?.data.energy ?? MiningConst.MAX_ENERGY;
