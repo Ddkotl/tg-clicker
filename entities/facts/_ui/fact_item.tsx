@@ -46,9 +46,9 @@ export function FactItem({
         return {
           color: "blue",
           icon: <Pickaxe className="h-5 w-5 text-blue-400" />,
-          bg: "bg-amber-500/10",
-          border: "border-amber-500/30",
-          separator: "bg-amber-500/20",
+          bg: "bg-blue-500/10",
+          border: "border-blue-500/30",
+          separator: "bg-blue-500/20",
           title: t("facts.mine_fact1"),
           rewards: [
             {

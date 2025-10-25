@@ -57,8 +57,9 @@ model Profile {
   skill      Int @default(1)
   qi         Int @default(1)
 
-  current_hitpoint Int @default(100)
-  max_hitpoint     Int @default(100)
+  current_hitpoint Int      @default(100)
+  max_hitpoint     Int      @default(100)
+  last_hp_update   DateTime @default(now())
 
   @@map("profiles")
 }
@@ -66,7 +67,7 @@ model Profile {
 model Mine {
   user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         String    @unique
-  energy         Int       @default(50)
+  energy         Int       @default(25)
   last_mine_at   DateTime?
   last_energy_at DateTime?
   updated_at     DateTime  @updatedAt

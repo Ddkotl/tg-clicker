@@ -17,7 +17,8 @@
     "ngrok_tunel": "tsx scripts/ngrok.ts",
     "cloud_tunel": "cloudflared tunnel --url http://localhost:3000",
     "prepare": "git config core.hooksPath .git-hooks && chmod +x .git-hooks/pre-commit",
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests",
+    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
