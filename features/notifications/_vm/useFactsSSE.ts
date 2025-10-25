@@ -2,10 +2,10 @@
 
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Facts } from "@/_generated/prisma";
-import { FactResponseType } from "@/entities/facts";
+import { FactsType } from "@/_generated/prisma";
 import { api_path } from "@/shared/lib/paths";
 import { queries_keys } from "@/shared/lib/queries_keys";
+import { pageSize } from "@/shared/game_config/facts/facts_const";
 
 export function useFactsSSE(userId?: string) {
   const queryClient = useQueryClient();
@@ -31,18 +31,13 @@ export function useFactsSSE(userId?: string) {
         try {
           if (!event.data?.trim() || event.data === "ok") return;
           console.log("🔥 RAW SSE event:", event.data);
-          const newFacts: Facts[] = JSON.parse(event.data);
-
-          // Обновляем кэш react-query для этого пользователя
-          queryClient.setQueryData<FactResponseType>(queries_keys.facts_userId(userId), (oldData) => {
-            if (!oldData) {
-              return { data: newFacts, message: "ok" };
+          const newFacts: FactsType[] = JSON.parse(event.data);
+          newFacts.map((fact_type) => {
+            queryClient.invalidateQueries({ queryKey: queries_keys.facts_userId(userId) });
+            queryClient.invalidateQueries({ queryKey: [...queries_keys.facts_userId(userId), pageSize] });
+            if (fact_type === FactsType.MEDITATION) {
+              queryClient.invalidateQueries({ queryKey: queries_keys.meditation_userId(userId) });
             }
-
-            const existingIds = new Set(oldData.data.map((f) => f.id));
-            const mergedFacts = [...oldData.data, ...newFacts.filter((f) => !existingIds.has(f.id))];
-
-            return { ...oldData, data: mergedFacts };
           });
         } catch (err) {
           console.error("SSE parse error:", err);

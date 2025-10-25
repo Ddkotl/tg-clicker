@@ -7,13 +7,14 @@ import { FactItem } from "./fact_item";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { getFactsInfiniteQuery } from "../_queries/facts_query";
+import { pageSize } from "@/shared/game_config/facts/facts_const";
 
 export function FactsList({ t }: { t: (key: TranslationKey, vars?: Record<string, string | number>) => string }) {
   const { data: session, isLoading: isLoadingSession } = useGetSessionQuery();
   const userId = session?.data?.user.userId;
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useInfiniteQuery({
-    ...getFactsInfiniteQuery(userId ?? "", 10),
+    ...getFactsInfiniteQuery(userId ?? "", pageSize),
     enabled: !!userId,
     initialPageParam: 1,
   });
