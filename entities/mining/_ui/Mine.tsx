@@ -16,6 +16,7 @@ import { cn } from "@/shared/lib/utils";
 import { Spinner } from "@/shared/components/ui/spinner";
 import { useEffect, useState } from "react";
 import { img_paths } from "@/shared/lib/img_paths";
+import { Zap } from "lucide-react";
 
 export default function Mine() {
   const { t } = useTranslation();
@@ -65,9 +66,10 @@ export default function Mine() {
           <CardContent className="text-center space-y-3 p-3">
             <div>
               <div className="flex justify-between items-center mb-1">
-                <p className="text-sm text-muted-foreground">
+                <p className="flex gap-2 text-sm text-muted-foreground">
                   {t("headquarter.mine_page.energy")}{" "}
-                  <span className="font-medium text-foreground">
+                  <span className=" flex gap-1 font-medium text-foreground">
+                    <Zap className="h-5 w-5 text-primary" />
                     {energy}/{MiningConst.MAX_ENERGY}
                   </span>
                 </p>
