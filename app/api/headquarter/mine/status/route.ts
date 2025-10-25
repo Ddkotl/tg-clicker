@@ -29,8 +29,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       data: {
         userId,
         energy: user_mine.energy,
-        last_energy_at: user_mine.last_mine_at?.getTime() ?? null,
-        last_mine_at: user_mine.last_energy_at?.getTime() ?? null,
+        last_energy_at: user_mine.last_energy_at?.getTime() ?? null,
+        last_mine_at: user_mine.last_mine_at?.getTime() ?? null,
       },
       type: "ok",
       message: "Mining was successful",

@@ -8,7 +8,7 @@ export async function giveMineRevard(userId: string, reward: number, exp: number
         where: { userId },
         data: {
           energy: { decrement: 1 },
-          last_mine_at,
+          last_mine_at: last_mine_at,
         },
       }),
       dataBase.profile.update({
