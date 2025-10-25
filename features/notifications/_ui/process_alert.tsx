@@ -15,7 +15,7 @@ interface ProcessAlertProps {
 
 export function ProcessAlert({ endTime, description, label, href, onClose }: ProcessAlertProps) {
   return (
-    <Alert className="px-2 w-full justify-between py-1 animate-pulse relative flex items-center gap-2 bg-card border border-border shadow-md rounded-lg">
+    <Alert className="px-2 w-full justify-between py-1 relative flex items-center gap-2 bg-card border border-border shadow-md rounded-lg">
       <div className="flex-1 flex gap-3">
         <ClockArrowDown className="h-5 w-5 text-primary shrink-0" />
         <AlertTitle className="font-semibold">{`${description}: `}</AlertTitle>

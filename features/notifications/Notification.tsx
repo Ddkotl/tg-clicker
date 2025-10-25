@@ -11,6 +11,10 @@ import { ProcessAlert } from "./_ui/process_alert";
 import { useTranslation } from "../translations/use_translation";
 import { ui_path } from "@/shared/lib/paths";
 import { queries_keys } from "@/shared/lib/queries_keys";
+import { GetMineResponseType } from "@/entities/mining";
+import { getMineInfoQuery } from "@/entities/mining/_queries/get_mine_info_query";
+import { ActionAlert } from "./_ui/action_alert";
+import { Zap } from "lucide-react";
 
 export function Notifications() {
   const { t } = useTranslation();
@@ -27,6 +31,11 @@ export function Notifications() {
 
   const { data: meditation_info } = useQuery<MeditationInfoResponse>({
     ...getMeditationInfoQuery(userId ?? ""),
+    enabled: !!userId,
+  });
+
+  const { data: mine, isLoading: isLoadingMine } = useQuery<GetMineResponseType>({
+    ...getMineInfoQuery(userId ?? ""),
     enabled: !!userId,
   });
 
@@ -48,7 +57,7 @@ export function Notifications() {
     end = start + meditation.meditation_hours * 60 * 60 * 1000;
   }
 
-  const isLoading = isLoadingSession || isLoadingFacts;
+  const isLoading = isLoadingSession || isLoadingFacts || isLoadingMine;
   if (isLoading) return null;
 
   return (
@@ -66,6 +75,15 @@ export function Notifications() {
 
       {facts_count?.data !== undefined && facts_count?.data > 0 && (
         <FactsAlert count={facts_count?.data} onClose={handleCloseClick} />
+      )}
+      {mine?.data.energy !== undefined && mine?.data.energy > 0 && (
+        <ActionAlert
+          icon={<Zap className="h-5 w-5 text-blue-500" />}
+          title="У тебя есть энергия,"
+          actionText="перейти к шахте"
+          href={ui_path.mine_page()}
+          className="shine-effect"
+        />
       )}
     </div>
   );
