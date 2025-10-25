@@ -98,12 +98,15 @@ export const ru_lang: Messages = {
     qi_desc: "Дает превосходство в бою",
   },
   facts: {
-    fact_title: "Факты",
+    fact_title: "Хроники",
     fact_description: "Здесь храняться события, произошедшие с тобой за последние трое суток.",
     no_fact: "В последнее время ничего не происходило",
     meditation_fact1: "Ты медитировал {time} и получил:",
     meditation_fact2: "маны и",
     meditation_fact3: "опыта.",
+    mine_fact1: "Вы добыли ресурсы в шахте:",
+    mine_fact2: "Камней ци",
+    mine_fact3: "Опыта",
     notification: {
       new_events: "Есть новые события",
       сheck: "проверить",

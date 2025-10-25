@@ -101,12 +101,15 @@ export const en_lang = {
     qi_desc: "Gives superiority in battle",
   },
   facts: {
-    fact_title: "Facts",
+    fact_title: "Chronicles",
     fact_description: "Events that happened to you over the last three days are stored here.",
     no_fact: "Nothing has happened lately",
     meditation_fact1: "You meditated for {time} and received:",
     meditation_fact2: "mana and",
     meditation_fact3: "experience.",
+    mine_fact1: "You mined resources:",
+    mine_fact2: "Qi stones",
+    mine_fact3: "Experience",
     notification: {
       new_events: "There are new events",
       сheck: "сheck",

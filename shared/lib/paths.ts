@@ -8,7 +8,8 @@ export const ui_path = {
 
 export const api_path = {
   get_action_token: () => `/api/auth/action-token`,
-  get_facts: (userId: string) => `/api/user/facts?userId=${userId}`,
+  get_facts: (userId: string, page: number, pageSize: number) =>
+    `/api/user/facts?userId=${userId}&page=${page}&pageSize=${pageSize}`,
   check_all_facts: (userId: string) => `/api/user/facts/check_all?userId=${userId}`,
   facts_sse: (userId: string) => `/api/user/facts/stream?userId=${userId}`,
   mining_gold: () => `/api/headquarter/mine`,

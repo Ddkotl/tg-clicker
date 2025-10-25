@@ -1,25 +1,17 @@
+import { Facts } from "@/_generated/prisma";
 import { api_path } from "@/shared/lib/paths";
 import { queries_keys } from "@/shared/lib/queries_keys";
-import { useQueryClient } from "@tanstack/react-query";
 
-export const getFactsQuery = (userId: string) => ({
-  queryKey: queries_keys.facts_userId(userId),
-  queryFn: async ({ signal }: { signal: AbortSignal }) => {
-    const res = await fetch(api_path.get_facts(userId), { signal });
+export const getFactsInfiniteQuery = (userId: string, pageSize: number) => ({
+  queryKey: [...queries_keys.facts_userId(userId), pageSize],
+  queryFn: async ({ pageParam = 1, signal }: { pageParam?: number; signal?: AbortSignal }) => {
+    const res = await fetch(api_path.get_facts(userId, pageParam, pageSize), { signal });
     if (!res.ok) {
       throw new Error("Failed to fetch facts");
     }
     return res.json();
   },
+  getNextPageParam: (lastPage: { nextPage: number | null; data: Facts[] }) => lastPage.nextPage ?? undefined,
   staleTime: 5 * 60 * 1000,
   gcTime: 5 * 60 * 1000,
 });
-
-export const useInvalidateFacts = () => {
-  const queryClient = useQueryClient();
-
-  return (userId: string) =>
-    queryClient.invalidateQueries({
-      queryKey: queries_keys.facts_userId(userId),
-    });
-};

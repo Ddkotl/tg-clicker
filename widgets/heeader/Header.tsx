@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { User, Gem, Clock, Backpack, HeartPulse, Droplet, Coins, Swords } from "lucide-react";
+import { User, Gem, Clock, Backpack, HeartPulse, Droplet, Swords, Sparkles } from "lucide-react";
 import { useGetSessionQuery } from "@/entities/auth/_queries/session_queries";
 import { HeaderItem } from "./_ui/header_item";
 import { getProfileQuery, ProfileResponse } from "@/entities/profile";
@@ -61,7 +61,7 @@ export function Header() {
             value={profile?.data?.mana}
           />
           <HeaderItem
-            icon={Coins}
+            icon={Sparkles}
             color="text-yellow-500"
             href={`/game`}
             isDisabled={isDisabled}

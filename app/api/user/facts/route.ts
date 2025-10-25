@@ -1,41 +1,41 @@
-import { factErrorResponseSchema, FactErrorResponseType, factResponseSchema, FactResponseType } from "@/entities/facts";
+import { factResponseSchema, FactResponseType } from "@/entities/facts";
 import { getUserFacts } from "@/entities/facts/index.server";
+import { makeError } from "@/shared/lib/api_helpers/make_error";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
-    const requestedUserId = searchParams.get("userId");
-    if (!requestedUserId) {
-      const response: FactErrorResponseType = {
-        data: {},
-        message: "User not authenticated",
-      };
-      factErrorResponseSchema.parse(response);
-      return NextResponse.json(response, { status: 401 });
+    const searchParams = req.nextUrl.searchParams;
+    const userId = searchParams.get("userId");
+    const page = Number(searchParams.get("page") ?? "1");
+    const page_size = Number(searchParams.get("page_size") ?? "10");
+    if (!userId) {
+      return makeError("Missing userId", 400);
     }
-    const user_facts = await getUserFacts(requestedUserId);
-    if (!user_facts || user_facts === null) {
-      const response: FactErrorResponseType = {
-        data: {},
-        message: "not user facts",
-      };
-      factErrorResponseSchema.parse(response);
-      return NextResponse.json(response, { status: 404 });
+    if (!page) {
+      return makeError("Missing page", 400);
     }
+    if (!page_size) {
+      return makeError("Missing page", 400);
+    }
+
+    const result = await getUserFacts(userId, page, page_size);
+    if (!result || result === null) {
+      return makeError("Failed to fetch user facts", 500);
+    }
+
+    const { facts, hasNextPage } = result;
+
     const response: FactResponseType = {
-      data: user_facts,
-      message: "Profile fetched successfully",
+      data: facts,
+      message: "Facts fetched successfully",
+      nextPage: hasNextPage ? page + 1 : null,
     };
 
     factResponseSchema.parse(response);
     return NextResponse.json(response);
   } catch (error) {
-    console.error("GET /facts", error);
-    const response: FactErrorResponseType = {
-      data: {},
-      message: "Internal server error",
-    };
-    return NextResponse.json(response, { status: 500 });
+    console.error("GET /facts error:", error);
+    return makeError("Internal server error", 500);
   }
 }

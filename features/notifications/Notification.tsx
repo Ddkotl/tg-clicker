@@ -1,10 +1,8 @@
 "use client";
 
-import { useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { FactsStatus } from "@/_generated/prisma";
 import { useGetSessionQuery } from "@/entities/auth";
-import { FactResponseType, getFactsQuery, useCheckAllFactsMutation } from "@/entities/facts";
+import { FactCoutNocheckErrorResponseType, getFactCountNocheckQuery, useCheckAllFactsMutation } from "@/entities/facts";
 import { queries_keys } from "@/shared/lib/queries_keys";
 import { FactsAlert } from "./_ui/facts_alert";
 import { useFactsSSE } from "./_vm/useFactsSSE";
@@ -22,8 +20,8 @@ export function Notifications() {
 
   const userId = session?.data?.user.userId;
 
-  const { data: all_facts, isLoading: isLoadingFacts } = useQuery<FactResponseType>({
-    ...getFactsQuery(userId ?? ""),
+  const { data: facts_count, isLoading: isLoadingFacts } = useQuery<FactCoutNocheckErrorResponseType>({
+    ...getFactCountNocheckQuery(userId ?? ""),
     enabled: !!userId,
   });
 
@@ -33,11 +31,6 @@ export function Notifications() {
   });
 
   useFactsSSE(userId);
-
-  const newFacts = useMemo(
-    () => (all_facts?.data ?? []).filter((f) => f.status === FactsStatus.NO_CHECKED),
-    [all_facts],
-  );
 
   const handleCloseClick = () => {
     if (!userId) return;
@@ -71,7 +64,9 @@ export function Notifications() {
         />
       )}
 
-      {newFacts.length > 0 && <FactsAlert count={newFacts.length} onClose={handleCloseClick} />}
+      {facts_count?.data !== undefined && facts_count?.data > 0 && (
+        <FactsAlert count={facts_count?.data} onClose={handleCloseClick} />
+      )}
     </div>
   );
 }
