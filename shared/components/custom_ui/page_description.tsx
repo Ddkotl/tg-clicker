@@ -16,7 +16,7 @@ export function PageDescription({ title, text, highlight, img }: PageDescription
     return (
       <Card className="px-1 py-4 gap-2 bg-card border border-border shadow-lg">
         <CardTitle className=" px-2 text-primary text-lg font-bold">{title}</CardTitle>
-        <CardContent className="space-y-3 px-2 text-sm leading-relaxed text-card-foreground text-justify">
+        <CardContent className="indent-6 space-y-3 px-2 text-sm leading-relaxed text-card-foreground text-justify">
           {highlight && <span className="text-primary text-base font-bold">{highlight} </span>}
           {text && <span>{text}</span>}
         </CardContent>
@@ -40,7 +40,7 @@ export function PageDescription({ title, text, highlight, img }: PageDescription
 
       {/* Текст под картинкой */}
       {text && (
-        <CardContent className="px-4 py-3 pt-1 text-sm leading-relaxed text-card-foreground text-justify">
+        <CardContent className="indent-6 px-4 py-3 pt-1 text-sm leading-relaxed text-card-foreground text-justify">
           {text}
         </CardContent>
       )}

@@ -44,6 +44,7 @@ export const MeditatonFormSchema = z.object({
 
 export const getMeditationRewardRequestSchema = z.object({
   userId: z.string(),
+  break_meditation: z.boolean().optional(),
 });
 
 export const getMeditationRewardResponseSchema = z.object({
@@ -54,6 +55,8 @@ export const getMeditationRewardResponseSchema = z.object({
     hours: z.number(),
     current_mana: z.number(),
     current_exp: z.number(),
+    current_diamond: z.number(),
+    current_lvl: z.number(),
   }),
   message: z.string(),
   type: z.literal("success"),

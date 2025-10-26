@@ -34,11 +34,11 @@ export function FactItem({
           rewards: [
             {
               icon: <Droplet className="text-blue-400 h-4 w-4" />,
-              text: `${fact.mana_reward ?? 0} ${t("facts.meditation_fact2")}`,
+              text: `${t("facts.meditation_fact2")} ${fact.mana_reward ?? 0}`,
             },
             {
               icon: <HardHat className="text-amber-500 h-4 w-4" />,
-              text: `${fact.exp_reward ?? 0} ${t("facts.meditation_fact3")}`,
+              text: `${t("facts.meditation_fact3")} ${fact.exp_reward ?? 0}`,
             },
           ],
         };

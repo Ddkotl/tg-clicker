@@ -25,6 +25,7 @@ model User {
   profile        Profile?
   user_statistic UserStatistic?
   meditation     Meditation?
+  job            Job?
   mine           Mine?
   facts          Facts[]
 
@@ -100,6 +101,19 @@ model Meditation {
   meditation_revard Int?
 
   @@map("meditations")
+}
+
+model Job {
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique
+
+  on_job     Boolean   @default(false)
+  start_job  DateTime?
+  job_hours  Int?
+  job_revard Int?
+
+  @@map("jobs")
 }
 
 model Facts {
