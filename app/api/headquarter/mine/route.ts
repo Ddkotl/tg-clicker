@@ -9,6 +9,7 @@ import { validateActionToken } from "@/shared/lib/api_helpers/action_token/valid
 import { CreateUserMine, GetUserMine, giveMineRevard } from "@/entities/mining/index.server";
 import { restoreEnergy } from "@/entities/mining/_vm/restore_mine_energy";
 import { MINE_COOLDOWN } from "@/shared/game_config/mining/mining_const";
+import { checkUserDeals } from "@/entities/user/_repositories/check_user_deals";
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
@@ -21,8 +22,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     if (!allowed) return makeError("Rate limit exceeded", 429);
 
     const tokenError = await validateActionToken(req, "action-token");
-    if (tokenError) return tokenError;
-
+    if (tokenError) return makeError("Token error", 401);
+    const user_deals = await checkUserDeals(userId);
+    if (!user_deals || user_deals === null) return makeError("invalid user_deals", 400);
+    if (user_deals !== "ок") return makeError(user_deals, 400);
     const now = new Date();
 
     let user_mine = await GetUserMine(userId);

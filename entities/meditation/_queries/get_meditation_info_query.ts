@@ -1,5 +1,3 @@
-import { useQueryClient } from "@tanstack/react-query";
-
 export const getMeditationInfoQuery = (userId: string) => ({
   queryKey: ["meditation", userId],
   queryFn: async ({ signal }: { signal: AbortSignal }) => {
@@ -10,12 +8,3 @@ export const getMeditationInfoQuery = (userId: string) => ({
     return res.json();
   },
 });
-
-export const useInvalidateMeditation = () => {
-  const queryClient = useQueryClient();
-
-  return (userId: string) =>
-    queryClient.invalidateQueries({
-      queryKey: ["meditation", userId],
-    });
-};
