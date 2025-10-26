@@ -62,10 +62,10 @@ export const en_lang = {
     select: "Select color theme",
   },
   home: {
-    ready_to_battle: "⚔️ Ready for battle?",
+    ready_to_battle: "Ready for battle?",
 
     welcome_wanderer: "Welcome, wanderer",
-    balance_of_pover: "Today your path will lead to great achievements! Balance of power:",
+    home_text: "Today your path will lead to great achievements!",
     adepts_loses: "Adept Losses:",
     novise_loses: "Novice Losses:",
     navigation: {

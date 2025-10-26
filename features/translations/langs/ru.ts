@@ -60,9 +60,9 @@ export const ru_lang: Messages = {
     select: "Выберите цветовую тему",
   },
   home: {
-    ready_to_battle: "⚔️ Готов к битве?",
+    ready_to_battle: "Готов к битве?",
     welcome_wanderer: "Добро пожаловать, странник",
-    balance_of_pover: "Сегодня твой путь приведёт к великим свершениям! Баланс сил:",
+    home_text: "Сегодня твой путь приведёт к великим свершениям!",
     adepts_loses: "Потери Адептов:",
     novise_loses: "Потери Послушников:",
     navigation: {
