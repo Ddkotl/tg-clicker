@@ -1,3 +1,4 @@
+import { SupportedLang } from "@/features/translations/translate_type";
 import { JWTPayload, jwtVerify, SignJWT } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -11,6 +12,7 @@ export interface AppJWTPayload extends JWTPayload {
   user: {
     userId: string;
     telegram_id: string;
+    lang: SupportedLang;
   };
 }
 
@@ -81,6 +83,7 @@ export async function updateSession(request: NextRequest) {
     user: {
       telegram_id: parsed.user.telegram_id,
       userId: parsed.user.userId,
+      lang: parsed.user.lang,
     },
     exp: Math.floor(Date.now() / 1000) + SESSION_DURATION / 1000,
   };

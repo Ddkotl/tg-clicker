@@ -18,16 +18,13 @@ export async function UpdateOrCreateUser(user: CreateUserType, referer_id?: stri
         profile: { create: {} },
         user_statistic: { create: {} },
         meditation: { create: {} },
+        mine: { create: {} },
+        job: { create: {} },
       },
       update: {
-        telegram_id: user.telegram_id,
         username: user.username || null,
-        first_name: user.first_name || null,
-        last_name: user.last_name || null,
         photo_url: user.photo_url || null,
-        language_code: user.language_code || null,
         auth_date: user.auth_date || null,
-        allows_write_to_pm: user.allows_write_to_pm || null,
       },
       include: {
         profile: {

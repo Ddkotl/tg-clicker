@@ -27,7 +27,7 @@ export function WelcomeCard({
         img={img_paths.home()}
       />
 
-      <FactionConfrontationBar dataFractionCounts={dataFractionCounts} />
+      <FactionConfrontationBar isLoading={isLoadingFractionCounts} dataFractionCounts={dataFractionCounts} />
     </>
   );
 }

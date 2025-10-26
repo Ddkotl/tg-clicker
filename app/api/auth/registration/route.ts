@@ -1,25 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-  registrationErrorResponseSchema,
-  RegistrationErrorResponseType,
-  registrationRequestSchema,
-  registrationResponseSchema,
-  RegistrationResponseType,
-} from "@/entities/auth";
+import { registrationRequestSchema, registrationResponseSchema, RegistrationResponseType } from "@/entities/auth";
 import { RegistrationUser } from "@/entities/auth/index.server";
+import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
+import { translate } from "@/features/translations/server/translate_fn";
+import { makeError } from "@/shared/lib/api_helpers/make_error";
+import { Fraktion, Gender } from "@/_generated/prisma";
 
 export async function POST(req: NextRequest) {
+  const lang = getCookieLang(req);
   try {
     const body = await req.json();
     const parsed = registrationRequestSchema.safeParse(body);
 
     if (!parsed.success) {
-      const errorResponse: RegistrationErrorResponseType = {
-        data: {},
-        message: "Invalid request data",
-      };
-      registrationErrorResponseSchema.parse(errorResponse);
-      return NextResponse.json(errorResponse, { status: 400 });
+      return makeError(translate("api.invalid_request_data", lang), 400);
     }
 
     const { userId, nikname, fraktion, gender, color_theme, avatar_url } = parsed.data;
@@ -33,34 +27,24 @@ export async function POST(req: NextRequest) {
       avatar_url,
     });
     if (!updatedProfile) {
-      const errorResponse: RegistrationErrorResponseType = {
-        data: {},
-        message: "Invalid registration user",
-      };
-      registrationErrorResponseSchema.parse(errorResponse);
-      return NextResponse.json(errorResponse, { status: 400 });
+      return makeError(translate("api.invalid_registration_user", lang), 400);
     }
     const response: RegistrationResponseType = {
       data: {
         userId: updatedProfile.userId,
-        nikname: updatedProfile.nikname,
-        fraktion: updatedProfile.fraktion,
-        gender: updatedProfile.gender,
-        color_theme: updatedProfile.color_theme,
-        avatar_url: updatedProfile.avatar_url ?? null,
+        nikname: updatedProfile.nikname ?? "",
+        fraktion: updatedProfile.fraktion ?? Fraktion.ADEPT,
+        gender: updatedProfile.gender ?? Gender.MALE,
+        color_theme: updatedProfile.color_theme ?? "",
+        avatar_url: updatedProfile.avatar_url ?? "",
       },
-      message: "Profile updated successfully",
+      message: translate("api.successful_registration", lang),
     };
 
     registrationResponseSchema.parse(response);
     return NextResponse.json(response);
   } catch (error) {
-    console.error("POST /updateProfile error:", error);
-    const errorResponse: RegistrationErrorResponseType = {
-      data: {},
-      message: "Internal server error",
-    };
-    registrationErrorResponseSchema.parse(errorResponse);
-    return NextResponse.json(errorResponse, { status: 500 });
+    console.error(translate("api.internal_server_error", lang), error);
+    return makeError(translate("api.internal_server_error", lang), 500);
   }
 }

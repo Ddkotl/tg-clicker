@@ -4,21 +4,23 @@ import { useTranslation } from "@/features/translations/use_translation";
 import { goMeditationRequestType, goMeditationResponseType } from "../_domain/types";
 import { getHoursString } from "../_vm/getHoursString";
 import { TranslationKey } from "@/features/translations/translate_type";
+import { ErrorResponseType } from "@/shared/lib/api_helpers/types";
+import { api_path } from "@/shared/lib/paths";
 
 export function useGoMeditationMutation() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
 
-  return useMutation<goMeditationResponseType, Error, goMeditationRequestType>({
+  return useMutation<goMeditationResponseType, ErrorResponseType, goMeditationRequestType>({
     mutationFn: async (data) => {
-      const res = await fetch("/api/headquarter/meditation", {
+      const res = await fetch(api_path.go_meditation(), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.message || "Ошибка медитации");
-      return result;
+      const json = await res.json();
+      if (!res.ok) throw json;
+      return json;
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({
@@ -35,11 +37,16 @@ export function useGoMeditationMutation() {
               `hour.${getHoursString(data.data.meditation_hours)}` as TranslationKey,
             )}`,
           }),
+          {
+            position: "bottom-center",
+          },
         );
       }
     },
     onError: (error) => {
-      toast.error(error.message || "Не удалось начать медитацию");
+      toast.error(error.message, {
+        position: "bottom-center",
+      });
     },
   });
 }

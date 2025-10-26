@@ -7,6 +7,10 @@ export const ui_path = {
 };
 
 export const api_path = {
+  auth: () => `/api/auth`,
+  registration: () => `/api/auth/registration`,
+  go_meditation: () => `/api/headquarter/meditation`,
+  get_meditation_revard: () => `/api/headquarter/meditation/get_meditation_reward`,
   get_action_token: () => `/api/auth/action-token`,
   get_facts: (userId: string, page: number, pageSize: number) =>
     `/api/user/facts?userId=${userId}&page=${page}&pageSize=${pageSize}`,

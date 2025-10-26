@@ -68,11 +68,11 @@ export const registrationRequestSchema = z.object({
 export const registrationResponseSchema = z.object({
   data: z.object({
     userId: z.string(),
-    nikname: z.string().nullable(),
-    fraktion: z.enum(Fraktion).nullable(),
-    gender: z.enum(Gender).nullable(),
-    color_theme: z.string().nullable(),
-    avatar_url: z.string().nullable(),
+    nikname: z.string(),
+    fraktion: z.enum(Fraktion),
+    gender: z.enum(Gender),
+    color_theme: z.string(),
+    avatar_url: z.string(),
   }),
   message: z.string(),
 });
