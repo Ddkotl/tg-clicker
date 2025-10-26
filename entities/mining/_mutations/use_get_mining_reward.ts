@@ -46,8 +46,8 @@ export function useGetMiningReward() {
           data: {
             ...old.data,
             energy: data.data.energy,
-            last_energy_at: data.data.last_energy_at,
-            last_mine_at: data.data.last_mine_at,
+            last_energy_at: data.data.last_energy_at ?? Date.now(),
+            last_mine_at: data.data.last_mine_at ?? Date.now(),
           },
         };
       });

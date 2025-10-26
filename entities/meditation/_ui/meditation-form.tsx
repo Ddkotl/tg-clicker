@@ -20,7 +20,7 @@ import { Button } from "@/shared/components/ui/button";
 import { TranslationKey } from "@/features/translations/translate_type";
 import { useEffect } from "react";
 import { Spinner } from "@/shared/components/ui/spinner";
-import { CountdownTimer } from "@/shared/components/custom_ui/timer";
+import { MeditationInProgress } from "./meditation_in_progtrss";
 
 export function MeditationForm({ onTimeChange }: { onTimeChange?: (time: string) => void }) {
   const { t } = useTranslation();
@@ -70,7 +70,7 @@ export function MeditationForm({ onTimeChange }: { onTimeChange?: (time: string)
     end = start + meditation.meditation_hours * 60 * 60 * 1000;
   }
 
-  if (isLoading) {
+  if (isLoading || !session?.data?.user.userId) {
     return (
       <div className="flex items-center justify-center h-40">
         <Spinner className="w-6 h-6  text-muted-foreground" />
@@ -80,12 +80,7 @@ export function MeditationForm({ onTimeChange }: { onTimeChange?: (time: string)
 
   return (
     <>
-      {isMeditating && (
-        <div className="p-3 text-sm shine-effect rounded-md  bg-primary/70  text-foreground/80  flex gap-2 items-center">
-          <span>{t("headquarter.meditation_in_progress")}: </span>
-          {end && <CountdownTimer endTime={end} label={t("headquarter.remaining")} />}
-        </div>
-      )}
+      {isMeditating && <MeditationInProgress t={t} end={end} userId={session?.data?.user.userId} />}
       <div
         className={cn(
           "relative transition-opacity",

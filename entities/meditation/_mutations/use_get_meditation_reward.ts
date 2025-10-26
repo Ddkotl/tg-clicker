@@ -4,6 +4,9 @@ import {
   GetMeditationRewardRequestType,
   GetMeditationRewardResponseType,
 } from "../_domain/types";
+import { queries_keys } from "@/shared/lib/queries_keys";
+import { pageSize } from "@/shared/game_config/facts/facts_const";
+import { ProfileResponse } from "@/entities/profile";
 
 export function useGetMeditationReward() {
   const queryClient = useQueryClient();
@@ -23,14 +26,27 @@ export function useGetMeditationReward() {
       return result;
     },
     onSuccess: (data) => {
-      queryClient.removeQueries({
-        queryKey: ["meditation", data.data.userId],
+      queryClient.setQueryData<ProfileResponse>(queries_keys.profile_userId(data.data.userId), (old) => {
+        if (!old?.data) return old;
+        return {
+          ...old,
+          data: {
+            ...old.data,
+            lvl: data.data.current_lvl,
+            exp: data.data.current_exp,
+            diamond: data.data.current_diamond,
+            mana: data.data.current_mana,
+          },
+        };
       });
       queryClient.invalidateQueries({
-        queryKey: ["profile", data.data.userId],
+        queryKey: queries_keys.meditation_userId(data.data.userId),
       });
       queryClient.invalidateQueries({
-        queryKey: ["meditation", data.data.userId],
+        queryKey: queries_keys.facts_userId(data.data.userId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: [...queries_keys.facts_userId(data.data.userId), pageSize],
       });
     },
   });

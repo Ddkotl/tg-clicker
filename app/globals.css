@@ -236,8 +236,9 @@ body::-webkit-scrollbar {
 .bg-header-gradient {
   background: linear-gradient(
     to bottom,
-    color-mix(in oklch, var(--primary) 25%, transparent) 10%,
-    color-mix(in oklch, var(--primary) 10%, transparent) 50%,
+    color-mix(in oklch, var(--primary) 14%, transparent) 10%,
+    color-mix(in oklch, var(--primary) 10%, transparent) 25%,
+    color-mix(in oklch, var(--primary) 6%, transparent) 50%,
     transparent 100%
   );
   backdrop-filter: blur(8px);
@@ -245,8 +246,9 @@ body::-webkit-scrollbar {
 .bg-footer-gradient {
   background: linear-gradient(
     to top,
-    color-mix(in oklch, var(--primary) 25%, transparent) 10%,
-    color-mix(in oklch, var(--primary) 10%, transparent) 50%,
+    color-mix(in oklch, var(--primary) 14%, transparent) 10%,
+    color-mix(in oklch, var(--primary) 10%, transparent) 25%,
+    color-mix(in oklch, var(--primary) 6%, transparent) 50%,
     transparent 100%
   );
   backdrop-filter: blur(8px);

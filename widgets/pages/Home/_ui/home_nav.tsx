@@ -13,7 +13,7 @@ export function HomeNav({ t }: { t: (key: TranslationKey, vars?: Record<string, 
       href: "/game/headquarter",
     },
     { label: `🌆 ${t("home.navigation.city")}`, href: "/game/city" },
-    { label: `🕵️ ${t("home.navigation.secret_agent")}`, href: "/game/agent" },
+    { label: `🕵️ ${t("home.navigation.agent")}`, href: "/game/agent" },
     { label: `🏆 ${t("home.navigation.rating")}`, href: "/game/ranking" },
   ];
   return (

@@ -8,6 +8,7 @@ import { useLanguage } from "@/features/translations/lang_context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Separator } from "@/shared/components/ui/separator";
 import { Droplet, HardHat, Hourglass, Pickaxe, Sparkles, Calendar } from "lucide-react";
+import { getHoursString } from "@/entities/meditation/_vm/getHoursString";
 
 export function FactItem({
   fact,
@@ -28,16 +29,16 @@ export function FactItem({
           border: "border-purple-500/30",
           separator: "bg-purple-500/20",
           title: t("facts.meditation_fact1", {
-            time: fact.active_hours ?? 0,
+            time: `${fact.active_hours} ${t(`hour.${getHoursString(fact.active_hours ?? 0)}` as TranslationKey)}`,
           }),
           rewards: [
             {
               icon: <Droplet className="text-blue-400 h-4 w-4" />,
-              text: `${fact.mana_reward ?? 0} ${t("facts.meditation_fact2")}`,
+              text: `${t("facts.meditation_fact2")} ${fact.mana_reward ?? 0}`,
             },
             {
               icon: <HardHat className="text-amber-500 h-4 w-4" />,
-              text: `${fact.exp_reward ?? 0} ${t("facts.meditation_fact3")}`,
+              text: `${t("facts.meditation_fact3")} ${fact.exp_reward ?? 0}`,
             },
           ],
         };
@@ -97,8 +98,8 @@ export function FactItem({
             <div className="flex gap-3">
               {config?.rewards.map((reward, i) => (
                 <div key={i} className="flex items-center gap-1">
-                  {reward.icon}
                   <span className="text-foreground/80">{reward.text}</span>
+                  {reward.icon}
                 </div>
               ))}
             </div>

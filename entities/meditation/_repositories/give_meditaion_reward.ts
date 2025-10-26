@@ -2,7 +2,7 @@ import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lv
 import { dataBase } from "@/shared/connect/db_connect";
 import { getMeditationExperience } from "@/shared/game_config/exp/give_expirience";
 
-export async function giveMeditationReward(userId: string) {
+export async function giveMeditationReward(userId: string, break_meditation: boolean = false) {
   try {
     const meditation = await dataBase.meditation.findUnique({
       where: { userId: userId },
@@ -17,7 +17,9 @@ export async function giveMeditationReward(userId: string) {
     }
     const meditation_expirience = getMeditationExperience(meditation.meditation_hours);
 
-    const meditation_reward = meditation.meditation_revard;
+    const meditation_reward = break_meditation
+      ? Math.floor(meditation.meditation_revard / 20)
+      : meditation.meditation_revard;
     const res = await dataBase.$transaction([
       dataBase.meditation.update({
         where: { userId },
@@ -33,12 +35,13 @@ export async function giveMeditationReward(userId: string) {
         data: {
           mana: { increment: meditation_reward },
           exp: { increment: meditation_expirience },
+          diamond: { decrement: break_meditation ? 10 : 0 },
         },
       }),
       dataBase.userStatistic.update({
         where: { userId },
         data: {
-          meditated_hours: { increment: meditation.meditation_hours },
+          meditated_hours: { increment: break_meditation ? 1 : meditation.meditation_hours },
         },
       }),
     ]);
@@ -50,6 +53,7 @@ export async function giveMeditationReward(userId: string) {
       hours: meditation.meditation_hours,
       current_mana: res[1].mana,
       current_exp: res[1].exp,
+      current_diamond: res[1].diamond,
       current_lvl: lvl_up ? lvl_up : res[1].lvl,
     };
   } catch (error) {
