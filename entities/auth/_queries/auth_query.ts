@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { AuthErrorResponseType, AuthResponseType } from "../_domain/types";
+import { api_path } from "@/shared/lib/paths";
 
 export function useAuthQuery() {
   return useQuery<AuthResponseType | AuthErrorResponseType>({
@@ -10,10 +11,9 @@ export function useAuthQuery() {
       WebApp.disableVerticalSwipes();
       const initData = WebApp.initData;
       const start_param = WebApp.initDataUnsafe.start_param;
-      console.log("init data", initData);
       if (!initData) throw new Error("No initData from Telegram WebApp");
 
-      const res = await fetch("/api/auth", {
+      const res = await fetch(api_path.auth(), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ initData, ref: start_param }),
@@ -26,7 +26,7 @@ export function useAuthQuery() {
 
       return json;
     },
-    gcTime: 1 * 60 * 1000,
-    staleTime: 1 * 60 * 1000,
+    gcTime: 10 * 1000,
+    staleTime: 10 * 1000,
   });
 }

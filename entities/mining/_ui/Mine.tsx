@@ -105,7 +105,7 @@ export default function Mine() {
               {deals.on_meditation ? (
                 <span>{t("headquarter.mine_page.cannot_mine_while_meditating")}</span>
               ) : (
-                <div className="flex flex-col items-center gap-1">
+                <div className="flex  items-center gap-2">
                   {now.getTime() < mine.data.last_mine_at + MiningConst.MINE_COOLDOWN && (
                     <CountdownTimer
                       endTime={mine.data.last_mine_at + MiningConst.MINE_COOLDOWN}

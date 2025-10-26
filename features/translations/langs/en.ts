@@ -1,4 +1,11 @@
 export const en_lang = {
+  api: {
+    invalid_request_data: "Invalid request data",
+    internal_server_error: "Internal server error",
+    invalid_registration_user: "Invalid registration user",
+    successful_registration: "Profile updated successfully",
+  },
+  close: "Close",
   loading: "loading",
   error: "anithing went wrong",
   reboot: "Reboot",

@@ -11,7 +11,7 @@ export async function checkUserDeals(userId: string): Promise<"ok" | string | nu
 
     if (!user) return "User not found";
     if (user.meditation?.on_meditation) return "User is on meditation";
-    return "ok";
+    return "ок";
   } catch (error) {
     console.error("Error checkUserDeals:", error);
     return null;

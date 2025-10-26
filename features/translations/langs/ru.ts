@@ -1,6 +1,13 @@
 import { Messages } from "../translate_type";
 
 export const ru_lang: Messages = {
+  api: {
+    invalid_request_data: "Неверные данные запроса",
+    internal_server_error: "Внутренняя ошибка сервера",
+    invalid_registration_user: "Не получилось зарегистрировать пользователя",
+    successful_registration: " Профиль успешно обновлен",
+  },
+  close: "Закрыть",
   loading: "загрузка",
   error: "что-то пошло не так",
   lvl: "Уровень",

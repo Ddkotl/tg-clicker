@@ -7,11 +7,6 @@ import { pushToSubscriber } from "@/app/api/user/facts/stream/route";
 import { MEDITATION_EXCHANGE, MEDITATION_QUEUE } from "@/features/meditation/rabit_meditation_connect";
 import { RABBITMQ_URL } from "@/shared/lib/consts";
 
-if (!process.env.WORKER_SECRET) {
-  console.error("❌ WORKER_SECRET is not set");
-  process.exit(1);
-}
-
 async function startWorker() {
   const connection = await amqp.connect(RABBITMQ_URL);
   const channel = await connection.createChannel();

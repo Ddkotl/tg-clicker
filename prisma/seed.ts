@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("🌱 Start seeding...");
 
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= 500; i++) {
     const user = await prisma.user.create({
       data: {
         telegram_id: `tg_id_${i}`,

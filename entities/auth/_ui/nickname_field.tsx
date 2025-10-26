@@ -28,6 +28,7 @@ export function NicknameField({
         maxLength={20}
         required
         className={cn(
+          "bg-transparent",
           nickname.length >= 3 && isNiknameValid === true && "border-green-500 focus-visible:ring-green-500/50",
           nickname.length >= 3 && isNiknameChecked && "border-blue-500 focus-visible:ring-blue-500/50",
           nickname.length >= 3 && isNiknameValid === false && "border-red-500 focus-visible:ring-red-500/50",
