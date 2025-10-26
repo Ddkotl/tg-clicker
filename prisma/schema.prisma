@@ -68,8 +68,8 @@ model Mine {
   user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         String    @unique
   energy         Int       @default(25)
-  last_mine_at   DateTime?
-  last_energy_at DateTime?
+  last_mine_at   DateTime @default(now())
+  last_energy_at DateTime @default(now())
   updated_at     DateTime  @updatedAt
 
   @@map("mines")

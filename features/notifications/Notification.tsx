@@ -57,7 +57,7 @@ export function Notifications() {
     end = start + meditation.meditation_hours * 60 * 60 * 1000;
   }
 
-  const isLoading = isLoadingSession || isLoadingFacts || isLoadingMine;
+  const isLoading = isLoadingSession || isLoadingFacts;
   if (isLoading) return null;
 
   return (
@@ -76,7 +76,7 @@ export function Notifications() {
       {facts_count?.data !== undefined && facts_count?.data > 0 && (
         <FactsAlert count={facts_count?.data} onClose={handleCloseClick} />
       )}
-      {mine?.data.energy !== undefined && mine?.data.energy > 0 && (
+      {!isLoadingMine && mine?.data.energy !== undefined && mine?.data.energy > 0 && (
         <ActionAlert
           icon={<Zap className="h-5 w-5 text-blue-500" />}
           title="У тебя есть энергия,"

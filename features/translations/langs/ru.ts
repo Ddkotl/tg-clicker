@@ -63,9 +63,9 @@ export const ru_lang: Messages = {
     navigation: {
       chronicles: "Хроники",
       battle: "Схватка",
-      headquarters: "Штаб",
+      headquarters: "Храм Духа",
       city: "Город",
-      secret_agent: "Тайный агент",
+      agent: "Питомец",
       rating: "Рейтинг",
     },
   },
@@ -105,8 +105,8 @@ export const ru_lang: Messages = {
     meditation_fact2: "маны и",
     meditation_fact3: "опыта.",
     mine_fact1: "Вы добыли ресурсы в шахте:",
-    mine_fact2: "Камней ци",
-    mine_fact3: "Опыта",
+    mine_fact2: "Камни ци",
+    mine_fact3: "Опыт",
     notification: {
       new_events: "Есть новые события",
       сheck: "проверить",
@@ -118,13 +118,13 @@ export const ru_lang: Messages = {
       "В штабе проходят важные мероприятия, которые могут пополнить запасы вашей маны и золота. Выберите действие, чтобы продолжить.",
     meditation: "Медитация",
     meditation_desc:
-      "Медитация — это постижение тайн вселенной. Во время медитации вы находите покой и накапливаете ману.",
+      "Медитация — это постижение тайн вселенной. Во время медитации вы находите покой и накапливаете энергию ци.",
     meditation_revard_promise:
       "Чем выше уровень вашей характеристики, тем больше маны вы накопите во время медитации. Вы заработаете {mana} маны за {time}.",
     meditation_time: "Выбери время медитации",
     meditation_went_message: "Ты начал медитировать {time}",
     meditate: "Медитировать",
-    meditation_in_progress: "Медитация в процессе",
+    meditation_in_progress: "Ты медитируешь",
     mine: "Шахта",
     mine_page: {
       title: "Шахта камней Ци",

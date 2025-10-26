@@ -66,9 +66,9 @@ export const en_lang = {
     navigation: {
       chronicles: "Chronicles",
       battle: "Battle",
-      headquarters: "Headquarters",
+      headquarters: "Temple of Spirit",
       city: "City",
-      secret_agent: "Secret Agent",
+      agent: "Pet",
       rating: "Rating",
     },
   },
@@ -121,13 +121,13 @@ export const en_lang = {
       "The headquarters hosts important events that can replenish your mana and gold reserves. Choose an action to proceed.",
     meditation: "Meditation",
     meditation_desc:
-      "Meditation is the unraveling of the universe's mysteries. During meditation, you find peace and accumulate mana.",
+      "Meditation is the unraveling of the universe's mysteries. During meditation, you find peace and accumulate qi energy.",
     meditation_revard_promise:
       "The higher your stat level, the more mana you'll accumulate during meditation. You'll earn {mana} mana in {time}.",
     meditation_time: "Select meditation time",
     meditation_went_message: "You started meditating {time}",
     meditate: "Meditate",
-    meditation_in_progress: "Meditation in progress",
+    meditation_in_progress: "You are meditating",
     mine: "Mine",
     mine_page: {
       title: "Qi Stone Mine",

@@ -21,8 +21,8 @@ export const getMineResponseSchema = z.object({
   data: z.object({
     userId: z.string(),
     energy: z.number(),
-    last_energy_at: z.number().nullable(),
-    last_mine_at: z.number().nullable(),
+    last_energy_at: z.number(),
+    last_mine_at: z.number(),
   }),
   message: z.string(),
   type: z.literal("ok"),
