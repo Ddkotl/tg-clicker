@@ -17,12 +17,13 @@ import { Spinner } from "@/shared/components/ui/spinner";
 import { useEffect, useState } from "react";
 import { img_paths } from "@/shared/lib/img_paths";
 import { Zap } from "lucide-react";
+import { useCheckUserDeals } from "@/entities/user/_queries/use_check_user_deals";
 
 export default function Mine() {
   const { t } = useTranslation();
   const { data: session, isLoading: isSessionLoading } = useGetSessionQuery();
   const userId = session?.data?.user.userId;
-
+  const deals = useCheckUserDeals();
   const {
     data: mine,
     isLoading,
@@ -95,25 +96,34 @@ export default function Mine() {
               size="lg"
               onClick={() => mutation.mutate({ userId: userId ?? "" })}
               disabled={
-                energy < 0 || now.getTime() < mine.data.last_mine_at + MiningConst.MINE_COOLDOWN || mutation.isPending
+                energy < 0 ||
+                now.getTime() < mine.data.last_mine_at + MiningConst.MINE_COOLDOWN ||
+                mutation.isPending ||
+                deals.on_meditation
               }
             >
-              {now.getTime() < mine.data.last_mine_at + MiningConst.MINE_COOLDOWN && (
-                <CountdownTimer
-                  endTime={mine.data.last_mine_at + MiningConst.MINE_COOLDOWN}
-                  onComplete={() => setNow(new Date())}
-                />
-              )}
-              {mutation.isPending ? (
-                <>
-                  <Spinner className="w-4 h-4" />
-                  {t("headquarter.mine_page.mining_in_progress")}
-                </>
+              {deals.on_meditation ? (
+                <span>{t("headquarter.mine_page.cannot_mine_while_meditating")}</span>
               ) : (
-                t("headquarter.mine_page.get_qi_stones")
+                <div className="flex flex-col items-center gap-1">
+                  {now.getTime() < mine.data.last_mine_at + MiningConst.MINE_COOLDOWN && (
+                    <CountdownTimer
+                      endTime={mine.data.last_mine_at + MiningConst.MINE_COOLDOWN}
+                      onComplete={() => setNow(new Date())}
+                    />
+                  )}
+
+                  {mutation.isPending ? (
+                    <div className="flex items-center gap-2">
+                      <Spinner className="w-4 h-4" />
+                      {t("headquarter.mine_page.mining_in_progress")}
+                    </div>
+                  ) : (
+                    t("headquarter.mine_page.get_qi_stones")
+                  )}
+                </div>
               )}
             </Button>
-            {/* Таймер до следующей добычи */}
           </CardContent>
         </Card>
       </div>

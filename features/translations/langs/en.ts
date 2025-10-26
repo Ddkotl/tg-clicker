@@ -62,17 +62,17 @@ export const en_lang = {
     select: "Select color theme",
   },
   home: {
-    ready_to_battle: "⚔️ Ready for battle?",
+    ready_to_battle: "Ready for battle?",
 
     welcome_wanderer: "Welcome, wanderer",
-    balance_of_pover: "Today your path will lead to great achievements! Balance of power:",
+    home_text: "Today your path will lead to great achievements!",
     adepts_loses: "Adept Losses:",
     novise_loses: "Novice Losses:",
     navigation: {
       chronicles: "Chronicles",
       battle: "Battle",
       headquarters: "Temple of Spirit",
-      city: "City",
+      city: "Сitadel",
       agent: "Pet",
       rating: "Rating",
     },
@@ -145,6 +145,7 @@ export const en_lang = {
       energy_recovery: "Energy Recovery:",
       get_qi_stones: "Get Qi Stones",
       mining_in_progress: "We extract...",
+      cannot_mine_while_meditating: "Not available during meditation",
     },
     remaining: "remaining",
     wait: "wait...",
