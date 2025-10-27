@@ -3,14 +3,13 @@ import { cn } from "@/shared/lib/utils";
 import Link from "next/link";
 
 export function HeaderItem({
-  icon: Icon,
+  icon,
   value,
-  color,
   isLoading,
   isDisabled,
   href,
 }: {
-  icon: React.ElementType;
+  icon: React.ReactNode;
   value?: string | number;
   color?: string;
   isLoading?: boolean;
@@ -26,7 +25,7 @@ export function HeaderItem({
         value && "gap-1",
       )}
     >
-      <Icon className={cn("h-4 w-4 xs:h-5 xs:w-5", color)} />
+      {icon}
       {isLoading && value ? (
         <Skeleton className="h-3 w-8 rounded-md" />
       ) : (

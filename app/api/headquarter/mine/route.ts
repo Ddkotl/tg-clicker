@@ -10,21 +10,24 @@ import { CreateUserMine, GetUserMine, giveMineRevard } from "@/entities/mining/i
 import { restoreEnergy } from "@/entities/mining/_vm/restore_mine_energy";
 import { MINE_COOLDOWN } from "@/shared/game_config/mining/mining_const";
 import { checkUserDeals } from "@/entities/user/_repositories/check_user_deals";
+import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
+import { translate } from "@/features/translations/server/translate_fn";
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  const lang = getCookieLang(req);
   try {
     const body = await req.json();
     const parsed = miningRequestSchema.safeParse(body);
-    if (!parsed.success) return makeError("Invalid request data", 400);
+    if (!parsed.success) return makeError(translate("api.invalid_request_data", lang), 400);
     const userId = parsed.data.userId;
 
     const { allowed } = await rateLimitRedis(`rl:mine:${userId}`, 10, 60);
-    if (!allowed) return makeError("Rate limit exceeded", 429);
+    if (!allowed) return makeError(translate("api.rate_limit_exceeded", lang), 429);
 
     const tokenError = await validateActionToken(req, "action-token");
-    if (tokenError) return makeError("Token error", 401);
+    if (tokenError) return makeError(translate("api.invalid_token", lang), 401);
     const user_deals = await checkUserDeals(userId);
-    if (!user_deals || user_deals === null) return makeError("invalid user_deals", 400);
+    if (!user_deals || user_deals === null) return makeError(translate("api.invalid_process", lang), 400);
     if (user_deals !== "ок") return makeError(user_deals, 400);
     const now = new Date();
     let user_mine = await GetUserMine(userId);
@@ -32,23 +35,23 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       user_mine = await CreateUserMine(userId, now);
     }
     if (!user_mine || user_mine === null) {
-      return makeError("invalid user_mine", 400);
+      return makeError(translate("api.invalid_process", lang), 400);
     }
 
     user_mine = await restoreEnergy(userId, user_mine, now);
 
     if (user_mine.last_mine_at && now.getTime() - user_mine.last_mine_at.getTime() < MINE_COOLDOWN) {
       const remaining = Math.ceil((MINE_COOLDOWN - (now.getTime() - user_mine.last_mine_at.getTime())) / 1000);
-      return makeError(`Cooldown: wait ${remaining}s`, 429);
+      return makeError(translate("api.cooldown", lang, { remaining }), 429);
     }
 
-    if (user_mine.energy <= 0) return makeError("No energy", 400);
+    if (user_mine.energy <= 0) return makeError(translate("api.no_energy", lang), 400);
 
     const reward = CalcMineReward();
     const exp = getMineExperience(reward);
 
     const result = await giveMineRevard(userId, reward, exp, now);
-    if (!result || result === null) return makeError("giveMineRevard err", 400);
+    if (!result || result === null) return makeError(translate("api.invalid_process", lang), 400);
 
     await pushToSubscriber(userId, result.fact.type);
 
@@ -70,6 +73,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json(response);
   } catch (error) {
     console.error("POST /headquarter/mining:", error);
-    return makeError("Internal server error", 500);
+    return makeError(translate("api.internal_server_error", lang), 500);
   }
 }

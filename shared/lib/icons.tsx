@@ -1,5 +1,4 @@
 import {
-  GiBloodySword,
   GiDigDug,
   GiDodging,
   GiFire,
@@ -9,7 +8,21 @@ import {
   GiStonePile,
 } from "react-icons/gi";
 import { ReactNode } from "react";
-import { ArrowRightCircle, BellDot, Calendar, Hourglass, PawPrint, Pickaxe, ScrollText, X } from "lucide-react";
+import {
+  ArrowRightCircle,
+  Backpack,
+  BellDot,
+  Calendar,
+  Clock,
+  HeartPulse,
+  Hourglass,
+  PawPrint,
+  Pickaxe,
+  ScrollText,
+  Swords,
+  User,
+  X,
+} from "lucide-react";
 import { MdOutlineTempleHindu } from "react-icons/md";
 import { cn } from "@/shared/lib/utils";
 
@@ -18,6 +31,10 @@ type IconProps = {
 };
 
 export const icons = {
+  heart: ({ className }: IconProps): ReactNode => <HeartPulse className={cn("h-4 w-4 text-red-700", className)} />,
+  user: ({ className }: IconProps): ReactNode => <User className={cn("h-4 w-4 text-primary", className)} />,
+  backpack: ({ className }: IconProps): ReactNode => <Backpack className={cn("h-4 w-4 text-green-700", className)} />,
+  clock: ({ className }: IconProps): ReactNode => <Clock className={cn("h-4 w-4 text-white/80", className)} />,
   qi_energy: ({ className }: IconProps): ReactNode => <GiFire className={cn("h-4 w-4 text-blue-400", className)} />,
 
   exp: ({ className }: IconProps): ReactNode => <GiDodging className={cn("h-4 w-4 text-green-400", className)} />,
@@ -40,7 +57,7 @@ export const icons = {
     <GiHadesSymbol className={cn("h-5 w-5 text-white/80", className)} />
   ),
 
-  fight: ({ className }: IconProps): ReactNode => <GiBloodySword className={cn("h-5 w-5 text-white/80", className)} />,
+  fight: ({ className }: IconProps): ReactNode => <Swords className={cn("h-5 w-5 text-white/80", className)} />,
 
   pet: ({ className }: IconProps): ReactNode => <PawPrint className={cn("h-5 w-5 text-white/80", className)} />,
 

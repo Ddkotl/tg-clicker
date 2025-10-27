@@ -9,7 +9,7 @@ export async function getReferrer(userId: string) {
       },
     });
   } catch (e) {
-    console.log("Not referrer", e);
+    console.error("Not referrer", e);
     return null;
   }
 }
@@ -23,7 +23,7 @@ export async function getReferrals(userId: string) {
       },
     });
   } catch (e) {
-    console.log("Not referrals", e);
+    console.error("Not referrals", e);
     return [];
   }
 }

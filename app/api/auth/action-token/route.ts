@@ -1,22 +1,16 @@
-import {
-  AuthErrorResponseType,
-  errorResponseSchema,
-  getActionTokenResponseSchema,
-  GetActionTokenResponseType,
-} from "@/entities/auth";
+import { getActionTokenResponseSchema, GetActionTokenResponseType } from "@/entities/auth";
+import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
+import { translate } from "@/features/translations/server/translate_fn";
 import { createJwtActive } from "@/shared/lib/api_helpers/action_token/jwt";
-import { NextResponse } from "next/server";
+import { makeError } from "@/shared/lib/api_helpers/make_error";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const lang = getCookieLang(req);
   try {
     const new_action_jwt = await createJwtActive();
     if (!new_action_jwt || new_action_jwt === null) {
-      const response = {
-        message: "Invalid new_action_jwt",
-        data: {},
-      };
-      errorResponseSchema.parse(response);
-      return NextResponse.json(response, { status: 400 });
+      return makeError(translate("api.invalid_token", lang), 401);
     }
     const response: GetActionTokenResponseType = {
       message: "ok",
@@ -29,11 +23,6 @@ export async function GET() {
     return NextResponse.json(response);
   } catch (error) {
     console.error("POST /auth/action-token error:", error);
-    const response: AuthErrorResponseType = {
-      message: "Internal server error",
-      data: {},
-    };
-    errorResponseSchema.parse(response);
-    return NextResponse.json(response, { status: 500 });
+    return makeError(translate("api.internal_server_error", lang), 500);
   }
 }
