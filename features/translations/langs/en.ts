@@ -125,12 +125,13 @@ export const en_lang = {
     notification: {
       new_events: "There are new events",
       сheck: "сheck",
+      you_have_energy: "You have energy",
+      go_to_the_mine: "go to the mine",
     },
   },
   headquarter: {
-    headquarter_title: "Headquarters",
     headquarter_welcome:
-      "The headquarters hosts important events that can replenish your energy and qi stoun reserves. Choose an action to proceed.",
+      "The temple hosts important events that can replenish your energy and qi stoun reserves. Choose an action to proceed.",
     meditation: "Meditation",
     meditation_desc: "Meditation is the unraveling of the universe's mysteries",
     meditation_revard_promise:

@@ -25,13 +25,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     if (tokenError) return makeError("Token error", 401);
     const user_deals = await checkUserDeals(userId);
     if (!user_deals || user_deals === null) return makeError("invalid user_deals", 400);
-    console.log(user_deals);
-    console.log(user_deals);
-    console.log(user_deals);
-    console.log(user_deals);
     if (user_deals !== "ок") return makeError(user_deals, 400);
     const now = new Date();
-    console.log("1");
     let user_mine = await GetUserMine(userId);
     if (!user_mine) {
       user_mine = await CreateUserMine(userId, now);

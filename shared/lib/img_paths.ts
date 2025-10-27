@@ -3,4 +3,5 @@ export const img_paths = {
   meditation: () => `/meditation.jpg`,
   facts: () => `/facts.jpg`,
   home: () => `/home.jpg`,
+  temple: () => `/temple.jpg`,
 };

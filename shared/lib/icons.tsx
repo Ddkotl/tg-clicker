@@ -1,57 +1,60 @@
-import { GiFire } from "react-icons/gi";
+import {
+  GiBloodySword,
+  GiDigDug,
+  GiDodging,
+  GiFire,
+  GiFloatingCrystal,
+  GiHadesSymbol,
+  GiHolyGrail,
+  GiStonePile,
+} from "react-icons/gi";
 import { ReactNode } from "react";
+import { ArrowRightCircle, BellDot, Calendar, Hourglass, PawPrint, Pickaxe, ScrollText, X } from "lucide-react";
 import { MdOutlineTempleHindu } from "react-icons/md";
-import { GiHadesSymbol } from "react-icons/gi";
-import { GiBloodySword } from "react-icons/gi";
-import { GiHolyGrail } from "react-icons/gi";
-import { GiStonePile } from "react-icons/gi";
-import { GiDigDug } from "react-icons/gi";
-import { GiDodging } from "react-icons/gi";
+import { cn } from "@/shared/lib/utils";
 
 type IconProps = {
-  size?: number;
-  color?: string;
   className?: string;
 };
 
 export const icons = {
-  qi_energy: ({ size = 20, color = "blue", className = "" }: IconProps): ReactNode => (
-    <GiFire size={size} color={color} className={className} />
+  qi_energy: ({ className }: IconProps): ReactNode => <GiFire className={cn("h-4 w-4 text-blue-400", className)} />,
+
+  exp: ({ className }: IconProps): ReactNode => <GiDodging className={cn("h-4 w-4 text-green-400", className)} />,
+
+  stone: ({ className }: IconProps): ReactNode => <GiStonePile className={cn("h-4 w-4 text-yellow-400", className)} />,
+
+  crystal: ({ className }: IconProps): ReactNode => (
+    <GiFloatingCrystal className={cn("h-4 w-4 text-purple-400", className)} />
   ),
-  exp: ({ size = 20, color = "green", className = "" }: IconProps): ReactNode => (
-    <GiDodging size={size} color={color} className={className} />
+
+  notification: ({ className }: IconProps): ReactNode => <BellDot className={cn("h-5 w-5 text-primary", className)} />,
+
+  fact: ({ className }: IconProps): ReactNode => <ScrollText className={cn("h-5 w-5 text-white/80", className)} />,
+
+  temple: ({ className }: IconProps): ReactNode => (
+    <MdOutlineTempleHindu className={cn("h-5 w-5 text-white/80", className)} />
   ),
-  stone: ({ size = 20, color = "yellow", className = "" }: IconProps): ReactNode => (
-    <GiStonePile size={size} color={color} className={className} />
+
+  citadel: ({ className }: IconProps): ReactNode => (
+    <GiHadesSymbol className={cn("h-5 w-5 text-white/80", className)} />
   ),
-  crystal: ({ size = 20, color = "purple", className = "" }: IconProps): ReactNode => (
-    <GiFloatingCrystal size={size} color={color} className={className} />
+
+  fight: ({ className }: IconProps): ReactNode => <GiBloodySword className={cn("h-5 w-5 text-white/80", className)} />,
+
+  pet: ({ className }: IconProps): ReactNode => <PawPrint className={cn("h-5 w-5 text-white/80", className)} />,
+
+  trophy: ({ className }: IconProps): ReactNode => <GiHolyGrail className={cn("h-8 w-8 text-white/80", className)} />,
+
+  dig: ({ className }: IconProps): ReactNode => <GiDigDug className={cn("h-5 w-5 text-white/80", className)} />,
+
+  meditation: ({ className }: IconProps): ReactNode => <Hourglass className={cn("h-5 w-5 text-white/80", className)} />,
+  mine: ({ className }: IconProps): ReactNode => <Pickaxe className={cn("h-5 w-5 text-primary", className)} />,
+  calendar: ({ className }: IconProps): ReactNode => (
+    <Calendar className={cn("h-3.5 w-3.5 text-primary/60", className)} />
   ),
-  notification: ({ size = 20, color = "primary", className = "" }: IconProps): ReactNode => (
-    <BellDot /> size={size} color={color} className={className} />
+  arrow_right: ({ className }: IconProps): ReactNode => (
+    <ArrowRightCircle className={cn("h-5 w-5 text-primary", className)} />
   ),
-  fact: ({ size = 20, color = "white", className = "" }: IconProps): ReactNode => (
-    <ScrollText size={size} color={color} className={className} />
-  ),
-  temple: ({ size = 20, color = "white", className = "" }: IconProps): ReactNode => (
-    <MdOutlineTempleHindu size={size} color={color} className={className} />
-  ),
-  citadel: ({ size = 20, color = "white", className = "" }: IconProps): ReactNode => (
-    <GiHadesSymbol size={size} color={color} className={className} />
-  ),
-  fight: ({ size = 20, color = "white", className = "" }: IconProps): ReactNode => (
-    <GiBloodySword size={size} color={color} className={className} />
-  ),
-  pet: ({ size = 20, color = "white", className = "" }: IconProps): ReactNode => (
-    <PawPrint size={size} color={color} className={className} />
-  ),
-  trophy: ({ size = 20, color = "white", className = "" }: IconProps): ReactNode => (
-    <GiHolyGrail  size={size} color={color} className={className} />
-  ),
-  dig: ({ size = 20, color = "white", className = "" }: IconProps): ReactNode => (
-    <GiDigDug size={size} color={color} className={className} />
-  ),
-  meditation: ({ size = 20, color = "white", className = "" }: IconProps): ReactNode => (
-    <Hourglass size={size} color={color} className={className} />
-  ),
+  close: ({ className }: IconProps): ReactNode => <X className={cn("h-5 w-5 text-primary", className)} />,
 };
