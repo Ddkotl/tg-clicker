@@ -24,12 +24,15 @@ export function FactionConfrontationBar({
 }: FactionConfrontationBarProps) {
   if (isLoading) {
     return (
-      <div className={`relative w-full max-w-md mx-auto h-6 rounded-full ${className}`}>
-        <Skeleton className="absolute inset-0 rounded-full" />
+      <div
+        className={`relative opacity-60 w-full max-w-md mx-auto h-6 rounded-full overflow-hidden border border-border shadow-sm ${className}`}
+      >
+        <div className="absolute left-0 top-0 w-1/2 h-full bg-gradient-to-r from-red-700 to-red-500 opacity-70 animate-pulse" />
+        <div className="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-blue-700 to-blue-400 opacity-70 animate-pulse" />
 
         <div className="absolute inset-0 flex justify-between items-center px-3">
-          <Skeleton className="w-8 h-4 rounded" />
-          <Skeleton className="w-8 h-4 rounded" />
+          <Skeleton className="w-8 h-4 rounded bg-white/30" />
+          <Skeleton className="w-8 h-4 rounded bg-white/30" />
         </div>
       </div>
     );
@@ -45,18 +48,18 @@ export function FactionConfrontationBar({
 
   return (
     <div
-      className={`relative w-full max-w-md mx-auto h-6 rounded-full overflow-hidden border border-border shadow-sm ${className}`}
+      className={`relative opacity-70 w-full max-w-md mx-auto h-6 rounded-full overflow-hidden border border-border shadow-sm ${className}`}
     >
       <div
         className={`
-          absolute right-0 top-0 h-full transition-all duration-500 ease-in-out 
+          absolute left-0 top-0 h-full transition-all duration-500 ease-in-out 
           bg-gradient-to-r from-red-700 to-red-500
         `}
         style={{ width: `${adeptsPercent}%` }}
       />
       <div
         className={`
-          absolute left-0 top-0 h-full transition-all duration-500 ease-in-out 
+          absolute right-0 top-0 h-full transition-all duration-500 ease-in-out 
           bg-gradient-to-l from-blue-700 to-blue-400
         `}
         style={{ width: `${novicesPercent}%` }}

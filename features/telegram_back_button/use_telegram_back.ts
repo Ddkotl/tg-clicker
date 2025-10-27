@@ -11,16 +11,11 @@ export function useTelegramBack() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let WebApp: any;
     const hideBackPaths = ["/", "/registration"];
-    const blockBackPaths = ["/game"]; // 👈 тут блокируем возврат с game
+    const blockBackPaths = ["/game"];
 
     const handleBack = () => {
       try {
-        console.log("🔙 Telegram Back pressed on:", pathname);
-
-        // 🚫 блокируем возврат с /game
         if (blockBackPaths.includes(pathname)) {
-          console.log("🚫 Возврат с /game запрещён — ничего не делаем");
-          // если хочешь — можно просто закрыть Mini App:
           // WebApp.close();
           return;
         }
@@ -36,13 +31,11 @@ export function useTelegramBack() {
       WebApp = sdk.default;
 
       if (hideBackPaths.includes(pathname)) {
-        console.log("🙈 Скрываю Telegram Back на маршруте:", pathname);
         WebApp.BackButton.hide();
 
         if (initializedRef.current) {
           WebApp.BackButton.offClick(handleBack);
           initializedRef.current = false;
-          console.log("🧹 Удалил обработчик Back");
         }
 
         return;
@@ -53,7 +46,6 @@ export function useTelegramBack() {
       if (!initializedRef.current) {
         WebApp.BackButton.onClick(handleBack);
         initializedRef.current = true;
-        console.log("✅ Telegram Back Button активна на:", pathname);
       }
     })();
 
@@ -61,7 +53,6 @@ export function useTelegramBack() {
       if (WebApp && initializedRef.current) {
         WebApp.BackButton.offClick(handleBack);
         initializedRef.current = false;
-        console.log("🧹 Очистка обработчика Back при размонтировании");
       }
     };
   }, [pathname, router]);

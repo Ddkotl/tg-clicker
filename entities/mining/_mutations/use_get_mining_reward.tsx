@@ -7,19 +7,22 @@ import { queries_keys } from "@/shared/lib/queries_keys";
 import { ProfileResponse } from "@/entities/profile";
 import { api_path } from "@/shared/lib/paths";
 import { pageSize } from "@/shared/game_config/facts/facts_const";
+import { useTranslation } from "@/features/translations/use_translation";
+import { icons } from "@/shared/lib/icons";
 
 export function useGetMiningReward() {
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
 
   return useMutation<MiningResponseType, ErrorResponseType, MiningRequestType>({
     mutationFn: async (data) => {
       const tokenRes = await fetch(api_path.get_action_token());
-      if (!tokenRes.ok) throw new Error("No action token");
-      const ok_res: GetActionTokenResponseType = await tokenRes.json();
+      const json: GetActionTokenResponseType = await tokenRes.json();
+      if (!tokenRes.ok) throw json;
 
       const res = await fetch(api_path.mining_gold(), {
         method: "POST",
-        headers: { "Content-Type": "application/json", "action-token": `Bearer ${ok_res.data.action_token}` },
+        headers: { "Content-Type": "application/json", "action-token": `Bearer ${json.data.action_token}` },
         body: JSON.stringify(data),
       });
       const payload = await res.json();
@@ -53,10 +56,27 @@ export function useGetMiningReward() {
       });
       queryClient.invalidateQueries({ queryKey: queries_keys.facts_userId(data.data.userId) });
       queryClient.invalidateQueries({ queryKey: [...queries_keys.facts_userId(data.data.userId), pageSize] });
-      toast.success(`⛏️ Вы добыли ${data.data.gold_reward} камней и ${data.data.exp_reward} опыта!`);
+      toast.success(t("facts.mine_fact1"), {
+        description: (
+          <div className=" w-full flex gap-4">
+            <span className="flex items-center gap-1">
+              {t("facts.mine_fact2")}: {data.data.gold_reward}
+              {icons.stone({})}
+            </span>
+            <span className="flex items-center gap-1">
+              {t("facts.mine_fact3")}: {data.data.exp_reward}
+              {icons.exp({})}
+            </span>
+          </div>
+        ),
+        position: "bottom-center",
+        duration: 5000,
+      });
     },
-    onError: (err) => {
-      toast.error(err.message ?? "Ошибка при добыче");
+    onError: (error) => {
+      toast.error(error.message, {
+        position: "bottom-center",
+      });
     },
   });
 }

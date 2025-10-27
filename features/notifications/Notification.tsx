@@ -14,7 +14,7 @@ import { queries_keys } from "@/shared/lib/queries_keys";
 import { GetMineResponseType } from "@/entities/mining";
 import { getMineInfoQuery } from "@/entities/mining/_queries/get_mine_info_query";
 import { ActionAlert } from "./_ui/action_alert";
-import { Zap } from "lucide-react";
+import { icons } from "@/shared/lib/icons";
 
 export function Notifications() {
   const { t } = useTranslation();
@@ -78,9 +78,9 @@ export function Notifications() {
       )}
       {!isLoadingMine && mine?.data.energy !== undefined && mine?.data.energy > 0 && (
         <ActionAlert
-          icon={<Zap className="h-5 w-5 text-blue-500" />}
-          title="У тебя есть энергия,"
-          actionText="перейти к шахте"
+          icon={icons.mine({})}
+          title={t("facts.notification.you_have_energy")}
+          actionText={t("facts.notification.go_to_the_mine")}
           href={ui_path.mine_page()}
           className="shine-effect"
         />

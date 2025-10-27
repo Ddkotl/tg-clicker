@@ -16,7 +16,6 @@ export async function POST(request: NextRequest) {
     const { initData, ref } = parsedBody.data;
     const validationResult = validateTelegramWebAppData(initData);
     if (!validationResult.validatedData || !validationResult.user.id) return makeError(validationResult.message, 401);
-    console.log("Telegram data validated:", validationResult);
     const updated_user = await UpdateOrCreateUser(
       {
         telegram_id: validationResult.user.id,

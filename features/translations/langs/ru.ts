@@ -6,6 +6,11 @@ export const ru_lang: Messages = {
     internal_server_error: "Внутренняя ошибка сервера",
     invalid_registration_user: "Не получилось зарегистрировать пользователя",
     successful_registration: " Профиль успешно обновлен",
+    invalid_token: "Недействительный токен",
+    rate_limit_exceeded: "Превышен лимит запросов",
+    invalid_process: "Недействительный процесс",
+    cooldown: "Кулдаун: подождите {seconds}c",
+    no_energy: "Нет энергии",
   },
   close: "Закрыть",
   loading: "загрузка",
@@ -122,12 +127,13 @@ export const ru_lang: Messages = {
     notification: {
       new_events: "Есть новые события",
       сheck: "проверить",
+      you_have_energy: "У тебя есть энергия",
+      go_to_the_mine: "перейти к шахте",
     },
   },
   headquarter: {
-    headquarter_title: "Штаб",
     headquarter_welcome:
-      "В штабе проходят важные мероприятия, которые могут пополнить запасы вашей энергии и камней ци. Выберите действие, чтобы продолжить.",
+      "В храме проходят важные мероприятия, которые могут пополнить запасы вашей энергии и камней ци. Выберите действие, чтобы продолжить.",
     meditation: "Медитация",
     meditation_desc: "Медитация — это постижение тайн вселенной.",
     meditation_revard_promise:

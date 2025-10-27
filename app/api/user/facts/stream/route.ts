@@ -9,9 +9,6 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export async function GET(req: NextRequest) {
-  console.log("sse route start");
-  console.log("✅ SSE route loaded, process.versions.node =", process.versions.node);
-  console.log("✅ SSE route environment =", process.env.NEXT_RUNTIME ?? "unknown");
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get("userId");
   if (!userId) {
@@ -22,7 +19,6 @@ export async function GET(req: NextRequest) {
     factErrorResponseSchema.parse(response);
     return NextResponse.json(response, { status: 401 });
   }
-  console.log("new subscriber for userId", userId);
 
   const stream = new ReadableStream({
     async start(controller) {
@@ -76,7 +72,6 @@ export async function GET(req: NextRequest) {
 }
 
 export async function pushToSubscriber(userId: string, payload: Facts["type"]) {
-  console.log("userId", userId);
   console.log("payload", payload);
   await redis.publish(`user:${userId}`, JSON.stringify(payload));
 }
