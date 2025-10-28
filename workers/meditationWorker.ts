@@ -39,7 +39,7 @@ async function startWorker() {
             userId: userId,
             active_hours: res.hours,
             exp_reward: res.reward_exp,
-            mana_reward: res.reward_mana,
+            qi_reward: res.reward_qi,
           });
 
           if (new_fact) pushToSubscriber(userId, new_fact.type);

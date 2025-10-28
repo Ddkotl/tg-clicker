@@ -8,7 +8,7 @@ export const miningResponseSchema = z.object({
   data: z.object({
     userId: z.string(),
     lvl: z.number(),
-    gold_reward: z.number(),
+    qi_stone_reward: z.number(),
     exp_reward: z.number(),
     energy: z.number(),
     last_mine_at: z.number().nullable(),

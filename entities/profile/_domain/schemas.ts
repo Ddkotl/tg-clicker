@@ -12,9 +12,9 @@ export const ProfileSchema = z.object({
   player_motto: z.string().nullable(),
   lvl: z.number(),
   exp: z.number(),
-  mana: z.number(),
-  gold: z.number(),
-  diamond: z.number(),
+  qi: z.number(),
+  qi_stone: z.number(),
+  spirit_stone: z.number(),
   fight: z.number(),
   last_fight_time: z.date().nullable(),
   glory: z.number(),
@@ -22,7 +22,7 @@ export const ProfileSchema = z.object({
   protection: z.number(),
   speed: z.number(),
   skill: z.number(),
-  qi: z.number(),
+  qi_param: z.number(),
   current_hitpoint: z.number(),
   max_hitpoint: z.number(),
   last_hp_update: z.date(),
@@ -38,7 +38,7 @@ export const profileErrorResponseSchema = z.object({
 });
 
 export const trainSchema = z.object({
-  paramName: z.enum(["power", "protection", "speed", "skill", "qi"]),
+  paramName: z.enum(["power", "protection", "speed", "skill", "qi_param"]),
 });
 
 export const trainResponseSchema = z.object({
@@ -46,7 +46,7 @@ export const trainResponseSchema = z.object({
     userId: z.string(),
     paramName: trainSchema.shape.paramName,
     newValue: z.number(),
-    mana: z.number(),
+    qi: z.number(),
     max_hitpoint: z.number(),
   }),
   message: z.string(),

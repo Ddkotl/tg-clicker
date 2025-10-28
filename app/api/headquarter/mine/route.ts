@@ -61,7 +61,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         lvl: result.lvl_up ? result.lvl_up : result.profile.lvl,
         energy: result.mine.energy,
         exp_reward: exp,
-        gold_reward: reward,
+        qi_stone_reward: reward,
         last_energy_at: result.mine.last_energy_at?.getTime() ?? null,
         last_mine_at: result.mine.last_mine_at?.getTime() ?? null,
       },

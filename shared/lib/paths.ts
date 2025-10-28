@@ -3,6 +3,7 @@ export const ui_path = {
   facts_page: () => `/game/facts`,
   mine_page: () => `/game/headquarter/mine`,
   meditation_page: () => `/game/headquarter/meditation`,
+  spirit_path_page: () => `/game/headquarter/spirit_path`,
   city_shop_page: () => `/game/city/shop`,
 };
 
@@ -17,5 +18,5 @@ export const api_path = {
   get_facts_count_nocheck: (userId: string) => `/api/user/facts/count_nocheck?userId=${userId}`,
   check_all_facts: (userId: string) => `/api/user/facts/check_all?userId=${userId}`,
   facts_sse: (userId: string) => `/api/user/facts/stream?userId=${userId}`,
-  mining_gold: () => `/api/headquarter/mine`,
+  mining_qi_stone: () => `/api/headquarter/mine`,
 };

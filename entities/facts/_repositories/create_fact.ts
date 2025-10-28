@@ -7,13 +7,13 @@ export async function createFact({
   fact_status,
   active_hours,
   exp_reward,
-  mana_reward,
+  qi_reward,
 }: {
   userId: string;
   fact_type: FactsType;
   fact_status: FactsStatus;
   active_hours?: number;
-  mana_reward?: number;
+  qi_reward?: number;
   exp_reward?: number;
 }) {
   try {
@@ -22,7 +22,7 @@ export async function createFact({
         userId,
         type: fact_type,
         status: fact_status,
-        mana_reward: mana_reward,
+        qi_reward: qi_reward,
         exp_reward: exp_reward,
         active_hours: active_hours,
       },

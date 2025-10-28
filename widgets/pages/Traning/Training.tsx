@@ -57,10 +57,10 @@ export function Training() {
       icon: "/skill.png",
     },
     {
-      name: "qi",
-      title: `${t("training.qi")}`,
-      description: `${t("training.qi_desc")}`,
-      icon: "/qi.png",
+      name: "qi_param",
+      title: `${t("training.qi_param")}`,
+      description: `${t("training.qi_param_desc")}`,
+      icon: "/qi_param.png",
     },
   ];
   if (isLoadingProfile) return <p>{t("loading")}</p>;
@@ -79,7 +79,7 @@ export function Training() {
             value={profile.data?.[param.name as keyof Profile] as number}
             paramName={param.name}
             onUpgrade={handleUpgrade}
-            hero_mana={profile.data?.mana as number}
+            hero_qi={profile.data?.qi as number}
             isPending={mutation.isPending}
           />
         ))}

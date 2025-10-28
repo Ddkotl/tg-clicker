@@ -54,21 +54,21 @@ export function Header() {
             href={`/game`}
             isDisabled={isDisabled}
             isLoading={isLoading}
-            value={profile?.data?.mana}
+            value={profile?.data?.qi}
           />
           <HeaderItem
             icon={icons.stone({ className: "h-4 w-4 xs:h-5 xs:w-5" })}
             href={`/game`}
             isDisabled={isDisabled}
             isLoading={isLoading}
-            value={profile?.data?.gold}
+            value={profile?.data?.qi_stone}
           />
           <HeaderItem
             icon={icons.crystal({ className: "h-4 w-4 xs:h-5 xs:w-5" })}
             href={`/game`}
             isDisabled={isDisabled}
             isLoading={isLoading}
-            value={profile?.data?.diamond}
+            value={profile?.data?.spirit_stone}
           />
           <HeaderItem
             icon={icons.fight({ className: "h-4 w-4 xs:h-5 xs:w-5" })}

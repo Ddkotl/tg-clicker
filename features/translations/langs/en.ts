@@ -114,8 +114,8 @@ export const en_lang = {
     speed_desc: "Increases evasion chance",
     skill: "Skill",
     skill_desc: "Increases critical hit chance",
-    qi: "Qi",
-    qi_desc: "Gives superiority in battle",
+    qi_param: "Qi",
+    qi_param_desc: "Gives superiority in battle",
   },
   facts: {
     fact_title: "Chronicles",
@@ -136,11 +136,11 @@ export const en_lang = {
   },
   headquarter: {
     headquarter_welcome:
-      "The temple hosts important events that can replenish your energy and qi stoun reserves. Choose an action to proceed.",
+      "The temple hosts important events that can replenish your energy and qi stone reserves. Choose an action to proceed.",
     meditation: "Meditation",
     meditation_desc: "Meditation is the unraveling of the universe's mysteries",
     meditation_revard_promise:
-      "The higher your stat level, the more energy you'll accumulate during meditation. You'll earn {mana} qi energy in {time}.",
+      "The higher your stat level, the more energy you'll accumulate during meditation. You'll earn {qi_param} qi energy in {time}.",
     meditation_time: "Select meditation time",
     meditation_went_message: "You started meditating {time}",
     meditate: "Meditate",
@@ -162,6 +162,11 @@ export const en_lang = {
     },
     remaining: "remaining",
     wait: "wait...",
+    spirit_path: {
+      title: "Spirit Path",
+      highlight: "Leave the body — discover truth through silence and light.",
+      text: "Embark on a spiritual journey beyond the body to uncover traces of spirit spies, reveal the hidden paths of foreign shadows, and dispel ghostly distortions.",
+    },
   },
   city: {
     city_title: "Citadel",

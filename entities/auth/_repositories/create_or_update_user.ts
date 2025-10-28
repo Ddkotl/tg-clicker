@@ -19,7 +19,7 @@ export async function UpdateOrCreateUser(user: CreateUserType, referer_id?: stri
         user_statistic: { create: {} },
         meditation: { create: {} },
         mine: { create: {} },
-        job: { create: {} },
+        spirit_path: { create: {} },
       },
       update: {
         username: user.username || null,

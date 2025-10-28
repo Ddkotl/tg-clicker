@@ -34,7 +34,7 @@ export function FactItem({
           rewards: [
             {
               icon: icons.qi_energy({}),
-              text: `${t("facts.meditation_fact2")} ${fact.mana_reward ?? 0}`,
+              text: `${t("facts.meditation_fact2")} ${fact.qi_reward ?? 0}`,
             },
             {
               icon: icons.exp({}),
@@ -54,7 +54,7 @@ export function FactItem({
           rewards: [
             {
               icon: icons.stone({}),
-              text: `${t("facts.mine_fact2")}: ${fact.gold_reward ?? 0}`,
+              text: `${t("facts.mine_fact2")}: ${fact.qi_stone_reward ?? 0}`,
             },
             {
               icon: icons.exp({}),

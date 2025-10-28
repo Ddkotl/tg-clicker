@@ -1,10 +1,10 @@
 // Параметры с их коэффициентами влияния на здоровье
 export const PARAMS: Record<string, number> = {
   power: 1.5, // коэффициент влияния параметра на здоровье
-  protection: 1.2,
-  speed: 1.0,
-  skill: 1.3,
-  qi: 1.4,
+  protection: 2.2,
+  speed: 2.0,
+  skill: 1.5,
+  qi_param: 1.4,
 };
 
 // Функция для расчёта максимального здоровья
@@ -13,14 +13,14 @@ export function calcMaxHP({
   protection,
   speed,
   skill,
-  qi,
+  qi_param,
   level,
 }: {
   power: number;
   protection: number;
   speed: number;
   skill: number;
-  qi: number;
+  qi_param: number;
   level: number;
 }) {
   // Базовое здоровье
@@ -31,7 +31,7 @@ export function calcMaxHP({
   const protectionHealth = protection * PARAMS.protection;
   const speedHealth = speed * PARAMS.speed;
   const skillHealth = skill * PARAMS.skill;
-  const qiHealth = qi * PARAMS.qi;
+  const qiHealth = qi_param * PARAMS.qi_param;
 
   // Добавляем влияние уровня игрока
   const levelBonus = level * 10; // Например, 10 хп за каждый уровень

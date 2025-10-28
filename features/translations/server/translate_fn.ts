@@ -18,3 +18,5 @@ export function translate(
 
   return raw.replace(/\{(\w+)\}/g, (_, name) => String(vars[name] ?? ""));
 }
+
+export type TranslateFn = (key: TranslationKey, lang: SupportedLang, vars?: Record<string, string | number>) => string;

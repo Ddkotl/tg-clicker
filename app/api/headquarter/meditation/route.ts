@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
       protection: user_params.profile.protection,
       speed: user_params.profile.speed,
       skill: user_params.profile.skill,
-      qi: user_params.profile.qi,
+      qi_param: user_params.profile.qi_param,
       hours,
     });
     const meditate = await goMeditation(userId, hours, meditation_revard);

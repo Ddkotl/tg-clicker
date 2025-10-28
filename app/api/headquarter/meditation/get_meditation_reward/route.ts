@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
       userId: userId,
       active_hours: res?.hours,
       exp_reward: res?.reward_exp,
-      mana_reward: res?.reward_mana,
+      qi_reward: res?.reward_qi,
     });
     if (new_fact !== null) {
       await pushToSubscriber(userId, new_fact.type);
