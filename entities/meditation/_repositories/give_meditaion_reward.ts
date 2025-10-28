@@ -4,6 +4,15 @@ import { getMeditationExperience } from "@/shared/game_config/exp/give_expirienc
 
 export async function giveMeditationReward(userId: string, break_meditation: boolean = false) {
   try {
+    if (break_meditation) {
+      const diamond = await dataBase.profile.findUnique({
+        where: { userId },
+        select: { diamond: true },
+      });
+      if ((diamond?.diamond || 0) < 10) {
+        return null;
+      }
+    }
     const meditation = await dataBase.meditation.findUnique({
       where: { userId: userId },
     });

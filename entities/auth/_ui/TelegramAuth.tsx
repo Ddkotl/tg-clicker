@@ -18,17 +18,17 @@ export function TelegramAuth() {
   useEffect(() => {
     if (data) {
       if (data.data?.color_theme) {
-  const newTheme = data.data.color_theme as Theme;
-  setTheme(newTheme);
-  document.documentElement.classList.remove(
-    "theme-red",
-    "theme-purple",
-    "theme-green",
-    "theme-yellow",
-    "theme-blue"
-  );
-  document.documentElement.classList.add(`theme-${newTheme}`);
-}
+        const newTheme = data.data.color_theme as Theme;
+        setTheme(newTheme);
+        document.documentElement.classList.remove(
+          "theme-red",
+          "theme-purple",
+          "theme-green",
+          "theme-yellow",
+          "theme-blue",
+        );
+        document.documentElement.classList.add(`theme-${newTheme}`);
+      }
 
       if (data.data?.language_code) {
         const lang = data.data?.language_code.startsWith("ru") ? "ru" : "en";
