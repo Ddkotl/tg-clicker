@@ -14,7 +14,7 @@ export const ProfileSchema = z.object({
   exp: z.number(),
   qi: z.number(),
   qi_stone: z.number(),
-  spirit_stone: z.number(),
+  spirit_cristal: z.number(),
   fight: z.number(),
   last_fight_time: z.date().nullable(),
   glory: z.number(),

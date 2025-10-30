@@ -7,6 +7,7 @@ import { ProfileResponse } from "@/entities/profile";
 import { queries_keys } from "@/shared/lib/queries_keys";
 import { pageSize } from "@/shared/game_config/facts/facts_const";
 import { toast } from "sonner";
+import { icons } from "@/shared/lib/icons";
 
 export function useGetSpiritPathReward() {
   const queryClient = useQueryClient();
@@ -32,13 +33,13 @@ export function useGetSpiritPathReward() {
             ...old.data,
             lvl: data.data.current_lvl,
             exp: data.data.current_exp,
-            spirit_stone: data.data.current_spirit_stone,
+            spirit_cristal: data.data.current_spirit_cristal,
             qi: data.data.current_qi,
           },
         };
       });
       queryClient.invalidateQueries({
-        queryKey: queries_keys.meditation_userId(data.data.userId),
+        queryKey: queries_keys.spirit_path_userId(data.data.userId),
       });
       queryClient.invalidateQueries({
         queryKey: queries_keys.facts_userId(data.data.userId),
@@ -47,18 +48,22 @@ export function useGetSpiritPathReward() {
         queryKey: [...queries_keys.facts_userId(data.data.userId), pageSize],
       });
       toast.success(
-        t("facts.meditation_fact1", {
-          time: `${data.data.hours} ${t(`hour.${getHoursString(data.data.hours)}` as TranslationKey)}`,
+        t("facts.spirit_path_fact1", {
+          time: `${data.data.minutes} ${t("minutes")}}`,
         }),
         {
           description: (
             <div className="flex gap-4">
               <span className="flex items-center gap-1">
-                {t("facts.meditation_fact2")}: {data.data.reward_qi}
+                {t("facts.spirit_path_fact2")}: {data.data.reward_qi}
                 {icons.qi_energy({})}
               </span>
               <span className="flex items-center gap-1">
-                {t("facts.meditation_fact3")}: {data.data.reward_exp}
+                {t("facts.spirit_path_fact3")}: {data.data.reward_spirit_cristal}
+                {icons.crystal({})}
+              </span>
+              <span className="flex items-center gap-1">
+                {t("facts.spirit_path_fact4")}: {data.data.reward_exp}
                 {icons.exp({})}
               </span>
             </div>

@@ -47,7 +47,7 @@ model Profile {
   exp             Int       @default(0)
   qi            Int       @default(100)
   qi_stone            Int       @default(50)
-  spirit_stone         Int       @default(50)
+  spirit_cristal         Int       @default(50)
   fight           Int       @default(30)
   last_fight_time DateTime?
   glory           Int       @default(0)
@@ -128,7 +128,7 @@ model Facts {
   status       FactsStatus
   qi_reward  Int?
   qi_stone_reward  Int?
-  spitit_stone_reward  Int?
+  spirit_cristal_reward  Int?
   exp_reward   Int?
   active_hours Int?
   active_minutes Int?

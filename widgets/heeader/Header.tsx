@@ -68,7 +68,7 @@ export function Header() {
             href={`/game`}
             isDisabled={isDisabled}
             isLoading={isLoading}
-            value={profile?.data?.spirit_stone}
+            value={profile?.data?.spirit_cristal}
           />
           <HeaderItem
             icon={icons.fight({ className: "h-4 w-4 xs:h-5 xs:w-5" })}

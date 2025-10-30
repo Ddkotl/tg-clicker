@@ -6,10 +6,12 @@ import { FactsStatus, FactsType } from "@/_generated/prisma";
 import { pushToSubscriber } from "@/app/api/user/facts/stream/route";
 import { MEDITATION_EXCHANGE, MEDITATION_QUEUE } from "@/features/meditation/rabit_meditation_connect";
 import { RABBITMQ_URL } from "@/shared/lib/consts";
+import { meditationWorkerCongig } from "@/shared/productivity_config/workers";
 
 async function startWorker() {
   const connection = await amqp.connect(RABBITMQ_URL);
   const channel = await connection.createChannel();
+  await channel.prefetch(meditationWorkerCongig.prfetch);
 
   await channel.assertExchange(MEDITATION_EXCHANGE, "x-delayed-message", {
     durable: true,

@@ -18,6 +18,7 @@ import { cn } from "@/shared/lib/utils";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";
 import { Button } from "@/shared/components/ui/button";
+import { useCheckUserDealsStatus } from "@/entities/user/_queries/use_check_user_deals";
 
 export function SpiritPathForm() {
   const [selectedMinutes, setSelectedMinutes] = useState("10");
@@ -28,6 +29,8 @@ export function SpiritPathForm() {
     ...getSpiritPathInfoQuery(session?.data?.user.userId ?? ""),
     enabled: !!session?.data?.user.userId,
   });
+  const user_deals = useCheckUserDealsStatus();
+
   const form = useForm<z.infer<typeof spiritPathFormSchema>>({
     resolver: zodResolver(spiritPathFormSchema),
     defaultValues: {
@@ -73,11 +76,11 @@ export function SpiritPathForm() {
 
   return (
     <>
-      {/* {isSpiritPath && <SpiritPathInProgress t={t} end={end} userId={session?.data?.user.userId} />} */}
+      {isSpiritPath && <SpiritPathInProgress t={t} end={end} userId={session?.data?.user.userId} />}
       <div
         className={cn(
           "relative transition-opacity",
-          (isSpiritPath || mutation.isPending) && "opacity-50 pointer-events-none",
+          (mutation.isPending || user_deals.busy) && "opacity-50 pointer-events-none",
         )}
       >
         <Form {...form}>
@@ -108,8 +111,8 @@ export function SpiritPathForm() {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={mutation.isPending || isSpiritPath}>
-              {t("headquarter.spirit_path.start_spirit_path")}
+            <Button type="submit" disabled={mutation.isPending || isSpiritPath || user_deals.busy}>
+              {user_deals.busy ? user_deals.reason : t("headquarter.spirit_path.start_spirit_path")}
             </Button>
           </form>
         </Form>

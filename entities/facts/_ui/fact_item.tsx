@@ -34,11 +34,36 @@ export function FactItem({
           rewards: [
             {
               icon: icons.qi_energy({}),
-              text: `${t("facts.meditation_fact2")} ${fact.qi_reward ?? 0}`,
+              text: `${t("facts.meditation_fact2")}: ${fact.qi_reward ?? 0}`,
             },
             {
               icon: icons.exp({}),
-              text: `${t("facts.meditation_fact3")} ${fact.exp_reward ?? 0}`,
+              text: `${t("facts.meditation_fact3")}: ${fact.exp_reward ?? 0}`,
+            },
+          ],
+        };
+      case FactsType.SPIRIT_PATH:
+        return {
+          color: "yellow",
+          icon: icons.spirit_path({ className: "text-yellow-400" }),
+          bg: "bg-yellow-500/10",
+          border: "border-yellow-500/30",
+          separator: "bg-yellow-500/20",
+          title: t("facts.spirit_path_fact1", {
+            time: `${fact.active_minutes} ${t("minutes")}`,
+          }),
+          rewards: [
+            {
+              icon: icons.qi_energy({}),
+              text: `${t("facts.spirit_path_fact2")}: ${fact.qi_reward ?? 0}`,
+            },
+            {
+              icon: icons.crystal({}),
+              text: `${t("facts.spirit_path_fact3")}: ${fact.spirit_cristal_reward ?? 0}`,
+            },
+            {
+              icon: icons.exp({}),
+              text: `${t("facts.spirit_path_fact4")}: ${fact.exp_reward ?? 0}`,
             },
           ],
         };
@@ -90,12 +115,14 @@ export function FactItem({
       <Separator className={config?.separator} />
 
       {config?.rewards?.length !== undefined && config?.rewards?.length > 0 && (
-        <CardContent className="p-1 text-sm flex gap-3 items-center justify-start flex-wrap">
-          <div className={`flex items-center justify-center w-10 h-10 rounded-md ${config?.bg}`}>{config?.icon}</div>
+        <CardContent className="p-1 text-sm flex flex-col gap-3  justify-start flex-wrap">
+          <div className="flex gap-2 items-center justify-start">
+            <div className={`flex items-center justify-center w-10 h-10 rounded-md ${config?.bg}`}>{config?.icon}</div>
 
-          <div className="flex-1">
             <CardTitle className="text-sm font-medium leading-tight">{config?.title}</CardTitle>
-            <div className="flex gap-3">
+          </div>
+          <div className="flex-1 ">
+            <div className="flex gap-3 items-center justify-center">
               {config?.rewards.map((reward, i) => (
                 <div key={i} className="flex justify-center items-center gap-1">
                   <span className="text-foreground/80">{reward.text}</span>

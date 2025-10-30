@@ -31,7 +31,6 @@ async function startWorker() {
         console.log(`💫 Spirit Path completed for user ${userId}`);
 
         const res = await giveSpiritPathReward(userId);
-
         if (res) {
           const new_fact = await createFact({
             fact_type: FactsType.SPIRIT_PATH,
@@ -40,9 +39,8 @@ async function startWorker() {
             active_minutes: res.minutes,
             exp_reward: res.reward_exp,
             qi_reward: res.reward_qi,
-            reward_spirit_stone: res.reward_spirit_stone,
+            reward_spirit_cristal: res.reward_spirit_cristal,
           });
-
           if (new_fact) pushToSubscriber(userId, new_fact.type);
           console.log(`✅ SPIRIT_PATH reward given to ${userId}`);
         } else {

@@ -35,7 +35,7 @@ export function useGetMeditationReward() {
             ...old.data,
             lvl: data.data.current_lvl,
             exp: data.data.current_exp,
-            spirit_stone: data.data.current_spirit_stone,
+            spirit_cristal: data.data.current_spirit_cristal,
             qi: data.data.current_qi,
           },
         };

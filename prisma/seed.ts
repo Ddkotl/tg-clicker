@@ -23,7 +23,7 @@ async function main() {
             exp: Math.floor(Math.random() * 500),
             qi: 100,
             qi_stone: 50,
-            spirit_stone: 50,
+            spirit_cristal: 50,
           },
         },
         user_statistic: {

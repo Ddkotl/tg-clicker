@@ -2,7 +2,7 @@
 CREATE TYPE "public"."FactsStatus" AS ENUM ('CHECKED', 'NO_CHECKED');
 
 -- CreateEnum
-CREATE TYPE "public"."FactsType" AS ENUM ('MEDITATION', 'MINE');
+CREATE TYPE "public"."FactsType" AS ENUM ('MEDITATION', 'MINE', 'SPIRIT_PATH');
 
 -- CreateEnum
 CREATE TYPE "public"."Fraktion" AS ENUM ('ADEPT', 'NOVICE');
@@ -42,7 +42,7 @@ CREATE TABLE "public"."profiles" (
     "exp" INTEGER NOT NULL DEFAULT 0,
     "qi" INTEGER NOT NULL DEFAULT 100,
     "qi_stone" INTEGER NOT NULL DEFAULT 50,
-    "spirit_stone" INTEGER NOT NULL DEFAULT 50,
+    "spirit_cristal" INTEGER NOT NULL DEFAULT 50,
     "fight" INTEGER NOT NULL DEFAULT 30,
     "last_fight_time" TIMESTAMP(3),
     "glory" INTEGER NOT NULL DEFAULT 0,
@@ -74,6 +74,7 @@ CREATE TABLE "public"."user_statistics" (
     "wins" INTEGER NOT NULL DEFAULT 0,
     "loses" INTEGER NOT NULL DEFAULT 0,
     "meditated_hours" INTEGER NOT NULL DEFAULT 0,
+    "spirit_path_minutes" INTEGER NOT NULL DEFAULT 0,
     "mined_qi_stone" INTEGER NOT NULL DEFAULT 0,
     "mined_count" INTEGER NOT NULL DEFAULT 0,
 
@@ -100,6 +101,8 @@ CREATE TABLE "public"."spirit_paths" (
     "start_spirit_paths" TIMESTAMP(3),
     "spirit_paths_minutes" INTEGER,
     "spirit_paths_reward" INTEGER,
+    "minutes_today" INTEGER NOT NULL DEFAULT 0,
+    "date_today" TIMESTAMP(3),
 
     CONSTRAINT "spirit_paths_pkey" PRIMARY KEY ("id")
 );
@@ -112,9 +115,10 @@ CREATE TABLE "public"."facts" (
     "status" "public"."FactsStatus" NOT NULL,
     "qi_reward" INTEGER,
     "qi_stone_reward" INTEGER,
-    "spitit_stone_reward" INTEGER,
+    "spirit_cristal_reward" INTEGER,
     "exp_reward" INTEGER,
     "active_hours" INTEGER,
+    "active_minutes" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "facts_pkey" PRIMARY KEY ("id")

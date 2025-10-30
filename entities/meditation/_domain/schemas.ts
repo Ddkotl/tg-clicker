@@ -55,7 +55,7 @@ export const getMeditationRewardResponseSchema = z.object({
     hours: z.number(),
     current_qi: z.number(),
     current_exp: z.number(),
-    current_spirit_stone: z.number(),
+    current_spirit_cristal: z.number(),
     current_lvl: z.number(),
   }),
   message: z.string(),

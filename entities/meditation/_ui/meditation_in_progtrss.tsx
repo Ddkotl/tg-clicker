@@ -7,7 +7,6 @@ import { useGetMeditationReward } from "../_mutations/use_get_meditation_reward"
 import { Button } from "@/shared/components/ui/button";
 import {
   Dialog,
-  DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
@@ -44,26 +43,26 @@ export function MeditationInProgress({ t, end, userId }: MeditationInProgressPro
           </Button>
         </DialogTrigger>
 
-        <DialogContent className="sm:max-w-[400px] max-w-[400px]">
-          {" "}
-          {/* ограничиваем ширину модалки */}
-          <DialogHeader>
-            <DialogTitle>{t("headquarter.cancel_meditation")}</DialogTitle>
-            <DialogDescription className="indent-6 w-full text-justify  items-center gap-1">
-              {t("headquarter.cancel_meditation_confirm1")}
-              <Gem className=" h-4 text-purple-500 inline" />
-              {t("headquarter.cancel_meditation_confirm2")}
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => setOpen(false)}>
-              {t("cancel")}
-            </Button>
-            <Button className="bg-primary" onClick={handleConfirmCancel} disabled={mutation.isPending}>
-              {mutation.isPending ? t("canceling") : t("confirm")}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
+        {open && (
+          <div className="absolute top-1/2 -translate-y-1/2 mt-2 left-1/2 -translate-x-1/2 bg-background border border-primary/50 rounded-xl shadow-lg p-4 max-w-[400px] z-10">
+            <DialogHeader>
+              <DialogTitle>{t("headquarter.cancel_meditation")}</DialogTitle>
+              <DialogDescription className="indent-6 w-full text-justify items-center gap-1">
+                {t("headquarter.cancel_meditation_confirm1")}
+                <Gem className="h-4 text-purple-500 inline" />
+                {t("headquarter.cancel_meditation_confirm2")}
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="flex justify-end gap-2 mt-4">
+              <Button variant="outline" onClick={() => setOpen(false)}>
+                {t("cancel")}
+              </Button>
+              <Button className="bg-primary" onClick={handleConfirmCancel} disabled={mutation.isPending}>
+                {mutation.isPending ? t("canceling") : t("confirm")}
+              </Button>
+            </DialogFooter>
+          </div>
+        )}
       </Dialog>
     </div>
   );

@@ -21,6 +21,8 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
     healthcheck:
       test: ["CMD", "rabbitmqctl", "status"]
       interval: 10s
@@ -39,6 +41,7 @@ services:
 
 volumes:
   postgres_tg_clicker_volume:
+  rabbitmq_data:
   redis_data:
 
 networks:

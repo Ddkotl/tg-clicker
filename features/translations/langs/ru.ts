@@ -8,6 +8,7 @@ export const ru_lang: Messages = {
     internal_server_error: "Внутренняя ошибка сервера",
     invalid_registration_user: "Не получилось зарегистрировать пользователя",
     successful_registration: " Профиль успешно обновлен",
+    reward_successfully_received: "Награда успешно получена",
     invalid_token: "Недействительный токен",
     rate_limit_exceeded: "Превышен лимит запросов",
     invalid_process: "Недействительный процесс",
@@ -127,6 +128,10 @@ export const ru_lang: Messages = {
     mine_fact1: "Вы добыли ресурсы в шахте:",
     mine_fact2: "Камни ци",
     mine_fact3: "Опыт",
+    spirit_path_fact1: "Ты был на Пути Духа {time} и получил:",
+    spirit_path_fact2: "Ци",
+    spirit_path_fact3: "Кристаллы",
+    spirit_path_fact4: "Опыт",
     notification: {
       new_events: "Есть новые события",
       сheck: "проверить",

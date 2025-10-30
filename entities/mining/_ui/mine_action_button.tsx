@@ -12,7 +12,8 @@ interface MineActionButtonProps {
   isPending: boolean;
   onMine: () => void;
   onCooldownEnd: () => void;
-  onMeditation: boolean;
+  busy: boolean;
+  busyReason?: string;
 }
 
 export const MineActionButton = ({
@@ -22,12 +23,13 @@ export const MineActionButton = ({
   isPending,
   onMine,
   onCooldownEnd,
-  onMeditation,
+  busy,
+  busyReason,
 }: MineActionButtonProps) => {
   const { t } = useTranslation();
   const isCooldown = now.getTime() < lastMineAt + MiningConst.MINE_COOLDOWN;
 
-  const disabled = energy < 0 || isCooldown || isPending || onMeditation;
+  const disabled = energy < 0 || isCooldown || isPending || busy;
 
   return (
     <Button
@@ -39,8 +41,8 @@ export const MineActionButton = ({
       disabled={disabled}
       onClick={onMine}
     >
-      {onMeditation ? (
-        <span>{t("headquarter.mine_page.cannot_mine_while_meditating")}</span>
+      {busy ? (
+        <span>{busyReason}</span>
       ) : (
         <div className="flex items-center gap-2">
           {isCooldown && <CountdownTimer endTime={lastMineAt + MiningConst.MINE_COOLDOWN} onComplete={onCooldownEnd} />}
