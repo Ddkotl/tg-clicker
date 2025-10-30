@@ -26,7 +26,7 @@ export function calcMeditationReward({
   const totalCost = powerCost + protectionCost + speedCost + skillCost + qiCost;
 
   // Коэффициент, который определяет размер награды относительно стоимости улучшений
-  const rewardCoefficient = 0.5; // 0.5 означает, что награда будет половиной стоимости прокачки
+  const rewardCoefficient = 0.05; // 0.5 означает, что награда будет половиной стоимости прокачки
 
   // Итоговая награда = общая стоимость прокачки * коэффициент * количество часов
   return Math.floor(totalCost * rewardCoefficient * hours);

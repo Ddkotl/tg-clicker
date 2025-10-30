@@ -7,7 +7,7 @@ import { makeError } from "@/shared/lib/api_helpers/make_error";
 import { Fraktion, Gender } from "@/_generated/prisma";
 
 export async function POST(req: NextRequest) {
-  const lang = getCookieLang(req);
+  const lang = getCookieLang({ headers: req.headers });
   try {
     const body = await req.json();
     const parsed = registrationRequestSchema.safeParse(body);

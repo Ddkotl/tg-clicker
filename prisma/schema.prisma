@@ -84,6 +84,7 @@ model UserStatistic {
   wins            Int @default(0)
   loses           Int @default(0)
   meditated_hours Int @default(0)
+  spirit_path_minutes Int @default(0)
   mined_qi_stone      Int @default(0)
   mined_count     Int @default(0)
 
@@ -110,8 +111,11 @@ model SpiritPath {
 
   on_spirit_paths     Boolean   @default(false)
   start_spirit_paths  DateTime?
-  spirit_paths_hours  Int?
+  spirit_paths_minutes  Int?
   spirit_paths_reward Int?
+
+  minutes_today Int @default(0)
+  date_today  DateTime?
 
   @@map("spirit_paths")
 }
@@ -127,6 +131,7 @@ model Facts {
   spitit_stone_reward  Int?
   exp_reward   Int?
   active_hours Int?
+  active_minutes Int?
   createdAt    DateTime    @default(now())
 
   @@index([userId])
@@ -141,6 +146,7 @@ enum FactsStatus {
 enum FactsType {
   MEDITATION
   MINE
+  SPIRIT_PATH
 }
 
 enum Fraktion {

@@ -1,3 +1,4 @@
+import { SpiritPathForm } from "@/entities/spirit_path/_ui/spirit_path_form";
 import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
 import { translate } from "@/features/translations/server/translate_fn";
 import { PageDescription } from "@/shared/components/custom_ui/page_description";
@@ -17,7 +18,7 @@ export default async function SpiritPathPage() {
         img={img_paths.spirit_path()}
       />
 
-      {/* <MeditationForm onTimeChange={setSelectedHours} /> */}
+      <SpiritPathForm />
     </div>
   );
 }

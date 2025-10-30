@@ -14,7 +14,7 @@ import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
 import { translate } from "@/features/translations/server/translate_fn";
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  const lang = getCookieLang(req);
+  const lang = getCookieLang({ headers: req.headers });
   try {
     const body = await req.json();
     const parsed = miningRequestSchema.safeParse(body);
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     if (user_mine.energy <= 0) return makeError(translate("api.no_energy", lang), 400);
 
     const reward = CalcMineReward();
-    const exp = getMineExperience(reward);
+    const exp = getMineExperience();
 
     const result = await giveMineRevard(userId, reward, exp, now);
     if (!result || result === null) return makeError(translate("api.invalid_process", lang), 400);

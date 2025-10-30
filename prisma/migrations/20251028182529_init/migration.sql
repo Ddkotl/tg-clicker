@@ -98,7 +98,7 @@ CREATE TABLE "public"."spirit_paths" (
     "userId" TEXT NOT NULL,
     "on_spirit_paths" BOOLEAN NOT NULL DEFAULT false,
     "start_spirit_paths" TIMESTAMP(3),
-    "spirit_paths_hours" INTEGER,
+    "spirit_paths_minutes" INTEGER,
     "spirit_paths_reward" INTEGER,
 
     CONSTRAINT "spirit_paths_pkey" PRIMARY KEY ("id")

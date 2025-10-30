@@ -5,9 +5,16 @@ function giveExperience(min: number, max: number): number {
 }
 
 export function getMeditationExperience(hour: number) {
-  return giveExperience(1 * hour, 2 * hour);
+  return giveExperience(1, 2 * hour);
 }
 
-export function getMineExperience(reward: number) {
-  return giveExperience(1, reward);
+export function getSpiritPathExperience(minutes: number) {
+  if (minutes < 60) {
+    return giveExperience(1, 3);
+  }
+  return giveExperience(1, minutes / 30);
+}
+
+export function getMineExperience() {
+  return giveExperience(1, 5);
 }

@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
       user_params.profile?.protection === undefined ||
       user_params.profile?.speed === undefined ||
       user_params.profile?.skill === undefined ||
-      user_params.profile?.qi === undefined
+      user_params.profile?.qi_param === undefined
     ) {
       const errorResponse: goMeditationErrorResponseType = {
         data: {},

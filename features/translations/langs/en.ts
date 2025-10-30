@@ -1,5 +1,7 @@
 export const en_lang = {
   api: {
+    no_auth: "User not authenticated",
+    info_not_found: "Info not found",
     invalid_request_data: "Invalid request data",
     internal_server_error: "Internal server error",
     invalid_registration_user: "Invalid registration user",
@@ -25,6 +27,7 @@ export const en_lang = {
   auth_retry: "Retry",
   auth_congratulation: "{nikname}, congratulations on your successful registration.",
   greeting: "Hello, {name}!",
+  minutes: "minutes",
   errors: {
     page_not_found: "Page not found",
     page_not_found_description: "Oops! This page does not exist.",
@@ -166,6 +169,13 @@ export const en_lang = {
       title: "Spirit Path",
       highlight: "Leave the body — discover truth through silence and light.",
       text: "Embark on a spiritual journey beyond the body to uncover traces of spirit spies, reveal the hidden paths of foreign shadows, and dispel ghostly distortions.",
+      go_sperit_path_message: "You embarked on the Spirit Path for {time}",
+      select_spirit_path_time: "Select Spirit Path time",
+      start_spirit_path: "Start Spirit Path",
+      spirit_path_in_progress: "You are on the Spirit Path",
+      cancel_spirit_path: "Cancel Spirit Path",
+      cancel_spirit_path_confirm1:
+        "Are you sure you want to interrupt the Spirit Path? Cancelling it costs 10 spiritual crystals, and the Spirit Path reward will be reduced by 10 times.",
     },
   },
   city: {

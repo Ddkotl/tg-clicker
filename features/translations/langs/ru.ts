@@ -2,6 +2,8 @@ import { Messages } from "../translate_type";
 
 export const ru_lang: Messages = {
   api: {
+    no_auth: "Пользователь не аутентифицирован",
+    info_not_found: "Информация не найдена",
     invalid_request_data: "Неверные данные запроса",
     internal_server_error: "Внутренняя ошибка сервера",
     invalid_registration_user: "Не получилось зарегистрировать пользователя",
@@ -27,6 +29,7 @@ export const ru_lang: Messages = {
   auth_retry: "Повторить",
   auth_congratulation: "{nikname}, поздравляю с успешной регистрацией.",
   greeting: "Привет, {name}!",
+  minutes: "минут",
   errors: {
     page_not_found: "Страница не найдена",
     page_not_found_description: "Упс! Такой страницы не существует.",
@@ -163,6 +166,13 @@ export const ru_lang: Messages = {
       title: "Путь Духа",
       highlight: "Покинь тело — открой истину через тишину и свет.",
       text: "Отправься в духовное путешествие за пределы тела, чтобы обнаружить следы шпионов духа, раскрыть скрытые пути чужих теней и рассеять призрачные искажения.",
+      go_sperit_path_message: "Ты отправился на Путь Духа на {time}",
+      select_spirit_path_time: "Выбери время Пути Духа",
+      start_spirit_path: "Начать Путь Духа",
+      spirit_path_in_progress: "Ты на Пути Духа",
+      cancel_spirit_path: "Отменить Путь Духа",
+      cancel_spirit_path_confirm1:
+        "Вы уверены, что хотите прервать Путь Духа? Стоимость отмены составляет 10 духовных кристаллов, а награда за Путь Духа будет уменьшена в 10 раз.",
     },
   },
   city: {
