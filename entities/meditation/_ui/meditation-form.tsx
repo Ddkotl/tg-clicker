@@ -21,6 +21,7 @@ import { TranslationKey } from "@/features/translations/translate_type";
 import { useEffect } from "react";
 import { Spinner } from "@/shared/components/ui/spinner";
 import { MeditationInProgress } from "./meditation_in_progtrss";
+import { useCheckUserDealsStatus } from "@/entities/user/_queries/use_check_user_deals";
 
 export function MeditationForm({ onTimeChange }: { onTimeChange?: (time: string) => void }) {
   const { t } = useTranslation();
@@ -34,6 +35,7 @@ export function MeditationForm({ onTimeChange }: { onTimeChange?: (time: string)
     ...getMeditationInfoQuery(session?.data?.user.userId ?? ""),
     enabled: !!session?.data?.user.userId,
   });
+  const user_deals = useCheckUserDealsStatus();
   const form = useForm<z.infer<typeof MeditatonFormSchema>>({
     resolver: zodResolver(MeditatonFormSchema),
     defaultValues: {
@@ -84,7 +86,7 @@ export function MeditationForm({ onTimeChange }: { onTimeChange?: (time: string)
       <div
         className={cn(
           "relative transition-opacity",
-          (isMeditating || meditationMutation.isPending) && "opacity-50 pointer-events-none",
+          (user_deals.busy || meditationMutation.isPending) && "opacity-50 pointer-events-none",
         )}
       >
         <Form {...form}>
@@ -113,8 +115,8 @@ export function MeditationForm({ onTimeChange }: { onTimeChange?: (time: string)
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={meditationMutation.isPending || isMeditating}>
-              {t("headquarter.meditate")}
+            <Button type="submit" disabled={meditationMutation.isPending || isMeditating || user_deals.busy}>
+              {user_deals.busy ? user_deals.reason : t("headquarter.meditate")}
             </Button>
           </form>
         </Form>

@@ -6,7 +6,7 @@ import { makeError } from "@/shared/lib/api_helpers/make_error";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-  const lang = getCookieLang(req);
+  const lang = getCookieLang({ headers: req.headers });
   try {
     const new_action_jwt = await createJwtActive();
     if (!new_action_jwt || new_action_jwt === null) {

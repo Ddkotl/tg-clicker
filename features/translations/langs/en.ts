@@ -1,9 +1,12 @@
 export const en_lang = {
   api: {
+    no_auth: "User not authenticated",
+    info_not_found: "Info not found",
     invalid_request_data: "Invalid request data",
     internal_server_error: "Internal server error",
     invalid_registration_user: "Invalid registration user",
     successful_registration: "Profile updated successfully",
+    reward_successfully_received: "Reward successfully received",
     invalid_token: "Invalid token",
     rate_limit_exceeded: "Rate limit exceeded",
     invalid_process: "Invalid process",
@@ -25,6 +28,7 @@ export const en_lang = {
   auth_retry: "Retry",
   auth_congratulation: "{nikname}, congratulations on your successful registration.",
   greeting: "Hello, {name}!",
+  minutes: "minutes",
   errors: {
     page_not_found: "Page not found",
     page_not_found_description: "Oops! This page does not exist.",
@@ -114,19 +118,23 @@ export const en_lang = {
     speed_desc: "Increases evasion chance",
     skill: "Skill",
     skill_desc: "Increases critical hit chance",
-    qi: "Qi",
-    qi_desc: "Gives superiority in battle",
+    qi_param: "Qi",
+    qi_param_desc: "Gives superiority in battle",
   },
   facts: {
     fact_title: "Chronicles",
     fact_description: "Events that happened to you over the last three days are stored here.",
     no_fact: "Nothing has happened lately",
     meditation_fact1: "You meditated for {time} and received:",
-    meditation_fact2: "Qi energy",
-    meditation_fact3: "Experience",
+    meditation_fact2: "Qi",
+    meditation_fact3: "Exp",
     mine_fact1: "You mined resources:",
     mine_fact2: "Qi stones",
-    mine_fact3: "Experience",
+    mine_fact3: "Exp",
+    spirit_path_fact1: "You have been on the Path of the Spirit {time} and received:",
+    spirit_path_fact2: "Qi",
+    spirit_path_fact3: "Crystals",
+    spirit_path_fact4: "Exp",
     notification: {
       new_events: "There are new events",
       сheck: "сheck",
@@ -136,11 +144,11 @@ export const en_lang = {
   },
   headquarter: {
     headquarter_welcome:
-      "The temple hosts important events that can replenish your energy and qi stoun reserves. Choose an action to proceed.",
+      "The temple hosts important events that can replenish your energy and qi stone reserves. Choose an action to proceed.",
     meditation: "Meditation",
     meditation_desc: "Meditation is the unraveling of the universe's mysteries",
     meditation_revard_promise:
-      "The higher your stat level, the more energy you'll accumulate during meditation. You'll earn {mana} qi energy in {time}.",
+      "The higher your stat level, the more energy you'll accumulate during meditation. You'll earn {qi_param} qi energy in {time}.",
     meditation_time: "Select meditation time",
     meditation_went_message: "You started meditating {time}",
     meditate: "Meditate",
@@ -162,6 +170,18 @@ export const en_lang = {
     },
     remaining: "remaining",
     wait: "wait...",
+    spirit_path: {
+      title: "Spirit Path",
+      highlight: "Leave the body — discover truth through silence and light.",
+      text: "Embark on a spiritual journey beyond the body to uncover traces of spirit spies, reveal the hidden paths of foreign shadows, and dispel ghostly distortions.",
+      go_sperit_path_message: "You embarked on the Spirit Path for {time}",
+      select_spirit_path_time: "Select Spirit Path time",
+      start_spirit_path: "Start Spirit Path",
+      spirit_path_in_progress: "You are on the Spirit Path",
+      cancel_spirit_path: "Cancel Spirit Path",
+      cancel_spirit_path_confirm1:
+        "Are you sure you want to interrupt the Spirit Path? Cancelling it costs 10 spiritual crystals, and the Spirit Path reward will be reduced by 10 times.",
+    },
   },
   city: {
     city_title: "Citadel",

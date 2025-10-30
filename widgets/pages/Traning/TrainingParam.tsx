@@ -13,7 +13,7 @@ type TrainingParamProps = {
   icon: string;
   value: number;
   paramName: string;
-  hero_mana: number;
+  hero_qi: number;
   isPending: boolean;
   onUpgrade: (paramName: string) => void;
 };
@@ -24,14 +24,14 @@ export function TrainingParam({
   icon,
   value,
   paramName,
-  hero_mana,
+  hero_qi,
   isPending,
   onUpgrade,
 }: TrainingParamProps) {
   const { t } = useTranslation();
   const nextCost = calcParamCost(paramName, value);
 
-  const progress = Math.min(Math.floor((hero_mana / nextCost) * 100), 100);
+  const progress = Math.min(Math.floor((hero_qi / nextCost) * 100), 100);
   return (
     <div className="flex-1 space-y-2">
       <div className="flex items-center gap-3">
@@ -55,7 +55,7 @@ export function TrainingParam({
       <Button
         size="sm"
         className="w-full bg-primary/70"
-        disabled={hero_mana < nextCost || isPending}
+        disabled={hero_qi < nextCost || isPending}
         onClick={() => onUpgrade(paramName)}
       >
         {t("training.upgrade")}

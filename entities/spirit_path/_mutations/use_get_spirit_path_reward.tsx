@@ -1,0 +1,81 @@
+import { useTranslation } from "@/features/translations/use_translation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { GetSpiritPathRewardRequestType, GetSpiritPathRewardResponseType } from "../_domain/types";
+import { ErrorResponseType } from "@/shared/lib/api_helpers/types";
+import { api_path } from "@/shared/lib/paths";
+import { ProfileResponse } from "@/entities/profile";
+import { queries_keys } from "@/shared/lib/queries_keys";
+import { pageSize } from "@/shared/game_config/facts/facts_const";
+import { toast } from "sonner";
+import { icons } from "@/shared/lib/icons";
+
+export function useGetSpiritPathReward() {
+  const queryClient = useQueryClient();
+  const { t } = useTranslation();
+
+  return useMutation<GetSpiritPathRewardResponseType, ErrorResponseType, GetSpiritPathRewardRequestType>({
+    mutationFn: async (data) => {
+      const res = await fetch(api_path.get_spirit_path_reward(), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const json = await res.json();
+      if (!res.ok) throw json;
+      return json;
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData<ProfileResponse>(queries_keys.profile_userId(data.data.userId), (old) => {
+        if (!old?.data) return old;
+        return {
+          ...old,
+          data: {
+            ...old.data,
+            lvl: data.data.current_lvl,
+            exp: data.data.current_exp,
+            spirit_cristal: data.data.current_spirit_cristal,
+            qi: data.data.current_qi,
+          },
+        };
+      });
+      queryClient.invalidateQueries({
+        queryKey: queries_keys.spirit_path_userId(data.data.userId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queries_keys.facts_userId(data.data.userId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: [...queries_keys.facts_userId(data.data.userId), pageSize],
+      });
+      toast.success(
+        t("facts.spirit_path_fact1", {
+          time: `${data.data.minutes} ${t("minutes")}}`,
+        }),
+        {
+          description: (
+            <div className="flex gap-4">
+              <span className="flex items-center gap-1">
+                {t("facts.spirit_path_fact2")}: {data.data.reward_qi}
+                {icons.qi_energy({})}
+              </span>
+              <span className="flex items-center gap-1">
+                {t("facts.spirit_path_fact3")}: {data.data.reward_spirit_cristal}
+                {icons.crystal({})}
+              </span>
+              <span className="flex items-center gap-1">
+                {t("facts.spirit_path_fact4")}: {data.data.reward_exp}
+                {icons.exp({})}
+              </span>
+            </div>
+          ),
+          position: "bottom-center",
+        },
+      );
+    },
+    onError: (error) => {
+      toast.error(error.message, {
+        position: "bottom-center",
+      });
+    },
+  });
+}

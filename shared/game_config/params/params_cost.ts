@@ -9,7 +9,7 @@ export const PARAMS: Record<string, ParamConfig> = {
   protection: { base: 10, factor: 1.7, exp: 1.4 },
   speed: { base: 10, factor: 1.5, exp: 1.2 },
   skill: { base: 10, factor: 1.6, exp: 1.8 },
-  qi: { base: 10, factor: 1.9, exp: 2.5 },
+  qi_param: { base: 10, factor: 1.9, exp: 2.5 },
 };
 
 export function calcParamCost(paramName: keyof typeof PARAMS, lvl: number) {

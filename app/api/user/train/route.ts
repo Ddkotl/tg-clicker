@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
         userId,
         paramName,
         newValue,
-        mana: updated_profile.profile.mana,
+        qi: updated_profile.profile.qi,
         max_hitpoint: updated_profile.profile.max_hitpoint,
       },
       message: "Parameter updated successfully",

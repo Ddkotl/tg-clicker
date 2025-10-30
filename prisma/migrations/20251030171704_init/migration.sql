@@ -2,7 +2,7 @@
 CREATE TYPE "public"."FactsStatus" AS ENUM ('CHECKED', 'NO_CHECKED');
 
 -- CreateEnum
-CREATE TYPE "public"."FactsType" AS ENUM ('MEDITATION', 'MINE');
+CREATE TYPE "public"."FactsType" AS ENUM ('MEDITATION', 'MINE', 'SPIRIT_PATH');
 
 -- CreateEnum
 CREATE TYPE "public"."Fraktion" AS ENUM ('ADEPT', 'NOVICE');
@@ -40,9 +40,9 @@ CREATE TABLE "public"."profiles" (
     "player_motto" TEXT,
     "lvl" INTEGER NOT NULL DEFAULT 1,
     "exp" INTEGER NOT NULL DEFAULT 0,
-    "mana" INTEGER NOT NULL DEFAULT 100,
-    "gold" INTEGER NOT NULL DEFAULT 50,
-    "diamond" INTEGER NOT NULL DEFAULT 50,
+    "qi" INTEGER NOT NULL DEFAULT 100,
+    "qi_stone" INTEGER NOT NULL DEFAULT 50,
+    "spirit_cristal" INTEGER NOT NULL DEFAULT 50,
     "fight" INTEGER NOT NULL DEFAULT 30,
     "last_fight_time" TIMESTAMP(3),
     "glory" INTEGER NOT NULL DEFAULT 0,
@@ -50,9 +50,10 @@ CREATE TABLE "public"."profiles" (
     "protection" INTEGER NOT NULL DEFAULT 1,
     "speed" INTEGER NOT NULL DEFAULT 1,
     "skill" INTEGER NOT NULL DEFAULT 1,
-    "qi" INTEGER NOT NULL DEFAULT 1,
+    "qi_param" INTEGER NOT NULL DEFAULT 1,
     "current_hitpoint" INTEGER NOT NULL DEFAULT 100,
     "max_hitpoint" INTEGER NOT NULL DEFAULT 100,
+    "last_hp_update" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "profiles_pkey" PRIMARY KEY ("id")
 );
@@ -60,9 +61,9 @@ CREATE TABLE "public"."profiles" (
 -- CreateTable
 CREATE TABLE "public"."mines" (
     "userId" TEXT NOT NULL,
-    "energy" INTEGER NOT NULL DEFAULT 50,
-    "last_mine_at" TIMESTAMP(3),
-    "last_energy_at" TIMESTAMP(3),
+    "energy" INTEGER NOT NULL DEFAULT 25,
+    "last_mine_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "last_energy_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL
 );
 
@@ -73,7 +74,9 @@ CREATE TABLE "public"."user_statistics" (
     "wins" INTEGER NOT NULL DEFAULT 0,
     "loses" INTEGER NOT NULL DEFAULT 0,
     "meditated_hours" INTEGER NOT NULL DEFAULT 0,
-    "mined_gold" INTEGER NOT NULL DEFAULT 0,
+    "spirit_path_minutes" INTEGER NOT NULL DEFAULT 0,
+    "mined_qi_stone" INTEGER NOT NULL DEFAULT 0,
+    "mined_count" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "user_statistics_pkey" PRIMARY KEY ("id")
 );
@@ -91,14 +94,31 @@ CREATE TABLE "public"."meditations" (
 );
 
 -- CreateTable
+CREATE TABLE "public"."spirit_paths" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "on_spirit_paths" BOOLEAN NOT NULL DEFAULT false,
+    "start_spirit_paths" TIMESTAMP(3),
+    "spirit_paths_minutes" INTEGER,
+    "spirit_paths_reward" INTEGER,
+    "minutes_today" INTEGER NOT NULL DEFAULT 0,
+    "date_today" TIMESTAMP(3),
+
+    CONSTRAINT "spirit_paths_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "public"."facts" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "type" "public"."FactsType" NOT NULL,
     "status" "public"."FactsStatus" NOT NULL,
-    "mana_reward" INTEGER,
+    "qi_reward" INTEGER,
+    "qi_stone_reward" INTEGER,
+    "spirit_cristal_reward" INTEGER,
     "exp_reward" INTEGER,
     "active_hours" INTEGER,
+    "active_minutes" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "facts_pkey" PRIMARY KEY ("id")
@@ -123,6 +143,9 @@ CREATE UNIQUE INDEX "user_statistics_userId_key" ON "public"."user_statistics"("
 CREATE UNIQUE INDEX "meditations_userId_key" ON "public"."meditations"("userId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "spirit_paths_userId_key" ON "public"."spirit_paths"("userId");
+
+-- CreateIndex
 CREATE INDEX "facts_userId_idx" ON "public"."facts"("userId");
 
 -- AddForeignKey
@@ -136,6 +159,9 @@ ALTER TABLE "public"."user_statistics" ADD CONSTRAINT "user_statistics_userId_fk
 
 -- AddForeignKey
 ALTER TABLE "public"."meditations" ADD CONSTRAINT "meditations_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."spirit_paths" ADD CONSTRAINT "spirit_paths_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "public"."facts" ADD CONSTRAINT "facts_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -2,7 +2,7 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useGetSessionQuery } from "@/entities/auth";
-import { FactCoutNocheckErrorResponseType, getFactCountNocheckQuery, useCheckAllFactsMutation } from "@/entities/facts";
+import { FactCoutNocheckResponseType, getFactCountNocheckQuery, useCheckAllFactsMutation } from "@/entities/facts";
 import { FactsAlert } from "./_ui/facts_alert";
 import { useFactsSSE } from "./_vm/useFactsSSE";
 import { MeditationInfoResponse } from "@/entities/meditation";
@@ -15,6 +15,7 @@ import { GetMineResponseType } from "@/entities/mining";
 import { getMineInfoQuery } from "@/entities/mining/_queries/get_mine_info_query";
 import { ActionAlert } from "./_ui/action_alert";
 import { icons } from "@/shared/lib/icons";
+import { getSpiritPathInfoQuery, SpiritPathInfoResponseType } from "@/entities/spirit_path";
 
 export function Notifications() {
   const { t } = useTranslation();
@@ -24,13 +25,18 @@ export function Notifications() {
 
   const userId = session?.data?.user.userId;
 
-  const { data: facts_count, isLoading: isLoadingFacts } = useQuery<FactCoutNocheckErrorResponseType>({
+  const { data: facts_count, isLoading: isLoadingFacts } = useQuery<FactCoutNocheckResponseType>({
     ...getFactCountNocheckQuery(userId ?? ""),
     enabled: !!userId,
   });
 
-  const { data: meditation_info } = useQuery<MeditationInfoResponse>({
+  const { data: meditation_info, isLoading: isLoadingMeditation } = useQuery<MeditationInfoResponse>({
     ...getMeditationInfoQuery(userId ?? ""),
+    enabled: !!userId,
+  });
+
+  const { data: spirit_path_info, isLoading: isLoadingPathInfo } = useQuery<SpiritPathInfoResponseType>({
+    ...getSpiritPathInfoQuery(userId ?? ""),
     enabled: !!userId,
   });
 
@@ -46,7 +52,15 @@ export function Notifications() {
     queryClient.removeQueries({ queryKey: queries_keys.facts_userId(userId) });
     mutation.mutate({ userId });
   };
+  // spirit path
+  const spirit_path = spirit_path_info?.data;
+  const isSpiritPath = spirit_path?.on_spirit_paths ?? false;
+  let spirit_path_end: number | null = null;
 
+  if (isSpiritPath && spirit_path?.start_spirit_paths && spirit_path?.spirit_paths_minutes) {
+    const start = new Date(spirit_path.start_spirit_paths).getTime();
+    spirit_path_end = start + spirit_path.spirit_paths_minutes * 60 * 1000;
+  }
   // Медитация
   const meditation = meditation_info?.data;
   const isMeditating = meditation?.on_meditation ?? false;
@@ -57,7 +71,7 @@ export function Notifications() {
     end = start + meditation.meditation_hours * 60 * 60 * 1000;
   }
 
-  const isLoading = isLoadingSession || isLoadingFacts;
+  const isLoading = isLoadingSession || isLoadingFacts || isLoadingMeditation || isLoadingPathInfo;
   if (isLoading) return null;
 
   return (
@@ -65,10 +79,19 @@ export function Notifications() {
       {/* Постоянный алерт если игрок медитирует */}
       {isMeditating && end && (
         <ProcessAlert
+          icon={icons.meditation({ className: "h-5 w-5 text-primary shrink-0" })}
           endTime={end}
-          onClose={handleCloseClick}
           href={ui_path.meditation_page()}
           description={t("headquarter.meditation_in_progress")}
+          label={t("headquarter.remaining")}
+        />
+      )}
+      {isSpiritPath && spirit_path_end && (
+        <ProcessAlert
+          icon={icons.spirit_path({ className: "h-5 w-5 text-primary shrink-0" })}
+          endTime={spirit_path_end}
+          href={ui_path.spirit_path_page()}
+          description={t("headquarter.spirit_path.spirit_path_in_progress")}
           label={t("headquarter.remaining")}
         />
       )}

@@ -25,7 +25,7 @@ export function useTrainParamMutation(userId: string) {
             data: {
               ...old.data,
               [paramName as keyof typeof old.data]: newValue,
-              mana: typeof data.data?.mana === "number" ? data.data.mana : old.data.mana,
+              qi: typeof data.data?.qi === "number" ? data.data.qi : old.data.qi,
               max_hitpoint:
                 typeof data.data?.max_hitpoint === "number" ? data.data.max_hitpoint : old.data.max_hitpoint,
             },

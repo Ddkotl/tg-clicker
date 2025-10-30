@@ -3,6 +3,7 @@ import {
   GiDodging,
   GiFire,
   GiFloatingCrystal,
+  GiGhostAlly,
   GiHadesSymbol,
   GiHolyGrail,
   GiStonePile,
@@ -66,6 +67,9 @@ export const icons = {
   dig: ({ className }: IconProps): ReactNode => <GiDigDug className={cn("h-5 w-5 text-white/80", className)} />,
 
   meditation: ({ className }: IconProps): ReactNode => <Hourglass className={cn("h-5 w-5 text-white/80", className)} />,
+  spirit_path: ({ className }: IconProps): ReactNode => (
+    <GiGhostAlly className={cn("h-5 w-5 text-white/80", className)} />
+  ),
   mine: ({ className }: IconProps): ReactNode => <Pickaxe className={cn("h-5 w-5 text-primary", className)} />,
   calendar: ({ className }: IconProps): ReactNode => (
     <Calendar className={cn("h-3.5 w-3.5 text-primary/60", className)} />

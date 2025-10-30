@@ -50,12 +50,12 @@ export const getMeditationRewardRequestSchema = z.object({
 export const getMeditationRewardResponseSchema = z.object({
   data: z.object({
     userId: z.string(),
-    reward_mana: z.number(),
+    reward_qi: z.number(),
     reward_exp: z.number(),
     hours: z.number(),
-    current_mana: z.number(),
+    current_qi: z.number(),
     current_exp: z.number(),
-    current_diamond: z.number(),
+    current_spirit_cristal: z.number(),
     current_lvl: z.number(),
   }),
   message: z.string(),

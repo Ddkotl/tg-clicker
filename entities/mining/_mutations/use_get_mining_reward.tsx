@@ -20,7 +20,7 @@ export function useGetMiningReward() {
       const json: GetActionTokenResponseType = await tokenRes.json();
       if (!tokenRes.ok) throw json;
 
-      const res = await fetch(api_path.mining_gold(), {
+      const res = await fetch(api_path.mining_qi_stone(), {
         method: "POST",
         headers: { "Content-Type": "application/json", "action-token": `Bearer ${json.data.action_token}` },
         body: JSON.stringify(data),
@@ -37,7 +37,7 @@ export function useGetMiningReward() {
           data: {
             ...old.data,
             lvl: data.data.lvl,
-            gold: data.data.gold_reward + old.data.gold,
+            qi_stone: data.data.qi_stone_reward + old.data.qi_stone,
             exp: data.data.exp_reward + old.data.exp,
           },
         };
@@ -60,7 +60,7 @@ export function useGetMiningReward() {
         description: (
           <div className=" w-full flex gap-4">
             <span className="flex items-center gap-1">
-              {t("facts.mine_fact2")}: {data.data.gold_reward}
+              {t("facts.mine_fact2")}: {data.data.qi_stone_reward}
               {icons.stone({})}
             </span>
             <span className="flex items-center gap-1">

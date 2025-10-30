@@ -15,7 +15,7 @@ export type {
   CheckAllFactsRequestType,
   CheckAllFactsResponseType,
   factRequestTipe,
-  FactCoutNocheckErrorResponseType,
+  FactCoutNocheckResponseType,
 } from "./_domain/types";
 export { getFactsInfiniteQuery } from "./_queries/facts_query";
 export { useCheckAllFactsMutation } from "./_mutation/check_all_facts_mutation";

@@ -1,4 +1,4 @@
-import { FactCoutNocheckErrorResponseType, factCoutNocheckResponseSchema, getFactNocheckCount } from "@/entities/facts";
+import { FactCoutNocheckResponseType, factCoutNocheckResponseSchema, getFactNocheckCount } from "@/entities/facts";
 import { makeError } from "@/shared/lib/api_helpers/make_error";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
       return makeError("Failed to fetch user facts", 500);
     }
 
-    const response: FactCoutNocheckErrorResponseType = {
+    const response: FactCoutNocheckResponseType = {
       data: result,
       message: "Facts count fetched successfully",
     };

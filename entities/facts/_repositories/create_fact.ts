@@ -7,14 +7,18 @@ export async function createFact({
   fact_status,
   active_hours,
   exp_reward,
-  mana_reward,
+  qi_reward,
+  active_minutes,
+  reward_spirit_cristal,
 }: {
   userId: string;
   fact_type: FactsType;
   fact_status: FactsStatus;
   active_hours?: number;
-  mana_reward?: number;
+  qi_reward?: number;
   exp_reward?: number;
+  active_minutes?: number;
+  reward_spirit_cristal?: number;
 }) {
   try {
     const new_fact = await dataBase.facts.create({
@@ -22,9 +26,11 @@ export async function createFact({
         userId,
         type: fact_type,
         status: fact_status,
-        mana_reward: mana_reward,
+        qi_reward: qi_reward,
         exp_reward: exp_reward,
         active_hours: active_hours,
+        active_minutes: active_minutes,
+        spirit_cristal_reward: reward_spirit_cristal,
       },
     });
     return new_fact;

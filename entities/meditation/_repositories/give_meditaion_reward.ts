@@ -4,6 +4,15 @@ import { getMeditationExperience } from "@/shared/game_config/exp/give_expirienc
 
 export async function giveMeditationReward(userId: string, break_meditation: boolean = false) {
   try {
+    if (break_meditation) {
+      const spirit_cristal = await dataBase.profile.findUnique({
+        where: { userId },
+        select: { spirit_cristal: true },
+      });
+      if ((spirit_cristal?.spirit_cristal || 0) < 10) {
+        return null;
+      }
+    }
     const meditation = await dataBase.meditation.findUnique({
       where: { userId: userId },
     });
@@ -33,9 +42,9 @@ export async function giveMeditationReward(userId: string, break_meditation: boo
       dataBase.profile.update({
         where: { userId },
         data: {
-          mana: { increment: meditation_reward },
+          qi: { increment: meditation_reward },
           exp: { increment: meditation_expirience },
-          diamond: { decrement: break_meditation ? 10 : 0 },
+          spirit_cristal: { decrement: break_meditation ? 10 : 0 },
         },
       }),
       dataBase.userStatistic.update({
@@ -48,12 +57,12 @@ export async function giveMeditationReward(userId: string, break_meditation: boo
     const lvl_up = await CheckUpdateLvl(userId);
     return {
       userId,
-      reward_mana: meditation_reward,
+      reward_qi: meditation_reward,
       reward_exp: meditation_expirience,
       hours: meditation.meditation_hours,
-      current_mana: res[1].mana,
+      current_qi: res[1].qi,
       current_exp: res[1].exp,
-      current_diamond: res[1].diamond,
+      current_spirit_cristal: res[1].spirit_cristal,
       current_lvl: lvl_up ? lvl_up : res[1].lvl,
     };
   } catch (error) {

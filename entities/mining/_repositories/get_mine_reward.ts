@@ -14,7 +14,7 @@ export async function giveMineRevard(userId: string, reward: number, exp: number
       dataBase.profile.update({
         where: { userId },
         data: {
-          gold: { increment: reward },
+          qi_stone: { increment: reward },
           exp: { increment: exp },
         },
       }),
@@ -22,7 +22,7 @@ export async function giveMineRevard(userId: string, reward: number, exp: number
         where: { userId },
         data: {
           mined_count: { increment: 1 },
-          mined_gold: { increment: reward },
+          mined_qi_stone: { increment: reward },
         },
       }),
       dataBase.facts.create({
@@ -31,7 +31,7 @@ export async function giveMineRevard(userId: string, reward: number, exp: number
           status: "CHECKED",
           type: "MINE",
           exp_reward: exp,
-          gold_reward: reward,
+          qi_stone_reward: reward,
         },
       }),
     ]);

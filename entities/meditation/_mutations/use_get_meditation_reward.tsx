@@ -35,8 +35,8 @@ export function useGetMeditationReward() {
             ...old.data,
             lvl: data.data.current_lvl,
             exp: data.data.current_exp,
-            diamond: data.data.current_diamond,
-            mana: data.data.current_mana,
+            spirit_cristal: data.data.current_spirit_cristal,
+            qi: data.data.current_qi,
           },
         };
       });
@@ -57,7 +57,7 @@ export function useGetMeditationReward() {
           description: (
             <div className="flex gap-4">
               <span className="flex items-center gap-1">
-                {t("facts.meditation_fact2")}: {data.data.reward_mana}
+                {t("facts.meditation_fact2")}: {data.data.reward_qi}
                 {icons.qi_energy({})}
               </span>
               <span className="flex items-center gap-1">

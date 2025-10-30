@@ -36,12 +36,12 @@ export function Meditation() {
         title={t("headquarter.meditation")}
         highlight={t("headquarter.meditation_desc")}
         text={t("headquarter.meditation_revard_promise", {
-          mana: `${calcMeditationReward({
+          qi_param: `${calcMeditationReward({
             power: profile?.data.power ?? 0,
             protection: profile?.data.protection ?? 0,
             speed: profile?.data.speed ?? 0,
             skill: profile?.data.skill ?? 0,
-            qi: profile?.data.qi ?? 0,
+            qi_param: profile?.data.qi_param ?? 0,
             hours: +selectedHours,
           })}`,
           time: `${selectedHours} ${t(`hour.${getHoursString(+selectedHours)}` as TranslationKey)}`,

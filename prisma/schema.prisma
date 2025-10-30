@@ -25,7 +25,7 @@ model User {
   profile        Profile?
   user_statistic UserStatistic?
   meditation     Meditation?
-  job            Job?
+  spirit_path            SpiritPath?
   mine           Mine?
   facts          Facts[]
 
@@ -45,9 +45,9 @@ model Profile {
   player_motto    String?
   lvl             Int       @default(1)
   exp             Int       @default(0)
-  mana            Int       @default(100)
-  gold            Int       @default(50)
-  diamond         Int       @default(50)
+  qi            Int       @default(100)
+  qi_stone            Int       @default(50)
+  spirit_cristal         Int       @default(50)
   fight           Int       @default(30)
   last_fight_time DateTime?
   glory           Int       @default(0)
@@ -56,7 +56,7 @@ model Profile {
   protection Int @default(1)
   speed      Int @default(1)
   skill      Int @default(1)
-  qi         Int @default(1)
+  qi_param         Int @default(1)
 
   current_hitpoint Int      @default(100)
   max_hitpoint     Int      @default(100)
@@ -84,7 +84,8 @@ model UserStatistic {
   wins            Int @default(0)
   loses           Int @default(0)
   meditated_hours Int @default(0)
-  mined_gold      Int @default(0)
+  spirit_path_minutes Int @default(0)
+  mined_qi_stone      Int @default(0)
   mined_count     Int @default(0)
 
   @@map("user_statistics")
@@ -103,17 +104,20 @@ model Meditation {
   @@map("meditations")
 }
 
-model Job {
+model SpiritPath {
   id     String @id @default(cuid())
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique
 
-  on_job     Boolean   @default(false)
-  start_job  DateTime?
-  job_hours  Int?
-  job_revard Int?
+  on_spirit_paths     Boolean   @default(false)
+  start_spirit_paths  DateTime?
+  spirit_paths_minutes  Int?
+  spirit_paths_reward Int?
 
-  @@map("jobs")
+  minutes_today Int @default(0)
+  date_today  DateTime?
+
+  @@map("spirit_paths")
 }
 
 model Facts {
@@ -122,10 +126,12 @@ model Facts {
   userId       String
   type         FactsType
   status       FactsStatus
-  mana_reward  Int?
-  gold_reward  Int?
+  qi_reward  Int?
+  qi_stone_reward  Int?
+  spirit_cristal_reward  Int?
   exp_reward   Int?
   active_hours Int?
+  active_minutes Int?
   createdAt    DateTime    @default(now())
 
   @@index([userId])
@@ -140,6 +146,7 @@ enum FactsStatus {
 enum FactsType {
   MEDITATION
   MINE
+  SPIRIT_PATH
 }
 
 enum Fraktion {

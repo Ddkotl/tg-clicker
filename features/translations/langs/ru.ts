@@ -2,10 +2,13 @@ import { Messages } from "../translate_type";
 
 export const ru_lang: Messages = {
   api: {
+    no_auth: "Пользователь не аутентифицирован",
+    info_not_found: "Информация не найдена",
     invalid_request_data: "Неверные данные запроса",
     internal_server_error: "Внутренняя ошибка сервера",
     invalid_registration_user: "Не получилось зарегистрировать пользователя",
     successful_registration: " Профиль успешно обновлен",
+    reward_successfully_received: "Награда успешно получена",
     invalid_token: "Недействительный токен",
     rate_limit_exceeded: "Превышен лимит запросов",
     invalid_process: "Недействительный процесс",
@@ -27,6 +30,7 @@ export const ru_lang: Messages = {
   auth_retry: "Повторить",
   auth_congratulation: "{nikname}, поздравляю с успешной регистрацией.",
   greeting: "Привет, {name}!",
+  minutes: "минут",
   errors: {
     page_not_found: "Страница не найдена",
     page_not_found_description: "Упс! Такой страницы не существует.",
@@ -111,8 +115,8 @@ export const ru_lang: Messages = {
     speed_desc: "Увеличивает шанс уклонения",
     skill: "Навык",
     skill_desc: "Увеличивает шанс критического удара",
-    qi: "Ци",
-    qi_desc: "Дает превосходство в бою",
+    qi_param: "Ци",
+    qi_param_desc: "Дает превосходство в бою",
   },
   facts: {
     fact_title: "Хроники",
@@ -124,6 +128,10 @@ export const ru_lang: Messages = {
     mine_fact1: "Вы добыли ресурсы в шахте:",
     mine_fact2: "Камни ци",
     mine_fact3: "Опыт",
+    spirit_path_fact1: "Ты был на Пути Духа {time} и получил:",
+    spirit_path_fact2: "Ци",
+    spirit_path_fact3: "Кристаллы",
+    spirit_path_fact4: "Опыт",
     notification: {
       new_events: "Есть новые события",
       сheck: "проверить",
@@ -137,7 +145,7 @@ export const ru_lang: Messages = {
     meditation: "Медитация",
     meditation_desc: "Медитация — это постижение тайн вселенной.",
     meditation_revard_promise:
-      "Чем выше уровень вашей характеристики, тем больше энергии вы накопите во время медитации. Вы заработаете {mana} энергии ци за {time}.",
+      "Чем выше уровень вашей характеристики, тем больше энергии вы накопите во время медитации. Вы заработаете {qi_param} энергии ци за {time}.",
     meditation_time: "Выбери время медитации",
     meditation_went_message: "Ты начал медитировать {time}",
     meditate: "Медитировать",
@@ -159,6 +167,18 @@ export const ru_lang: Messages = {
     },
     remaining: "осталось",
     wait: "ожидание...",
+    spirit_path: {
+      title: "Путь Духа",
+      highlight: "Покинь тело — открой истину через тишину и свет.",
+      text: "Отправься в духовное путешествие за пределы тела, чтобы обнаружить следы шпионов духа, раскрыть скрытые пути чужих теней и рассеять призрачные искажения.",
+      go_sperit_path_message: "Ты отправился на Путь Духа на {time}",
+      select_spirit_path_time: "Выбери время Пути Духа",
+      start_spirit_path: "Начать Путь Духа",
+      spirit_path_in_progress: "Ты на Пути Духа",
+      cancel_spirit_path: "Отменить Путь Духа",
+      cancel_spirit_path_confirm1:
+        "Вы уверены, что хотите прервать Путь Духа? Стоимость отмены составляет 10 духовных кристаллов, а награда за Путь Духа будет уменьшена в 10 раз.",
+    },
   },
   city: {
     city_title: "Цитадель",

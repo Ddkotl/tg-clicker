@@ -42,7 +42,8 @@ export default function Mine() {
               isPending={mutation.isPending}
               onMine={() => mutation.mutate({ userId: userId ?? "" })}
               onCooldownEnd={() => setNow(new Date())}
-              onMeditation={deals.on_meditation}
+              busy={deals.busy}
+              busyReason={deals.reason}
             />
           </CardContent>
         </Card>
