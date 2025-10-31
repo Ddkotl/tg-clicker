@@ -1,7 +1,6 @@
 "use client";
 
-import Image from "next/image";
-import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 export type Theme = "red" | "blue" | "green" | "purple" | "yellow";
 
@@ -13,33 +12,31 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("blue");
-  const [loading, setLoading] = useState(true);
+  const [theme, setTheme] = useState<Theme>(() => {
+    // ✅ Инициализация темы синхронно — без мигалки при рендере
+    if (typeof window !== "undefined") {
+      return (localStorage.getItem("theme") as Theme) || "blue";
+    }
+    return "blue";
+  });
 
   useEffect(() => {
-    const stored_theme = localStorage.getItem("theme");
-    if (stored_theme) {
-      setTheme(stored_theme as Theme);
-    }
-    setLoading(false);
-  }, []);
+    // ✅ Синхронизируем с localStorage
+    localStorage.setItem("theme", theme);
 
-  useEffect(() => {
-    if (theme) {
-      localStorage.setItem("theme", theme);
-    }
+    // ✅ Управляем классами на уровне <html>, чтобы Tailwind-темы работали глобально
+    const root = document.documentElement;
+    const currentThemeClass = Array.from(root.classList).find((cls) => cls.startsWith("theme-"));
+    if (currentThemeClass) root.classList.remove(currentThemeClass);
+    root.classList.add(`theme-${theme}`);
   }, [theme]);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Image priority src="/loading.png" width={300} height={300} alt="loading" />
-      </div>
-    );
-  }
+  // ❌ Больше не нужен loading state — всё делается синхронно
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
-      <div className={`theme-${theme} min-h-screen`}>{children}</div>
+      <div suppressHydrationWarning className={`theme-${theme} min-h-screen transition-colors duration-300`}>
+        {children}
+      </div>
     </ThemeContext.Provider>
   );
 }
