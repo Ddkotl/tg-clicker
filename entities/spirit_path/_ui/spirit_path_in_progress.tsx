@@ -7,7 +7,6 @@ import { Dialog, DialogFooter, DialogHeader, DialogTrigger } from "@/shared/comp
 import { useState } from "react";
 import { useGetSpiritPathReward } from "../_mutations/use_get_spirit_path_reward";
 import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
-import { Gem } from "lucide-react";
 
 interface SpiritPathInProgressProps {
   t: (key: TranslationKey, vars?: Record<string, string | number>) => string;

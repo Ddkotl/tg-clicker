@@ -80,7 +80,7 @@ export function SpiritPathForm() {
       <div
         className={cn(
           "relative transition-opacity",
-          (mutation.isPending || user_deals.busy) && "opacity-50 pointer-events-none",
+          (mutation.isPending || minutesLeftToday === 0 || user_deals.busy) && "opacity-50 pointer-events-none",
         )}
       >
         <Form {...form}>
@@ -91,7 +91,7 @@ export function SpiritPathForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("headquarter.spirit_path.select_spirit_path_time")}</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select onValueChange={field.onChange} value={field.value} disabled={minutesLeftToday === 0}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder={`${form.getValues("time")} ${t("minutes")}`} />
@@ -111,8 +111,15 @@ export function SpiritPathForm() {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={mutation.isPending || isSpiritPath || user_deals.busy}>
-              {user_deals.busy ? user_deals.reason : t("headquarter.spirit_path.start_spirit_path")}
+            <Button
+              type="submit"
+              disabled={mutation.isPending || isSpiritPath || user_deals.busy || minutesLeftToday === 0}
+            >
+              {minutesLeftToday === 0
+                ? t("headquarter.spirit_path.no_minutes_left")
+                : user_deals.busy
+                  ? user_deals.reason
+                  : t("headquarter.spirit_path.start_spirit_path")}
             </Button>
           </form>
         </Form>

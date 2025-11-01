@@ -7,11 +7,6 @@ import { getProfileQuery, ProfileResponse, ProfileErrorResponse } from "@/entiti
 import { HP_REGEN_INTERVAL, HP_REGEN_PERCENT } from "@/shared/game_config/params/hp_regen";
 import { queries_keys } from "@/shared/lib/queries_keys";
 
-/**
- * 🔁 Автоматически регенерирует HP в кэше профиля по таймеру.
- * Работает только если есть userId и загружен профиль.
- * Не делает сетевые запросы — только обновляет кэш React Query.
- */
 export function useProfileHPUpdate() {
   const queryClient = useQueryClient();
   const { data: session } = useGetSessionQuery();

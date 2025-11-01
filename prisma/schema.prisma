@@ -101,6 +101,7 @@ model Meditation {
   meditation_hours  Int?
   meditation_revard Int?
 
+canceled_meditated_dates   DateTime[]  @default([])
   @@map("meditations")
 }
 
@@ -117,6 +118,7 @@ model SpiritPath {
   minutes_today Int @default(0)
   date_today  DateTime?
 
+ canceled_paths_dates   DateTime[]  @default([])
   @@map("spirit_paths")
 }
 

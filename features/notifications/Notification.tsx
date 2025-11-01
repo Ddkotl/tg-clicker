@@ -16,6 +16,7 @@ import { getMineInfoQuery } from "@/entities/mining/_queries/get_mine_info_query
 import { ActionAlert } from "./_ui/action_alert";
 import { icons } from "@/shared/lib/icons";
 import { getSpiritPathInfoQuery, SpiritPathInfoResponseType } from "@/entities/spirit_path";
+import { useProfileHPUpdate } from "../hp_regen/use_xp_update";
 
 export function Notifications() {
   const { t } = useTranslation();
@@ -44,7 +45,7 @@ export function Notifications() {
     ...getMineInfoQuery(userId ?? ""),
     enabled: !!userId,
   });
-
+  useProfileHPUpdate();
   useFactsSSE(userId);
 
   const handleCloseClick = () => {

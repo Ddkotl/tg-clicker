@@ -55,6 +55,7 @@ export async function POST(request: NextRequest) {
         nikname: updated_user.profile?.nikname ?? undefined,
         color_theme: updated_user.profile?.color_theme ?? undefined,
       },
+      type: "success",
     };
     authResponseSchema.parse(response);
 

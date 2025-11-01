@@ -181,6 +181,7 @@ export const en_lang = {
       cancel_spirit_path: "Cancel Spirit Path",
       cancel_spirit_path_confirm1:
         "Are you sure you want to interrupt the Spirit Path? Cancelling it costs 10 spiritual crystals, and the Spirit Path reward will be reduced by 10 times.",
+      no_minutes_left: "0 minutes left",
     },
   },
   city: {

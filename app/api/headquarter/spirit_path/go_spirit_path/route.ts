@@ -50,11 +50,17 @@ export async function POST(req: NextRequest) {
       return makeError(translate("api.invalid_process", lang), 400);
     }
     const delay = minutes * 60 * 1000;
+    const start_spirit_paths = spirit_path.start_spirit_paths;
     const { channel, connection } = await createMqSpiritPathConnection();
-    channel.publish(SPIRIT_PATH_EXCHANGE, SPIRIT_PATH_QUEUE, Buffer.from(JSON.stringify({ userId })), {
-      headers: { "x-delay": delay },
-      persistent: true,
-    });
+    channel.publish(
+      SPIRIT_PATH_EXCHANGE,
+      SPIRIT_PATH_QUEUE,
+      Buffer.from(JSON.stringify({ userId, start_spirit_paths })),
+      {
+        headers: { "x-delay": delay },
+        persistent: true,
+      },
+    );
     await channel.close();
     await connection.close();
     const response: GoSpiritPathResponseType = {

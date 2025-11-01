@@ -3,8 +3,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { RegistrationRequestType, RegistrationResponseType } from "../_domain/types";
 import { toast } from "sonner";
-import { api_path } from "@/shared/lib/paths";
+import { api_path, ui_path } from "@/shared/lib/paths";
 import { ErrorResponseType } from "@/shared/lib/api_helpers/types";
+import { queries_keys } from "@/shared/lib/queries_keys";
 
 export function useRegistrationMutation() {
   const queryClient = useQueryClient();
@@ -30,10 +31,10 @@ export function useRegistrationMutation() {
       });
 
       queryClient.invalidateQueries({
-        queryKey: ["profile", data.data?.userId],
+        queryKey: queries_keys.profile_userId(data.data.userId),
       });
 
-      router.push("/game");
+      router.push(ui_path.home_page());
     },
     onError: (error) => {
       toast.error(error.message, {

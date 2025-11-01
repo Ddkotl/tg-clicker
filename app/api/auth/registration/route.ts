@@ -39,6 +39,7 @@ export async function POST(req: NextRequest) {
         avatar_url: updatedProfile.avatar_url ?? "",
       },
       message: translate("api.successful_registration", lang),
+      type: "success",
     };
 
     registrationResponseSchema.parse(response);

@@ -13,6 +13,7 @@ export async function giveMeditationReward(userId: string, break_meditation: boo
         return null;
       }
     }
+
     const meditation = await dataBase.meditation.findUnique({
       where: { userId: userId },
     });
@@ -29,15 +30,21 @@ export async function giveMeditationReward(userId: string, break_meditation: boo
     const meditation_reward = break_meditation
       ? Math.floor(meditation.meditation_revard / 20)
       : meditation.meditation_revard;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const meditationUpdateData: any = {
+      meditation_hours: 0,
+      on_meditation: false,
+      start_meditation: null,
+      meditation_revard: null,
+    };
+    if (break_meditation && meditation.start_meditation) {
+      meditationUpdateData.canceled_meditated_dates = { push: meditation.start_meditation };
+    }
     const res = await dataBase.$transaction([
       dataBase.meditation.update({
         where: { userId },
-        data: {
-          meditation_hours: 0,
-          on_meditation: false,
-          start_meditation: null,
-          meditation_revard: null,
-        },
+        data: meditationUpdateData,
       }),
       dataBase.profile.update({
         where: { userId },

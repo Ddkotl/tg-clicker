@@ -12,6 +12,7 @@ export const authResponseSchema = z.object({
     nikname: z.string().optional(),
     color_theme: z.string().optional(),
   }),
+  type: z.literal("success"),
   message: z.string(),
 });
 
@@ -75,6 +76,7 @@ export const registrationResponseSchema = z.object({
     avatar_url: z.string(),
   }),
   message: z.string(),
+  type: z.literal("success"),
 });
 
 export const registrationErrorResponseSchema = z.object({

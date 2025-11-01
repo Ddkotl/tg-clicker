@@ -1,7 +1,6 @@
 import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lvl";
 import { dataBase } from "@/shared/connect/db_connect";
 import { getSpiritPathExperience } from "@/shared/game_config/exp/give_expirience";
-import dayjs from "dayjs";
 import { calcSpiritPathSpiritStoneReward } from "../_vm/calc_spirit_path_spirit_stone_reward";
 
 export async function giveSpiritPathReward(userId: string, break_spirit_path: boolean = false) {
@@ -27,7 +26,8 @@ export async function giveSpiritPathReward(userId: string, break_spirit_path: bo
       !spiritPath ||
       !spiritPath.on_spirit_paths ||
       spiritPath.spirit_paths_minutes === null ||
-      spiritPath.spirit_paths_reward === null
+      spiritPath.spirit_paths_reward === null ||
+      spiritPath.start_spirit_paths === null
     ) {
       return null;
     }
@@ -41,22 +41,22 @@ export async function giveSpiritPathReward(userId: string, break_spirit_path: bo
       : spiritPath.spirit_paths_reward;
 
     const rewardSpiritStone = calcSpiritPathSpiritStoneReward(minutes);
-    // 4️⃣ Считаем дату (для обновления minutes_today)
-    const today = dayjs().startOf("day").toDate();
-    const sameDay = spiritPath.date_today ? dayjs(spiritPath.date_today).isSame(today, "day") : false;
-
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const spiritPathUpdateData: any = {
+      on_spirit_paths: false,
+      start_spirit_paths: null,
+      spirit_paths_minutes: null,
+      spirit_paths_reward: null,
+      date_today: new Date(),
+    };
+    if (break_spirit_path && spiritPath.start_spirit_paths) {
+      spiritPathUpdateData.canceled_paths_dates = { push: spiritPath.start_spirit_paths };
+    }
     // 5️⃣ Транзакция: сбрасываем состояние пути, обновляем профиль и счётчик
     const [spirit_path, updatedProfile] = await dataBase.$transaction([
       dataBase.spiritPath.update({
         where: { userId },
-        data: {
-          on_spirit_paths: false,
-          start_spirit_paths: null,
-          spirit_paths_minutes: null,
-          spirit_paths_reward: null,
-          minutes_today: sameDay ? { increment: minutes } : minutes, // если новый день — перезаписываем
-          date_today: new Date(),
-        },
+        data: spiritPathUpdateData,
       }),
       dataBase.profile.update({
         where: { userId },

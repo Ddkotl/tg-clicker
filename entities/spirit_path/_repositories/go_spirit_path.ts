@@ -30,6 +30,7 @@ export async function goSpiritPath(userId: string, minutes: number, spirit_path_
         on_spirit_paths: true,
         start_spirit_paths: new Date(),
         spirit_paths_reward: spirit_path_reward,
+        minutes_today: sameDay ? { increment: minutes } : minutes,
       },
     });
   } catch (error) {

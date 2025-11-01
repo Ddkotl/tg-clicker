@@ -7,7 +7,6 @@ import { useTranslation } from "@/features/translations/use_translation";
 
 interface MineActionButtonProps {
   energy: number;
-  now: Date;
   lastMineAt: number;
   isPending: boolean;
   onMine: () => void;
@@ -18,7 +17,6 @@ interface MineActionButtonProps {
 
 export const MineActionButton = ({
   energy,
-  now,
   lastMineAt,
   isPending,
   onMine,
@@ -27,7 +25,7 @@ export const MineActionButton = ({
   busyReason,
 }: MineActionButtonProps) => {
   const { t } = useTranslation();
-  const isCooldown = now.getTime() < lastMineAt + MiningConst.MINE_COOLDOWN;
+  const isCooldown = Date.now() < lastMineAt + MiningConst.MINE_COOLDOWN;
 
   const disabled = energy < 0 || isCooldown || isPending || busy;
 
