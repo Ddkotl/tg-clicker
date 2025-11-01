@@ -13,6 +13,11 @@ export const en_lang = {
     cooldown: "Cooldown: wait {seconds}s",
     no_energy: "No energy",
   },
+  qi_energy: "Qi",
+  qi_stone: "Qi stone",
+  spirit_cristal: "Spirit cristal",
+  experience: "Exp",
+  glory: "Glory",
   close: "Close",
   loading: "loading",
   error: "anithing went wrong",
@@ -24,6 +29,7 @@ export const en_lang = {
   saving: "Saving...",
   lvl: "Level",
   price: "Price",
+  progress: "Progress",
   auth_error: "An authentication error occurred",
   auth_retry: "Retry",
   auth_congratulation: "{nikname}, congratulations on your successful registration.",
@@ -140,9 +146,35 @@ export const en_lang = {
       сheck: "сheck",
       you_have_energy: "You have energy",
       go_to_the_mine: "go to the mine",
+      new_missions: "New missions available",
+      go_to_missions: "go to missions",
     },
   },
   headquarter: {
+    missions: {
+      title: "Missions",
+      highlight: "Every mission is a challenge on your path. Test yourself and maintain the balance of the world.",
+      text: "Choose a path that matches your level of strength and awareness—from peaceful practices to shadow battles. Remember: every mission is not just a test, but an opportunity to attain truth through action.",
+      types: {
+        MEDITATION: {
+          title: "Meditate for {target}",
+          highlight: "Silence unveils the flow of Qi.",
+        },
+        SPIRIT_PATH: {
+          title: "Walk the Path of the Spirit for {target} minutes",
+          highlight: "Step beyond the physical and touch the essence of truth.",
+        },
+        MINE: {
+          title: "Extract {target} Qi stones",
+          highlight: "The mountain hums with ancient energy.",
+        },
+        MINE_STONE: {
+          title: "Dig up Qi Stones {target} times",
+          highlight: "Where effort meets fortune.",
+        },
+      },
+    },
+
     headquarter_welcome:
       "The temple hosts important events that can replenish your energy and qi stone reserves. Choose an action to proceed.",
     meditation: "Meditation",

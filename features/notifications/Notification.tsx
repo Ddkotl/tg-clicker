@@ -17,6 +17,8 @@ import { ActionAlert } from "./_ui/action_alert";
 import { icons } from "@/shared/lib/icons";
 import { getSpiritPathInfoQuery, SpiritPathInfoResponseType } from "@/entities/spirit_path";
 import { useProfileHPUpdate } from "../hp_regen/use_xp_update";
+import { getAllDailyMissionsQuery, GetDailyMissionsResponseType } from "@/entities/missions";
+import { useMidnightUpdate } from "./_vm/useMidnightUpdate";
 
 export function Notifications() {
   const { t } = useTranslation();
@@ -45,8 +47,13 @@ export function Notifications() {
     ...getMineInfoQuery(userId ?? ""),
     enabled: !!userId,
   });
-  useProfileHPUpdate();
+  const { data: mission, isLoading: isLoadingMission } = useQuery<GetDailyMissionsResponseType>({
+    ...getAllDailyMissionsQuery(userId ?? ""),
+    enabled: !!userId,
+  });
+  // useProfileHPUpdate(userId);
   useFactsSSE(userId);
+  useMidnightUpdate(userId);
 
   const handleCloseClick = () => {
     if (!userId) return;
@@ -106,6 +113,15 @@ export function Notifications() {
           title={t("facts.notification.you_have_energy")}
           actionText={t("facts.notification.go_to_the_mine")}
           href={ui_path.mine_page()}
+          className="shine-effect"
+        />
+      )}
+      {!isLoadingMission && mission?.data.missions.length !== 0 && (
+        <ActionAlert
+          icon={icons.missions({ className: "text-primary" })}
+          title={t("facts.notification.new_missions")}
+          actionText={t("facts.notification.go_to_missions")}
+          href={ui_path.missions_page()}
           className="shine-effect"
         />
       )}

@@ -28,6 +28,7 @@ model User {
   spirit_path            SpiritPath?
   mine           Mine?
   facts          Facts[]
+  missions Mission[]
 
   @@map("users")
 }
@@ -63,6 +64,36 @@ model Profile {
   last_hp_update   DateTime @default(now())
 
   @@map("profiles")
+}
+model Mission {
+  id          String   @id @default(cuid())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+
+  type        MissionType
+  reward_exp  Int      @default(0)
+  reward_qi   Int      @default(0)
+  reward_qi_stone Int @default(0)
+  reward_spirit_cristal Int @default(0)
+  reward_glory Int     @default(0)
+
+  target_value Int     @default(1)
+  progress     Int     @default(0)
+
+  is_active    Boolean @default(false)
+  is_completed Boolean @default(false)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("missions")
+}
+
+enum MissionType {
+  MEDITATION
+  SPIRIT_PATH
+  MINE
+  MINE_STONE
 }
 
 model Mine {

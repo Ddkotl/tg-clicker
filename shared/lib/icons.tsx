@@ -24,9 +24,10 @@ import {
   User,
   X,
 } from "lucide-react";
+import { GoTasklist } from "react-icons/go";
 import { MdOutlineTempleHindu } from "react-icons/md";
 import { cn } from "@/shared/lib/utils";
-
+import { GiLaurelCrown } from "react-icons/gi";
 type IconProps = {
   className?: string;
 };
@@ -37,6 +38,7 @@ export const icons = {
   backpack: ({ className }: IconProps): ReactNode => <Backpack className={cn("h-4 w-4 text-green-700", className)} />,
   clock: ({ className }: IconProps): ReactNode => <Clock className={cn("h-4 w-4 text-white/80", className)} />,
   qi_energy: ({ className }: IconProps): ReactNode => <GiFire className={cn("h-4 w-4 text-blue-400", className)} />,
+  glory: ({ className }: IconProps): ReactNode => <GiLaurelCrown className={cn("h-4 w-4 text-green-400", className)} />,
 
   exp: ({ className }: IconProps): ReactNode => <GiDodging className={cn("h-4 w-4 text-green-400", className)} />,
 
@@ -65,8 +67,8 @@ export const icons = {
   trophy: ({ className }: IconProps): ReactNode => <GiHolyGrail className={cn("h-8 w-8 text-white/80", className)} />,
 
   dig: ({ className }: IconProps): ReactNode => <GiDigDug className={cn("h-5 w-5 text-white/80", className)} />,
-
   meditation: ({ className }: IconProps): ReactNode => <Hourglass className={cn("h-5 w-5 text-white/80", className)} />,
+  missions: ({ className }: IconProps): ReactNode => <GoTasklist className={cn("h-5 w-5 text-white/80", className)} />,
   spirit_path: ({ className }: IconProps): ReactNode => (
     <GiGhostAlly className={cn("h-5 w-5 text-white/80", className)} />
   ),
