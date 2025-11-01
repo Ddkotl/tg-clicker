@@ -7,6 +7,7 @@ import { pushToSubscriber } from "@/app/api/user/facts/stream/route";
 import { MEDITATION_EXCHANGE, MEDITATION_QUEUE } from "@/features/meditation/rabit_meditation_connect";
 import { RABBITMQ_URL } from "@/shared/lib/consts";
 import { meditationWorkerCongig } from "@/shared/productivity_config/workers";
+import { dataBase } from "@/shared/connect/db_connect";
 
 async function startWorker() {
   const connection = await amqp.connect(RABBITMQ_URL);
@@ -29,7 +30,32 @@ async function startWorker() {
       if (!msg) return;
 
       try {
-        const { userId } = JSON.parse(msg.content.toString());
+        const { userId, start_meditation } = JSON.parse(msg.content.toString());
+        const meditation = await dataBase.meditation.findUnique({ where: { userId } });
+        if (!meditation) return channel.ack(msg);
+
+        // 1️⃣ Проверка массива отменённых путей
+        if (meditation.canceled_meditated_dates?.some((d) => d.getTime() === new Date(start_meditation).getTime())) {
+          await dataBase.meditation.update({
+            where: { userId },
+            data: {
+              canceled_meditated_dates: {
+                set: meditation.canceled_meditated_dates.filter(
+                  (d) => d.getTime() !== new Date(start_meditation).getTime(),
+                ),
+              },
+            },
+          });
+          return channel.ack(msg); // путь отменён, сообщение удаляем
+        }
+
+        // 2️⃣ Проверка текущего активного пути
+        if (
+          !meditation.on_meditation ||
+          meditation.start_meditation?.getTime() !== new Date(start_meditation).getTime()
+        ) {
+          return channel.ack(msg); // сообщение устарело, удаляем
+        }
         console.log(`💫 Meditation completed for user ${userId}`);
 
         const res = await giveMeditationReward(userId);

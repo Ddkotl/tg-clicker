@@ -12,16 +12,27 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<SupportedLang>("en");
+  const [loaded, setLoaded] = useState(false);
 
+  // Загружаем язык только на клиенте
   useEffect(() => {
-    const stored_lang = localStorage.getItem("language");
-    if (stored_lang) {
-      setLanguage(stored_lang as SupportedLang);
+    const storedLang = localStorage.getItem("language") as SupportedLang | null;
+    if (storedLang) {
+      setLanguage(storedLang);
     }
+    setLoaded(true);
   }, []);
+
+  // Сохраняем при изменении
   useEffect(() => {
-    localStorage.setItem("language", language);
-  }, [language]);
+    if (loaded) localStorage.setItem("language", language);
+  }, [language, loaded]);
+
+  if (!loaded) {
+    // Показываем безопасную заглушку, пока язык не загружен (избегаем рассинхронизации)
+    return <div suppressHydrationWarning />;
+  }
+
   return <LanguageContext.Provider value={{ language, setLanguage }}>{children}</LanguageContext.Provider>;
 }
 

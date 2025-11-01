@@ -38,6 +38,9 @@ export function useFactsSSE(userId?: string) {
             if (fact_type === FactsType.MEDITATION) {
               queryClient.invalidateQueries({ queryKey: queries_keys.meditation_userId(userId) });
             }
+            if (fact_type === FactsType.SPIRIT_PATH) {
+              queryClient.invalidateQueries({ queryKey: queries_keys.spirit_path_userId(userId) });
+            }
           });
         } catch (err) {
           console.error("SSE parse error:", err);

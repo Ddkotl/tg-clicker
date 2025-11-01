@@ -1,52 +1,44 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useLanguage } from "@/features/translations/lang_context";
 import { Theme, useTheme } from "@/features/themes/theme_context";
 import { useAuthQuery } from "../_queries/auth_query";
 import { TelegramAuthLoading } from "./telegram_auth_loading";
 import { TelegramAuthError } from "./telegram_auth_error";
+import { ui_path } from "@/shared/lib/paths";
 
 export function TelegramAuth() {
   const router = useRouter();
   const { setLanguage } = useLanguage();
-  const { theme, setTheme } = useTheme();
-
+  const { setTheme } = useTheme();
   const { isError, data } = useAuthQuery();
 
+  // ✅ Применяем тему из API
   useEffect(() => {
-    if (data) {
-      if (data.data?.color_theme) {
-        const newTheme = data.data.color_theme as Theme;
-        setTheme(newTheme);
-        document.documentElement.classList.remove(
-          "theme-red",
-          "theme-purple",
-          "theme-green",
-          "theme-yellow",
-          "theme-blue",
-        );
-        document.documentElement.classList.add(`theme-${newTheme}`);
-      }
-
-      if (data.data?.language_code) {
-        const lang = data.data?.language_code.startsWith("ru") ? "ru" : "en";
-        setLanguage(lang);
-      } else {
-        setLanguage("en");
-      }
-      if (data.data?.nikname) {
-        router.push("/game");
-      } else {
-        router.push("/registration");
-      }
+    const themeValue = data?.data?.color_theme as Theme | undefined;
+    if (themeValue) {
+      setTheme(themeValue);
     }
-  }, [data, router, setLanguage, setTheme, theme]);
+  }, [data?.data?.color_theme, setTheme]);
 
-  if (isError) {
-    return <TelegramAuthError />;
-  }
+  // ✅ Применяем язык из API
+  useEffect(() => {
+    const langCode = data?.data?.language_code;
+    if (langCode) {
+      const lang = langCode.startsWith("ru") ? "ru" : "en";
+      setLanguage(lang);
+    }
+  }, [data?.data?.language_code, setLanguage]);
 
+  // ✅ Навигация после авторизации
+  useEffect(() => {
+    if (!data?.data) return;
+    const target = data.data.nikname ? ui_path.home_page() : ui_path.registration_page();
+    router.replace(target);
+  }, [data?.data, router]);
+
+  if (isError) return <TelegramAuthError />;
   return <TelegramAuthLoading />;
 }

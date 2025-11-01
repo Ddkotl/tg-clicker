@@ -1,3 +1,3 @@
 export function CalcMineReward() {
-  return Math.floor(Math.random() * 11);
+  return Math.floor(Math.random() * 6);
 }

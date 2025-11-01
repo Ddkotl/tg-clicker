@@ -15,8 +15,8 @@ const geistMono = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "My TG App",
-  description: "My first TG app",
+  title: "Qi Wars",
+  description: "Qi Wars",
 };
 
 export default function RootLayout({

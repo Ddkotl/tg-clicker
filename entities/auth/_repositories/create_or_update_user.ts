@@ -1,5 +1,6 @@
 import { dataBase } from "@/shared/connect/db_connect";
 import { CreateUserType } from "../_domain/types";
+import dayjs from "dayjs";
 
 export async function UpdateOrCreateUser(user: CreateUserType, referer_id?: string) {
   try {
@@ -18,7 +19,12 @@ export async function UpdateOrCreateUser(user: CreateUserType, referer_id?: stri
         profile: { create: {} },
         user_statistic: { create: {} },
         meditation: { create: {} },
-        mine: { create: {} },
+        mine: {
+          create: {
+            last_mine_at: dayjs().subtract(1, "day").toDate(),
+            last_energy_at: dayjs().subtract(1, "day").toDate(),
+          },
+        },
         spirit_path: { create: {} },
       },
       update: {

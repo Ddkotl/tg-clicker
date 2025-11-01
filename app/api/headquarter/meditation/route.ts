@@ -104,9 +104,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(errorResponse, { status: 400 });
     }
     const delay = hours * 60 * 60 * 1000;
+    const start_meditation = meditate.start_meditation;
     // const delay = hours * 1000;
     const { channel, connection } = await createRabbitMeditationConnection();
-    channel.publish(MEDITATION_EXCHANGE, MEDITATION_QUEUE, Buffer.from(JSON.stringify({ userId })), {
+    channel.publish(MEDITATION_EXCHANGE, MEDITATION_QUEUE, Buffer.from(JSON.stringify({ userId, start_meditation })), {
       headers: { "x-delay": delay },
       persistent: true,
     });

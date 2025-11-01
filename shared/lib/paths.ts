@@ -1,5 +1,7 @@
 export const ui_path = {
+  auth_page: () => `/`,
   home_page: () => `/game`,
+  registration_page: () => `/registration`,
   facts_page: () => `/game/facts`,
   mine_page: () => `/game/headquarter/mine`,
   meditation_page: () => `/game/headquarter/meditation`,
