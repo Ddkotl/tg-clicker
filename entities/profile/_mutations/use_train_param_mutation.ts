@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ProfileResponse, TrainErrorResponseType, TrainResponseType } from "../_domain/types";
+import { queries_keys } from "@/shared/lib/queries_keys";
 
 export function useTrainParamMutation(userId: string) {
   const queryClient = useQueryClient();
@@ -17,7 +18,7 @@ export function useTrainParamMutation(userId: string) {
       if ("data" in data && data.data?.paramName && data.data?.newValue !== undefined) {
         const { paramName, newValue } = data.data;
 
-        queryClient.setQueryData<ProfileResponse>(["profile", userId], (old) => {
+        queryClient.setQueryData<ProfileResponse>(queries_keys.profile_userId(userId), (old) => {
           if (!old?.data) return old;
 
           return {
@@ -25,9 +26,8 @@ export function useTrainParamMutation(userId: string) {
             data: {
               ...old.data,
               [paramName as keyof typeof old.data]: newValue,
-              qi: typeof data.data?.qi === "number" ? data.data.qi : old.data.qi,
-              max_hitpoint:
-                typeof data.data?.max_hitpoint === "number" ? data.data.max_hitpoint : old.data.max_hitpoint,
+              qi: data.data.qi,
+              max_hitpoint: data.data.max_hitpoint,
             },
           };
         });

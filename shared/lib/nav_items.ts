@@ -7,6 +7,11 @@ import { SupportedLang } from "@/features/translations/translate_type";
 export const nav_items = {
   headquarter_page_nav_items: (translate: TranslateFn, lang: SupportedLang): NavItem[] => [
     {
+      label: translate("headquarter.missions.title", lang),
+      href: ui_path.missions_page(),
+      icon: icons.missions({}),
+    },
+    {
       label: translate("headquarter.meditation", lang),
       href: ui_path.meditation_page(),
       icon: icons.meditation({}),

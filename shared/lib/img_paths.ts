@@ -5,4 +5,5 @@ export const img_paths = {
   facts: () => `/facts.jpg`,
   home: () => `/home.jpg`,
   temple: () => `/temple.jpg`,
+  mission: () => `/missions.jpg`,
 };
