@@ -33,6 +33,22 @@ export function useGetMiningReward() {
       return payload;
     },
     onSuccess: (data) => {
+      const mission_reward = data.data.missions.reduce(
+        (acc, m) => ({
+          reward_exp: acc.reward_exp + (m.reward_exp ?? 0),
+          reward_qi: acc.reward_qi + (m.reward_qi ?? 0),
+          reward_qi_stone: acc.reward_qi_stone + (m.reward_qi_stone ?? 0),
+          reward_spirit_cristal: acc.reward_spirit_cristal + (m.reward_spirit_cristal ?? 0),
+          reward_glory: acc.reward_glory + (m.reward_glory ?? 0),
+        }),
+        {
+          reward_exp: 0,
+          reward_qi: 0,
+          reward_qi_stone: 0,
+          reward_spirit_cristal: 0,
+          reward_glory: 0,
+        },
+      );
       queryClient.setQueryData<ProfileResponse>(queries_keys.profile_userId(data.data.userId), (old) => {
         if (!old?.data) return old;
         return {
@@ -40,8 +56,11 @@ export function useGetMiningReward() {
           data: {
             ...old.data,
             lvl: data.data.lvl,
-            qi_stone: data.data.qi_stone_reward + old.data.qi_stone,
-            exp: data.data.exp_reward + old.data.exp,
+            qi: mission_reward.reward_qi + old.data.qi,
+            qi_stone: data.data.qi_stone_reward + mission_reward.reward_qi_stone + old.data.qi_stone,
+            exp: data.data.exp_reward + mission_reward.reward_exp + old.data.exp,
+            spirit_cristal: mission_reward.reward_spirit_cristal + old.data.spirit_cristal,
+            glory: mission_reward.reward_glory + old.data.glory,
           },
         };
       });
@@ -56,6 +75,9 @@ export function useGetMiningReward() {
             last_mine_at: data.data.last_mine_at ?? Date.now(),
           },
         };
+      });
+      queryClient.invalidateQueries({
+        queryKey: queries_keys.daily_missions_userId(data.data.userId),
       });
       queryClient.invalidateQueries({
         queryKey: queries_keys.facts_userId(data.data.userId),

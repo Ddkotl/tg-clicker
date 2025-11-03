@@ -131,6 +131,7 @@ export const en_lang = {
     fact_title: "Chronicles",
     fact_description: "Events that happened to you over the last three days are stored here.",
     no_fact: "Nothing has happened lately",
+    mission: 'You successfully completed the mission "{mission}" and received:',
     meditation_fact1: "You meditated for {time} and received:",
     meditation_fact2: "Qi",
     meditation_fact3: "Exp",
@@ -165,11 +166,11 @@ export const en_lang = {
           highlight: "Step beyond the physical and touch the essence of truth.",
         },
         MINE: {
-          title: "Extract {target} Qi stones",
+          title: "Dig up Qi Stones {target} times",
           highlight: "The mountain hums with ancient energy.",
         },
         MINE_STONE: {
-          title: "Dig up Qi Stones {target} times",
+          title: "Extract {target} Qi stones",
           highlight: "Where effort meets fortune.",
         },
       },

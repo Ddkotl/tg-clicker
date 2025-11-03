@@ -86,6 +86,7 @@ model Mission {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
+@@unique([userId,type])
   @@map("missions")
 }
 
@@ -163,8 +164,11 @@ model Facts {
   qi_stone_reward  Int?
   spirit_cristal_reward  Int?
   exp_reward   Int?
+  glory_reward Int?
   active_hours Int?
   active_minutes Int?
+  target_value Int?
+  mission_type MissionType?
   createdAt    DateTime    @default(now())
 
   @@index([userId])
@@ -180,6 +184,7 @@ enum FactsType {
   MEDITATION
   MINE
   SPIRIT_PATH
+  MISSION
 }
 
 enum Fraktion {

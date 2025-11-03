@@ -1,6 +1,6 @@
 import { Notifications } from "@/features/notifications/Notification";
-import { Footer } from "@/widgets/footer/Footer";
-import { Header } from "@/widgets/heeader/Header";
+import { Footer } from "@/features/footer/Footer";
+import { Header } from "@/features/heeader/Header";
 
 export default function Layout({
   children,
