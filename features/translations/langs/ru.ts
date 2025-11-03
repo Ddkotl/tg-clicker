@@ -132,6 +132,7 @@ export const ru_lang: Messages = {
     fact_title: "Хроники",
     fact_description: "Здесь храняться события, произошедшие с тобой за последние трое суток.",
     no_fact: "В последнее время ничего не происходило",
+    mission: 'Вы успешно выполнили миссию "{mission}" и получили:',
     meditation_fact1: "Ты медитировал {time} и получил:",
     meditation_fact2: "Энергию ци",
     meditation_fact3: "Опыт",
@@ -166,11 +167,11 @@ export const ru_lang: Messages = {
           highlight: "Выйди за пределы тела и коснись сути истины.",
         },
         MINE: {
-          title: "Добудь {target} камней Ци",
+          title: "Добудь камни Ци {target} раз",
           highlight: "Горы поют древними вибрациями силы.",
         },
         MINE_STONE: {
-          title: "Выкопай камни Ци {target} раз",
+          title: "Выкопай {target} камней Ци",
           highlight: "Там, где усилие встречается с удачей.",
         },
       },

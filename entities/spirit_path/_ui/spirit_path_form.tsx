@@ -19,6 +19,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";
 import { Button } from "@/shared/components/ui/button";
 import { useCheckUserDealsStatus } from "@/entities/user/_queries/use_check_user_deals";
+import dayjs from "dayjs";
 
 export function SpiritPathForm() {
   const [selectedMinutes, setSelectedMinutes] = useState("10");
@@ -53,6 +54,7 @@ export function SpiritPathForm() {
     }
     mutation.mutate({ userId, minutes: Number(data.time) });
   };
+  const isSameDay = dayjs(spirit_path_info?.data?.date_today).isSame(new Date(), "day") ?? false;
   const minutes_today = spirit_path_info?.data?.minutes_today ?? 0;
   const minutesLeftToday = Math.max(480 - minutes_today, 0);
   const isLoading = isSessionLoading || isSpiritPathLoading;
@@ -80,7 +82,8 @@ export function SpiritPathForm() {
       <div
         className={cn(
           "relative transition-opacity",
-          (mutation.isPending || minutesLeftToday === 0 || user_deals.busy) && "opacity-50 pointer-events-none",
+          (mutation.isPending || (isSameDay && minutesLeftToday === 0) || user_deals.busy) &&
+            "opacity-50 pointer-events-none",
         )}
       >
         <Form {...form}>
@@ -113,7 +116,7 @@ export function SpiritPathForm() {
             />
             <Button
               type="submit"
-              disabled={mutation.isPending || isSpiritPath || user_deals.busy || minutesLeftToday === 0}
+              disabled={mutation.isPending || isSpiritPath || user_deals.busy || (isSameDay && minutesLeftToday === 0)}
             >
               {minutesLeftToday === 0
                 ? t("headquarter.spirit_path.no_minutes_left")

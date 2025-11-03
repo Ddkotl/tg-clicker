@@ -5,6 +5,7 @@ import { useTelegramBack } from "@/features/telegram_back_button/use_telegram_ba
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/shared/components/ui/sonner";
 import { queryClient } from "@/shared/connect/query-client";
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   useTelegramBack();
@@ -14,6 +15,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         <LanguageProvider>
           <ThemeProvider>{children}</ThemeProvider>
         </LanguageProvider>
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         <Toaster />
       </QueryClientProvider>
     </>

@@ -59,6 +59,7 @@
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@tanstack/eslint-plugin-query": "^5.89.0",
+    "@tanstack/react-query-devtools": "^5.90.2",
     "@types/amqplib": "^0.10.7",
     "@types/jest": "^30.0.0",
     "@types/node": "^20",

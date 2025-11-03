@@ -12,6 +12,12 @@ import { MINE_COOLDOWN } from "@/shared/game_config/mining/mining_const";
 import { checkUserDeals } from "@/entities/user/_repositories/check_user_deals";
 import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
 import { translate } from "@/features/translations/server/translate_fn";
+import { UpdateProgressMission } from "@/entities/missions/_repositories/update_progress_mission";
+import { FactsStatus, FactsType, MissionType } from "@/_generated/prisma";
+import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lvl";
+import { GetResources } from "@/entities/missions/_repositories/get_resurces";
+import { createFact } from "@/entities/facts/index.server";
+import { InactivateMission } from "@/entities/missions/index.server";
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const lang = getCookieLang({ headers: req.headers });
@@ -54,16 +60,72 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     if (!result || result === null) return makeError(translate("api.invalid_process", lang), 400);
 
     await pushToSubscriber(userId, result.fact.type);
-
+    const completed_missions = [];
+    const mine_mission = await UpdateProgressMission(userId, MissionType.MINE, 1);
+    if (mine_mission?.is_completed && mine_mission?.is_active) {
+      await GetResources({
+        userId,
+        qi: mine_mission.reward_qi,
+        qi_stone: mine_mission.reward_qi_stone,
+        spirit_cristal: mine_mission.reward_spirit_cristal,
+        glory: mine_mission.reward_glory,
+        exp: mine_mission.reward_exp,
+      });
+      await createFact({
+        userId,
+        fact_status: FactsStatus.NO_CHECKED,
+        fact_type: FactsType.MISSION,
+        exp_reward: mine_mission.reward_exp,
+        qi_reward: mine_mission.reward_qi,
+        reward_spirit_cristal: mine_mission.reward_spirit_cristal,
+        qi_stone_reward: mine_mission.reward_qi_stone,
+        reward_glory: mine_mission.reward_glory,
+        target: mine_mission.target_value,
+        mission_type: mine_mission.type,
+      });
+      await InactivateMission(mine_mission.userId, mine_mission.type);
+      completed_missions.push(mine_mission);
+    }
+    const mine_stone_mission = await UpdateProgressMission(
+      userId,
+      MissionType.MINE_STONE,
+      result.fact.qi_stone_reward!,
+    );
+    if (mine_stone_mission?.is_completed && mine_stone_mission?.is_active) {
+      await GetResources({
+        userId,
+        qi: mine_stone_mission.reward_qi,
+        qi_stone: mine_stone_mission.reward_qi_stone,
+        spirit_cristal: mine_stone_mission.reward_spirit_cristal,
+        glory: mine_stone_mission.reward_glory,
+        exp: mine_stone_mission.reward_exp,
+      });
+      await createFact({
+        userId,
+        fact_status: FactsStatus.NO_CHECKED,
+        fact_type: FactsType.MISSION,
+        exp_reward: mine_stone_mission.reward_exp,
+        qi_reward: mine_stone_mission.reward_qi,
+        reward_spirit_cristal: mine_stone_mission.reward_spirit_cristal,
+        qi_stone_reward: mine_stone_mission.reward_qi_stone,
+        reward_glory: mine_stone_mission.reward_glory,
+        target: mine_stone_mission.target_value,
+        mission_type: mine_stone_mission.type,
+      });
+      await InactivateMission(mine_stone_mission.userId, mine_stone_mission.type);
+      completed_missions.push(mine_stone_mission);
+    }
+    const lvl = await CheckUpdateLvl(userId);
     const response: MiningResponseType = {
       data: {
         userId,
-        lvl: result.lvl_up ? result.lvl_up : result.profile.lvl,
+        lvl: lvl ? lvl : result.profile.lvl,
         energy: result.mine.energy,
         exp_reward: exp,
         qi_stone_reward: reward,
         last_energy_at: result.mine.last_energy_at?.getTime() ?? null,
         last_mine_at: result.mine.last_mine_at?.getTime() ?? null,
+        missions: completed_missions,
       },
       type: "ok",
       message: "Mining was successful",
