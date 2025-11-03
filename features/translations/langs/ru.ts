@@ -71,7 +71,11 @@ export const ru_lang: Messages = {
     nickname_taken: "имя {nickname} не доступно",
     nickname_free: "имя {nickname} свободно",
   },
-  gender: { gender: "Пол", male: "мужской", female: "женский" },
+  gender: {
+    gender: "Пол",
+    male: "мужской",
+    female: "женский",
+  },
   fraction: {
     adept: "Адепт горы",
     novice: "Послушник долины",
@@ -143,8 +147,8 @@ export const ru_lang: Messages = {
       сheck: "проверить",
       you_have_energy: "У тебя есть энергия",
       go_to_the_mine: "перейти к шахте",
-      new_missions: "Доступны новые миссии",
-      go_to_missions: "перейти к миссиям",
+      new_missions: "Доступны",
+      go_to_missions: "новые миссии",
     },
   },
   headquarter: {

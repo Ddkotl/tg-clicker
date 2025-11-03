@@ -21,11 +21,31 @@ export function MissionCard({
   const title = getMissionTitle(t, mission);
 
   const rewards = [
-    { value: mission.reward_exp, label: t("experience"), icon: icons.exp({}) },
-    { value: mission.reward_qi, label: t("qi_energy"), icon: icons.qi_energy({}) },
-    { value: mission.reward_qi_stone, label: t("qi_stone"), icon: icons.stone({}) },
-    { value: mission.reward_spirit_cristal, label: t("spirit_cristal"), icon: icons.crystal({}) },
-    { value: mission.reward_glory, label: t("glory"), icon: icons.glory({}) },
+    {
+      value: mission.reward_exp,
+      label: t("experience"),
+      icon: icons.exp({}),
+    },
+    {
+      value: mission.reward_qi,
+      label: t("qi_energy"),
+      icon: icons.qi_energy({}),
+    },
+    {
+      value: mission.reward_qi_stone,
+      label: t("qi_stone"),
+      icon: icons.stone({}),
+    },
+    {
+      value: mission.reward_spirit_cristal,
+      label: t("spirit_cristal"),
+      icon: icons.crystal({}),
+    },
+    {
+      value: mission.reward_glory,
+      label: t("glory"),
+      icon: icons.glory({}),
+    },
   ].filter((r) => r.value > 0);
   return (
     <Card className="bg-background/50 border border-border">

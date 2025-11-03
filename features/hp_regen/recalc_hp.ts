@@ -5,7 +5,11 @@ export async function recalcHp(userId: string) {
   try {
     const profile = await dataBase.profile.findUnique({
       where: { userId },
-      select: { current_hitpoint: true, max_hitpoint: true, last_hp_update: true },
+      select: {
+        current_hitpoint: true,
+        max_hitpoint: true,
+        last_hp_update: true,
+      },
     });
     if (!profile) return null;
 
@@ -20,7 +24,10 @@ export async function recalcHp(userId: string) {
     const newLastUpdate = new Date(last + intervalsPassed * HP_REGEN_INTERVAL);
     await dataBase.profile.update({
       where: { userId },
-      data: { current_hitpoint: newHp, last_hp_update: newLastUpdate },
+      data: {
+        current_hitpoint: newHp,
+        last_hp_update: newLastUpdate,
+      },
     });
 
     return newHp;

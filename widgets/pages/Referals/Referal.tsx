@@ -25,7 +25,10 @@ export function Referral() {
           const response = await fetch("/api/referrals", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userId, referrerId: startParam }),
+            body: JSON.stringify({
+              userId,
+              referrerId: startParam,
+            }),
           });
           if (!response.ok) throw new Error("Failed to save referral");
         } catch (error) {

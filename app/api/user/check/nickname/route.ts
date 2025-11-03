@@ -11,14 +11,18 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   try {
     const nickname = req.nextUrl.searchParams.get("nickname");
-    const parsed = checkNicknameRequestSchema.safeParse({ nickname });
+    const parsed = checkNicknameRequestSchema.safeParse({
+      nickname,
+    });
 
     if (!parsed.success) {
       const errorResponse: CheckNicknameErrorResponseType = {
         data: {},
         message: parsed.error.issues[0]?.message ?? "Invalid nickname format",
       };
-      return NextResponse.json(errorResponse, { status: 400 });
+      return NextResponse.json(errorResponse, {
+        status: 400,
+      });
     }
 
     const exists = await dataBase.user.findFirst({
@@ -41,6 +45,8 @@ export async function GET(req: NextRequest) {
     };
 
     checkNicknameerrorResponseSchema.parse(errorResponse);
-    return NextResponse.json(errorResponse, { status: 500 });
+    return NextResponse.json(errorResponse, {
+      status: 500,
+    });
   }
 }

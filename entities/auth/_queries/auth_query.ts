@@ -18,7 +18,10 @@ export function useAuthQuery() {
       const res = await fetch(api_path.auth(), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ initData, ref: start_param }),
+        body: JSON.stringify({
+          initData,
+          ref: start_param,
+        }),
         cache: "no-store",
       });
 

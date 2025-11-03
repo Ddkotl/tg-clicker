@@ -30,55 +30,71 @@ export function Header() {
       <div className="fixed top-0 z-50 bg-header-gradient  w-full max-w-md">
         <div className="flex flex-wrap gap-2 justify-evenly w-full  items-center  p-2">
           <HeaderItem
-            icon={icons.user({ className: "h-4 w-4 xs:h-5 xs:w-5" })}
+            icon={icons.user({
+              className: "h-4 w-4 xs:h-5 xs:w-5",
+            })}
             href={`/game/profile/${userId}`}
             isDisabled={isDisabled}
             isLoading={isLoading}
             value={`${profile?.data?.nikname}[${profile?.data?.lvl}]`}
           />
           <HeaderItem
-            icon={icons.backpack({ className: "h-4 w-4 xs:h-5 xs:w-5" })}
+            icon={icons.backpack({
+              className: "h-4 w-4 xs:h-5 xs:w-5",
+            })}
             href={`/game`}
             isDisabled={isDisabled}
             isLoading={isLoading}
           />
           <HeaderItem
-            icon={icons.heart({ className: "h-4 w-4 xs:h-5 xs:w-5" })}
+            icon={icons.heart({
+              className: "h-4 w-4 xs:h-5 xs:w-5",
+            })}
             href={`/game/profile/training/${userId}`}
             isDisabled={isDisabled}
             isLoading={isLoading}
             value={`${profile?.data?.current_hitpoint}`}
           />
           <HeaderItem
-            icon={icons.qi_energy({ className: "h-4 w-4 xs:h-5 xs:w-5" })}
+            icon={icons.qi_energy({
+              className: "h-4 w-4 xs:h-5 xs:w-5",
+            })}
             href={`/game`}
             isDisabled={isDisabled}
             isLoading={isLoading}
             value={profile?.data?.qi}
           />
           <HeaderItem
-            icon={icons.stone({ className: "h-4 w-4 xs:h-5 xs:w-5" })}
+            icon={icons.stone({
+              className: "h-4 w-4 xs:h-5 xs:w-5",
+            })}
             href={`/game`}
             isDisabled={isDisabled}
             isLoading={isLoading}
             value={profile?.data?.qi_stone}
           />
           <HeaderItem
-            icon={icons.crystal({ className: "h-4 w-4 xs:h-5 xs:w-5" })}
+            icon={icons.crystal({
+              className: "h-4 w-4 xs:h-5 xs:w-5",
+            })}
             href={`/game`}
             isDisabled={isDisabled}
             isLoading={isLoading}
             value={profile?.data?.spirit_cristal}
           />
           <HeaderItem
-            icon={icons.fight({ className: "h-4 w-4 xs:h-5 xs:w-5" })}
+            icon={icons.fight({
+              className: "h-4 w-4 xs:h-5 xs:w-5",
+            })}
             href={`/game`}
             isDisabled={isDisabled}
             isLoading={isLoading}
             value={`${profile?.data?.fight}/${generated_fight_limit}`}
           />
           <HeaderItem
-            icon={icons.clock({ className: "h-4 w-4 xs:h-5 xs:w-5" })}
+            icon={icons.clock({
+              className: "h-4 w-4 xs:h-5 xs:w-5",
+            })}
             href={`/game`}
             isDisabled={isDisabled}
             isLoading={isLoading}

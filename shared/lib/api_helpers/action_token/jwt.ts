@@ -13,7 +13,10 @@ export async function verifyJwtActive(token: string): Promise<JwtActivePaloadTyp
       return null;
     }
     const encoded_secret = new TextEncoder().encode(secret);
-    const { payload } = await jwtVerify<{ data: string; type: string }>(token, encoded_secret);
+    const { payload } = await jwtVerify<{
+      data: string;
+      type: string;
+    }>(token, encoded_secret);
     if (payload.type !== "action") return null;
 
     return payload;
@@ -30,7 +33,10 @@ export async function createJwtActive() {
       return null;
     }
     const encoded_secret = new TextEncoder().encode(secret);
-    const new_jwt = await new SignJWT({ data: new Date(), type: "action" })
+    const new_jwt = await new SignJWT({
+      data: new Date(),
+      type: "action",
+    })
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
       .setExpirationTime("2m")

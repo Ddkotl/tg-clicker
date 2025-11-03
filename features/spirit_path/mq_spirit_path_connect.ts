@@ -13,7 +13,9 @@ export async function createMqSpiritPathConnection() {
     arguments: { "x-delayed-type": "direct" },
   });
 
-  await channel.assertQueue(SPIRIT_PATH_QUEUE, { durable: true });
+  await channel.assertQueue(SPIRIT_PATH_QUEUE, {
+    durable: true,
+  });
   await channel.bindQueue(SPIRIT_PATH_QUEUE, SPIRIT_PATH_EXCHANGE, SPIRIT_PATH_QUEUE);
 
   return { connection, channel };

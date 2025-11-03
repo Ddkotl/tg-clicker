@@ -15,7 +15,12 @@ export function Footer() {
   const { data: session, isLoading, isFetching } = useGetSessionQuery();
   const userId = session?.data?.user?.userId ?? "";
   const items: FooterItemType[] = [
-    { id: "home", url: "/game", label: t("footer.home"), Icon: Home },
+    {
+      id: "home",
+      url: "/game",
+      label: t("footer.home"),
+      Icon: Home,
+    },
     {
       id: "friends",
       url: `profile/friends/${userId}`,

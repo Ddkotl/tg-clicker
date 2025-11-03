@@ -19,7 +19,9 @@ export async function GET() {
 
       userCountInFrErrorResponseSchema.parse(errorResponse);
 
-      return NextResponse.json(errorResponse, { status: 400 });
+      return NextResponse.json(errorResponse, {
+        status: 400,
+      });
     }
     const response: UserCountInFrResponseType = {
       data: {
@@ -42,6 +44,8 @@ export async function GET() {
 
     userCountInFrErrorResponseSchema.parse(errorResponse);
 
-    return NextResponse.json(errorResponse, { status: 500 });
+    return NextResponse.json(errorResponse, {
+      status: 500,
+    });
   }
 }

@@ -20,7 +20,7 @@ export const api_path = {
   get_spirit_path_info: (userId: string) => `/api/headquarter/spirit_path?userId=${userId}`,
   get_daily_missions: (userId: string) => `/api/user/daily_mission?userId=${userId}`,
   create_daily_missions: (userId: string) => `/api/user/daily_mission?userId=${userId}`,
-  get_action_token: () => `/api/user/action-token`,
+  get_action_token: () => `/api/auth/action-token`,
   get_facts: (userId: string, page: number, pageSize: number) =>
     `/api/user/facts?userId=${userId}&page=${page}&pageSize=${pageSize}`,
   get_facts_count_nocheck: (userId: string) => `/api/user/facts/count_nocheck?userId=${userId}`,

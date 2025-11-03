@@ -22,7 +22,10 @@ export function useGetMiningReward() {
 
       const res = await fetch(api_path.mining_qi_stone(), {
         method: "POST",
-        headers: { "Content-Type": "application/json", "action-token": `Bearer ${json.data.action_token}` },
+        headers: {
+          "Content-Type": "application/json",
+          "action-token": `Bearer ${json.data.action_token}`,
+        },
         body: JSON.stringify(data),
       });
       const payload = await res.json();
@@ -54,8 +57,12 @@ export function useGetMiningReward() {
           },
         };
       });
-      queryClient.invalidateQueries({ queryKey: queries_keys.facts_userId(data.data.userId) });
-      queryClient.invalidateQueries({ queryKey: [...queries_keys.facts_userId(data.data.userId), pageSize] });
+      queryClient.invalidateQueries({
+        queryKey: queries_keys.facts_userId(data.data.userId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: [...queries_keys.facts_userId(data.data.userId), pageSize],
+      });
       toast.success(t("facts.mine_fact1"), {
         description: (
           <div className=" w-full flex gap-4">

@@ -17,7 +17,9 @@ async function startWorker() {
     arguments: { "x-delayed-type": "direct" },
   });
 
-  await channel.assertQueue(SPIRIT_PATH_QUEUE, { durable: true });
+  await channel.assertQueue(SPIRIT_PATH_QUEUE, {
+    durable: true,
+  });
   await channel.bindQueue(SPIRIT_PATH_QUEUE, SPIRIT_PATH_EXCHANGE, SPIRIT_PATH_QUEUE);
 
   console.log("⏳ Spirit PAth worker is waiting for messages...");
@@ -29,7 +31,9 @@ async function startWorker() {
 
       try {
         const { userId, start_spirit_paths } = JSON.parse(msg.content.toString());
-        const spiritPath = await dataBase.spiritPath.findUnique({ where: { userId } });
+        const spiritPath = await dataBase.spiritPath.findUnique({
+          where: { userId },
+        });
         if (!spiritPath) return channel.ack(msg);
 
         // 1️⃣ Проверка массива отменённых путей

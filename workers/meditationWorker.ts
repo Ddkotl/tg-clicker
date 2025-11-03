@@ -19,7 +19,9 @@ async function startWorker() {
     arguments: { "x-delayed-type": "direct" },
   });
 
-  await channel.assertQueue(MEDITATION_QUEUE, { durable: true });
+  await channel.assertQueue(MEDITATION_QUEUE, {
+    durable: true,
+  });
   await channel.bindQueue(MEDITATION_QUEUE, MEDITATION_EXCHANGE, MEDITATION_QUEUE);
 
   console.log("⏳ Meditation worker is waiting for messages...");
@@ -31,7 +33,9 @@ async function startWorker() {
 
       try {
         const { userId, start_meditation } = JSON.parse(msg.content.toString());
-        const meditation = await dataBase.meditation.findUnique({ where: { userId } });
+        const meditation = await dataBase.meditation.findUnique({
+          where: { userId },
+        });
         if (!meditation) return channel.ack(msg);
 
         // 1️⃣ Проверка массива отменённых путей

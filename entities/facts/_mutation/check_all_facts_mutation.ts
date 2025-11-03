@@ -18,8 +18,12 @@ export function useCheckAllFactsMutation() {
       return result;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: queries_keys.facts_userId(data.data.userId) });
-      queryClient.invalidateQueries({ queryKey: [...queries_keys.facts_userId(data.data.userId), pageSize] });
+      queryClient.invalidateQueries({
+        queryKey: queries_keys.facts_userId(data.data.userId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: [...queries_keys.facts_userId(data.data.userId), pageSize],
+      });
     },
   });
 }
