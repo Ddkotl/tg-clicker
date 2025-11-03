@@ -3,7 +3,9 @@ import { lvl_exp } from "@/shared/game_config/exp/lvl_exp";
 
 export async function CheckUpdateLvl(userId: string) {
   try {
-    const profile = await dataBase.profile.findUnique({ where: { userId } });
+    const profile = await dataBase.profile.findUnique({
+      where: { userId },
+    });
     if (!profile) throw new Error("User profile not found");
 
     const { exp, lvl } = profile;

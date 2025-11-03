@@ -25,7 +25,11 @@ export function validateTelegramWebAppData(telegramInitData: string): Validation
   let message = "";
 
   if (!BOT_TOKEN) {
-    return { message: "BOT_TOKEN is not set", validatedData: null, user: {} };
+    return {
+      message: "BOT_TOKEN is not set",
+      validatedData: null,
+      user: {},
+    };
   }
 
   const initData: URLSearchParams = new URLSearchParams(telegramInitData);

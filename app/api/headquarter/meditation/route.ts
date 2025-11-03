@@ -67,7 +67,9 @@ export async function POST(req: NextRequest) {
         message: "Invalid request data",
       };
       goMeditationErrorResponseSchema.parse(errorResponse);
-      return NextResponse.json(errorResponse, { status: 400 });
+      return NextResponse.json(errorResponse, {
+        status: 400,
+      });
     }
     const { userId, hours } = parsed.data;
     const user_params = await getUserProfileByUserId(userId);
@@ -84,7 +86,9 @@ export async function POST(req: NextRequest) {
         message: "getUserProfileByUserId error",
       };
       goMeditationErrorResponseSchema.parse(errorResponse);
-      return NextResponse.json(errorResponse, { status: 400 });
+      return NextResponse.json(errorResponse, {
+        status: 400,
+      });
     }
     const meditation_revard = calcMeditationReward({
       power: user_params.profile.power,
@@ -101,7 +105,9 @@ export async function POST(req: NextRequest) {
         message: "goMeditation error",
       };
       goMeditationErrorResponseSchema.parse(errorResponse);
-      return NextResponse.json(errorResponse, { status: 400 });
+      return NextResponse.json(errorResponse, {
+        status: 400,
+      });
     }
     const delay = hours * 60 * 60 * 1000;
     const start_meditation = meditate.start_meditation;
@@ -131,6 +137,8 @@ export async function POST(req: NextRequest) {
       data: {},
       message: "Internal server error",
     };
-    return NextResponse.json(errorResponse, { status: 500 });
+    return NextResponse.json(errorResponse, {
+      status: 500,
+    });
   }
 }

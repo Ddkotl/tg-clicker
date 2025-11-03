@@ -20,16 +20,36 @@ export default function Home() {
 
   const { data: dataFractionCounts, isLoading: isLoadingFractionCounts } = useGetUsersCountInFractionsQuery();
   const home_nav_items: NavItem[] = [
-    { label: `${t("home.navigation.chronicles")}`, href: "/game/facts", icon: icons.fact({}) },
-    { label: `${t("home.navigation.battle")}`, href: "/game/battle", icon: icons.fight({}) },
+    {
+      label: `${t("home.navigation.chronicles")}`,
+      href: "/game/facts",
+      icon: icons.fact({}),
+    },
+    {
+      label: `${t("home.navigation.battle")}`,
+      href: "/game/battle",
+      icon: icons.fight({}),
+    },
     {
       label: `${t("home.navigation.headquarters")}`,
       href: "/game/headquarter",
       icon: icons.temple({}),
     },
-    { label: `${t("home.navigation.city")}`, href: "/game/city", icon: icons.citadel({}) },
-    { label: `${t("home.navigation.agent")}`, href: "/game/agent", icon: icons.pet({}) },
-    { label: `${t("home.navigation.rating")}`, href: "/game/ranking", icon: icons.trophy({ className: "h-10 w-10 " }) },
+    {
+      label: `${t("home.navigation.city")}`,
+      href: "/game/city",
+      icon: icons.citadel({}),
+    },
+    {
+      label: `${t("home.navigation.agent")}`,
+      href: "/game/agent",
+      icon: icons.pet({}),
+    },
+    {
+      label: `${t("home.navigation.rating")}`,
+      href: "/game/ranking",
+      icon: icons.trophy({ className: "h-10 w-10 " }),
+    },
   ];
   return (
     <div className="friends-tab-con flex flex-col gap-2 transition-all duration-300">

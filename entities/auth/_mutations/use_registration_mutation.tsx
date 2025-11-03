@@ -26,9 +26,14 @@ export function useRegistrationMutation() {
       return json;
     },
     onSuccess: (data) => {
-      toast.success(t("auth_congratulation", { nikname: data.data.nikname }), {
-        position: "bottom-center",
-      });
+      toast.success(
+        t("auth_congratulation", {
+          nikname: data.data.nikname,
+        }),
+        {
+          position: "bottom-center",
+        },
+      );
 
       queryClient.invalidateQueries({
         queryKey: queries_keys.profile_userId(data.data.userId),

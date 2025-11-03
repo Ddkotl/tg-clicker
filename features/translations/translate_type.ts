@@ -2,7 +2,10 @@ import { en_lang } from "@/features/translations/langs/en";
 import { ru_lang } from "./langs/ru";
 
 export type Messages = typeof en_lang;
-export const translated_messages = { en: en_lang, ru: ru_lang };
+export const translated_messages = {
+  en: en_lang,
+  ru: ru_lang,
+};
 export type SupportedLang = keyof typeof translated_messages;
 
 export type NestedKeyOf<ObjectType extends object> = {

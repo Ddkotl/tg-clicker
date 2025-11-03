@@ -33,13 +33,21 @@ export function useFactsSSE(userId?: string) {
           console.log("🔥 RAW SSE event:", event.data);
           const newFacts: FactsType[] = JSON.parse(event.data);
           newFacts.map((fact_type) => {
-            queryClient.invalidateQueries({ queryKey: queries_keys.facts_userId(userId) });
-            queryClient.invalidateQueries({ queryKey: [...queries_keys.facts_userId(userId), pageSize] });
+            queryClient.invalidateQueries({
+              queryKey: queries_keys.facts_userId(userId),
+            });
+            queryClient.invalidateQueries({
+              queryKey: [...queries_keys.facts_userId(userId), pageSize],
+            });
             if (fact_type === FactsType.MEDITATION) {
-              queryClient.invalidateQueries({ queryKey: queries_keys.meditation_userId(userId) });
+              queryClient.invalidateQueries({
+                queryKey: queries_keys.meditation_userId(userId),
+              });
             }
             if (fact_type === FactsType.SPIRIT_PATH) {
-              queryClient.invalidateQueries({ queryKey: queries_keys.spirit_path_userId(userId) });
+              queryClient.invalidateQueries({
+                queryKey: queries_keys.spirit_path_userId(userId),
+              });
             }
           });
         } catch (err) {

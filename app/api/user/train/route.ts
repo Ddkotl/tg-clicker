@@ -19,7 +19,9 @@ export async function POST(req: NextRequest) {
         message: "Missing userId in URL",
       };
       trainErrorResponseSchema.parse(errorResponse);
-      return NextResponse.json(errorResponse, { status: 400 });
+      return NextResponse.json(errorResponse, {
+        status: 400,
+      });
     }
 
     const body = await req.json();
@@ -31,7 +33,9 @@ export async function POST(req: NextRequest) {
         message: "Invalid request body",
       };
       trainErrorResponseSchema.parse(errorResponse);
-      return NextResponse.json(errorResponse, { status: 400 });
+      return NextResponse.json(errorResponse, {
+        status: 400,
+      });
     }
 
     const paramName: ParamNameType = parsed.data.paramName;
@@ -43,7 +47,9 @@ export async function POST(req: NextRequest) {
         message: "Failed to update parameter",
       };
       trainErrorResponseSchema.parse(errorResponse);
-      return NextResponse.json(errorResponse, { status: 400 });
+      return NextResponse.json(errorResponse, {
+        status: 400,
+      });
     }
 
     const newValue = updated_profile.profile[paramName];
@@ -66,6 +72,8 @@ export async function POST(req: NextRequest) {
       data: {},
       message: "Internal server error",
     };
-    return NextResponse.json(errorResponse, { status: 500 });
+    return NextResponse.json(errorResponse, {
+      status: 500,
+    });
   }
 }

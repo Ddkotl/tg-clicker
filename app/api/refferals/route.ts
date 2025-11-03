@@ -33,7 +33,9 @@ export async function GET(request: NextRequest) {
         message: "Missing or invalid userId",
       };
       errorResponseSchema.parse(errorResponse);
-      return NextResponse.json(errorResponse, { status: 400 });
+      return NextResponse.json(errorResponse, {
+        status: 400,
+      });
     }
 
     const referrals = await getReferrals(parsed.data.userId);
@@ -58,6 +60,8 @@ export async function GET(request: NextRequest) {
       message: "Internal server error",
     };
     errorResponseSchema.parse(errorResponse);
-    return NextResponse.json(errorResponse, { status: 500 });
+    return NextResponse.json(errorResponse, {
+      status: 500,
+    });
   }
 }

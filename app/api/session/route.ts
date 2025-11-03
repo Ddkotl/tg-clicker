@@ -26,7 +26,10 @@ export async function GET() {
     const session: AppJWTPayload | null = await getSession();
 
     if (!session) {
-      const response = { data: {}, message: "No active session" };
+      const response = {
+        data: {},
+        message: "No active session",
+      };
       errorResponseSchema.parse(response);
       return NextResponse.json(response, { status: 401 });
     }

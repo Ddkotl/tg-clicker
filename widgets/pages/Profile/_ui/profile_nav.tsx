@@ -15,7 +15,10 @@ export function ProfileNav({ isMyProfile, userId, isLoading }: ProfileButtonsPro
 
   const buttons = useMemo(() => {
     const base = [
-      { label: t("profile.statistics"), href: "/game/profile/statistics" },
+      {
+        label: t("profile.statistics"),
+        href: "/game/profile/statistics",
+      },
       {
         label: t("profile.questionnaire"),
         href: "/game/profile/questionnaire",
@@ -29,12 +32,27 @@ export function ProfileNav({ isMyProfile, userId, isLoading }: ProfileButtonsPro
         label: t("profile.development"),
         href: `/game/profile/training/${userId}`,
       },
-      { label: t("profile.equipment"), href: "/game/profile/equipment" },
-      { label: t("profile.friends"), href: "/game/profile/friends" },
+      {
+        label: t("profile.equipment"),
+        href: "/game/profile/equipment",
+      },
+      {
+        label: t("profile.friends"),
+        href: "/game/profile/friends",
+      },
       ...base,
-      { label: t("profile.description"), href: "/game/profile/description" },
-      { label: t("profile.avatars"), href: "/game/profile/avatars" },
-      { label: t("profile.invite"), href: "/game/profile/invite" },
+      {
+        label: t("profile.description"),
+        href: "/game/profile/description",
+      },
+      {
+        label: t("profile.avatars"),
+        href: "/game/profile/avatars",
+      },
+      {
+        label: t("profile.invite"),
+        href: "/game/profile/invite",
+      },
     ];
   }, [t, isMyProfile, userId]);
 

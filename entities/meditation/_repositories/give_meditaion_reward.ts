@@ -39,7 +39,9 @@ export async function giveMeditationReward(userId: string, break_meditation: boo
       meditation_revard: null,
     };
     if (break_meditation && meditation.start_meditation) {
-      meditationUpdateData.canceled_meditated_dates = { push: meditation.start_meditation };
+      meditationUpdateData.canceled_meditated_dates = {
+        push: meditation.start_meditation,
+      };
     }
     const res = await dataBase.$transaction([
       dataBase.meditation.update({
@@ -51,13 +53,17 @@ export async function giveMeditationReward(userId: string, break_meditation: boo
         data: {
           qi: { increment: meditation_reward },
           exp: { increment: meditation_expirience },
-          spirit_cristal: { decrement: break_meditation ? 10 : 0 },
+          spirit_cristal: {
+            decrement: break_meditation ? 10 : 0,
+          },
         },
       }),
       dataBase.userStatistic.update({
         where: { userId },
         data: {
-          meditated_hours: { increment: break_meditation ? 1 : meditation.meditation_hours },
+          meditated_hours: {
+            increment: break_meditation ? 1 : meditation.meditation_hours,
+          },
         },
       }),
     ]);

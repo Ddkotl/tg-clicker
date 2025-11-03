@@ -18,5 +18,7 @@ export function getMissionTitle(
       ? `${target_value} ${t(`hour.${getHoursString(target_value)}` as TranslationKey)}`
       : target_value;
 
-  return t(`headquarter.missions.types.${type}.title`, { target });
+  return t(`headquarter.missions.types.${type}.title`, {
+    target,
+  });
 }

@@ -19,7 +19,9 @@ export async function POST(request: NextRequest) {
         type: "error",
       };
       checkAllFactsErrorResponseSchema.parse(errorResponse);
-      return NextResponse.json(errorResponse, { status: 400 });
+      return NextResponse.json(errorResponse, {
+        status: 400,
+      });
     }
     const { userId } = parsed.data;
     const res = await CheckAllFacts(userId);
@@ -30,7 +32,9 @@ export async function POST(request: NextRequest) {
         type: "error",
       };
       checkAllFactsErrorResponseSchema.parse(errorResponse);
-      return NextResponse.json(errorResponse, { status: 400 });
+      return NextResponse.json(errorResponse, {
+        status: 400,
+      });
     }
     const response: CheckAllFactsResponseType = {
       data: { userId: userId },
@@ -46,6 +50,8 @@ export async function POST(request: NextRequest) {
       type: "error",
       message: "Internal server error",
     };
-    return NextResponse.json(errorResponse, { status: 500 });
+    return NextResponse.json(errorResponse, {
+      status: 500,
+    });
   }
 }

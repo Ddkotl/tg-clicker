@@ -24,7 +24,9 @@ export function FactItem({
       case FactsType.MEDITATION:
         return {
           color: "purple",
-          icon: icons.meditation({ className: "text-purple-400" }),
+          icon: icons.meditation({
+            className: "text-purple-400",
+          }),
           bg: "bg-purple-500/10",
           border: "border-purple-500/30",
           separator: "bg-purple-500/20",
@@ -45,7 +47,9 @@ export function FactItem({
       case FactsType.SPIRIT_PATH:
         return {
           color: "yellow",
-          icon: icons.spirit_path({ className: "text-yellow-400" }),
+          icon: icons.spirit_path({
+            className: "text-yellow-400",
+          }),
           bg: "bg-yellow-500/10",
           border: "border-yellow-500/30",
           separator: "bg-yellow-500/20",

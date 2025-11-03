@@ -2,7 +2,9 @@ import { dataBase } from "@/shared/connect/db_connect";
 
 export async function HpRegen(userId: string) {
   try {
-    const profile = await dataBase.profile.findUnique({ where: { userId } });
+    const profile = await dataBase.profile.findUnique({
+      where: { userId },
+    });
     if (!profile) return;
 
     if (profile.current_hitpoint < profile.max_hitpoint) {

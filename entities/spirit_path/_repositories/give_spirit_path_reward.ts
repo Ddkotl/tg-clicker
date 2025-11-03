@@ -2,6 +2,7 @@ import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lv
 import { dataBase } from "@/shared/connect/db_connect";
 import { getSpiritPathExperience } from "@/shared/game_config/exp/give_expirience";
 import { calcSpiritPathSpiritStoneReward } from "../_vm/calc_spirit_path_spirit_stone_reward";
+import dayjs from "dayjs";
 
 export async function giveSpiritPathReward(userId: string, break_spirit_path: boolean = false) {
   try {
@@ -27,7 +28,8 @@ export async function giveSpiritPathReward(userId: string, break_spirit_path: bo
       !spiritPath.on_spirit_paths ||
       spiritPath.spirit_paths_minutes === null ||
       spiritPath.spirit_paths_reward === null ||
-      spiritPath.start_spirit_paths === null
+      spiritPath.start_spirit_paths === null ||
+      spiritPath.minutes_today === null
     ) {
       return null;
     }
@@ -50,7 +52,9 @@ export async function giveSpiritPathReward(userId: string, break_spirit_path: bo
       date_today: new Date(),
     };
     if (break_spirit_path && spiritPath.start_spirit_paths) {
-      spiritPathUpdateData.canceled_paths_dates = { push: spiritPath.start_spirit_paths };
+      spiritPathUpdateData.canceled_paths_dates = {
+        push: spiritPath.start_spirit_paths,
+      };
     }
     // 5️⃣ Транзакция: сбрасываем состояние пути, обновляем профиль и счётчик
     const [spirit_path, updatedProfile] = await dataBase.$transaction([
@@ -69,7 +73,9 @@ export async function giveSpiritPathReward(userId: string, break_spirit_path: bo
       dataBase.userStatistic.update({
         where: { userId },
         data: {
-          spirit_path_minutes: { increment: break_spirit_path ? 10 : spiritPath.spirit_paths_minutes },
+          spirit_path_minutes: {
+            increment: break_spirit_path ? 10 : spiritPath.spirit_paths_minutes,
+          },
         },
       }),
     ]);

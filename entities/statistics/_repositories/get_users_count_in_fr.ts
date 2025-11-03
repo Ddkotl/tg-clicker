@@ -13,7 +13,10 @@ export async function getUserCountsInFractions() {
         fraktion: Fraktion.NOVICE,
       },
     });
-    return { adepts_count: adepts_count, novices_count: novices_count };
+    return {
+      adepts_count: adepts_count,
+      novices_count: novices_count,
+    };
   } catch (error) {
     console.error("not found users", error);
     return null;

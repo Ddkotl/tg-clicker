@@ -146,8 +146,8 @@ export const en_lang = {
       сheck: "сheck",
       you_have_energy: "You have energy",
       go_to_the_mine: "go to the mine",
-      new_missions: "New missions available",
-      go_to_missions: "go to missions",
+      new_missions: "New missions are",
+      go_to_missions: "available",
     },
   },
   headquarter: {

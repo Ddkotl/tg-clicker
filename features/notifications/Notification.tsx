@@ -57,7 +57,9 @@ export function Notifications() {
 
   const handleCloseClick = () => {
     if (!userId) return;
-    queryClient.removeQueries({ queryKey: queries_keys.facts_userId(userId) });
+    queryClient.removeQueries({
+      queryKey: queries_keys.facts_userId(userId),
+    });
     mutation.mutate({ userId });
   };
   // spirit path
@@ -87,7 +89,9 @@ export function Notifications() {
       {/* Постоянный алерт если игрок медитирует */}
       {isMeditating && end && (
         <ProcessAlert
-          icon={icons.meditation({ className: "h-5 w-5 text-primary shrink-0" })}
+          icon={icons.meditation({
+            className: "h-5 w-5 text-primary shrink-0",
+          })}
           endTime={end}
           href={ui_path.meditation_page()}
           description={t("headquarter.meditation_in_progress")}
@@ -96,7 +100,9 @@ export function Notifications() {
       )}
       {isSpiritPath && spirit_path_end && (
         <ProcessAlert
-          icon={icons.spirit_path({ className: "h-5 w-5 text-primary shrink-0" })}
+          icon={icons.spirit_path({
+            className: "h-5 w-5 text-primary shrink-0",
+          })}
           endTime={spirit_path_end}
           href={ui_path.spirit_path_page()}
           description={t("headquarter.spirit_path.spirit_path_in_progress")}
@@ -118,7 +124,9 @@ export function Notifications() {
       )}
       {!isLoadingMission && mission?.data.missions.length !== 0 && (
         <ActionAlert
-          icon={icons.missions({ className: "text-primary" })}
+          icon={icons.missions({
+            className: "text-primary",
+          })}
           title={t("facts.notification.new_missions")}
           actionText={t("facts.notification.go_to_missions")}
           href={ui_path.missions_page()}
