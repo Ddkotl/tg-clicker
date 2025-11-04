@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     const meditation_mission = await UpdateProgressMission(
       userId,
       MissionType.MEDITATION,
-      break_meditation ? res.hours : 0,
+      break_meditation ? 0 : res.hours,
     );
     if (meditation_mission?.is_completed && meditation_mission?.is_active) {
       await GetResources({
