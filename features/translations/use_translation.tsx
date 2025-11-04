@@ -16,25 +16,29 @@ export function useTranslation() {
     return path.split(".").reduce((acc, part) => acc?.[part], obj) ?? path;
   }
 
-  function t(
-    key: TranslationKey,
-    vars?: Record<string, string | number | ReactNode>
-  ): ReactNode {
+  // === t() как раньше — всегда возвращает STRING ===
+  function t(key: TranslationKey, vars?: Record<string, string | number>): string {
     const raw = getValue(dict, key);
     if (!vars) return raw;
 
-    const parts = raw.split(/(\{.*?\})/g); // разбиваем по {var}
+    return raw.replace(/\{(\w+)\}/g, (_, name) => String(vars[name] ?? ""));
+  }
+
+  // === tNode() — позволяет вставлять ReactNode ===
+  function tNode(key: TranslationKey, vars?: Record<string, string | number | ReactNode>): ReactNode {
+    const raw = getValue(dict, key);
+    if (!vars) return raw;
+
+    const parts = raw.split(/(\{.*?\})/g);
     return parts.map((part, i) => {
       const match = part.match(/^\{(.*)\}$/);
       if (match) {
         const name = match[1];
-        const value = vars[name];
-        return <span key={i}>{value}</span>;
+        return <span key={i}>{vars[name]}</span>;
       }
       return <span key={i}>{part}</span>;
     });
   }
 
-  return { t, language };
+  return { t, tNode, language };
 }
-

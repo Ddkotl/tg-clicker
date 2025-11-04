@@ -2,27 +2,15 @@
 
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { Users } from "lucide-react";
+import { useGetUsersCountInFractionsQuery } from "../_queries/users_count_in_fr_querys";
 
 interface FactionConfrontationBarProps {
-  dataFractionCounts?:
-    | {
-        data: {
-          adepts: number;
-          novices: number;
-        };
-        message: string;
-      }
-    | undefined;
   className?: string;
-  isLoading?: boolean;
 }
 
-export function FactionConfrontationBar({
-  dataFractionCounts,
-  className = "",
-  isLoading,
-}: FactionConfrontationBarProps) {
-  if (isLoading) {
+export function FactionConfrontationBar({ className = "" }: FactionConfrontationBarProps) {
+  const { data: dataFractionCounts, isLoading: isLoadingFractionCounts } = useGetUsersCountInFractionsQuery();
+  if (isLoadingFractionCounts) {
     return (
       <div
         className={`relative opacity-60 w-full max-w-md mx-auto h-6 rounded-full overflow-hidden border border-border shadow-sm ${className}`}
