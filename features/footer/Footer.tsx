@@ -9,6 +9,7 @@ import Earn from "@/shared/components/icons/Earn";
 import Leaderboard from "@/shared/components/icons/Leaderboard";
 import Settings from "@/shared/components/icons/Settings";
 import { FooterItem } from "./_ui/footer_item";
+import { ui_path } from "@/shared/lib/paths";
 
 export function Footer() {
   const { t } = useTranslation();
@@ -17,7 +18,7 @@ export function Footer() {
   const items: FooterItemType[] = [
     {
       id: "home",
-      url: "/game",
+      url: ui_path.home_page(),
       label: t("footer.home"),
       Icon: Home,
     },
@@ -29,7 +30,7 @@ export function Footer() {
     },
     {
       id: "tasks",
-      url: `game/tasks/${userId}`,
+      url: ui_path.missions_page(),
       label: t("footer.tasks"),
       Icon: Earn,
     },

@@ -35,7 +35,8 @@ export async function giveSpiritPathReward(userId: string, break_spirit_path: bo
     }
 
     const minutes = spiritPath.spirit_paths_minutes;
-
+    const today = dayjs().startOf("day").toDate();
+    const isSameDay = spiritPath.date_today ? dayjs(spiritPath.date_today).isSame(today, "day") : false;
     // 3️⃣ Считаем награды
     const rewardExp = getSpiritPathExperience(minutes);
     const rewardQi = break_spirit_path
@@ -50,6 +51,7 @@ export async function giveSpiritPathReward(userId: string, break_spirit_path: bo
       spirit_paths_minutes: null,
       spirit_paths_reward: null,
       date_today: new Date(),
+      minutes_today: isSameDay ? spiritPath.minutes_today : 0,
     };
     if (break_spirit_path && spiritPath.start_spirit_paths) {
       spiritPathUpdateData.canceled_paths_dates = {

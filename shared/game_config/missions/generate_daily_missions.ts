@@ -19,25 +19,25 @@ export function generateDailyMissions(
     {
       type: MissionType.MEDITATION,
       target_value: 1 + Math.floor(lvl / 2),
-      reward_exp: rewardBase(15),
+      reward_exp: rewardBase(5),
       reward_qi: rewardBase(30),
     },
     {
       type: MissionType.SPIRIT_PATH,
       target_value: 10,
-      reward_exp: rewardBase(35),
-      reward_spirit_cristal: rewardBase(5),
+      reward_exp: rewardBase(5),
+      reward_spirit_cristal: rewardBase(2),
     },
     {
       type: MissionType.MINE,
       target_value: 5 + Math.floor(lvl / 3),
-      reward_exp: rewardBase(25),
+      reward_exp: rewardBase(5),
       reward_qi_stone: rewardBase(3),
     },
     {
       type: MissionType.MINE_STONE,
       target_value: 10 + lvl * 1,
-      reward_exp: rewardBase(40),
+      reward_exp: rewardBase(5),
       reward_glory: rewardBase(3),
     },
   ];

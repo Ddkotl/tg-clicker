@@ -1,3 +1,4 @@
+import { DailyMissionSchema } from "@/entities/missions";
 import z from "zod";
 
 const MeditationInfoSchema = z.object({
@@ -57,6 +58,7 @@ export const getMeditationRewardResponseSchema = z.object({
     current_exp: z.number(),
     current_spirit_cristal: z.number(),
     current_lvl: z.number(),
+    missions: z.array(DailyMissionSchema),
   }),
   message: z.string(),
   type: z.literal("success"),

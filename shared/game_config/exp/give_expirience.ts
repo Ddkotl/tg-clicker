@@ -16,5 +16,5 @@ export function getSpiritPathExperience(minutes: number) {
 }
 
 export function getMineExperience() {
-  return giveExperience(1, 5);
+  return giveExperience(1, 3);
 }
