@@ -80,7 +80,7 @@ model Mission {
   target_value Int     @default(1)
   progress     Int     @default(0)
 
-  is_active    Boolean @default(false)
+  is_active    Boolean @default(true)
   is_completed Boolean @default(false)
 
   createdAt    DateTime @default(now())
