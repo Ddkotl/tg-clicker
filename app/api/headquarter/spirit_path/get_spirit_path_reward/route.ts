@@ -36,11 +36,7 @@ export async function POST(request: NextRequest) {
       await pushToSubscriber(userId, new_fact.type);
     }
     const completed_missions = [];
-    const spirit_path_mission = await UpdateProgressMission(
-      userId,
-      MissionType.SPIRIT_PATH,
-      break_spirit_path ? 0 : res.minutes,
-    );
+    const spirit_path_mission = await UpdateProgressMission(userId, MissionType.SPIRIT_PATH, res.minutes);
     if (spirit_path_mission?.is_completed && spirit_path_mission?.is_active) {
       await GetResources({
         userId,

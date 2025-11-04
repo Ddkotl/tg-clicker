@@ -26,7 +26,7 @@ export function generateDailyMissions(
       type: MissionType.SPIRIT_PATH,
       target_value: 10,
       reward_exp: rewardBase(5),
-      reward_spirit_cristal: rewardBase(5),
+      reward_spirit_cristal: rewardBase(2),
     },
     {
       type: MissionType.MINE,
