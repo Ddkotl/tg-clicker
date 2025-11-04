@@ -10,11 +10,21 @@ import Leaderboard from "@/shared/components/icons/Leaderboard";
 import Settings from "@/shared/components/icons/Settings";
 import { FooterItem } from "./_ui/footer_item";
 import { ui_path } from "@/shared/lib/paths";
+import { useQuery } from "@tanstack/react-query";
+import { getAllDailyMissionsQuery, GetDailyMissionsResponseType } from "@/entities/missions";
 
 export function Footer() {
   const { t } = useTranslation();
   const { data: session, isLoading, isFetching } = useGetSessionQuery();
-  const userId = session?.data?.user?.userId ?? "";
+  const userId = session?.data?.user?.userId;
+  const {
+    data: missions,
+    isLoading: isLoadingMissions,
+    isFetching: isFetchingMissions,
+  } = useQuery<GetDailyMissionsResponseType>({
+    ...getAllDailyMissionsQuery(userId || ""),
+    enabled: !!userId,
+  });
   const items: FooterItemType[] = [
     {
       id: "home",
@@ -33,6 +43,7 @@ export function Footer() {
       url: ui_path.missions_page(),
       label: t("footer.tasks"),
       Icon: Earn,
+      count: missions?.data.missions.length,
     },
     {
       id: "leaderboard",
@@ -47,13 +58,13 @@ export function Footer() {
       Icon: Settings,
     },
   ];
-  const isDisabled = isLoading || isFetching;
+  const isDisabled = isLoading || isFetching || isLoadingMissions || isFetchingMissions;
   return (
     <div className="flex justify-center w-full">
       <div className="fixed bottom-0 bg-footer-gradient border-t border-foreground/60 w-full max-w-md">
         <div className="flex justify-between px-4 py-2">
           {items.map((item) => {
-            return <FooterItem key={item.id} item={item} disabled={isDisabled} />;
+            return <FooterItem key={item.id} item={item} count={item.count ? item.count : -1} disabled={isDisabled} />;
           })}
         </div>
       </div>

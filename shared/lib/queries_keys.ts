@@ -1,5 +1,6 @@
 export const queries_keys = {
   tg_auth: () => ["telegramAuth"],
+  session: () => ["session"],
   profile_userId: (userId: string) => ["profile", userId],
   meditation_userId: (userId: string) => ["meditation", userId],
   daily_missions_userId: (userId: string) => ["daily_missions", userId],

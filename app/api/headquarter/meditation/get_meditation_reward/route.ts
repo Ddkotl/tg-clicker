@@ -8,6 +8,7 @@ import {
 } from "@/entities/meditation/_domain/schemas";
 import { giveMeditationReward } from "@/entities/meditation/index.server";
 import { GetResources, InactivateMission, UpdateProgressMission } from "@/entities/missions/index.server";
+import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lvl";
 import { makeError } from "@/shared/lib/api_helpers/make_error";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -32,35 +33,42 @@ export async function POST(request: NextRequest) {
       await pushToSubscriber(userId, new_fact.type);
     }
     const completed_missions = [];
-    const meditation_mission = await UpdateProgressMission(userId, MissionType.MEDITATION, res.hours);
-    if (meditation_mission?.is_completed && meditation_mission?.is_active) {
-      await GetResources({
-        userId,
-        qi: meditation_mission.reward_qi,
-        qi_stone: meditation_mission.reward_qi_stone,
-        spirit_cristal: meditation_mission.reward_spirit_cristal,
-        glory: meditation_mission.reward_glory,
-        exp: meditation_mission.reward_exp,
-      });
-      await createFact({
-        userId,
-        fact_status: FactsStatus.NO_CHECKED,
-        fact_type: FactsType.MISSION,
-        exp_reward: meditation_mission.reward_exp,
-        qi_reward: meditation_mission.reward_qi,
-        reward_spirit_cristal: meditation_mission.reward_spirit_cristal,
-        qi_stone_reward: meditation_mission.reward_qi_stone,
-        reward_glory: meditation_mission.reward_glory,
-        target: meditation_mission.target_value,
-        mission_type: meditation_mission.type,
-      });
-      await InactivateMission(meditation_mission.userId, meditation_mission.type);
-      completed_missions.push(meditation_mission);
+    if (!break_meditation) {
+      const meditation_mission = await UpdateProgressMission(userId, MissionType.MEDITATION, res.hours);
+      console.log("meditation_mission", meditation_mission);
+      if (meditation_mission?.is_completed && meditation_mission?.is_active) {
+        const a = await GetResources({
+          userId,
+          qi: meditation_mission.reward_qi,
+          qi_stone: meditation_mission.reward_qi_stone,
+          spirit_cristal: meditation_mission.reward_spirit_cristal,
+          glory: meditation_mission.reward_glory,
+          exp: meditation_mission.reward_exp,
+        });
+        console.log("a", a);
+        const b = await createFact({
+          userId,
+          fact_status: FactsStatus.NO_CHECKED,
+          fact_type: FactsType.MISSION,
+          exp_reward: meditation_mission.reward_exp,
+          qi_reward: meditation_mission.reward_qi,
+          reward_spirit_cristal: meditation_mission.reward_spirit_cristal,
+          qi_stone_reward: meditation_mission.reward_qi_stone,
+          reward_glory: meditation_mission.reward_glory,
+          target: meditation_mission.target_value,
+          mission_type: meditation_mission.type,
+        });
+        console.log("b", b);
+        await InactivateMission(meditation_mission.userId, meditation_mission.type);
+        completed_missions.push(meditation_mission);
+      }
     }
+    const lvl = await CheckUpdateLvl(userId);
     const response: GetMeditationRewardResponseType = {
       data: {
         ...res,
         missions: completed_missions,
+        current_lvl: lvl ? lvl : res.current_lvl,
       },
       type: "success",
       message: "getMeditationReward updated successfully",

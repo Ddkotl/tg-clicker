@@ -6,6 +6,8 @@ import { GetDailyMissionsResponseType } from "../_domain/types";
 import { getMissionTitle } from "../_vm/get_mission_title";
 import { icons } from "@/shared/lib/icons";
 import { TranslationKey } from "@/features/translations/translate_type";
+import { ui_path } from "@/shared/lib/paths";
+import Link from "next/link";
 
 type Mission = GetDailyMissionsResponseType["data"]["missions"][number];
 
@@ -49,8 +51,14 @@ export function MissionCard({
   ].filter((r) => r.value > 0);
   return (
     <Card className="bg-background/50 border border-border">
-      <CardHeader>
+      <CardHeader className="flex gap-2 justify-between items-center">
         <CardTitle className="text-sm font-semibold">{title}</CardTitle>
+        <Link
+          href={mission.path ?? ui_path.home_page()}
+          className="text-primary hover:text-primary/80 font-medium underline underline-offset-2"
+        >
+          {icons.arrow_right({})}
+        </Link>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
         <Progress value={progressPercent} className="h-2" />
