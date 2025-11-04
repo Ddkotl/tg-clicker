@@ -6,6 +6,7 @@ export const DailyMissionSchema = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
   userId: z.string(),
+  path: z.string().nullable(),
   type: z.enum(MissionType),
   reward_exp: z.number(),
   reward_qi: z.number(),

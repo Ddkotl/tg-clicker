@@ -27,4 +27,42 @@ export const nav_items = {
       icon: icons.spirit_path({}),
     },
   ],
+  city_nav_items: (translate: TranslateFn, lang: SupportedLang): NavItem[] => [
+    {
+      label: translate("city.shop.shop", lang),
+      href: ui_path.city_shop_page(),
+    },
+  ],
+  home_nav_items: (translate: TranslateFn, lang: SupportedLang): NavItem[] => [
+    {
+      label: `${translate("home.navigation.chronicles", lang)}`,
+      href: "/game/facts",
+      icon: icons.fact({}),
+    },
+    {
+      label: `${translate("home.navigation.battle", lang)}`,
+      href: "/game/battle",
+      icon: icons.fight({}),
+    },
+    {
+      label: `${translate("home.navigation.headquarters", lang)}`,
+      href: "/game/headquarter",
+      icon: icons.temple({}),
+    },
+    {
+      label: `${translate("home.navigation.city", lang)}`,
+      href: "/game/city",
+      icon: icons.citadel({}),
+    },
+    {
+      label: `${translate("home.navigation.agent", lang)}`,
+      href: "/game/agent",
+      icon: icons.pet({}),
+    },
+    {
+      label: `${translate("home.navigation.rating", lang)}`,
+      href: "/game/ranking",
+      icon: icons.trophy({ className: "h-10 w-10 " }),
+    },
+  ],
 };
