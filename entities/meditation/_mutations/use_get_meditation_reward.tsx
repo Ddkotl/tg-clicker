@@ -41,6 +41,9 @@ export function useGetMeditationReward() {
         };
       });
       queryClient.invalidateQueries({
+        queryKey: queries_keys.daily_missions_userId(data.data.userId),
+      });
+      queryClient.invalidateQueries({
         queryKey: queries_keys.meditation_userId(data.data.userId),
       });
       queryClient.invalidateQueries({
