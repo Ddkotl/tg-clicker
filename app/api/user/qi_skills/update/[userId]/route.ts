@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { dataBase } from "@/shared/connect/db_connect";
 import { QiSkillKey, QiSkillsConfig } from "@/shared/game_config/qi_skills/qi_skills";
 
-export async function POST(req: Request, { params }: { params: { userId: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ userId: string }> }) {
+   const api_params = await params;
   try {
     const { skill } = (await req.json()) as { skill: QiSkillKey };
 
@@ -11,12 +12,12 @@ export async function POST(req: Request, { params }: { params: { userId: string 
     }
 
     const user = await dataBase.profile.findUnique({
-      where: { userId: params.userId },
+      where: { userId: api_params.userId },
       select: { qi: true },
     });
 
     const skills = await dataBase.userQiSkills.findUnique({
-      where: { userId: params.userId },
+      where: { userId: api_params.userId },
     });
 
     if (!user || !skills) {
@@ -38,11 +39,11 @@ export async function POST(req: Request, { params }: { params: { userId: string 
 
     await dataBase.$transaction([
       dataBase.userQiSkills.update({
-        where: { userId: params.userId },
+        where: { userId: api_params.userId },
         data: { [skill]: { increment: 1 } },
       }),
       dataBase.profile.update({
-        where: { userId: params.userId },
+        where: { userId: api_params.userId },
         data: { qi: { decrement: cost } },
       }),
     ]);
