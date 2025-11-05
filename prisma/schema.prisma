@@ -29,6 +29,7 @@ model User {
   mine           Mine?
   facts          Facts[]
   missions Mission[]
+  qi_skills UserQiSkills?
 
   @@map("users")
 }
@@ -122,6 +123,19 @@ model UserStatistic {
   mined_count     Int @default(0)
 
   @@map("user_statistics")
+}
+
+model UserQiSkills {
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique
+
+  qi_veil            Int @default(0)
+  seal_of_mind           Int @default(0)
+  circulation_of_life Int @default(0)
+  spatial_vault Int @default(0)
+
+  @@map("user_qi_skills")
 }
 
 model Meditation {

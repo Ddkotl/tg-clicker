@@ -6,6 +6,7 @@ import {
   GiGhostAlly,
   GiHadesSymbol,
   GiHolyGrail,
+  GiSkills,
   GiStonePile,
 } from "react-icons/gi";
 import { ReactNode } from "react";
@@ -72,6 +73,7 @@ export const icons = {
   spirit_path: ({ className }: IconProps): ReactNode => (
     <GiGhostAlly className={cn("h-5 w-5 text-white/80", className)} />
   ),
+  qi_skills: ({ className }: IconProps): ReactNode => <GiSkills className={cn("h-5 w-5 text-white/80", className)} />,
   mine: ({ className }: IconProps): ReactNode => <Pickaxe className={cn("h-5 w-5 text-primary", className)} />,
   calendar: ({ className }: IconProps): ReactNode => (
     <Calendar className={cn("h-3.5 w-3.5 text-primary/60", className)} />

@@ -3,6 +3,7 @@ export const ui_path = {
   home_page: () => `/game`,
   registration_page: () => `/registration`,
   facts_page: () => `/game/facts`,
+  qi_skills_page: () => `/game/headquarter/qi_skills`,
   missions_page: () => `/game/headquarter/missions`,
   mine_page: () => `/game/headquarter/mine`,
   meditation_page: () => `/game/headquarter/meditation`,

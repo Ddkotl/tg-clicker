@@ -26,6 +26,11 @@ export const nav_items = {
       href: ui_path.spirit_path_page(),
       icon: icons.spirit_path({}),
     },
+    {
+      label: translate("headquarter.qi_skills.title", lang),
+      href: ui_path.qi_skills_page(),
+      icon: icons.qi_skills({}),
+    },
   ],
   city_nav_items: (translate: TranslateFn, lang: SupportedLang): NavItem[] => [
     {

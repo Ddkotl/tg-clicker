@@ -61,6 +61,7 @@ export async function POST(req: NextRequest) {
         newValue,
         qi: updated_profile.profile.qi,
         max_hitpoint: updated_profile.profile.max_hitpoint,
+        last_hp_update: updated_profile.profile.last_hp_update,
       },
       message: "Parameter updated successfully",
     };
