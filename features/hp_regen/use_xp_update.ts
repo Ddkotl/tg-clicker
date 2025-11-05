@@ -1,78 +1,178 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useRef, useCallback } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { HP_REGEN_INTERVAL, HP_REGEN_PERCENT } from "@/shared/game_config/params/hp_regen";
-import { queries_keys } from "@/shared/lib/queries_keys";
+import { queries_keys } from "@/shared/lib/queries_keys"; // поправь импорт getProfileQuery, если он в другом месте
+import { getProfileQuery, ProfileResponse } from "@/entities/profile";
 
+/**
+ * Хук регенерации HP — теперь использует useQuery для получения актуального профиля.
+ * - хук сам ничего не возвращает, работает "в фоне"
+ * - логи помогают отладить поведение
+ */
 export function useProfileHPUpdate(userId?: string) {
   const queryClient = useQueryClient();
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Получаем профиль через useQuery — когда данные придут/обновятся, эффект сработает
+  const { data: profile } = useQuery<ProfileResponse>({
+    ...getProfileQuery(userId ?? ""),
+    enabled: !!userId,
+  });
+
+  // Универсальная функция очистки
+  const clearTimeoutSafe = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+      console.log("[useProfileHPUpdate] cleared timeout");
+    }
+  }, []);
+
+  // Основная логика: реактивно на обновление profileQuery
   useEffect(() => {
-    if (!userId) return;
+    if (!userId) {
+      console.log("[useProfileHPUpdate] no userId, bailing out");
+      return;
+    }
 
-    const tick = () => {
-      const profile = queryClient.getQueryData<{ data: any }>(
-        queries_keys.profile_userId(userId)
-      )?.data;
+    console.log("[useProfileHPUpdate] effect triggered, userId:", userId, "profileQuery:", profile);
 
-      if (!profile) return;
+    // если нет профиля — просто очистим таймаут и ждём
+    if (!profile || !profile.data) {
+      clearTimeoutSafe();
+      console.log("[useProfileHPUpdate] profile not found in query result, waiting...");
+      return;
+    }
 
-      const { current_hitpoint, max_hitpoint, last_hp_update } = profile;
-      if (!last_hp_update) return;
+    const ensureTickScheduled = () => {
+      // tick функция берёт профиль из cache (чтобы иметь самое свежее состояние)
+      const tick = () => {
+        try {
+          const cached = queryClient.getQueryData<ProfileResponse>(queries_keys.profile_userId(userId));
+          const profile = cached?.data;
+          console.log("[useProfileHPUpdate.tick] cached profile:", cached);
 
-      const last = new Date(last_hp_update).getTime();
-      const now = Date.now();
+          if (!profile) {
+            console.log("[useProfileHPUpdate.tick] no profile in cache -> nothing");
+            return;
+          }
 
-      // Рассчитываем, сколько интервалов прошло
-      const intervalsPassed = Math.floor((now - last) / HP_REGEN_INTERVAL);
+          const { current_hitpoint, max_hitpoint, last_hp_update } = profile;
+          if (current_hitpoint >= max_hitpoint) {
+            console.log("[useProfileHPUpdate.tick] HP is full, stopping regen");
+            clearTimeoutSafe();
+            return;
+          }
+          if (!last_hp_update) {
+            console.log("[useProfileHPUpdate.tick] no last_hp_update -> nothing");
+            return;
+          }
 
-      let newHP = current_hitpoint;
-      let newLastUpdate = new Date(last);
+          const lastMs = new Date(last_hp_update).getTime();
+          const now = Date.now();
+          console.log(
+            "[useProfileHPUpdate.tick] now:",
+            new Date(now).toISOString(),
+            "last:",
+            new Date(lastMs).toISOString(),
+          );
 
-      if (intervalsPassed > 0) {
-        const regenAmount = Math.floor(max_hitpoint * HP_REGEN_PERCENT * intervalsPassed);
-        newHP = Math.min(current_hitpoint + regenAmount, max_hitpoint);
-        newLastUpdate = new Date(last + intervalsPassed * HP_REGEN_INTERVAL);
+          const intervalsPassed = Math.floor((now - lastMs) / HP_REGEN_INTERVAL);
+          console.log("[useProfileHPUpdate.tick] intervalsPassed:", intervalsPassed);
 
-        queryClient.setQueryData(queries_keys.profile_userId(userId), (old: any) =>
-          old
-            ? {
+          let newHP = current_hitpoint;
+          let updatedLastMs = lastMs;
+
+          if (intervalsPassed > 0) {
+            const regenAmount = Math.floor(max_hitpoint * HP_REGEN_PERCENT * intervalsPassed);
+            console.log(
+              "[useProfileHPUpdate.tick] regenAmount:",
+              regenAmount,
+              "max:",
+              max_hitpoint,
+              "percent:",
+              HP_REGEN_PERCENT,
+            );
+
+            newHP = Math.min(current_hitpoint + regenAmount, max_hitpoint);
+            updatedLastMs = lastMs + intervalsPassed * HP_REGEN_INTERVAL;
+
+            console.log(
+              "[useProfileHPUpdate.tick] updating cache: newHP:",
+              newHP,
+              "newLast:",
+              new Date(updatedLastMs).toISOString(),
+            );
+
+            queryClient.setQueryData<ProfileResponse>(queries_keys.profile_userId(userId), (old) => {
+              if (!old || !old.data) return old;
+              return {
                 ...old,
                 data: {
                   ...old.data,
                   current_hitpoint: newHP,
-                  last_hp_update: newLastUpdate,
+                  last_hp_update: new Date(updatedLastMs),
                 },
-              }
-            : old
-        );
+              };
+            });
+          } else {
+            console.log("[useProfileHPUpdate.tick] nothing to update now");
+          }
+
+          // расчитываем время до следующего тика, опираясь на обновлённый last
+          const now2 = Date.now();
+          const timeUntilNext = HP_REGEN_INTERVAL - ((now2 - updatedLastMs) % HP_REGEN_INTERVAL);
+          console.log("[useProfileHPUpdate.tick] scheduling next tick in ms:", timeUntilNext);
+
+          clearTimeoutSafe();
+          timeoutRef.current = setTimeout(tick, timeUntilNext);
+        } catch (err) {
+          console.error("[useProfileHPUpdate.tick] error:", err);
+        }
+      }; // end tick
+
+      // Если HP фул — просто не запускаем таймер
+      const data = profile?.data;
+      if (!data) {
+        console.log("[useProfileHPUpdate] profile data missing, nothing to schedule");
+        clearTimeoutSafe();
+        return;
+      }
+      if (data.current_hitpoint >= data.max_hitpoint) {
+        console.log("[useProfileHPUpdate] HP is full, no regen scheduling");
+        clearTimeoutSafe();
+        return;
+      }
+      // Решаем - запускать tick сразу (если накопилось) или ждать initialDelay
+      const last = data.last_hp_update ? new Date(data.last_hp_update).getTime() : null;
+      if (!last) {
+        console.log("[useProfileHPUpdate] profile has no last_hp_update, nothing to schedule");
+        return;
       }
 
-      // Время до следующего обновления
-      const timeUntilNext = HP_REGEN_INTERVAL - ((now - newLastUpdate.getTime()) % HP_REGEN_INTERVAL);
-
-      timeoutRef.current = setTimeout(tick, timeUntilNext);
-      console.log("Next HP update in:", timeUntilNext, "ms");
-    };
-
-    // Первый тик сразу с точным временем до следующего интервала
-    const profile = queryClient.getQueryData<{ data: any }>(
-      queries_keys.profile_userId(userId)
-    )?.data;
-
-    if (profile?.last_hp_update) {
-      const last = new Date(profile.last_hp_update).getTime();
       const now = Date.now();
-      const initialDelay = HP_REGEN_INTERVAL - ((now - last) % HP_REGEN_INTERVAL);
-      timeoutRef.current = setTimeout(tick, initialDelay);
-      console.log("First HP update scheduled in:", initialDelay, "ms");
-    }
+      const intervalsPassedNow = Math.floor((now - last) / HP_REGEN_INTERVAL);
+      if (intervalsPassedNow > 0) {
+        console.log("[useProfileHPUpdate] intervalsPassedNow > 0 - running tick immediately");
+        // run in microtask to avoid reentrancy
+        setTimeout(tick, 0);
+      } else {
+        const initialDelay = HP_REGEN_INTERVAL - ((now - last) % HP_REGEN_INTERVAL);
+        console.log("[useProfileHPUpdate] scheduling first tick in ms:", initialDelay);
+        clearTimeoutSafe();
+        timeoutRef.current = setTimeout(tick, initialDelay);
+      }
+    }; // end ensureTickScheduled
 
+    // Когда useQuery вернул данные — ставим/пересоздаём таймер
+    ensureTickScheduled();
+
+    // cleanup при изменении dependency (новые данные или unmount)
     return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      console.log("HP update hook unmounted, timeout cleared.");
+      clearTimeoutSafe();
+      console.log("[useProfileHPUpdate] cleanup for userId:", userId);
     };
-  }, [queryClient, userId]);
+  }, [userId, profile, queryClient, clearTimeoutSafe]);
 }
