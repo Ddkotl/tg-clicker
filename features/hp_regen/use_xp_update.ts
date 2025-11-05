@@ -1,83 +1,78 @@
 "use client";
 
-import { useEffect } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getProfileQuery, ProfileResponse, ProfileErrorResponse } from "@/entities/profile";
+import { useEffect, useRef } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { HP_REGEN_INTERVAL, HP_REGEN_PERCENT } from "@/shared/game_config/params/hp_regen";
 import { queries_keys } from "@/shared/lib/queries_keys";
 
 export function useProfileHPUpdate(userId?: string) {
   const queryClient = useQueryClient();
-
-  const { data: profile } = useQuery<ProfileResponse, ProfileErrorResponse>({
-    ...getProfileQuery(userId ?? ""),
-    enabled: !!userId,
-  });
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if (!profile?.data || !userId) return;
+    if (!userId) return;
 
-    const { current_hitpoint, max_hitpoint, last_hp_update } = profile.data;
-    if (!last_hp_update) return;
+    const tick = () => {
+      const profile = queryClient.getQueryData<{ data: any }>(
+        queries_keys.profile_userId(userId)
+      )?.data;
 
-    // Функция для выполнения обновления
-    const updateHP = () => {
-      const lastUpdate = new Date(last_hp_update).getTime();
+      if (!profile) return;
+
+      const { current_hitpoint, max_hitpoint, last_hp_update } = profile;
+      if (!last_hp_update) return;
+
+      const last = new Date(last_hp_update).getTime();
       const now = Date.now();
 
-      // Логи для дебага
-      console.log("Last update time:", lastUpdate);
-      console.log("Current time:", now);
+      // Рассчитываем, сколько интервалов прошло
+      const intervalsPassed = Math.floor((now - last) / HP_REGEN_INTERVAL);
 
-      // Рассчитываем оставшееся время до следующего обновления
-      const timeUntilNextUpdate = HP_REGEN_INTERVAL - ((now - lastUpdate) % HP_REGEN_INTERVAL);
-      console.log("Time until next update (ms):", timeUntilNextUpdate);
+      let newHP = current_hitpoint;
+      let newLastUpdate = new Date(last);
 
-      // Логируем процент регенерации
-      console.log("HP_REGEN_PERCENT:", HP_REGEN_PERCENT);
-      console.log("max_hitpoint:", max_hitpoint);
-      const regenAmount = Math.floor(max_hitpoint * HP_REGEN_PERCENT);
-      console.log("HP Regen Amount:", regenAmount);
+      if (intervalsPassed > 0) {
+        const regenAmount = Math.floor(max_hitpoint * HP_REGEN_PERCENT * intervalsPassed);
+        newHP = Math.min(current_hitpoint + regenAmount, max_hitpoint);
+        newLastUpdate = new Date(last + intervalsPassed * HP_REGEN_INTERVAL);
 
-      // Если regenAmount равен 0, это проблема с HP_REGEN_PERCENT
-      if (regenAmount === 0) {
-        console.warn("HP Regen Amount is 0! Check your HP_REGEN_PERCENT.");
+        queryClient.setQueryData(queries_keys.profile_userId(userId), (old: any) =>
+          old
+            ? {
+                ...old,
+                data: {
+                  ...old.data,
+                  current_hitpoint: newHP,
+                  last_hp_update: newLastUpdate,
+                },
+              }
+            : old
+        );
       }
 
-      const newHP = Math.min(max_hitpoint, current_hitpoint + regenAmount);
-      const newLastUpdate = new Date(now + timeUntilNextUpdate);
+      // Время до следующего обновления
+      const timeUntilNext = HP_REGEN_INTERVAL - ((now - newLastUpdate.getTime()) % HP_REGEN_INTERVAL);
 
-      // Логируем обновление данных
-      console.log("New HP:", newHP);
-      console.log("New Last Update Time:", newLastUpdate);
-
-      // Обновляем данные в queryClient
-      queryClient.setQueryData<ProfileResponse>(queries_keys.profile_userId(userId), (old) =>
-        old
-          ? {
-              ...old,
-              data: {
-                ...old.data!,
-                current_hitpoint: newHP,
-                last_hp_update: newLastUpdate,
-              },
-            }
-          : old,
-      );
-
-      // Устанавливаем новый таймер для следующего обновления
-      const timeout = setTimeout(updateHP, timeUntilNextUpdate);
-      console.log("Next update scheduled in:", timeUntilNextUpdate, "ms");
-      return timeout;
+      timeoutRef.current = setTimeout(tick, timeUntilNext);
+      console.log("Next HP update in:", timeUntilNext, "ms");
     };
 
-    // Устанавливаем первый таймер с точным временем до следующего обновления
-    const initialTimeout = setTimeout(updateHP, HP_REGEN_INTERVAL);
-    console.log("First timeout scheduled in:", HP_REGEN_INTERVAL, "ms");
+    // Первый тик сразу с точным временем до следующего интервала
+    const profile = queryClient.getQueryData<{ data: any }>(
+      queries_keys.profile_userId(userId)
+    )?.data;
+
+    if (profile?.last_hp_update) {
+      const last = new Date(profile.last_hp_update).getTime();
+      const now = Date.now();
+      const initialDelay = HP_REGEN_INTERVAL - ((now - last) % HP_REGEN_INTERVAL);
+      timeoutRef.current = setTimeout(tick, initialDelay);
+      console.log("First HP update scheduled in:", initialDelay, "ms");
+    }
 
     return () => {
-      clearTimeout(initialTimeout); // Очистим таймер при размонтировании компонента
-      console.log("Component unmounted, timeout cleared.");
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      console.log("HP update hook unmounted, timeout cleared.");
     };
-  }, [profile?.data, queryClient, userId]);
+  }, [queryClient, userId]);
 }
