@@ -1,69 +1,26 @@
-import { FactsStatus, FactsType, MissionType } from "@/_generated/prisma";
-import { pushToSubscriber } from "@/app/api/user/facts/stream/route";
-import { createFact } from "@/entities/facts/index.server";
 import { GetMeditationRewardResponseType } from "@/entities/meditation";
 import {
   getMeditationRewardRequestSchema,
   getMeditationRewardResponseSchema,
 } from "@/entities/meditation/_domain/schemas";
-import { giveMeditationReward } from "@/entities/meditation/index.server";
-import { GetResources, InactivateMission, UpdateProgressMission } from "@/entities/missions/index.server";
-import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lvl";
+import { MeditationRewardService } from "@/features/meditation/services/meditation_reward_service";
+import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
+import { translate } from "@/features/translations/server/translate_fn";
 import { makeError } from "@/shared/lib/api_helpers/make_error";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
+  const headers = await request.headers;
+  const lang = await getCookieLang({ headers });
   try {
     const body = await request.json();
     const parsed = getMeditationRewardRequestSchema.safeParse(body);
     if (!parsed.success) return makeError("Invalid request data", 400);
 
     const { userId, break_meditation } = parsed.data;
-    const res = await giveMeditationReward(userId, break_meditation);
-    if (!res || res === null) return makeError("Invalid request data", 400);
-    const new_fact = await createFact({
-      fact_type: FactsType.MEDITATION,
-      fact_status: FactsStatus.NO_CHECKED,
-      userId: userId,
-      active_hours: res?.hours,
-      exp_reward: res?.reward_exp,
-      qi_reward: res?.reward_qi,
-    });
-    if (new_fact !== null) {
-      await pushToSubscriber(userId, new_fact.type);
-    }
-    const completed_missions = [];
-    if (!break_meditation) {
-      const meditation_mission = await UpdateProgressMission(userId, MissionType.MEDITATION, res.hours);
-      console.log("meditation_mission", meditation_mission);
-      if (meditation_mission?.is_completed && meditation_mission?.is_active) {
-        const a = await GetResources({
-          userId,
-          qi: meditation_mission.reward_qi,
-          qi_stone: meditation_mission.reward_qi_stone,
-          spirit_cristal: meditation_mission.reward_spirit_cristal,
-          glory: meditation_mission.reward_glory,
-          exp: meditation_mission.reward_exp,
-        });
-        console.log("a", a);
-        const b = await createFact({
-          userId,
-          fact_status: FactsStatus.NO_CHECKED,
-          fact_type: FactsType.MISSION,
-          exp_reward: meditation_mission.reward_exp,
-          qi_reward: meditation_mission.reward_qi,
-          reward_spirit_cristal: meditation_mission.reward_spirit_cristal,
-          qi_stone_reward: meditation_mission.reward_qi_stone,
-          reward_glory: meditation_mission.reward_glory,
-          target: meditation_mission.target_value,
-          mission_type: meditation_mission.type,
-        });
-        console.log("b", b);
-        await InactivateMission(meditation_mission.userId, meditation_mission.type);
-        completed_missions.push(meditation_mission);
-      }
-    }
-    const lvl = await CheckUpdateLvl(userId);
+    const { res, completed_missions, lvl } = await MeditationRewardService(userId, break_meditation);
+    if (!res || res === null) return makeError(translate("api.invalid_process", lang), 400);
+
     const response: GetMeditationRewardResponseType = {
       data: {
         ...res,
@@ -71,12 +28,12 @@ export async function POST(request: NextRequest) {
         current_lvl: lvl ? lvl : res.current_lvl,
       },
       type: "success",
-      message: "getMeditationReward updated successfully",
+      message: translate("api.reward_successfully_received", lang),
     };
     getMeditationRewardResponseSchema.parse(response);
     return NextResponse.json(response);
   } catch (error) {
     console.error("POST /headquarer/meditation/get_meditation_reward error:", error);
-    return makeError("Internal server error", 500);
+    return makeError(translate("api.internal_server_error", lang), 500);
   }
 }
