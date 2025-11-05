@@ -1,12 +1,9 @@
 import "dotenv/config";
 import amqp from "amqplib";
-import { createFact } from "@/entities/facts/index.server";
-import { FactsStatus, FactsType } from "@/_generated/prisma";
-import { pushToSubscriber } from "@/app/api/user/facts/stream/route";
 import { RABBITMQ_URL } from "@/shared/lib/consts";
 import { SPIRIT_PATH_EXCHANGE, SPIRIT_PATH_QUEUE } from "@/features/spirit_path/mq_spirit_path_connect";
-import { giveSpiritPathReward } from "@/entities/spirit_path/_repositories/give_spirit_path_reward";
 import { dataBase } from "@/shared/connect/db_connect";
+import { SpiritPathRewardServices } from "@/features/spirit_path/services/spirit_path_reward_services";
 
 async function startWorker() {
   const connection = await amqp.connect(RABBITMQ_URL);
@@ -60,18 +57,8 @@ async function startWorker() {
         }
         console.log(`💫 Spirit Path completed for user ${userId}`);
 
-        const res = await giveSpiritPathReward(userId);
+        const { res } = await SpiritPathRewardServices(userId);
         if (res) {
-          const new_fact = await createFact({
-            fact_type: FactsType.SPIRIT_PATH,
-            fact_status: FactsStatus.NO_CHECKED,
-            userId: userId,
-            active_minutes: res.minutes,
-            exp_reward: res.reward_exp,
-            qi_reward: res.reward_qi,
-            reward_spirit_cristal: res.reward_spirit_cristal,
-          });
-          if (new_fact) pushToSubscriber(userId, new_fact.type);
           console.log(`✅ SPIRIT_PATH reward given to ${userId}`);
         } else {
           console.warn(`⚠️ No reward for user ${userId}`);

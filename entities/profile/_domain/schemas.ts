@@ -48,6 +48,7 @@ export const trainResponseSchema = z.object({
     newValue: z.number(),
     qi: z.number(),
     max_hitpoint: z.number(),
+    last_hp_update: z.date(),
   }),
   message: z.string(),
 });

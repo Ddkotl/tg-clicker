@@ -6,4 +6,5 @@ export const img_paths = {
   home: () => `/home.jpg`,
   temple: () => `/temple.jpg`,
   mission: () => `/missions.jpg`,
+  qi_skills: () => `/qi_skills.jpg`,
 };

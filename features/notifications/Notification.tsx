@@ -51,7 +51,7 @@ export function Notifications() {
     ...getAllDailyMissionsQuery(userId ?? ""),
     enabled: !!userId,
   });
-  // useProfileHPUpdate(userId);
+  useProfileHPUpdate(userId);
   useFactsSSE(userId);
   useMidnightUpdate(userId);
 

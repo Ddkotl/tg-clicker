@@ -19,6 +19,7 @@ export async function UpdateOrCreateUser(user: CreateUserType, referer_id?: stri
         profile: { create: {} },
         user_statistic: { create: {} },
         meditation: { create: {} },
+        qi_skills: { create: {} },
         mine: {
           create: {
             last_mine_at: dayjs().subtract(1, "day").toDate(),

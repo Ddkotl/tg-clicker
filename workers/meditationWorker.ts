@@ -1,13 +1,9 @@
-import "dotenv/config";
 import amqp from "amqplib";
-import { giveMeditationReward } from "@/entities/meditation/index.server";
-import { createFact } from "@/entities/facts/index.server";
-import { FactsStatus, FactsType } from "@/_generated/prisma";
-import { pushToSubscriber } from "@/app/api/user/facts/stream/route";
 import { MEDITATION_EXCHANGE, MEDITATION_QUEUE } from "@/features/meditation/rabit_meditation_connect";
 import { RABBITMQ_URL } from "@/shared/lib/consts";
 import { meditationWorkerCongig } from "@/shared/productivity_config/workers";
 import { dataBase } from "@/shared/connect/db_connect";
+import { MeditationRewardService } from "@/features/meditation/services/meditation_reward_service";
 
 async function startWorker() {
   const connection = await amqp.connect(RABBITMQ_URL);
@@ -62,19 +58,8 @@ async function startWorker() {
         }
         console.log(`💫 Meditation completed for user ${userId}`);
 
-        const res = await giveMeditationReward(userId);
-
+        const { res } = await MeditationRewardService(userId);
         if (res) {
-          const new_fact = await createFact({
-            fact_type: FactsType.MEDITATION,
-            fact_status: FactsStatus.NO_CHECKED,
-            userId: userId,
-            active_hours: res.hours,
-            exp_reward: res.reward_exp,
-            qi_reward: res.reward_qi,
-          });
-
-          if (new_fact) pushToSubscriber(userId, new_fact.type);
           console.log(`✅ Meditation reward given to ${userId}`);
         } else {
           console.warn(`⚠️ No reward for user ${userId}`);

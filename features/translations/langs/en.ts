@@ -216,6 +216,11 @@ export const en_lang = {
         "Are you sure you want to interrupt the Spirit Path? Cancelling it costs 10 spiritual crystals, and the Spirit Path reward will be reduced by 10 times.",
       no_minutes_left: "0 minutes left",
     },
+    qi_skills: {
+      title: "Arts of Qi",
+      highlight: "Break the mirror of thoughts — and the world reflects clearly.",
+      text: "The Arts of Qi clear the inner current. When the mind is transparent — energy knows no obstacle.",
+    },
   },
   city: {
     city_title: "Citadel",

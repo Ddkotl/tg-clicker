@@ -28,6 +28,7 @@ export function useTrainParamMutation(userId: string) {
               [paramName as keyof typeof old.data]: newValue,
               qi: data.data.qi,
               max_hitpoint: data.data.max_hitpoint,
+              last_hp_update: data.data.last_hp_update,
             },
           };
         });
