@@ -6,18 +6,14 @@ import { makeError } from "@/shared/lib/api_helpers/make_error";
 import { translate } from "@/features/translations/server/translate_fn";
 import { GetUserQiSkillsResponseType } from "@/entities/qi_skiils";
 
-export async function GET(req: Request, { params }: { params: Promise<{ userId: string }> }) {
-  console.log("skills");
+export async function GET(req: Request) {
   const lang = getCookieLang({ headers: req.headers });
-  const api_params = await params;
   try {
-    if (!api_params.userId) {
-      return makeError(translate("api.no_auth", lang), 401);
-    }
-    const userId = api_params.userId;
-    console.log(userId);
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId");
+    if (!userId) return makeError(translate("api.no_auth", lang), 401);
+
     const skills = await GetUserQiSkills(userId);
-    console.log(skills);
     if (!skills) {
       return makeError(translate("api.info_not_found", lang), 404);
     }

@@ -12,16 +12,17 @@ import { QiSkillsConfig } from "@/shared/game_config/qi_skills/qi_skills";
 import { makeError } from "@/shared/lib/api_helpers/make_error";
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request, { params }: { params: Promise<{ userId: string }> }) {
+export async function POST(req: Request) {
   const lang = getCookieLang({ headers: req.headers });
-  const api_params = await params;
   try {
-    if (!api_params.userId) return makeError(translate("api.no_auth", lang), 401);
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId");
+    if (!userId) return makeError(translate("api.no_auth", lang), 401);
+
     const body = await req.json();
     const parsed = updateUserQiSkillRequestSchema.safeParse(body);
     if (!parsed.success) return makeError(translate("api.invalid_request_data", lang), 400);
 
-    const userId = api_params.userId;
     const skill = parsed.data.skill;
 
     if (!QiSkillsConfig[skill]) return makeError(translate("api.invalid_request_data", lang), 400);
