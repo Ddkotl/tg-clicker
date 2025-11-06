@@ -15,7 +15,7 @@ import { translate } from "@/features/translations/server/translate_fn";
 import { UpdateProgressMission } from "@/entities/missions/_repositories/update_progress_mission";
 import { FactsStatus, FactsType, MissionType } from "@/_generated/prisma";
 import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lvl";
-import { GetResources } from "@/entities/missions/_repositories/get_resurces";
+import { GetResources } from "@/entities/profile/_repositories/get_resurces";
 import { createFact } from "@/entities/facts/index.server";
 import { InactivateMission } from "@/entities/missions/index.server";
 

@@ -16,7 +16,7 @@ export function useProfileHPUpdate(userId?: string) {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Получаем профиль через useQuery — когда данные придут/обновятся, эффект сработает
-  const { data: profile } = useQuery<ProfileResponse>({
+  const { data: profileQuery } = useQuery<ProfileResponse>({
     ...getProfileQuery(userId ?? ""),
     enabled: !!userId,
   });
@@ -37,10 +37,10 @@ export function useProfileHPUpdate(userId?: string) {
       return;
     }
 
-    console.log("[useProfileHPUpdate] effect triggered, userId:", userId, "profileQuery:", profile);
+    console.log("[useProfileHPUpdate] effect triggered, userId:", userId, "profileQuery:", profileQuery);
 
     // если нет профиля — просто очистим таймаут и ждём
-    if (!profile || !profile.data) {
+    if (!profileQuery || !profileQuery.data) {
       clearTimeoutSafe();
       console.log("[useProfileHPUpdate] profile not found in query result, waiting...");
       return;
@@ -60,11 +60,6 @@ export function useProfileHPUpdate(userId?: string) {
           }
 
           const { current_hitpoint, max_hitpoint, last_hp_update } = profile;
-          if (current_hitpoint >= max_hitpoint) {
-            console.log("[useProfileHPUpdate.tick] HP is full, stopping regen");
-            clearTimeoutSafe();
-            return;
-          }
           if (!last_hp_update) {
             console.log("[useProfileHPUpdate.tick] no last_hp_update -> nothing");
             return;
@@ -133,20 +128,13 @@ export function useProfileHPUpdate(userId?: string) {
         }
       }; // end tick
 
-      // Если HP фул — просто не запускаем таймер
-      const data = profile?.data;
-      if (!data) {
-        console.log("[useProfileHPUpdate] profile data missing, nothing to schedule");
-        clearTimeoutSafe();
-        return;
-      }
-      if (data.current_hitpoint >= data.max_hitpoint) {
-        console.log("[useProfileHPUpdate] HP is full, no regen scheduling");
-        clearTimeoutSafe();
-        return;
-      }
       // Решаем - запускать tick сразу (если накопилось) или ждать initialDelay
-      const last = data.last_hp_update ? new Date(data.last_hp_update).getTime() : null;
+      const profile = profileQuery.data;
+      if (!profile) {
+        console.log("[useProfileHPUpdate] profile is null, nothing to schedule");
+        return;
+      }
+      const last = profile.last_hp_update ? new Date(profile.last_hp_update).getTime() : null;
       if (!last) {
         console.log("[useProfileHPUpdate] profile has no last_hp_update, nothing to schedule");
         return;
@@ -174,5 +162,5 @@ export function useProfileHPUpdate(userId?: string) {
       clearTimeoutSafe();
       console.log("[useProfileHPUpdate] cleanup for userId:", userId);
     };
-  }, [userId, profile, queryClient, clearTimeoutSafe]);
+  }, [userId, profileQuery, queryClient, clearTimeoutSafe]);
 }

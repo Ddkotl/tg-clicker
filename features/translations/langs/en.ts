@@ -13,6 +13,7 @@ export const en_lang = {
     cooldown: "Cooldown: wait {seconds}s",
     no_energy: "No energy",
   },
+
   qi_energy: "Qi",
   qi_stone: "Qi stone",
   spirit_cristal: "Spirit cristal",
@@ -27,6 +28,8 @@ export const en_lang = {
   confirm: "Confirm",
   save: "Save",
   saving: "Saving...",
+  upgrade_cost: "Стоимость улучшения",
+  upgrade_button: "Улучшить",
   lvl: "Level",
   price: "Price",
   progress: "Progress",
@@ -220,6 +223,22 @@ export const en_lang = {
       title: "Arts of Qi",
       highlight: "Break the mirror of thoughts — and the world reflects clearly.",
       text: "The Arts of Qi clear the inner current. When the mind is transparent — energy knows no obstacle.",
+      qi_veil: {
+        name: "Qi Veil",
+        description: "Reduces incoming damage",
+      },
+      seal_of_mind: {
+        name: "Seal of Still Mind",
+        description: "Chance to immobilize an enemy",
+      },
+      circulation_of_life: {
+        name: "Circulation of Life",
+        description: "Increases Qi regeneration",
+      },
+      spatial_vault: {
+        name: "Spatial Vault",
+        description: "Increases inventory capacity",
+      },
     },
   },
   city: {

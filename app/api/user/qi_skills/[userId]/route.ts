@@ -1,21 +1,35 @@
 import { NextResponse } from "next/server";
-import { dataBase } from "@/shared/connect/db_connect";
+import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
+import { GetUserQiSkills } from "@/entities/qi_skiils/index.server";
+import { getUserQiSkillsResponseSchema } from "@/entities/qi_skiils/_domain/schemas";
+import { makeError } from "@/shared/lib/api_helpers/make_error";
+import { translate } from "@/features/translations/server/translate_fn";
+import { GetUserQiSkillsResponseType } from "@/entities/qi_skiils";
 
-export async function GET(_req: Request, { params }: { params: Promise<{ userId: string }> }) {
+export async function GET(req: Request, { params }: { params: Promise<{ userId: string }> }) {
+  console.log("skills");
+  const lang = getCookieLang({ headers: req.headers });
   const api_params = await params;
-  console.log(api_params);
   try {
-    const skills = await dataBase.userQiSkills.findUnique({
-      where: { userId: api_params.userId },
-    });
+    if (!api_params.userId) {
+      return makeError(translate("api.no_auth", lang), 401);
+    }
+    const userId = api_params.userId;
+    console.log(userId);
+    const skills = await GetUserQiSkills(userId);
     console.log(skills);
     if (!skills) {
-      return NextResponse.json({ error: "Skills not found" }, { status: 404 });
+      return makeError(translate("api.info_not_found", lang), 404);
     }
-
-    return NextResponse.json(skills);
+    const response: GetUserQiSkillsResponseType = {
+      data: skills,
+      type: "success",
+      message: "CheckAllFacts updated successfully",
+    };
+    getUserQiSkillsResponseSchema.parse(response);
+    return NextResponse.json(response);
   } catch (err) {
-    console.error("GET /api/qi-skills:", err);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    console.error("GET /api/user/qi-skills:", err);
+    return makeError(translate("api.internal_server_error", lang), 500);
   }
 }
