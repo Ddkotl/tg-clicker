@@ -58,6 +58,7 @@ async function startWorker() {
         console.log(`💫 Spirit Path completed for user ${userId}`);
 
         const { res } = await SpiritPathRewardServices(userId);
+        console.log(res);
         if (res) {
           console.log(`✅ SPIRIT_PATH reward given to ${userId}`);
         } else {

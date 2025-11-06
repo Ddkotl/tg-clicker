@@ -23,6 +23,8 @@ export const ru_lang: Messages = {
   close: "Закрыть",
   loading: "загрузка",
   error: "что-то пошло не так",
+  upgrade_cost: "Стоимость улучшения",
+  upgrade_button: "Улучшить",
   lvl: "Уровень",
   price: "Цена",
   progress: "Прогресс",
@@ -220,6 +222,22 @@ export const ru_lang: Messages = {
       title: "Искусства Ци",
       highlight: "Разбей зеркало мыслей — и увидишь отражение мира.",
       text: "Искусства Ци очищают внутренний поток. Когда разум прозрачен — энергия не знает преград.",
+      qi_veil: {
+        name: "Покров Ци",
+        description: "Снижает входящий урон",
+      },
+      seal_of_mind: {
+        name: "Печать Умиротворения Духа",
+        description: "Даёт шанс обездвижить врага",
+      },
+      circulation_of_life: {
+        name: "Циркуляция Жизни",
+        description: "Увеличивает регенерацию Ци",
+      },
+      spatial_vault: {
+        name: "Пространственное Хранилище",
+        description: "Увеличивает вместимость инвентаря",
+      },
     },
   },
   city: {

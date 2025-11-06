@@ -28,4 +28,6 @@ export const api_path = {
   check_all_facts: (userId: string) => `/api/user/facts/check_all?userId=${userId}`,
   facts_sse: (userId: string) => `/api/user/facts/stream?userId=${userId}`,
   mining_qi_stone: () => `/api/headquarter/mine`,
+  get_user_qi_skills: (userId: string) => `/api/user/qi_skills?userId=${userId}`,
+  upgrade_user_qi_skills: (userId: string) => `/api/user/qi_skills/upgrade?userId=${userId}`,
 };

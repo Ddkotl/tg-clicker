@@ -2,8 +2,9 @@ import { FactsStatus, FactsType, MissionType } from "@/_generated/prisma";
 import { pushToSubscriber } from "@/app/api/user/facts/stream/route";
 import { createFact } from "@/entities/facts/index.server";
 import { giveMeditationReward } from "@/entities/meditation/index.server";
-import { GetResources, InactivateMission, UpdateProgressMission } from "@/entities/missions/index.server";
+import { InactivateMission, UpdateProgressMission } from "@/entities/missions/index.server";
 import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lvl";
+import { GetResources } from "@/entities/profile/index.server";
 
 export async function MeditationRewardService(userId: string, break_meditation?: boolean) {
   const res = await giveMeditationReward(userId, break_meditation);

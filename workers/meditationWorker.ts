@@ -59,6 +59,7 @@ async function startWorker() {
         console.log(`💫 Meditation completed for user ${userId}`);
 
         const { res } = await MeditationRewardService(userId);
+        console.log(res);
         if (res) {
           console.log(`✅ Meditation reward given to ${userId}`);
         } else {

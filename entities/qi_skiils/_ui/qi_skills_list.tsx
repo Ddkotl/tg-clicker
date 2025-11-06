@@ -1,70 +1,57 @@
 "use client";
 import { useGetSessionQuery } from "@/entities/auth";
-import { Button } from "@/shared/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
-import { Progress } from "@/shared/components/ui/progress";
-import { queryClient } from "@/shared/connect/query-client";
+import { useQuery } from "@tanstack/react-query";
 import { QiSkillKey, QiSkillsConfig } from "@/shared/game_config/qi_skills/qi_skills";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { getUserQiSkillsQuery } from "../_queries/get_user_qi_skills_query";
+import { GetUserQiSkillsResponseType } from "../_domain/types";
+import { ComponentSpinner } from "@/shared/components/custom_ui/component_spinner";
+import { useUpdateQiSkillMutation } from "../_mutations/use_update_qi_skill_mutation";
+import { getProfileQuery, ProfileResponse } from "@/entities/profile";
+import { QiSkillItem } from "./qi_skill_item";
+import { useTranslation } from "@/features/translations/use_translation";
+import { TranslationKey } from "@/features/translations/translate_type";
+import { img_paths } from "@/shared/lib/img_paths";
 
 export function QiSkillsList() {
+  const { t } = useTranslation();
   const session = useGetSessionQuery();
   const userId = session.data?.data?.user.userId;
-  const { data: skills } = useQuery({
-    queryKey: ["user_qi_skills", userId],
-    queryFn: () => fetch(`/api/user/qi_skills/${userId}`).then((r) => r.json()),
-    enabled: !!userId,
-  });
-  console.log(skills);
-  const mutation = useMutation({
-    mutationFn: async (skill: QiSkillKey) => {
-      return fetch(`/api/user/qi_skills/${userId}/upgrade`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ skill }),
-      }).then((r) => r.json());
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user_qi_skills", userId] });
-      queryClient.invalidateQueries({ queryKey: ["profile", userId] }); // обновляем ЦИ
-    },
+  const profile = useQuery<ProfileResponse>({
+    ...getProfileQuery(session?.data?.data?.user.userId ?? ""),
+    enabled: !!session?.data?.data?.user.userId,
   });
 
+  const { data: skills, isLoading } = useQuery<GetUserQiSkillsResponseType>({
+    ...getUserQiSkillsQuery(userId ?? ""),
+    enabled: !!userId,
+  });
+
+  const mutation = useUpdateQiSkillMutation();
+
+  if (profile.isLoading || profile.data?.data?.spirit_cristal === undefined || isLoading || !userId)
+    return <ComponentSpinner />;
   if (!skills) return null;
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
+    <div className="flex flex-col gap-2">
       {Object.entries(QiSkillsConfig).map(([key, config]) => {
-        const level = skills[key];
-        const max = config.maxLevel;
-        const progress = (level / max) * 100;
-        const cost = config.calcUpgradeCost(level);
+        const typedKey = key as QiSkillKey;
+        const level = skills.data[typedKey];
+        const upgradeCost = config.calcUpgradeCost(level);
 
         return (
-          <Card key={key} className="border rounded-2xl shadow-sm">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold">{config.name}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="text-sm text-muted-foreground">{config.description}</div>
-
-              <Progress value={progress} />
-              <div className="text-sm">
-                Уровень: <b>{level}</b> / {max}
-              </div>
-              <div className="text-sm">
-                Стоимость улучшения: <b>{cost}</b> Ци
-              </div>
-
-              <Button
-                disabled={level >= max || mutation.isPending}
-                onClick={() => mutation.mutate(key as QiSkillKey)}
-                className="w-full"
-              >
-                Улучшить
-              </Button>
-            </CardContent>
-          </Card>
+          <QiSkillItem
+            key={key}
+            name={t(`headquarter.qi_skills.${key}.name` as TranslationKey)}
+            description={t(`headquarter.qi_skills.${key}.description` as TranslationKey)}
+            level={level}
+            maxLevel={config.maxLevel}
+            upgradeCost={upgradeCost}
+            userCristal={profile.data?.data?.spirit_cristal ?? 0}
+            onUpgrade={() => mutation.mutate({ skill: typedKey, userId })}
+            isUpgrading={mutation.isPending}
+            iconSrc={img_paths.qi_skills_list[typedKey]()}
+          />
         );
       })}
     </div>

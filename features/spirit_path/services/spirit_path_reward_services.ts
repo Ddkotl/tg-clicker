@@ -1,8 +1,9 @@
 import { FactsStatus, FactsType, MissionType } from "@/_generated/prisma";
 import { pushToSubscriber } from "@/app/api/user/facts/stream/route";
 import { createFact } from "@/entities/facts/index.server";
-import { GetResources, InactivateMission, UpdateProgressMission } from "@/entities/missions/index.server";
+import { InactivateMission, UpdateProgressMission } from "@/entities/missions/index.server";
 import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lvl";
+import { GetResources } from "@/entities/profile/index.server";
 import { giveSpiritPathReward } from "@/entities/spirit_path/_repositories/give_spirit_path_reward";
 
 export async function SpiritPathRewardServices(userId: string, break_spirit_path?: boolean) {
