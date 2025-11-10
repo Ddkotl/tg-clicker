@@ -55,7 +55,7 @@ export function SpiritPathForm() {
     mutation.mutate({ userId, minutes: Number(data.time) });
   };
   const isSameDay = dayjs(spirit_path_info?.data?.date_today).isSame(new Date(), "day") ?? false;
-  const minutes_today = spirit_path_info?.data?.minutes_today ?? 0;
+  const minutes_today = isSameDay ? (spirit_path_info?.data?.minutes_today ?? 0) : 0;
   const minutesLeftToday = Math.max(480 - minutes_today, 0);
   const isLoading = isSessionLoading || isSpiritPathLoading;
   const spirit_path = spirit_path_info?.data;
