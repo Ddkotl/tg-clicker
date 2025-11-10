@@ -37,6 +37,7 @@ export async function updateUserParam(userId: string, paramName: ParamNameType) 
             [paramName]: { increment: 1 },
             qi: { decrement: updateCost },
             max_hitpoint: new_max_hitpoints,
+            last_hp_update: new Date(),
           },
         },
       },
