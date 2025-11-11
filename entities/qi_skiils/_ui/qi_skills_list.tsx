@@ -42,8 +42,11 @@ export function QiSkillsList() {
         return (
           <QiSkillItem
             key={key}
+            userId={userId}
             name={t(`headquarter.qi_skills.${key}.name` as TranslationKey)}
             description={t(`headquarter.qi_skills.${key}.description` as TranslationKey)}
+            current_effect={t(`headquarter.qi_skills.${key}.current_effect` as TranslationKey)}
+            next_effect={t(`headquarter.qi_skills.${key}.next_effect` as TranslationKey)}
             level={level}
             maxLevel={config.maxLevel}
             upgradeCost={upgradeCost}
@@ -51,6 +54,7 @@ export function QiSkillsList() {
             onUpgrade={() => mutation.mutate({ skill: typedKey, userId })}
             isUpgrading={mutation.isPending}
             iconSrc={img_paths.qi_skills_list[typedKey]()}
+            skillKey={typedKey}
           />
         );
       })}

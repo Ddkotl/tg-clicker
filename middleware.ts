@@ -10,13 +10,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
   const session: AppJWTPayload | null = await getSession();
-  if (!session) {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
+  if (!session) return NextResponse.redirect(new URL("/", request.url));
+
   const response = NextResponse.next();
-  if (session.user.lang) {
-    response.headers.set("x-user-language", session.user.lang);
-  }
+
+  if (session.user.lang) response.headers.set("x-user-language", session.user.lang);
+  if (request.nextUrl.pathname.startsWith("/api")) response.headers.set("x-user-id", session.user.userId);
 
   return response;
 }
