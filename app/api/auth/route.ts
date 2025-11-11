@@ -5,6 +5,7 @@ import { UpdateOrCreateUser } from "@/entities/auth/index.server";
 import { deleteOldFacts } from "@/entities/facts/index.server";
 import { createDailyMissions } from "@/entities/missions/_repositories/create_daily_missions";
 import { recalcHp } from "@/features/hp_regen/recalc_hp";
+import { recalcQi } from "@/features/qi_regen/recalc_qi";
 import { makeError } from "@/shared/lib/api_helpers/make_error";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -35,6 +36,8 @@ export async function POST(request: NextRequest) {
 
     const hp = await recalcHp(updated_user.id);
     if (hp === null) return makeError("recalcHp error", 400);
+    const qi = await recalcQi(updated_user.id);
+    if (qi === null) return makeError("recalcQi error", 400);
 
     const deleted_facts_count = await deleteOldFacts(updated_user.id);
     if (deleted_facts_count === null) return makeError("deleteOldFacts error", 400);

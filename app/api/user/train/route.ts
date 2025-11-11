@@ -6,6 +6,8 @@ import {
   trainSchema,
 } from "@/entities/profile";
 import { ParamNameType, updateUserParam } from "@/entities/profile/_repositories/update_user_param";
+import { recalcQi } from "@/features/qi_regen/recalc_qi";
+import { makeError } from "@/shared/lib/api_helpers/make_error";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -37,7 +39,8 @@ export async function POST(req: NextRequest) {
         status: 400,
       });
     }
-
+    const qi = await recalcQi(userId);
+    if (qi === null) return makeError("recalcQi error", 400);
     const paramName: ParamNameType = parsed.data.paramName;
     const updated_profile = await updateUserParam(userId, paramName);
 

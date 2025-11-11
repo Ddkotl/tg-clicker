@@ -63,6 +63,7 @@ model Profile {
   current_hitpoint Int      @default(100)
   max_hitpoint     Int      @default(100)
   last_hp_update   DateTime @default(now())
+last_qi_update DateTime @default(now())
 
   @@map("profiles")
 }

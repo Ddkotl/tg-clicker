@@ -19,6 +19,8 @@ import { getSpiritPathInfoQuery, SpiritPathInfoResponseType } from "@/entities/s
 import { useProfileHPUpdate } from "../hp_regen/use_xp_update";
 import { getAllDailyMissionsQuery, GetDailyMissionsResponseType } from "@/entities/missions";
 import { useMidnightUpdate } from "./_vm/useMidnightUpdate";
+import { useQiRegen } from "../qi_regen/use_qi_update";
+import { getUserQiSkillsQuery, GetUserQiSkillsResponseType } from "@/entities/qi_skiils";
 
 export function Notifications() {
   const { t } = useTranslation();
@@ -51,7 +53,12 @@ export function Notifications() {
     ...getAllDailyMissionsQuery(userId ?? ""),
     enabled: !!userId,
   });
+  const { isLoading: isLoadingQiSkills } = useQuery<GetUserQiSkillsResponseType>({
+    ...getUserQiSkillsQuery(userId ?? ""),
+    enabled: !!userId,
+  });
   useProfileHPUpdate(userId);
+  useQiRegen(userId);
   useFactsSSE(userId);
   useMidnightUpdate(userId);
 
@@ -81,7 +88,7 @@ export function Notifications() {
     end = start + meditation.meditation_hours * 60 * 60 * 1000;
   }
 
-  const isLoading = isLoadingSession || isLoadingFacts || isLoadingMeditation || isLoadingPathInfo;
+  const isLoading = isLoadingSession || isLoadingFacts || isLoadingMeditation || isLoadingPathInfo || isLoadingQiSkills;
   if (isLoading) return null;
 
   return (

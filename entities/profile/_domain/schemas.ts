@@ -26,6 +26,7 @@ export const ProfileSchema = z.object({
   current_hitpoint: z.number(),
   max_hitpoint: z.number(),
   last_hp_update: z.date(),
+  last_qi_update: z.date(),
 });
 export const profileResponseSchema = z.object({
   data: ProfileSchema.nullable(),
