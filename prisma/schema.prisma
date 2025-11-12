@@ -31,6 +31,8 @@ model User {
   missions Mission[]
   qi_skills UserQiSkills?
 
+  fights Fight[] @relation("FightDefender")
+  atack_fights Fight[]
   @@map("users")
 }
 
@@ -50,9 +52,11 @@ model Profile {
   qi            Int       @default(100)
   qi_stone            Int       @default(50)
   spirit_cristal         Int       @default(50)
-  fight           Int       @default(30)
-  last_fight_time DateTime?
   glory           Int       @default(0)
+  
+  fight_charges        Int       @default(30)
+  last_charge_recovery DateTime? 
+  last_fight_time      DateTime?
 
   power      Int @default(1)
   protection Int @default(1)
@@ -122,6 +126,11 @@ model UserStatistic {
   spirit_path_minutes Int @default(0)
   mined_qi_stone      Int @default(0)
   mined_count     Int @default(0)
+
+  fights_total     Int      @default(0)
+  fights_wins         Int      @default(0)
+  fights_loses        Int      @default(0)
+  pve_shadow_wins         Int      @default(0)
 
   @@map("user_statistics")
 }
@@ -211,4 +220,47 @@ enum Fraktion {
 enum Gender {
   MALE
   FEMALE
+}
+model Fight {
+  id           String      @id @default(cuid())
+  attacker     User        @relation(fields: [attackerId], references: [id], onDelete: Cascade)
+  attackerId   String
+  defender     User?       @relation("FightDefender", fields: [defenderId], references: [id], onDelete: Cascade)
+  defenderId   String?
+  type         FightType   @default(PVE)
+  enemyType    EnemyType?  
+  enemyNpcId   String?    
+
+  status       FightStatus @default(PENDING)
+  result       FightResult?
+
+  snapshot     Json      
+  fightLog     Json       
+  rewards      Json?
+  startedAt    DateTime    @default(now())
+  finishedAt   DateTime?
+
+  @@map("fights")
+  @@index([attackerId])
+}
+
+enum FightType {
+  PVE
+  PVP
+}
+
+enum EnemyType {
+  NPC
+  PLAYER
+}
+
+enum FightStatus {
+  PENDING
+  FINISHED
+}
+
+enum FightResult {
+  WIN
+  LOSE
+  DRAW
 }

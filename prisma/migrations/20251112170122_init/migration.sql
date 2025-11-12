@@ -13,6 +13,18 @@ CREATE TYPE "public"."Fraktion" AS ENUM ('ADEPT', 'NOVICE');
 -- CreateEnum
 CREATE TYPE "public"."Gender" AS ENUM ('MALE', 'FEMALE');
 
+-- CreateEnum
+CREATE TYPE "public"."FightType" AS ENUM ('PVE', 'PVP');
+
+-- CreateEnum
+CREATE TYPE "public"."EnemyType" AS ENUM ('NPC', 'PLAYER');
+
+-- CreateEnum
+CREATE TYPE "public"."FightStatus" AS ENUM ('PENDING', 'FINISHED');
+
+-- CreateEnum
+CREATE TYPE "public"."FightResult" AS ENUM ('WIN', 'LOSE', 'DRAW');
+
 -- CreateTable
 CREATE TABLE "public"."users" (
     "id" TEXT NOT NULL,
@@ -46,9 +58,10 @@ CREATE TABLE "public"."profiles" (
     "qi" INTEGER NOT NULL DEFAULT 100,
     "qi_stone" INTEGER NOT NULL DEFAULT 50,
     "spirit_cristal" INTEGER NOT NULL DEFAULT 50,
-    "fight" INTEGER NOT NULL DEFAULT 30,
-    "last_fight_time" TIMESTAMP(3),
     "glory" INTEGER NOT NULL DEFAULT 0,
+    "fight_charges" INTEGER NOT NULL DEFAULT 30,
+    "last_charge_recovery" TIMESTAMP(3),
+    "last_fight_time" TIMESTAMP(3),
     "power" INTEGER NOT NULL DEFAULT 1,
     "protection" INTEGER NOT NULL DEFAULT 1,
     "speed" INTEGER NOT NULL DEFAULT 1,
@@ -57,6 +70,7 @@ CREATE TABLE "public"."profiles" (
     "current_hitpoint" INTEGER NOT NULL DEFAULT 100,
     "max_hitpoint" INTEGER NOT NULL DEFAULT 100,
     "last_hp_update" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "last_qi_update" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "profiles_pkey" PRIMARY KEY ("id")
 );
@@ -101,6 +115,10 @@ CREATE TABLE "public"."user_statistics" (
     "spirit_path_minutes" INTEGER NOT NULL DEFAULT 0,
     "mined_qi_stone" INTEGER NOT NULL DEFAULT 0,
     "mined_count" INTEGER NOT NULL DEFAULT 0,
+    "fights_total" INTEGER NOT NULL DEFAULT 0,
+    "fights_wins" INTEGER NOT NULL DEFAULT 0,
+    "fights_loses" INTEGER NOT NULL DEFAULT 0,
+    "pve_shadow_wins" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "user_statistics_pkey" PRIMARY KEY ("id")
 );
@@ -165,6 +183,25 @@ CREATE TABLE "public"."facts" (
     CONSTRAINT "facts_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "public"."fights" (
+    "id" TEXT NOT NULL,
+    "attackerId" TEXT NOT NULL,
+    "defenderId" TEXT,
+    "type" "public"."FightType" NOT NULL DEFAULT 'PVE',
+    "enemyType" "public"."EnemyType",
+    "enemyNpcId" TEXT,
+    "status" "public"."FightStatus" NOT NULL DEFAULT 'PENDING',
+    "result" "public"."FightResult",
+    "snapshot" JSONB NOT NULL,
+    "fightLog" JSONB NOT NULL,
+    "rewards" JSONB,
+    "startedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "finishedAt" TIMESTAMP(3),
+
+    CONSTRAINT "fights_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_telegram_id_key" ON "public"."users"("telegram_id");
 
@@ -195,6 +232,9 @@ CREATE UNIQUE INDEX "spirit_paths_userId_key" ON "public"."spirit_paths"("userId
 -- CreateIndex
 CREATE INDEX "facts_userId_idx" ON "public"."facts"("userId");
 
+-- CreateIndex
+CREATE INDEX "fights_attackerId_idx" ON "public"."fights"("attackerId");
+
 -- AddForeignKey
 ALTER TABLE "public"."profiles" ADD CONSTRAINT "profiles_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -218,3 +258,9 @@ ALTER TABLE "public"."spirit_paths" ADD CONSTRAINT "spirit_paths_userId_fkey" FO
 
 -- AddForeignKey
 ALTER TABLE "public"."facts" ADD CONSTRAINT "facts_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."fights" ADD CONSTRAINT "fights_attackerId_fkey" FOREIGN KEY ("attackerId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."fights" ADD CONSTRAINT "fights_defenderId_fkey" FOREIGN KEY ("defenderId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
