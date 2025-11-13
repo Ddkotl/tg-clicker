@@ -16,7 +16,14 @@ export async function UpdateOrCreateUser(user: CreateUserType, referer_id?: stri
         auth_date: user.auth_date || null,
         allows_write_to_pm: user.allows_write_to_pm || null,
         referrerId: referer_id || null,
-        profile: { create: {} },
+        profile: {
+          create: {
+            last_charge_recovery: dayjs().subtract(1, "day").toDate(),
+            last_qi_update: new Date(),
+            last_fight_time: dayjs().subtract(1, "day").toDate(),
+            last_hp_update: new Date(),
+          },
+        },
         user_statistic: { create: {} },
         meditation: { create: {} },
         qi_skills: { create: {} },
