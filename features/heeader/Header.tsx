@@ -4,9 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useGetSessionQuery } from "@/entities/auth/_queries/session_queries";
 import { HeaderItem } from "./_ui/header_item";
 import { getProfileQuery, ProfileResponse } from "@/entities/profile";
-import { generated_fight_limit } from "@/shared/game_config/fight/fight_const";
 import { HeaderProgressBars } from "./_ui/header_progress";
 import { icons } from "@/shared/lib/icons";
+import { MAX_CHARGES } from "@/shared/game_config/fight/fight_const";
 
 export function Header() {
   const { data: session, isLoading: isLoadingSession } = useGetSessionQuery();
@@ -89,7 +89,7 @@ export function Header() {
             href={`/game`}
             isDisabled={isDisabled}
             isLoading={isLoading}
-            value={`${profile?.data?.fight}/${generated_fight_limit}`}
+            value={`${profile?.data?.fight_charges}/${MAX_CHARGES}`}
           />
           <HeaderItem
             icon={icons.clock({
