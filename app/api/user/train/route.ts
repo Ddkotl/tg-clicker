@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
         status: 400,
       });
     }
-    const qi = await recalcQi(userId);
+    const qi = await recalcQi({ userId: userId });
     if (qi === null) return makeError("recalcQi error", 400);
     const paramName: ParamNameType = parsed.data.paramName;
     const updated_profile = await updateUserParam(userId, paramName);

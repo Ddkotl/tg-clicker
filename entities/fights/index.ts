@@ -9,7 +9,7 @@ export {
   fighterSnapshotSchema,
 } from "./_domain/schemas";
 export type {
-  CreateFightResponseType,
+  FightResponseType,
   FightLog,
   FightLogStep,
   FightResRewards,

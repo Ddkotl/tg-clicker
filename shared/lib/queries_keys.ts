@@ -8,4 +8,5 @@ export const queries_keys = {
   facts_userId: (userId: string) => ["facts", userId],
   mine_userId: (userId: string) => ["mine", userId],
   qi_skills_userId: (userId: string) => ["qi_skills", userId],
+  current_fight: () => ["currentFight"],
 };

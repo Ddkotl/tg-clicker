@@ -6,6 +6,7 @@ import { EnemyType, FightResult, FightType } from "@/_generated/prisma";
 import { recalcHp } from "@/features/hp_regen/recalc_hp";
 import { recalcQi } from "@/features/qi_regen/recalc_qi";
 import dayjs from "dayjs";
+import { dataBase, TransactionType } from "@/shared/connect/db_connect";
 
 export class FightService {
   constructor(
@@ -13,8 +14,8 @@ export class FightService {
     private fightRepo = fightRepository,
   ) {}
 
-  async restoreFightCharges(userId: string) {
-    let profile = await this.profileRepo.getByUserId({ userId: userId });
+  async restoreFightCharges({ userId, tx }: { userId: string; tx?: TransactionType }) {
+    let profile = await this.profileRepo.getByUserId({ userId: userId, tx: tx });
     if (!profile) return null;
 
     const now = new Date();
@@ -30,6 +31,7 @@ export class FightService {
     if (newCharges > profile.fight_charges) {
       profile = await this.profileRepo.updateFightCharges({
         userId: userId,
+        tx: tx,
         fight_charges: newCharges,
         last_charge_recovery: newLastChargeRecovery,
       });
@@ -38,8 +40,8 @@ export class FightService {
     return profile;
   }
 
-  private async canFight(userId: string) {
-    const profile = await this.restoreFightCharges(userId);
+  private async canFight({ userId, tx }: { userId: string; tx?: TransactionType }) {
+    const profile = await this.restoreFightCharges({ userId: userId, tx: tx });
     if (!profile) return null;
 
     const now = new Date();
@@ -145,29 +147,33 @@ export class FightService {
     };
   }
 
-  async startFight({ userId, enemyType, fightType }: { userId: string; enemyType: EnemyType; fightType: FightType }) {
-    const hp = await recalcHp(userId);
+  async startFight({
+    userId,
+    enemyType,
+    fightType,
+    tx,
+  }: {
+    userId: string;
+    enemyType: EnemyType;
+    fightType: FightType;
+    tx?: TransactionType;
+  }) {
+    const hp = await recalcHp({ userId: userId, tx: tx });
     if (hp === null) return null;
-    const qi = await recalcQi(userId);
+    const qi = await recalcQi({ userId: userId, tx: tx });
     if (qi === null) return null;
-    const restore = await this.restoreFightCharges(userId);
+    const restore = await this.restoreFightCharges({ userId: userId, tx: tx });
     if (!restore) return restore;
 
-    const check = await this.canFight(userId);
-    if (!check) return check;
-
-    // Use transaction: create fight, spend charge, calculate battle, finish fight, update profile and stats
-    const profile = await this.profileRepo.spendFightCharge({ userId: userId });
-    if (!profile) return null;
     const attackerSnapshot: FighterSnapshot = {
-      userId: profile.userId,
-      name: profile.nikname ?? "Unknown",
-      power: profile.power,
-      protection: profile.protection,
-      speed: profile.speed,
-      skill: profile.skill,
-      currentHp: profile.current_hitpoint,
-      maxHp: profile.max_hitpoint,
+      userId: restore.userId,
+      name: restore.nikname ?? "Unknown",
+      power: restore.power,
+      protection: restore.protection,
+      speed: restore.speed,
+      skill: restore.skill,
+      currentHp: restore.current_hitpoint,
+      maxHp: restore.max_hitpoint,
     };
     const enemySnapshot: FighterSnapshot = await this.generateEnemy(attackerSnapshot);
 
@@ -176,54 +182,78 @@ export class FightService {
       enemy: enemySnapshot,
     };
 
-    const fight = await this.fightRepo.createFight({
+    const fight = await this.fightRepo.createOrUpdateFight({
       attackerId: userId,
       enemyType: enemyType,
       fightType: fightType,
       fightSnapshot: fightSnapshot,
+      tx: tx,
     });
+
+    return fight;
+  }
+  private async getOrRefreshPendingFight({ userId, tx }: { userId: string; tx?: TransactionType }) {
+    const hp = await recalcHp({ userId: userId, tx: tx });
+    if (hp === null) return null;
+    let fight = await this.fightRepo.getPendingFightByAtackserId({ attackserId: userId, tx: tx });
+
+    const snapshotExpired =
+      !fight ||
+      dayjs().diff(dayjs(fight.startedAt), "second") > 10 ||
+      hp !== (fight.snapshot as FightSnapshot)?.player.currentHp;
+
+    if (snapshotExpired) {
+      if (fight) {
+        fight = await this.startFight({ userId: userId, enemyType: fight.enemyType, fightType: fight.type, tx });
+      }
+    }
 
     return fight;
   }
 
   async atack(userId: string) {
-    let fight = await this.fightRepo.getPendingFightByAtackserId({ attackserId: userId });
-    if (!fight) return fight;
-    if (dayjs().diff(dayjs(fight.startedAt), "second") >= 10) {
-      fight = await this.startFight({ userId: userId, enemyType: fight.enemyType, fightType: fight.type });
-    }
-    if (!fight) return fight;
-    const snapshot: FightSnapshot = fight.snapshot as FightSnapshot;
-    const { log, result } = await this.simulateBattle(snapshot.player, snapshot.enemy);
-    if (result === FightResult.WIN) {
-      const rewards: FightResRewards = await this.calculateRewards(snapshot.enemy);
-      await this.profileRepo.updateResources({
-        userId: userId,
-        resources: {
-          exp: rewards.exp,
-          qi: rewards.qi,
-          qi_stone: rewards.qiStone,
-          spirit_cristal: rewards.spiritCristal,
-          glory: rewards.glory,
-        },
-      });
+    return await dataBase.$transaction(async (tx) => {
+      const check = await this.canFight({ userId: userId, tx: tx });
+      if (!check) return check;
+      const fight = await this.getOrRefreshPendingFight({ userId: userId, tx: tx });
+      if (!fight) return fight;
+      const profile = await this.profileRepo.spendFightCharge({ userId: userId, tx: tx });
+      if (!profile) return null;
+      const snapshot: FightSnapshot = fight.snapshot as FightSnapshot;
+      const { log, result } = await this.simulateBattle(snapshot.player, snapshot.enemy);
+      if (result === FightResult.WIN) {
+        const rewards: FightResRewards = await this.calculateRewards(snapshot.enemy);
+        await this.profileRepo.updateResources({
+          userId: userId,
+          resources: {
+            exp: rewards.exp,
+            qi: rewards.qi,
+            qi_stone: rewards.qiStone,
+            spirit_cristal: rewards.spiritCristal,
+            glory: rewards.glory,
+          },
+          tx: tx,
+        });
 
-      const finished_fight = await this.fightRepo.finishFight({
-        fightId: fight.id,
-        fightLog: log,
-        result: "WIN",
-        rewards: rewards,
-      });
-      return finished_fight;
-    } else {
-      const finished_fight = await this.fightRepo.finishFight({
-        fightId: fight.id,
-        fightLog: log,
-        result: "LOSE",
-        rewards: { exp: 0, qi: 0, qiStone: 0, glory: 0 },
-      });
-      return finished_fight;
-    }
+        const finished_fight = await this.fightRepo.finishFight({
+          fightId: fight.id,
+          fightLog: log,
+          result: "WIN",
+          rewards: rewards,
+          tx: tx,
+        });
+        return finished_fight;
+      } else {
+        const finished_fight = await this.fightRepo.finishFight({
+          fightId: fight.id,
+          fightLog: log,
+          result: "LOSE",
+          rewards: { exp: 0, qi: 0, qiStone: 0, glory: 0 },
+          tx: tx,
+        });
+        return finished_fight;
+      }
+    });
   }
 }
 

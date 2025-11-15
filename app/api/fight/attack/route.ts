@@ -1,10 +1,10 @@
 import { getCookieUserId } from "@/features/auth/get_cookie_userId";
-import { fightService } from "@/features/fights/servises/fight_servise";
 import { translate } from "@/features/translations/server/translate_fn";
 import { makeError } from "@/shared/lib/api_helpers/make_error";
 import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
 import { NextResponse } from "next/server";
-import { fightResponseSchema, CreateFightResponseType } from "@/entities/fights";
+import { fightResponseSchema, FightResponseType } from "@/entities/fights";
+import { fightService } from "@/features/fights/_servises/fight_servise";
 
 export async function POST(req: Request) {
   const lang = getCookieLang({ headers: req.headers });
@@ -16,7 +16,7 @@ export async function POST(req: Request) {
 
     const result = await fightService.atack(userId);
     if (!result || result === null) return makeError(translate("api.invalid_process", lang), 400);
-    const response: CreateFightResponseType = {
+    const response: FightResponseType = {
       ok: true,
       message: "Fight started",
       data: result,

@@ -62,7 +62,8 @@ export class ProfileRepository {
     }
   }
 
-  async updateResources({ userId, resources }: ResourceUpdateParams) {
+  async updateResources({ userId, resources, tx }: ResourceUpdateParams & { tx?: TransactionType }) {
+    const db_client = tx ? tx : dataBase;
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const data: Record<string, any> = {};
@@ -79,7 +80,7 @@ export class ProfileRepository {
 
       if (Object.keys(data).length === 0) return null;
 
-      return await dataBase.profile.update({
+      return await db_client.profile.update({
         where: { userId },
         data,
       });
@@ -93,12 +94,14 @@ export class ProfileRepository {
     userId,
     current_hitpoint,
     last_hp_update,
+    tx,
   }: {
     userId: string;
     current_hitpoint: number;
     last_hp_update: Date;
+    tx?: TransactionType;
   }) {
-    return this.update({ userId, data: { current_hitpoint, last_hp_update } });
+    return this.update({ userId, data: { current_hitpoint, last_hp_update }, tx: tx });
   }
 }
 

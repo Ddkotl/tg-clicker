@@ -7,7 +7,7 @@ import {
   fightSnapshotSchema,
 } from "./schemas";
 
-export type CreateFightResponseType = z.infer<typeof fightResponseSchema>;
+export type FightResponseType = z.infer<typeof fightResponseSchema>;
 
 export type FighterSnapshot = z.infer<typeof fighterSnapshotSchema>;
 

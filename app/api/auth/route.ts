@@ -34,9 +34,9 @@ export async function POST(request: NextRequest) {
 
     if (!updated_user) return makeError("User not created", 401);
 
-    const hp = await recalcHp(updated_user.id);
+    const hp = await recalcHp({ userId: updated_user.id });
     if (hp === null) return makeError("recalcHp error", 400);
-    const qi = await recalcQi(updated_user.id);
+    const qi = await recalcQi({ userId: updated_user.id });
     if (qi === null) return makeError("recalcQi error", 400);
 
     const deleted_facts_count = await deleteOldFacts(updated_user.id);

@@ -4,6 +4,7 @@ export const ui_path = {
   registration_page: () => `/registration`,
   facts_page: () => `/game/facts`,
   fight_page: () => `/game/fight`,
+  fight_demon_page: () => `/game/fight/demon`,
   headquarter_page: () => `/game/headquarter`,
   city_page: () => `/game/city`,
   pet_page: () => `/game/pet`,
@@ -35,4 +36,7 @@ export const api_path = {
   mining_qi_stone: () => `/api/headquarter/mine`,
   get_user_qi_skills: (userId: string) => `/api/user/qi_skills?userId=${userId}`,
   upgrade_user_qi_skills: (userId: string) => `/api/user/qi_skills/upgrade?userId=${userId}`,
+  create_fight: () => `/api/fight/create`,
+  start_fight: () => `/api/fight/attack`,
+  get_current_fight: () => `/api/fight/current`,
 };

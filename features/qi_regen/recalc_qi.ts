@@ -1,12 +1,10 @@
-import { dataBase } from "@/shared/connect/db_connect";
+import { dataBase, TransactionType } from "@/shared/connect/db_connect";
 import { getQiRegenPerInterval, QI_REGEN_INTERVAL } from "@/shared/game_config/params/qi_regen";
 
-/**
- * Обновление Qi пользователя с привязкой к минутам часа
- */
-export async function recalcQi(userId: string) {
+export async function recalcQi({ userId, tx }: { userId: string; tx?: TransactionType }) {
+  const db_client = tx ? tx : dataBase;
   try {
-    const user = await dataBase.user.findUnique({
+    const user = await db_client.user.findUnique({
       where: { id: userId },
       select: {
         profile: {
@@ -58,7 +56,7 @@ export async function recalcQi(userId: string) {
 
     const newQi = Math.floor(profile.qi + gainPerInterval * intervalsPassed);
 
-    const updated = await dataBase.user.update({
+    const updated = await db_client.user.update({
       where: { id: userId },
       data: {
         profile: {

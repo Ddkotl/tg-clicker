@@ -73,7 +73,7 @@ export const nav_items = {
   fight_nav_items: (translate: TranslateFn, lang: SupportedLang): NavItem[] => [
     {
       label: translate("fight.oponents.demonic_beasts", lang),
-      href: ui_path.city_shop_page(),
+      href: ui_path.fight_demon_page(),
     },
   ],
 };
