@@ -1,5 +1,5 @@
 import { getUserProfileByUserId } from "@/entities/auth/_repositories/user_repository";
-import { UpdateResources } from "@/entities/profile/index.server";
+import { profileRepository } from "@/entities/profile/index.server";
 import {
   updateUserQiSkillRequestSchema,
   updateUserQiSkillsResponseSchema,
@@ -43,7 +43,10 @@ export async function POST(req: Request) {
 
     if (user.profile.spirit_cristal < cost) return makeError("Not enough qi", 400);
 
-    const updated_profile = await UpdateResources({ userId, resources: { spirit_cristal: { remove: cost } } });
+    const updated_profile = await profileRepository.updateResources({
+      userId,
+      resources: { spirit_cristal: { remove: cost } },
+    });
     const updated_skills = await UpdateQiSkill({ userId, skill });
     if (!updated_profile || !updated_profile.spirit_cristal || !updated_skills) {
       return makeError(translate("api.info_not_found", lang), 404);

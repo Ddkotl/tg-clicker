@@ -41,33 +41,39 @@ export const nav_items = {
   home_nav_items: (translate: TranslateFn, lang: SupportedLang): NavItem[] => [
     {
       label: `${translate("home.navigation.chronicles", lang)}`,
-      href: "/game/facts",
+      href: ui_path.facts_page(),
       icon: icons.fact({}),
     },
     {
       label: `${translate("home.navigation.battle", lang)}`,
-      href: "/game/battle",
+      href: ui_path.fight_page(),
       icon: icons.fight({}),
     },
     {
       label: `${translate("home.navigation.headquarters", lang)}`,
-      href: "/game/headquarter",
+      href: ui_path.headquarter_page(),
       icon: icons.temple({}),
     },
     {
       label: `${translate("home.navigation.city", lang)}`,
-      href: "/game/city",
+      href: ui_path.city_page(),
       icon: icons.citadel({}),
     },
     {
       label: `${translate("home.navigation.agent", lang)}`,
-      href: "/game/agent",
+      href: ui_path.pet_page(),
       icon: icons.pet({}),
     },
     {
       label: `${translate("home.navigation.rating", lang)}`,
-      href: "/game/ranking",
+      href: ui_path.rankings_page(),
       icon: icons.trophy({ className: "h-10 w-10 " }),
+    },
+  ],
+  fight_nav_items: (translate: TranslateFn, lang: SupportedLang): NavItem[] => [
+    {
+      label: translate("fight.oponents.demonic_beasts", lang),
+      href: ui_path.city_shop_page(),
     },
   ],
 };

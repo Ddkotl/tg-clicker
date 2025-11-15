@@ -15,7 +15,7 @@ export function PageNav({
   className?: string;
 }) {
   return (
-    <div className={cn("transition-opacity duration-200", className)}>
+    <div className={cn("transition-opacity  duration-200", className)}>
       {nav_items.map((item) => (
         <MainButton key={item.href} label={item.label} href={item.href} icon={item.icon} />
       ))}

@@ -25,14 +25,15 @@ model User {
   profile        Profile?
   user_statistic UserStatistic?
   meditation     Meditation?
-  spirit_path            SpiritPath?
+  spirit_path    SpiritPath?
   mine           Mine?
   facts          Facts[]
-  missions Mission[]
-  qi_skills UserQiSkills?
+  missions       Mission[]
+  qi_skills      UserQiSkills?
 
-  fights Fight[] @relation("FightDefender")
+  fights       Fight[] @relation("FightDefender")
   atack_fights Fight[]
+
   @@map("users")
 }
 
@@ -41,59 +42,60 @@ model Profile {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  fraktion        Fraktion?
-  nikname         String?   @unique
-  gender          Gender?
-  color_theme     String?
-  avatar_url      String?
-  player_motto    String?
-  lvl             Int       @default(1)
-  exp             Int       @default(0)
-  qi            Int       @default(100)
-  qi_stone            Int       @default(50)
-  spirit_cristal         Int       @default(50)
-  glory           Int       @default(0)
-  
+  fraktion       Fraktion?
+  nikname        String?   @unique
+  gender         Gender?
+  color_theme    String?
+  avatar_url     String?
+  player_motto   String?
+  lvl            Int       @default(1)
+  exp            Int       @default(0)
+  qi             Int       @default(100)
+  qi_stone       Int       @default(50)
+  spirit_cristal Int       @default(50)
+  glory          Int       @default(0)
+
   fight_charges        Int       @default(30)
-  last_charge_recovery DateTime? 
+  last_charge_recovery DateTime?
   last_fight_time      DateTime?
 
   power      Int @default(1)
   protection Int @default(1)
   speed      Int @default(1)
   skill      Int @default(1)
-  qi_param         Int @default(1)
+  qi_param   Int @default(1)
 
   current_hitpoint Int      @default(100)
   max_hitpoint     Int      @default(100)
   last_hp_update   DateTime @default(now())
-last_qi_update DateTime @default(now())
+  last_qi_update   DateTime @default(now())
 
   @@map("profiles")
 }
+
 model Mission {
-  id          String   @id @default(cuid())
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
 
-  path String?
-  type        MissionType
-  reward_exp  Int      @default(0)
-  reward_qi   Int      @default(0)
-  reward_qi_stone Int @default(0)
-  reward_spirit_cristal Int @default(0)
-  reward_glory Int     @default(0)
+  path                  String?
+  type                  MissionType
+  reward_exp            Int         @default(0)
+  reward_qi             Int         @default(0)
+  reward_qi_stone       Int         @default(0)
+  reward_spirit_cristal Int         @default(0)
+  reward_glory          Int         @default(0)
 
-  target_value Int     @default(1)
-  progress     Int     @default(0)
+  target_value Int @default(1)
+  progress     Int @default(0)
 
   is_active    Boolean @default(true)
   is_completed Boolean @default(false)
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-@@unique([userId,type])
+  @@unique([userId, type])
   @@map("missions")
 }
 
@@ -105,12 +107,12 @@ enum MissionType {
 }
 
 model Mine {
-  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId         String    @unique
-  energy         Int       @default(25)
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String   @unique
+  energy         Int      @default(25)
   last_mine_at   DateTime @default(now())
   last_energy_at DateTime @default(now())
-  updated_at     DateTime  @updatedAt
+  updated_at     DateTime @updatedAt
 
   @@map("mines")
 }
@@ -120,17 +122,17 @@ model UserStatistic {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique
 
-  wins            Int @default(0)
-  loses           Int @default(0)
-  meditated_hours Int @default(0)
+  wins                Int @default(0)
+  loses               Int @default(0)
+  meditated_hours     Int @default(0)
   spirit_path_minutes Int @default(0)
   mined_qi_stone      Int @default(0)
-  mined_count     Int @default(0)
+  mined_count         Int @default(0)
 
-  fights_total     Int      @default(0)
-  fights_wins         Int      @default(0)
-  fights_loses        Int      @default(0)
-  pve_shadow_wins         Int      @default(0)
+  fights_total    Int @default(0)
+  fights_wins     Int @default(0)
+  fights_loses    Int @default(0)
+  pve_shadow_wins Int @default(0)
 
   @@map("user_statistics")
 }
@@ -140,10 +142,10 @@ model UserQiSkills {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique
 
-  qi_veil            Int @default(0)
-  seal_of_mind           Int @default(0)
+  qi_veil             Int @default(0)
+  seal_of_mind        Int @default(0)
   circulation_of_life Int @default(0)
-  spatial_vault Int @default(0)
+  spatial_vault       Int @default(0)
 
   @@map("user_qi_skills")
 }
@@ -158,7 +160,8 @@ model Meditation {
   meditation_hours  Int?
   meditation_revard Int?
 
-canceled_meditated_dates   DateTime[]  @default([])
+  canceled_meditated_dates DateTime[] @default([])
+
   @@map("meditations")
 }
 
@@ -167,34 +170,35 @@ model SpiritPath {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique
 
-  on_spirit_paths     Boolean   @default(false)
-  start_spirit_paths  DateTime?
-  spirit_paths_minutes  Int?
-  spirit_paths_reward Int?
+  on_spirit_paths      Boolean   @default(false)
+  start_spirit_paths   DateTime?
+  spirit_paths_minutes Int?
+  spirit_paths_reward  Int?
 
-  minutes_today Int @default(0)
-  date_today  DateTime?
+  minutes_today Int       @default(0)
+  date_today    DateTime?
 
- canceled_paths_dates   DateTime[]  @default([])
+  canceled_paths_dates DateTime[] @default([])
+
   @@map("spirit_paths")
 }
 
 model Facts {
-  id           String      @id @default(cuid())
-  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId       String
-  type         FactsType
-  status       FactsStatus
-  qi_reward  Int?
-  qi_stone_reward  Int?
-  spirit_cristal_reward  Int?
-  exp_reward   Int?
-  glory_reward Int?
-  active_hours Int?
-  active_minutes Int?
-  target_value Int?
-  mission_type MissionType?
-  createdAt    DateTime    @default(now())
+  id                    String       @id @default(cuid())
+  user                  User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                String
+  type                  FactsType
+  status                FactsStatus
+  qi_reward             Int?
+  qi_stone_reward       Int?
+  spirit_cristal_reward Int?
+  exp_reward            Int?
+  glory_reward          Int?
+  active_hours          Int?
+  active_minutes        Int?
+  target_value          Int?
+  mission_type          MissionType?
+  createdAt             DateTime     @default(now())
 
   @@index([userId])
   @@map("facts")
@@ -221,27 +225,28 @@ enum Gender {
   MALE
   FEMALE
 }
+
 model Fight {
-  id           String      @id @default(cuid())
-  attacker     User        @relation(fields: [attackerId], references: [id], onDelete: Cascade)
-  attackerId   String
-  defender     User?       @relation("FightDefender", fields: [defenderId], references: [id], onDelete: Cascade)
-  defenderId   String?
-  type         FightType   @default(PVE)
-  enemyType    EnemyType?  
-  enemyNpcId   String?    
+  id         String    @id @default(cuid())
+  attacker   User      @relation(fields: [attackerId], references: [id], onDelete: Cascade)
+  attackerId String
+  defender   User?     @relation("FightDefender", fields: [defenderId], references: [id], onDelete: Cascade)
+  defenderId String?
+  type       FightType
+  enemyType  EnemyType
+  enemyNpcId String?
 
-  status       FightStatus @default(PENDING)
-  result       FightResult?
+  status FightStatus  
+  result FightResult?
 
-  snapshot     Json      
-  fightLog     Json       
-  rewards      Json?
-  startedAt    DateTime    @default(now())
-  finishedAt   DateTime?
+  snapshot   Json
+  fightLog   Json?
+  rewards    Json?
+  startedAt  DateTime  @default(now())
+  finishedAt DateTime?
 
-  @@map("fights")
   @@index([attackerId])
+  @@map("fights")
 }
 
 enum FightType {
@@ -250,7 +255,7 @@ enum FightType {
 }
 
 enum EnemyType {
-  NPC
+  DEMONIC_BEAST
   PLAYER
 }
 

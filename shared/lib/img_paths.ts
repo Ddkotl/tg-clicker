@@ -5,6 +5,10 @@ export const img_paths = {
   facts: () => `/facts.jpg`,
   home: () => `/home.jpg`,
   temple: () => `/temple.jpg`,
+  fight: () => `/fight.jpg`,
+  fight_list: {
+    demonic_beast: () => `/demonic_beast.jpg`,
+  },
   mission: () => `/missions.jpg`,
   qi_skills: () => `/qi_skills.jpg`,
   qi_skills_list: {

@@ -1,10 +1,12 @@
 import { Profile } from "@/_generated/prisma";
-import { dataBase } from "@/shared/connect/db_connect";
+import { dataBase, TransactionType } from "@/shared/connect/db_connect";
+import { ResourceUpdateParams } from "../_domain/types";
 
 export class ProfileRepository {
-  async getByUserId(userId: string) {
+  async getByUserId({ userId, tx }: { userId: string; tx?: TransactionType }) {
     try {
-      const profile = await dataBase.profile.findUnique({
+      const db_client = tx ? tx : dataBase;
+      const profile = await db_client.profile.findUnique({
         where: { userId: userId },
       });
       return profile;
@@ -14,9 +16,10 @@ export class ProfileRepository {
     }
   }
 
-  async update(userId: string, data: Partial<Profile>) {
+  async update({ data, userId, tx }: { userId: string; data: Partial<Profile>; tx?: TransactionType }) {
     try {
-      return await dataBase.profile.update({
+      const db_client = tx ? tx : dataBase;
+      return await db_client.profile.update({
         where: { userId: userId },
         data: data,
       });
@@ -26,16 +29,27 @@ export class ProfileRepository {
     }
   }
 
-  async updateFightCharges(userId: string, fight_charges: number, last_charge_recovery: Date) {
-    return this.update(userId, { last_charge_recovery, fight_charges });
+  async updateFightCharges({
+    fight_charges,
+    last_charge_recovery,
+    userId,
+    tx,
+  }: {
+    userId: string;
+    fight_charges: number;
+    last_charge_recovery: Date;
+    tx?: TransactionType;
+  }) {
+    return this.update({ userId: userId, data: { last_charge_recovery, fight_charges }, tx: tx });
   }
 
-  async spendFightCharge(userId: string) {
-    const profile = await this.getByUserId(userId);
+  async spendFightCharge({ userId, tx }: { userId: string; tx?: TransactionType }) {
+    const db_client = tx ? tx : dataBase;
+    const profile = await this.getByUserId({ userId: userId, tx: tx });
     if (!profile || profile.fight_charges <= 0) return null;
     const now = new Date();
     try {
-      return await dataBase.profile.update({
+      return await db_client.profile.update({
         where: { userId },
         data: {
           fight_charges: { decrement: 1 },
@@ -46,6 +60,45 @@ export class ProfileRepository {
       console.error("ProfileRepository.spendFightCharge error", error);
       return null;
     }
+  }
+
+  async updateResources({ userId, resources }: ResourceUpdateParams) {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const data: Record<string, any> = {};
+
+      for (const [key, value] of Object.entries(resources)) {
+        if (typeof value === "number") {
+          // number -> increment или decrement по знаку
+          data[key] = { increment: value };
+        } else if (typeof value === "object" && value !== null) {
+          if (value.add !== undefined) data[key] = { increment: value.add };
+          if (value.remove !== undefined) data[key] = { decrement: value.remove };
+        }
+      }
+
+      if (Object.keys(data).length === 0) return null;
+
+      return await dataBase.profile.update({
+        where: { userId },
+        data,
+      });
+    } catch (error) {
+      console.error("UpdateResources error:", error);
+      return null;
+    }
+  }
+
+  async updateHP({
+    userId,
+    current_hitpoint,
+    last_hp_update,
+  }: {
+    userId: string;
+    current_hitpoint: number;
+    last_hp_update: Date;
+  }) {
+    return this.update({ userId, data: { current_hitpoint, last_hp_update } });
   }
 }
 
