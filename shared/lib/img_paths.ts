@@ -17,4 +17,5 @@ export const img_paths = {
     circulation_of_life: () => `/circulation_of_life.jpg`,
     spatial_vault: () => `/spatial_vault.jpg`,
   },
+  ranking_page: () => `/ranking.jpg`,
 };

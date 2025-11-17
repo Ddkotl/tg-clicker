@@ -1,27 +1,17 @@
-import {
-  userCountInFrErrorResponseSchema,
-  UserCountInFrErrorResponseType,
-  userCountInFrResponseSchema,
-  UserCountInFrResponseType,
-} from "@/entities/statistics";
-import { getUserCountsInFractions } from "@/entities/statistics/index.server";
-import { NextResponse } from "next/server";
+import { userCountInFrResponseSchema, UserCountInFrResponseType } from "@/entities/statistics";
+import { statisticRepository } from "@/entities/statistics/index.server";
+import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
+import { translate } from "@/features/translations/server/translate_fn";
+import { makeError } from "@/shared/lib/api_helpers/make_error";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const lang = getCookieLang({ headers: req.headers });
   try {
-    const data = await getUserCountsInFractions();
+    const data = await statisticRepository.getUserCountsInFractions();
 
     if (!data) {
-      const errorResponse: UserCountInFrErrorResponseType = {
-        data: {},
-        message: "getUserCountsInFractions is null",
-      };
-
-      userCountInFrErrorResponseSchema.parse(errorResponse);
-
-      return NextResponse.json(errorResponse, {
-        status: 400,
-      });
+      return makeError(translate("api.info_not_found", lang), 400);
     }
     const response: UserCountInFrResponseType = {
       data: {
@@ -37,15 +27,6 @@ export async function GET() {
   } catch (error) {
     console.error("GET /statistics/users_count_in_fr error:", error);
 
-    const errorResponse: UserCountInFrErrorResponseType = {
-      data: {},
-      message: "Internal server error",
-    };
-
-    userCountInFrErrorResponseSchema.parse(errorResponse);
-
-    return NextResponse.json(errorResponse, {
-      status: 500,
-    });
+    return makeError(translate("api.internal_server_error", lang), 500);
   }
 }

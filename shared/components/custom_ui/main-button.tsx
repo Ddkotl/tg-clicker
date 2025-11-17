@@ -10,11 +10,13 @@ export function MainButton({
   href,
   isLoading = false,
   icon,
+  className,
 }: {
   label: string;
   href: string;
   icon?: React.ReactNode;
   isLoading?: boolean;
+  className?: string;
 }) {
   return (
     <Button
@@ -22,6 +24,7 @@ export function MainButton({
       size="lg"
       className={cn(
         "w-full bg-primary/70 flex gap-2 transition-opacity",
+        className,
         isLoading && "pointer-events-none opacity-50",
       )}
     >

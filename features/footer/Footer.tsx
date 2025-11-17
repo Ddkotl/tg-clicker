@@ -34,9 +34,10 @@ export function Footer() {
     },
     {
       id: "friends",
-      url: `profile/friends/${userId}`,
+      url: ui_path.home_page(),
       label: t("footer.messages"),
       Icon: Friends,
+      soon: t("soon"),
     },
     {
       id: "tasks",
@@ -47,15 +48,16 @@ export function Footer() {
     },
     {
       id: "leaderboard",
-      url: "game/leaderboard",
+      url: ui_path.rankings_page(),
       label: t("footer.ratings"),
       Icon: Leaderboard,
     },
     {
       id: "settings",
-      url: "game/settings",
+      url: ui_path.home_page(),
       label: t("footer.settings"),
       Icon: Settings,
+      soon: t("soon"),
     },
   ];
   const isDisabled = isLoading || isFetching || isLoadingMissions || isFetchingMissions;
@@ -64,7 +66,15 @@ export function Footer() {
       <div className="fixed bottom-0 bg-footer-gradient border-t border-foreground/60 w-full max-w-md">
         <div className="flex justify-between px-4 py-2">
           {items.map((item) => {
-            return <FooterItem key={item.id} item={item} count={item.count ? item.count : -1} disabled={isDisabled} />;
+            return (
+              <FooterItem
+                key={item.id}
+                soon={item.soon}
+                item={item}
+                count={item.count ? item.count : -1}
+                disabled={isDisabled}
+              />
+            );
           })}
         </div>
       </div>

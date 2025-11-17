@@ -1,3 +1,5 @@
+import { OverallRatingsMAP_Type } from "@/entities/statistics/_domain/ratings_list";
+
 export const queries_keys = {
   tg_auth: () => ["telegramAuth"],
   session: () => ["session"],
@@ -9,4 +11,5 @@ export const queries_keys = {
   mine_userId: (userId: string) => ["mine", userId],
   qi_skills_userId: (userId: string) => ["qi_skills", userId],
   current_fight: () => ["currentFight"],
+  ratings_type: (type: OverallRatingsMAP_Type) => ["rating", type],
 };

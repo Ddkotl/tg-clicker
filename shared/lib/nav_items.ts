@@ -35,7 +35,8 @@ export const nav_items = {
   city_nav_items: (translate: TranslateFn, lang: SupportedLang): NavItem[] => [
     {
       label: translate("city.shop.shop", lang),
-      href: ui_path.city_shop_page(),
+      href: ui_path.city_page(),
+      soon: translate("soon", lang),
     },
   ],
   home_nav_items: (translate: TranslateFn, lang: SupportedLang): NavItem[] => [
@@ -60,9 +61,10 @@ export const nav_items = {
       icon: icons.citadel({}),
     },
     {
-      label: `${translate("home.navigation.agent", lang)}`,
+      label: translate("home.navigation.agent", lang),
       href: ui_path.pet_page(),
       icon: icons.pet({}),
+      soon: translate("soon", lang),
     },
     {
       label: `${translate("home.navigation.rating", lang)}`,

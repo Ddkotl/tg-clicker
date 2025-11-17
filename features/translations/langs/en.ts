@@ -1,5 +1,6 @@
 export const en_lang = {
   api: {
+    success: "Success",
     no_auth: "User not authenticated",
     info_not_found: "Info not found",
     invalid_request_data: "Invalid request data",
@@ -13,7 +14,7 @@ export const en_lang = {
     cooldown: "Cooldown: wait {seconds}s",
     no_energy: "No energy",
   },
-
+  soon: "soon",
   qi_energy: "Qi",
   qi_stone: "Qi stone",
   spirit_cristal: "Spirit cristal",
@@ -262,6 +263,16 @@ export const en_lang = {
     text: "Strengthen the spirit, guide your energy, and each strike becomes the extension of your will. To initiate the battle, choose an enemy.",
     oponents: {
       demonic_beasts: "Demonic Beasts",
+    },
+  },
+  ranking: {
+    title: "Heart of Epoch",
+    highlight: "A perfect spiritual mechanism crafted by the ancient masters.",
+    text: "Here are stored particles of time of everyone who has mastered the path of cultivation, but the strongest and wisest are honored. Strive to etch your name into the annals of eternity.",
+    ratings: {
+      overall_game_rating: "Overall",
+      weekly: "Weekly",
+      daily: "Daily",
     },
   },
 };

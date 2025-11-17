@@ -133,6 +133,7 @@ model UserStatistic {
   fights_wins     Int @default(0)
   fights_loses    Int @default(0)
   pve_shadow_wins Int @default(0)
+  demonic_beasts_wins Int @default(0)
 
   @@map("user_statistics")
 }

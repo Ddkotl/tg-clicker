@@ -1,10 +1,12 @@
 import { cn } from "@/shared/lib/utils";
 import { MainButton } from "./main-button";
+import { Soon } from "./Soon";
 
 export type NavItem = {
   label: string;
   href: string;
   icon?: React.ReactNode;
+  soon?: string;
 };
 
 export function PageNav({
@@ -17,7 +19,10 @@ export function PageNav({
   return (
     <div className={cn("transition-opacity  duration-200", className)}>
       {nav_items.map((item) => (
-        <MainButton key={item.href} label={item.label} href={item.href} icon={item.icon} />
+        <div key={item.href} className="relative">
+          <MainButton label={item.label} href={item.href} icon={item.icon} />
+          {item.soon && <Soon soon={item.soon} />}
+        </div>
       ))}
     </div>
   );

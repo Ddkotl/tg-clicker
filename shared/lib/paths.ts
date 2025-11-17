@@ -1,3 +1,5 @@
+import { OverallRatingsMAP_Type } from "@/entities/statistics/_domain/ratings_list";
+
 export const ui_path = {
   auth_page: () => `/`,
   home_page: () => `/game`,
@@ -39,4 +41,5 @@ export const api_path = {
   create_fight: () => `/api/fight/create`,
   start_fight: () => `/api/fight/attack`,
   get_current_fight: () => `/api/fight/current`,
+  get_ratings: (type: OverallRatingsMAP_Type) => `/api/statistics/rating/${type}`,
 };

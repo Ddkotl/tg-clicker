@@ -4,4 +4,5 @@ export type FooterItemType = {
   label: string;
   Icon: React.FC<{ className?: string }>;
   count?: number;
+  soon?: string;
 };

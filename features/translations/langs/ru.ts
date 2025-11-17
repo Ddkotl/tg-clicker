@@ -2,6 +2,7 @@ import { Messages } from "../translate_type";
 
 export const ru_lang: Messages = {
   api: {
+    success: "Успех",
     no_auth: "Пользователь не аутентифицирован",
     info_not_found: "Информация не найдена",
     invalid_request_data: "Неверные данные запроса",
@@ -15,6 +16,7 @@ export const ru_lang: Messages = {
     cooldown: "Кулдаун: подождите {seconds}c",
     no_energy: "Нет энергии",
   },
+  soon: "скоро",
   qi_energy: "Ци",
   qi_stone: "Камень ци",
   spirit_cristal: "Духовный кристалл",
@@ -261,6 +263,16 @@ export const ru_lang: Messages = {
     text: "Укрепи дух, направь энергию, и удар станет продолжением твоей воли.Для начала боя выбери врага.",
     oponents: {
       demonic_beasts: "Демонические звери",
+    },
+  },
+  ranking: {
+    title: "Сердце Эпохи",
+    highlight: "Совершенный духовный механизм, созданный древними мастерами.",
+    text: "Здесь хранится частица времени каждого, кто постиг путь культивации, но чествуют самых сильных и мудрых. Стремись вписать свое имя в анналы вечности.",
+    ratings: {
+      overall_game_rating: "Общеигровой",
+      weekly: "Еженедельный",
+      daily: "Ежедневный",
     },
   },
 };
