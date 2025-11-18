@@ -26,7 +26,7 @@ export class StatisticRepository {
 
   async getOverallRating({ tx }: { tx?: TransactionType }) {
     const db_client = tx ? tx : dataBase;
-    return db_client.profile.findMany({
+    const users =  db_client.profile.findMany({
       take: 100,
       orderBy: [{ lvl: "desc" }, { exp: "desc" }],
       select: {
@@ -42,11 +42,15 @@ export class StatisticRepository {
         },
       },
     });
+    return {
+      rating_type: "lvl",
+      data: users,
+    }
   }
 
   async getMeditationRating({ tx }: { tx?: TransactionType }) {
     const db_client = tx ? tx : dataBase;
-    return db_client.userStatistic.findMany({
+    const users = db_client.userStatistic.findMany({
       take: 100,
       orderBy: { meditated_hours: "desc" },
       select: {
@@ -61,11 +65,15 @@ export class StatisticRepository {
         },
       },
     });
+    return {
+      rating_type: "meditation",
+      data: users,
+    }
   }
 
   async getSpiritPathRating({ tx }: { tx?: TransactionType }) {
     const db_client = tx ? tx : dataBase;
-    return db_client.userStatistic.findMany({
+    const users =  db_client.userStatistic.findMany({
       take: 100,
       orderBy: { spirit_path_minutes: "desc" },
       select: {
@@ -80,11 +88,15 @@ export class StatisticRepository {
         },
       },
     });
+    return {
+      rating_type: "spirit_path",
+      data: users,
+    }
   }
 
   async getMiningRating({ tx }: { tx?: TransactionType }) {
     const db_client = tx ? tx : dataBase;
-    return db_client.userStatistic.findMany({
+    const users =  db_client.userStatistic.findMany({
       take: 100,
       orderBy: { mined_qi_stone: "desc" },
       select: {
@@ -99,11 +111,15 @@ export class StatisticRepository {
         },
       },
     });
+    return {
+      rating_type: "mining",
+      data: users,
+    }
   }
 
   async getWinsRating({ tx }: { tx?: TransactionType }) {
     const db_client = tx ? tx : dataBase;
-    return db_client.userStatistic.findMany({
+    const users = db_client.userStatistic.findMany({
       take: 100,
       orderBy: { fights_wins: "desc" },
       select: {
@@ -118,6 +134,10 @@ export class StatisticRepository {
         },
       },
     });
+    return {
+      rating_type: "wins",
+      data: users,
+    }
   }
 }
 
