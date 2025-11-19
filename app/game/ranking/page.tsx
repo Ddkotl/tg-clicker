@@ -1,4 +1,4 @@
-import { RankingList } from "@/entities/statistics/_ui/RatingList";
+import { RankingList } from "@/entities/statistics/_ui/RankingList";
 import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
 import { translate } from "@/features/translations/server/translate_fn";
 import { PageDescription } from "@/shared/components/custom_ui/page_description";
@@ -24,7 +24,11 @@ export default async function RankingPage() {
           <TabsTrigger value="daily">{translate("ranking.ratings.daily", lang)}</TabsTrigger>
         </TabsList>
         <TabsContent value="overall">
-          <RankingList type="overall" />
+          <RankingList type="exp" />
+          <RankingList type="meditation" />
+          <RankingList type="spirit" />
+          <RankingList type="wins" />
+          <RankingList type="mining" />
         </TabsContent>
         <TabsContent value="weekly">weekly</TabsContent>
         <TabsContent value="daily">daiy</TabsContent>

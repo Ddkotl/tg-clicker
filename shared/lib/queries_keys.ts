@@ -1,4 +1,4 @@
-import { OverallRatingsMAP_Type } from "@/entities/statistics/_domain/ratings_list";
+import { OverallRatingsMAP_Type } from "@/entities/statistics/_domain/ratings_list_items";
 
 export const queries_keys = {
   tg_auth: () => ["telegramAuth"],

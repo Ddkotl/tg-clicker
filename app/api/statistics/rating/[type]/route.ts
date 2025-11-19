@@ -1,5 +1,5 @@
 import { ratingsOverallResponseSchema, RatingUnionSchema, RatingUnionType } from "@/entities/statistics";
-import { OverallRatingsMAP, OverallRatingsMAP_Type } from "@/entities/statistics/_domain/ratings_list";
+import { OverallRatingsMAP, OverallRatingsMAP_Type } from "@/entities/statistics/_domain/ratings_list_items";
 import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
 import { translate } from "@/features/translations/server/translate_fn";
 import { makeError } from "@/shared/lib/api_helpers/make_error";

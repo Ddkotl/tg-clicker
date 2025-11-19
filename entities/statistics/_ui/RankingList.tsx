@@ -1,15 +1,16 @@
 "use client";
 
-import { OverallRatingsMAP_Type } from "../_domain/ratings_list";
+import { ComponentSpinner } from "@/shared/components/custom_ui/component_spinner";
+import { OverallRatingsMAP_Type } from "../_domain/ratings_list_items";
 import { useGetOverallRatingsQuery } from "../_queries/use_get_overall_ratings_query";
 
 export function RankingList({ type }: { type: OverallRatingsMAP_Type }) {
   const { data, isLoading } = useGetOverallRatingsQuery(type);
 
-  if (isLoading || !data) return <div>Loading...</div>;
+  if (isLoading || !data) return <ComponentSpinner />;
   return (
     <div className="flex flex-col gap-2">
-      {data.data.map((player, i) => (
+      {data.data.rating_typedata.map((player, i) => (
         <div key={player.user.id} className="flex justify-between p-2 rounded bg-white/5">
           <div className="flex gap-3">
             <span>{i + 1}.</span>
