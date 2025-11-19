@@ -1,4 +1,4 @@
-import { OverallRatingsMAP_Type } from "@/entities/statistics/_domain/ratings_list";
+import { OverallRatingsMAP_Type } from "@/entities/statistics/_domain/ratings_list_items";
 
 export const ui_path = {
   auth_page: () => `/`,

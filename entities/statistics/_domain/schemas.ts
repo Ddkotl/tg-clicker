@@ -1,4 +1,5 @@
 import z from "zod";
+import { OverallRatingsMAP_KEYS } from "./ratings_list_items";
 
 export const userCountInFrResponseSchema = z.object({
   data: z.object({
@@ -17,33 +18,58 @@ const UserSchema = z.object({
   id: z.string(),
   profile: ProfileSchema.nullable(),
 });
-const RatingOverallSchema = z.object({
-  lvl: z.number(),
-  exp: z.number(),
-  user: UserSchema,
+const RatingExpSchema = z.object({
+  rating_type: z.literal(OverallRatingsMAP_KEYS.exp),
+  data: z.array(
+    z.object({
+      lvl: z.number(),
+      exp: z.number(),
+      user: UserSchema,
+    }),
+  ),
 });
 const RatingMeditationSchema = z.object({
-  meditated_hours: z.number(),
-  user: UserSchema,
+  rating_type: z.literal(OverallRatingsMAP_KEYS.meditation),
+  data: z.array(
+    z.object({
+      meditated_hours: z.number(),
+      user: UserSchema,
+    }),
+  ),
 });
 const RatingSpiritSchema = z.object({
-  spirit_path_minutes: z.number(),
-  user: UserSchema,
+  rating_type: z.literal(OverallRatingsMAP_KEYS.spirit),
+  data: z.array(
+    z.object({
+      spirit_path_minutes: z.number(),
+      user: UserSchema,
+    }),
+  ),
 });
 const RatingMiningSchema = z.object({
-  mined_qi_stone: z.number(),
-  user: UserSchema,
+  rating_type: z.literal(OverallRatingsMAP_KEYS.mining),
+  data: z.array(
+    z.object({
+      mined_qi_stone: z.number(),
+      user: UserSchema,
+    }),
+  ),
 });
 const RatingWinsSchema = z.object({
-  fights_wins: z.number(),
-  user: UserSchema,
+  rating_type: z.literal(OverallRatingsMAP_KEYS.wins),
+  data: z.array(
+    z.object({
+      fights_wins: z.number(),
+      user: UserSchema,
+    }),
+  ),
 });
-export const RatingUnionSchema = z.union([
-  z.array(RatingOverallSchema),
-  z.array(RatingMeditationSchema),
-  z.array(RatingSpiritSchema),
-  z.array(RatingMiningSchema),
-  z.array(RatingWinsSchema),
+export const RatingUnionSchema = z.discriminatedUnion("rating_type", [
+  RatingExpSchema,
+  RatingMeditationSchema,
+  RatingSpiritSchema,
+  RatingMiningSchema,
+  RatingWinsSchema,
 ]);
 export const ratingsOverallResponseSchema = z.object({
   data: RatingUnionSchema,

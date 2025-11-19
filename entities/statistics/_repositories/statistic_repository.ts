@@ -1,5 +1,6 @@
 import { Fraktion } from "@/_generated/prisma";
 import { dataBase, TransactionType } from "@/shared/connect/db_connect";
+import { OverallRatingsMAP_KEYS } from "../_domain/ratings_list_items";
 
 export class StatisticRepository {
   async getUserCountsInFractions() {
@@ -24,10 +25,11 @@ export class StatisticRepository {
     }
   }
 
-  async getOverallRating({ tx }: { tx?: TransactionType }) {
-    const db_client = tx ? tx : dataBase;
-    const users =  db_client.profile.findMany({
-      take: 100,
+  async getExpRating({ tx, page = 1, pageSize = 10 }: { tx?: TransactionType; page?: number; pageSize?: number }) {
+    const db = tx ?? dataBase;
+    const users = await db.profile.findMany({
+      skip: (page - 1) * pageSize,
+      take: pageSize,
       orderBy: [{ lvl: "desc" }, { exp: "desc" }],
       select: {
         lvl: true,
@@ -35,23 +37,37 @@ export class StatisticRepository {
         user: {
           select: {
             id: true,
-            profile: {
-              select: { avatar_url: true, nikname: true },
-            },
+            profile: { select: { avatar_url: true, nikname: true } },
           },
         },
       },
     });
+
+    const total = await db.profile.count();
+
     return {
-      rating_type: "lvl",
+      rating_type: OverallRatingsMAP_KEYS.exp,
+      page,
+      pageSize,
+      total,
+      pages: Math.ceil(total / pageSize),
       data: users,
-    }
+    };
   }
 
-  async getMeditationRating({ tx }: { tx?: TransactionType }) {
+  async getMeditationRating({
+    tx,
+    page = 1,
+    pageSize = 10,
+  }: {
+    tx?: TransactionType;
+    page?: number;
+    pageSize?: number;
+  }) {
     const db_client = tx ? tx : dataBase;
     const users = db_client.userStatistic.findMany({
-      take: 100,
+      skip: pageSize * (page - 1),
+      take: pageSize,
       orderBy: { meditated_hours: "desc" },
       select: {
         meditated_hours: true,
@@ -65,16 +81,30 @@ export class StatisticRepository {
         },
       },
     });
+    const total = await db_client.profile.count();
     return {
-      rating_type: "meditation",
+      rating_type: OverallRatingsMAP_KEYS.meditation,
+      page,
+      pageSize,
+      total,
+      pages: Math.ceil(total / pageSize),
       data: users,
-    }
+    };
   }
 
-  async getSpiritPathRating({ tx }: { tx?: TransactionType }) {
+  async getSpiritPathRating({
+    tx,
+    page = 1,
+    pageSize = 10,
+  }: {
+    tx?: TransactionType;
+    page?: number;
+    pageSize?: number;
+  }) {
     const db_client = tx ? tx : dataBase;
-    const users =  db_client.userStatistic.findMany({
-      take: 100,
+    const users = db_client.userStatistic.findMany({
+      skip: (page - 1) * pageSize,
+      take: pageSize,
       orderBy: { spirit_path_minutes: "desc" },
       select: {
         spirit_path_minutes: true,
@@ -88,16 +118,22 @@ export class StatisticRepository {
         },
       },
     });
+    const total = await db_client.profile.count();
     return {
-      rating_type: "spirit_path",
+      rating_type: OverallRatingsMAP_KEYS.spirit,
+      page,
+      pageSize,
+      total,
+      pages: Math.ceil(total / pageSize),
       data: users,
-    }
+    };
   }
 
-  async getMiningRating({ tx }: { tx?: TransactionType }) {
+  async getMiningRating({ tx, page = 1, pageSize = 10 }: { tx?: TransactionType; page?: number; pageSize?: number }) {
     const db_client = tx ? tx : dataBase;
-    const users =  db_client.userStatistic.findMany({
-      take: 100,
+    const users = db_client.userStatistic.findMany({
+      skip: (page - 1) * pageSize,
+      take: pageSize,
       orderBy: { mined_qi_stone: "desc" },
       select: {
         mined_qi_stone: true,
@@ -111,16 +147,22 @@ export class StatisticRepository {
         },
       },
     });
+    const total = await db_client.profile.count();
     return {
-      rating_type: "mining",
+      rating_type: OverallRatingsMAP_KEYS.mining,
+      page,
+      pageSize,
+      total,
+      pages: Math.ceil(total / pageSize),
       data: users,
-    }
+    };
   }
 
-  async getWinsRating({ tx }: { tx?: TransactionType }) {
+  async getWinsRating({ tx, page = 1, pageSize = 10 }: { tx?: TransactionType; page?: number; pageSize?: number }) {
     const db_client = tx ? tx : dataBase;
     const users = db_client.userStatistic.findMany({
-      take: 100,
+      skip: (page - 1) * pageSize,
+      take: pageSize,
       orderBy: { fights_wins: "desc" },
       select: {
         fights_wins: true,
@@ -134,10 +176,15 @@ export class StatisticRepository {
         },
       },
     });
+    const total = await db_client.profile.count();
     return {
-      rating_type: "wins",
+      rating_type: OverallRatingsMAP_KEYS.wins,
+      page,
+      pageSize,
+      total,
+      pages: Math.ceil(total / pageSize),
       data: users,
-    }
+    };
   }
 }
 
