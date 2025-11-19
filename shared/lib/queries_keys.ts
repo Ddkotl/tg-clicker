@@ -11,5 +11,5 @@ export const queries_keys = {
   mine_userId: (userId: string) => ["mine", userId],
   qi_skills_userId: (userId: string) => ["qi_skills", userId],
   current_fight: () => ["currentFight"],
-  ratings_type: (type: OverallRatingsMAP_Type) => ["rating", type],
+  ratings_type: (type: OverallRatingsMAP_Type, page: number) => ["rating", type, page],
 };

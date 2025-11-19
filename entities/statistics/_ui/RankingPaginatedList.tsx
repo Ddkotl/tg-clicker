@@ -1,12 +1,14 @@
 "use client";
 
+import { ComponentSpinner } from "@/shared/components/custom_ui/component_spinner";
+import { OverallRatingsMAP_Type } from "../_domain/ratings_list_items";
 import { useGetOverallRatingsQuery } from "../_queries/use_get_overall_ratings_query";
 import Link from "next/link";
 
-export function RankingPaginatedList({ type, page }: { type: any; page: number }) {
+export function RankingPaginatedList({ type, page }: { type: OverallRatingsMAP_Type; page: number }) {
   const { data, isLoading } = useGetOverallRatingsQuery(type, page);
 
-  if (isLoading || !data) return <div>Loading...</div>;
+  if (isLoading || !data) return <ComponentSpinner />;
 
   return (
     <div className="flex flex-col gap-4">

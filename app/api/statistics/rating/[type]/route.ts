@@ -13,8 +13,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ type
     if (!handler) {
       return makeError(translate("api.info_not_found", lang), 404);
     }
-
-    const raw_data = await handler({});
+    const page = Number(req.nextUrl.searchParams.get("page")) || 1;
+    const raw_data = await handler({ page });
     const data: RatingUnionType = RatingUnionSchema.parse(raw_data);
     const response = {
       ok: true,

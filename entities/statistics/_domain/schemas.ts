@@ -18,8 +18,16 @@ const UserSchema = z.object({
   id: z.string(),
   profile: ProfileSchema.nullable(),
 });
+const RatingPagingBase = z.object({
+  page: z.number(),
+  pageSize: z.number(),
+  total: z.number(),
+  pages: z.number(),
+});
+
 const RatingExpSchema = z.object({
   rating_type: z.literal(OverallRatingsMAP_KEYS.exp),
+  ...RatingPagingBase.shape,
   data: z.array(
     z.object({
       lvl: z.number(),
@@ -30,6 +38,7 @@ const RatingExpSchema = z.object({
 });
 const RatingMeditationSchema = z.object({
   rating_type: z.literal(OverallRatingsMAP_KEYS.meditation),
+  ...RatingPagingBase.shape,
   data: z.array(
     z.object({
       meditated_hours: z.number(),
@@ -39,6 +48,7 @@ const RatingMeditationSchema = z.object({
 });
 const RatingSpiritSchema = z.object({
   rating_type: z.literal(OverallRatingsMAP_KEYS.spirit),
+  ...RatingPagingBase.shape,
   data: z.array(
     z.object({
       spirit_path_minutes: z.number(),
@@ -48,6 +58,7 @@ const RatingSpiritSchema = z.object({
 });
 const RatingMiningSchema = z.object({
   rating_type: z.literal(OverallRatingsMAP_KEYS.mining),
+  ...RatingPagingBase.shape,
   data: z.array(
     z.object({
       mined_qi_stone: z.number(),
@@ -57,6 +68,7 @@ const RatingMiningSchema = z.object({
 });
 const RatingWinsSchema = z.object({
   rating_type: z.literal(OverallRatingsMAP_KEYS.wins),
+  ...RatingPagingBase.shape,
   data: z.array(
     z.object({
       fights_wins: z.number(),

@@ -132,8 +132,8 @@ async function createUser() {
 }
 
 async function main() {
-  console.log("Seeding 500 users...");
-  for (let i = 0; i < 500; i++) {
+  console.log("Seeding 50 users...");
+  for (let i = 0; i < 50; i++) {
     await createUser();
     if (i % 20 === 0) console.log(`→ Created: ${i}`);
   }

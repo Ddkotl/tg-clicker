@@ -1,10 +1,16 @@
 import { OverallRatingsMAP_Type } from "@/entities/statistics/_domain/ratings_list_items";
+import { RankingPaginatedList } from "@/entities/statistics/_ui/RankingPaginatedList";
 
-export default async function Page({ params, searchParams }: {
-  params: { type: OverallRatingsMAP_Type }
-  searchParams: { page?: string }
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ type: OverallRatingsMAP_Type }>;
+  searchParams: Promise<{ page?: string }>;
 }) {
-  const page = Number(searchParams.page) || 1;
+  const awaitedParams = await params;
+  const awaitedSearchParams = await searchParams;
+  const page = Number(awaitedSearchParams.page) || 1;
 
-  return <RankingPaginatedList type={params.type} page={page} />;
+  return <RankingPaginatedList type={awaitedParams.type} page={page} />;
 }
