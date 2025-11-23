@@ -36,3 +36,6 @@ export function getStartOfMonth() {
 export function getEndOfMonth() {
   return dayjs().tz("UTC").endOf("month").toDate();
 }
+export function getDaysAgoDate(days: number) {
+  return dayjs().tz("UTC").subtract(days, "day").toDate();
+}

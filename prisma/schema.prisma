@@ -123,6 +123,7 @@ model UserStatistic {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique
 
+exp   Int @default(0)
   meditated_hours     Int @default(0)
   spirit_path_minutes Int @default(0)
   mined_qi_stone      Int @default(0)
@@ -137,9 +138,10 @@ model UserStatistic {
 model UserDailyStats {
     id     String @id @default(cuid())
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String @unique
+  userId String 
   date DateTime
 
+  exp   Int @default(0)
   meditated_hours     Int @default(0)
   spirit_path_minutes Int @default(0)
   mined_qi_stone      Int @default(0)
@@ -148,7 +150,7 @@ model UserDailyStats {
   fights_total    Int @default(0)
   fights_wins     Int @default(0)
 
-  @@unique([userId, date])
+  @@unique([userId, date],name :"userId_date")
   @@index([date])
   @@map("user_daily_stats")
 }

@@ -1,14 +1,16 @@
-import { OverallRatingsMAP_KEYS } from "@/entities/statistics/_domain/ratings_list_items";
+import {
+  ratingMetrics,
+  RatingsMetrics,
+  RatingsTypes,
+  ratingsTypes,
+} from "@/entities/statistics/_domain/ratings_list_items";
 import { RankingList } from "@/entities/statistics/_ui/RankingList";
 import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
 import { translate } from "@/features/translations/server/translate_fn";
 import { PageDescription } from "@/shared/components/custom_ui/page_description";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
-import { icons } from "@/shared/lib/icons";
 import { img_paths } from "@/shared/lib/img_paths";
-import { ui_path } from "@/shared/lib/paths";
 import { headers } from "next/headers";
-import Link from "next/link";
 
 export default async function RankingPage() {
   const req_headers = await headers();
@@ -21,23 +23,35 @@ export default async function RankingPage() {
         text={translate("ranking.text", lang)}
         img={img_paths.ranking_page()}
       />
-      <Tabs defaultValue="overall">
+      <Tabs defaultValue={ratingsTypes.overall}>
         <TabsList className="w-full grid grid-cols-2 h-auto">
-          <TabsTrigger value="overall">{translate("ranking.ratings.overall_game_rating", lang)}</TabsTrigger>
-          <TabsTrigger value="monthly">{translate("ranking.ratings.monthly", lang)}</TabsTrigger>
-          <TabsTrigger value="weekly">{translate("ranking.ratings.weekly", lang)}</TabsTrigger>
-          <TabsTrigger value="daily">{translate("ranking.ratings.daily", lang)}</TabsTrigger>
+          <TabsTrigger value={ratingsTypes.overall}>
+            {translate("ranking.ratings.overall_game_rating", lang)}
+          </TabsTrigger>
+          <TabsTrigger value={ratingsTypes.monthly}>{translate("ranking.ratings.monthly", lang)}</TabsTrigger>
+          <TabsTrigger value={ratingsTypes.weekly}>{translate("ranking.ratings.weekly", lang)}</TabsTrigger>
+          <TabsTrigger value={ratingsTypes.daily}>{translate("ranking.ratings.daily", lang)}</TabsTrigger>
         </TabsList>
-        <TabsContent value="overall">
-          <RankingList type={OverallRatingsMAP_KEYS.exp} />
-          <RankingList type={OverallRatingsMAP_KEYS.meditation} />
-          <RankingList type={OverallRatingsMAP_KEYS.mining} />
-          <RankingList type={OverallRatingsMAP_KEYS.spirit} />
-          <RankingList type={OverallRatingsMAP_KEYS.wins} />
+        <TabsContent value={ratingsTypes.overall}>
+          {Object.entries(ratingMetrics).map(([_k, m]) => (
+            <RankingList key={m} metric={m as RatingsMetrics} type={ratingsTypes.overall as RatingsTypes} />
+          ))}
         </TabsContent>
-        <TabsContent value="monthly">monthly</TabsContent>
-        <TabsContent value="weekly">weekly</TabsContent>
-        <TabsContent value="daily">daily</TabsContent>
+        <TabsContent value={ratingsTypes.monthly}>
+          {Object.entries(ratingMetrics).map(([_k, m]) => (
+            <RankingList key={m} metric={m as RatingsMetrics} type={ratingsTypes.monthly as RatingsTypes} />
+          ))}
+        </TabsContent>
+        <TabsContent value={ratingsTypes.weekly}>
+          {Object.entries(ratingMetrics).map(([_k, m]) => (
+            <RankingList key={m} metric={m as RatingsMetrics} type={ratingsTypes.weekly as RatingsTypes} />
+          ))}
+        </TabsContent>
+        <TabsContent value={ratingsTypes.daily}>
+          {Object.entries(ratingMetrics).map(([_k, m]) => (
+            <RankingList key={m} metric={m as RatingsMetrics} type={ratingsTypes.daily as RatingsTypes} />
+          ))}
+        </TabsContent>
       </Tabs>
     </div>
   );
