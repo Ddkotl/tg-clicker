@@ -1,4 +1,10 @@
 export const img_paths = {
+  fractions: {
+    adept_f: () => `/adept_f.jpg`,
+    adept_m: () => `/adept_m.jpg`,
+    novice_f: () => `/novice_f.jpg`,
+    novice_m: () => `/novice_m.jpg`,
+  },
   mining_cave: () => `/mining_cave.jpg`,
   meditation: () => `/meditation.jpg`,
   spirit_path: () => `/spirit_path.jpg`,

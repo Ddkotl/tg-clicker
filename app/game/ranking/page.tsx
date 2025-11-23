@@ -22,19 +22,22 @@ export default async function RankingPage() {
         img={img_paths.ranking_page()}
       />
       <Tabs defaultValue="overall">
-        <TabsList className="w-full">
+        <TabsList className="w-full grid grid-cols-2 h-auto">
           <TabsTrigger value="overall">{translate("ranking.ratings.overall_game_rating", lang)}</TabsTrigger>
+          <TabsTrigger value="monthly">{translate("ranking.ratings.monthly", lang)}</TabsTrigger>
           <TabsTrigger value="weekly">{translate("ranking.ratings.weekly", lang)}</TabsTrigger>
           <TabsTrigger value="daily">{translate("ranking.ratings.daily", lang)}</TabsTrigger>
         </TabsList>
         <TabsContent value="overall">
           <RankingList type={OverallRatingsMAP_KEYS.exp} />
-          {/* <Link href={ui_path.rankings_type_page(OverallRatingsMAP_KEYS.exp, 1)} className="underline">
-            {icons.arrow_right({})}
-          </Link> */}
+          <RankingList type={OverallRatingsMAP_KEYS.meditation} />
+          <RankingList type={OverallRatingsMAP_KEYS.mining} />
+          <RankingList type={OverallRatingsMAP_KEYS.spirit} />
+          <RankingList type={OverallRatingsMAP_KEYS.wins} />
         </TabsContent>
+        <TabsContent value="monthly">monthly</TabsContent>
         <TabsContent value="weekly">weekly</TabsContent>
-        <TabsContent value="daily">daiy</TabsContent>
+        <TabsContent value="daily">daily</TabsContent>
       </Tabs>
     </div>
   );

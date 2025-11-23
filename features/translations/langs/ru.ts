@@ -16,6 +16,10 @@ export const ru_lang: Messages = {
     cooldown: "Кулдаун: подождите {seconds}c",
     no_energy: "Нет энергии",
   },
+  pagination: {
+    next: "Вперёд",
+    previous: "Назад",
+  },
   soon: "скоро",
   qi_energy: "Ци",
   qi_stone: "Камень ци",
@@ -271,8 +275,21 @@ export const ru_lang: Messages = {
     text: "Здесь хранится частица времени каждого, кто постиг путь культивации, но чествуют самых сильных и мудрых. Стремись вписать свое имя в анналы вечности.",
     ratings: {
       overall_game_rating: "Общеигровой",
+      monthly: "Ежемесячный",
       weekly: "Еженедельный",
       daily: "Ежедневный",
+      names_types: {
+        exp: "Уровень",
+        exp_value: "Уровень",
+        meditation: "Часы медитации",
+        meditation_value: "Часы",
+        spirit: "Минуты пути духа",
+        spirit_value: "Минуты",
+        mining: "Добыто камней ци",
+        mining_value: "Добыто",
+        wins: "Победы в боях",
+        wins_value: "Победы",
+      },
     },
   },
 };

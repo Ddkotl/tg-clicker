@@ -1,6 +1,7 @@
-import { Fraktion } from "@/_generated/prisma";
+import { Fraktion, UserDailyStats } from "@/_generated/prisma";
 import { dataBase, TransactionType } from "@/shared/connect/db_connect";
 import { OverallRatingsMAP_KEYS } from "../_domain/ratings_list_items";
+import { getStartOfToday } from "@/shared/lib/date";
 
 export class StatisticRepository {
   async getUserCountsInFractions() {
@@ -65,7 +66,7 @@ export class StatisticRepository {
     pageSize?: number;
   }) {
     const db_client = tx ? tx : dataBase;
-    const users = db_client.userStatistic.findMany({
+    const users = await db_client.userStatistic.findMany({
       skip: pageSize * (page - 1),
       take: pageSize,
       orderBy: { meditated_hours: "desc" },
@@ -102,7 +103,7 @@ export class StatisticRepository {
     pageSize?: number;
   }) {
     const db_client = tx ? tx : dataBase;
-    const users = db_client.userStatistic.findMany({
+    const users = await db_client.userStatistic.findMany({
       skip: (page - 1) * pageSize,
       take: pageSize,
       orderBy: { spirit_path_minutes: "desc" },
@@ -131,7 +132,7 @@ export class StatisticRepository {
 
   async getMiningRating({ tx, page = 1, pageSize = 10 }: { tx?: TransactionType; page?: number; pageSize?: number }) {
     const db_client = tx ? tx : dataBase;
-    const users = db_client.userStatistic.findMany({
+    const users = await db_client.userStatistic.findMany({
       skip: (page - 1) * pageSize,
       take: pageSize,
       orderBy: { mined_qi_stone: "desc" },
@@ -160,7 +161,7 @@ export class StatisticRepository {
 
   async getWinsRating({ tx, page = 1, pageSize = 10 }: { tx?: TransactionType; page?: number; pageSize?: number }) {
     const db_client = tx ? tx : dataBase;
-    const users = db_client.userStatistic.findMany({
+    const users = await db_client.userStatistic.findMany({
       skip: (page - 1) * pageSize,
       take: pageSize,
       orderBy: { fights_wins: "desc" },
@@ -185,6 +186,49 @@ export class StatisticRepository {
       pages: Math.ceil(total / pageSize),
       data: users,
     };
+  }
+  async getUserDailyStats({ userId, tx }: { userId: string; tx?: TransactionType }) {
+    const db_client = tx ? tx : dataBase;
+    const today = getStartOfToday();
+    try {
+      const stat = await db_client.userDailyStats.findUnique({
+        where: {
+          userId: userId,
+          date: today,
+        },
+      });
+      return stat;
+    } catch (error) {
+      console.error("getUserDailyStats error", error);
+      return null;
+    }
+  }
+  async updateUserDailyStats({
+    data,
+    userId,
+    tx,
+  }: {
+    data: Partial<UserDailyStats>;
+    userId: string;
+    tx?: TransactionType;
+  }) {
+    const db_client = tx ? tx : dataBase;
+    const today = getStartOfToday();
+    try {
+      const stat = await db_client.userDailyStats.upsert({
+        where: { userId: userId, date: today },
+        update: data,
+        create: {
+          userId,
+          date: today,
+          ...data,
+        },
+      });
+      return stat;
+    } catch (error) {
+      console.error("updateDailyStats error", error);
+      return null;
+    }
   }
 }
 

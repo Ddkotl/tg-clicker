@@ -14,6 +14,10 @@ export const en_lang = {
     cooldown: "Cooldown: wait {seconds}s",
     no_energy: "No energy",
   },
+  pagination: {
+    next: "Next",
+    previous: "Previous",
+  },
   soon: "soon",
   qi_energy: "Qi",
   qi_stone: "Qi stone",
@@ -271,8 +275,21 @@ export const en_lang = {
     text: "Here are stored particles of time of everyone who has mastered the path of cultivation, but the strongest and wisest are honored. Strive to etch your name into the annals of eternity.",
     ratings: {
       overall_game_rating: "Overall",
+      monthly: "Monthly",
       weekly: "Weekly",
       daily: "Daily",
+      names_types: {
+        exp: "Level",
+        exp_value: "Level",
+        meditation: "Meditation Hours",
+        meditation_value: "Hours",
+        spirit: "Spirit Path Minutes",
+        spirit_value: "Minutes",
+        mining: "Qi Stones Mined",
+        mining_value: "Mined",
+        wins: "Fights Won",
+        wins_value: "Wins",
+      },
     },
   },
 };
