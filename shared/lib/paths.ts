@@ -1,4 +1,4 @@
-import { OverallRatingsMAP_Type } from "@/entities/statistics/_domain/ratings_list_items";
+import { RatingsMetrics, RatingsTypes } from "@/entities/statistics/_domain/ratings_list_items";
 
 export const ui_path = {
   auth_page: () => `/`,
@@ -11,6 +11,8 @@ export const ui_path = {
   city_page: () => `/game/city`,
   pet_page: () => `/game/pet`,
   rankings_page: () => `/game/ranking`,
+  rankings_type_page: (type: RatingsTypes, metric: RatingsMetrics, page: number) =>
+    `/game/ranking/${type}/${metric}?page=${page}`,
   qi_skills_page: () => `/game/headquarter/qi_skills`,
   missions_page: () => `/game/headquarter/missions`,
   mine_page: () => `/game/headquarter/mine`,
@@ -41,5 +43,6 @@ export const api_path = {
   create_fight: () => `/api/fight/create`,
   start_fight: () => `/api/fight/attack`,
   get_current_fight: () => `/api/fight/current`,
-  get_ratings: (type: OverallRatingsMAP_Type) => `/api/statistics/rating/${type}`,
+  get_ratings: (type: RatingsTypes, metric: RatingsMetrics, page: number) =>
+    `/api/statistics/rating/${type}/${metric}?page=${page}`,
 };

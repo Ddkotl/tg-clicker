@@ -5,7 +5,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+   url      = env("DATABASE_URL")
 }
 
 model User {
@@ -33,6 +33,7 @@ model User {
 
   fights       Fight[] @relation("FightDefender")
   atack_fights Fight[]
+  user_daily_stats UserDailyStats[]
 
   @@map("users")
 }
@@ -122,8 +123,7 @@ model UserStatistic {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique
 
-  wins                Int @default(0)
-  loses               Int @default(0)
+exp   Int @default(0)
   meditated_hours     Int @default(0)
   spirit_path_minutes Int @default(0)
   mined_qi_stone      Int @default(0)
@@ -131,11 +131,28 @@ model UserStatistic {
 
   fights_total    Int @default(0)
   fights_wins     Int @default(0)
-  fights_loses    Int @default(0)
-  pve_shadow_wins Int @default(0)
-  demonic_beasts_wins Int @default(0)
 
+  @@index([userId])
   @@map("user_statistics")
+}
+model UserDailyStats {
+    id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String 
+  date DateTime
+
+  exp   Int @default(0)
+  meditated_hours     Int @default(0)
+  spirit_path_minutes Int @default(0)
+  mined_qi_stone      Int @default(0)
+  mined_count         Int @default(0)
+
+  fights_total    Int @default(0)
+  fights_wins     Int @default(0)
+
+  @@unique([userId, date],name :"userId_date")
+  @@index([date])
+  @@map("user_daily_stats")
 }
 
 model UserQiSkills {

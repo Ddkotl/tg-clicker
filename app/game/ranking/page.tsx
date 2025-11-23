@@ -1,3 +1,9 @@
+import {
+  ratingMetrics,
+  RatingsMetrics,
+  RatingsTypes,
+  ratingsTypes,
+} from "@/entities/statistics/_domain/ratings_list_items";
 import { RankingList } from "@/entities/statistics/_ui/RankingList";
 import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
 import { translate } from "@/features/translations/server/translate_fn";
@@ -17,21 +23,35 @@ export default async function RankingPage() {
         text={translate("ranking.text", lang)}
         img={img_paths.ranking_page()}
       />
-      <Tabs defaultValue="overall">
-        <TabsList className="w-full">
-          <TabsTrigger value="overall">{translate("ranking.ratings.overall_game_rating", lang)}</TabsTrigger>
-          <TabsTrigger value="weekly">{translate("ranking.ratings.weekly", lang)}</TabsTrigger>
-          <TabsTrigger value="daily">{translate("ranking.ratings.daily", lang)}</TabsTrigger>
+      <Tabs defaultValue={ratingsTypes.overall}>
+        <TabsList className="w-full grid grid-cols-2 h-auto">
+          <TabsTrigger value={ratingsTypes.overall}>
+            {translate("ranking.ratings.overall_game_rating", lang)}
+          </TabsTrigger>
+          <TabsTrigger value={ratingsTypes.monthly}>{translate("ranking.ratings.monthly", lang)}</TabsTrigger>
+          <TabsTrigger value={ratingsTypes.weekly}>{translate("ranking.ratings.weekly", lang)}</TabsTrigger>
+          <TabsTrigger value={ratingsTypes.daily}>{translate("ranking.ratings.daily", lang)}</TabsTrigger>
         </TabsList>
-        <TabsContent value="overall">
-          <RankingList type="exp" />
-          <RankingList type="meditation" />
-          <RankingList type="spirit" />
-          <RankingList type="wins" />
-          <RankingList type="mining" />
+        <TabsContent value={ratingsTypes.overall}>
+          {Object.entries(ratingMetrics).map(([_k, m]) => (
+            <RankingList key={m} metric={m as RatingsMetrics} type={ratingsTypes.overall as RatingsTypes} />
+          ))}
         </TabsContent>
-        <TabsContent value="weekly">weekly</TabsContent>
-        <TabsContent value="daily">daiy</TabsContent>
+        <TabsContent value={ratingsTypes.monthly}>
+          {Object.entries(ratingMetrics).map(([_k, m]) => (
+            <RankingList key={m} metric={m as RatingsMetrics} type={ratingsTypes.monthly as RatingsTypes} />
+          ))}
+        </TabsContent>
+        <TabsContent value={ratingsTypes.weekly}>
+          {Object.entries(ratingMetrics).map(([_k, m]) => (
+            <RankingList key={m} metric={m as RatingsMetrics} type={ratingsTypes.weekly as RatingsTypes} />
+          ))}
+        </TabsContent>
+        <TabsContent value={ratingsTypes.daily}>
+          {Object.entries(ratingMetrics).map(([_k, m]) => (
+            <RankingList key={m} metric={m as RatingsMetrics} type={ratingsTypes.daily as RatingsTypes} />
+          ))}
+        </TabsContent>
       </Tabs>
     </div>
   );

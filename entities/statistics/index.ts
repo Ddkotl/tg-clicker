@@ -1,6 +1,6 @@
-export type { UserCountInFrResponseType, RatingUnionType, RatingsOverallResponseType } from "./_domain/types";
+export type { UserCountInFrResponseType, RatingUnionType, RatingsResponseType } from "./_domain/types";
 export {
   useGetUsersCountInFractionsQuery,
   useInvalidateGetUserCountsInFractions,
 } from "./_queries/users_count_in_fr_querys";
-export { RatingUnionSchema, ratingsOverallResponseSchema, userCountInFrResponseSchema } from "./_domain/schemas";
+export { RatingUnionSchema, ratingsResponseSchema, userCountInFrResponseSchema } from "./_domain/schemas";

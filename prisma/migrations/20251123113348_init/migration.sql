@@ -1,32 +1,32 @@
 -- CreateEnum
-CREATE TYPE "public"."MissionType" AS ENUM ('MEDITATION', 'SPIRIT_PATH', 'MINE', 'MINE_STONE');
+CREATE TYPE "MissionType" AS ENUM ('MEDITATION', 'SPIRIT_PATH', 'MINE', 'MINE_STONE');
 
 -- CreateEnum
-CREATE TYPE "public"."FactsStatus" AS ENUM ('CHECKED', 'NO_CHECKED');
+CREATE TYPE "FactsStatus" AS ENUM ('CHECKED', 'NO_CHECKED');
 
 -- CreateEnum
-CREATE TYPE "public"."FactsType" AS ENUM ('MEDITATION', 'MINE', 'SPIRIT_PATH', 'MISSION');
+CREATE TYPE "FactsType" AS ENUM ('MEDITATION', 'MINE', 'SPIRIT_PATH', 'MISSION');
 
 -- CreateEnum
-CREATE TYPE "public"."Fraktion" AS ENUM ('ADEPT', 'NOVICE');
+CREATE TYPE "Fraktion" AS ENUM ('ADEPT', 'NOVICE');
 
 -- CreateEnum
-CREATE TYPE "public"."Gender" AS ENUM ('MALE', 'FEMALE');
+CREATE TYPE "Gender" AS ENUM ('MALE', 'FEMALE');
 
 -- CreateEnum
-CREATE TYPE "public"."FightType" AS ENUM ('PVE', 'PVP');
+CREATE TYPE "FightType" AS ENUM ('PVE', 'PVP');
 
 -- CreateEnum
-CREATE TYPE "public"."EnemyType" AS ENUM ('NPC', 'PLAYER');
+CREATE TYPE "EnemyType" AS ENUM ('DEMONIC_BEAST', 'PLAYER');
 
 -- CreateEnum
-CREATE TYPE "public"."FightStatus" AS ENUM ('PENDING', 'FINISHED');
+CREATE TYPE "FightStatus" AS ENUM ('PENDING', 'FINISHED');
 
 -- CreateEnum
-CREATE TYPE "public"."FightResult" AS ENUM ('WIN', 'LOSE', 'DRAW');
+CREATE TYPE "FightResult" AS ENUM ('WIN', 'LOSE', 'DRAW');
 
 -- CreateTable
-CREATE TABLE "public"."users" (
+CREATE TABLE "users" (
     "id" TEXT NOT NULL,
     "telegram_id" TEXT NOT NULL,
     "username" TEXT,
@@ -44,12 +44,12 @@ CREATE TABLE "public"."users" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."profiles" (
+CREATE TABLE "profiles" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "fraktion" "public"."Fraktion",
+    "fraktion" "Fraktion",
     "nikname" TEXT,
-    "gender" "public"."Gender",
+    "gender" "Gender",
     "color_theme" TEXT,
     "avatar_url" TEXT,
     "player_motto" TEXT,
@@ -76,11 +76,11 @@ CREATE TABLE "public"."profiles" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."missions" (
+CREATE TABLE "missions" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "path" TEXT,
-    "type" "public"."MissionType" NOT NULL,
+    "type" "MissionType" NOT NULL,
     "reward_exp" INTEGER NOT NULL DEFAULT 0,
     "reward_qi" INTEGER NOT NULL DEFAULT 0,
     "reward_qi_stone" INTEGER NOT NULL DEFAULT 0,
@@ -97,7 +97,7 @@ CREATE TABLE "public"."missions" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."mines" (
+CREATE TABLE "mines" (
     "userId" TEXT NOT NULL,
     "energy" INTEGER NOT NULL DEFAULT 25,
     "last_mine_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -106,25 +106,38 @@ CREATE TABLE "public"."mines" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."user_statistics" (
+CREATE TABLE "user_statistics" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "wins" INTEGER NOT NULL DEFAULT 0,
-    "loses" INTEGER NOT NULL DEFAULT 0,
+    "exp" INTEGER NOT NULL DEFAULT 0,
     "meditated_hours" INTEGER NOT NULL DEFAULT 0,
     "spirit_path_minutes" INTEGER NOT NULL DEFAULT 0,
     "mined_qi_stone" INTEGER NOT NULL DEFAULT 0,
     "mined_count" INTEGER NOT NULL DEFAULT 0,
     "fights_total" INTEGER NOT NULL DEFAULT 0,
     "fights_wins" INTEGER NOT NULL DEFAULT 0,
-    "fights_loses" INTEGER NOT NULL DEFAULT 0,
-    "pve_shadow_wins" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "user_statistics_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "public"."user_qi_skills" (
+CREATE TABLE "user_daily_stats" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL,
+    "exp" INTEGER NOT NULL DEFAULT 0,
+    "meditated_hours" INTEGER NOT NULL DEFAULT 0,
+    "spirit_path_minutes" INTEGER NOT NULL DEFAULT 0,
+    "mined_qi_stone" INTEGER NOT NULL DEFAULT 0,
+    "mined_count" INTEGER NOT NULL DEFAULT 0,
+    "fights_total" INTEGER NOT NULL DEFAULT 0,
+    "fights_wins" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "user_daily_stats_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "user_qi_skills" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "qi_veil" INTEGER NOT NULL DEFAULT 0,
@@ -136,7 +149,7 @@ CREATE TABLE "public"."user_qi_skills" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."meditations" (
+CREATE TABLE "meditations" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "on_meditation" BOOLEAN NOT NULL DEFAULT false,
@@ -149,7 +162,7 @@ CREATE TABLE "public"."meditations" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."spirit_paths" (
+CREATE TABLE "spirit_paths" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "on_spirit_paths" BOOLEAN NOT NULL DEFAULT false,
@@ -164,11 +177,11 @@ CREATE TABLE "public"."spirit_paths" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."facts" (
+CREATE TABLE "facts" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "type" "public"."FactsType" NOT NULL,
-    "status" "public"."FactsStatus" NOT NULL,
+    "type" "FactsType" NOT NULL,
+    "status" "FactsStatus" NOT NULL,
     "qi_reward" INTEGER,
     "qi_stone_reward" INTEGER,
     "spirit_cristal_reward" INTEGER,
@@ -177,24 +190,24 @@ CREATE TABLE "public"."facts" (
     "active_hours" INTEGER,
     "active_minutes" INTEGER,
     "target_value" INTEGER,
-    "mission_type" "public"."MissionType",
+    "mission_type" "MissionType",
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "facts_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "public"."fights" (
+CREATE TABLE "fights" (
     "id" TEXT NOT NULL,
     "attackerId" TEXT NOT NULL,
     "defenderId" TEXT,
-    "type" "public"."FightType" NOT NULL DEFAULT 'PVE',
-    "enemyType" "public"."EnemyType",
+    "type" "FightType" NOT NULL,
+    "enemyType" "EnemyType" NOT NULL,
     "enemyNpcId" TEXT,
-    "status" "public"."FightStatus" NOT NULL DEFAULT 'PENDING',
-    "result" "public"."FightResult",
+    "status" "FightStatus" NOT NULL,
+    "result" "FightResult",
     "snapshot" JSONB NOT NULL,
-    "fightLog" JSONB NOT NULL,
+    "fightLog" JSONB,
     "rewards" JSONB,
     "startedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "finishedAt" TIMESTAMP(3),
@@ -203,64 +216,76 @@ CREATE TABLE "public"."fights" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_telegram_id_key" ON "public"."users"("telegram_id");
+CREATE UNIQUE INDEX "users_telegram_id_key" ON "users"("telegram_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "profiles_userId_key" ON "public"."profiles"("userId");
+CREATE UNIQUE INDEX "profiles_userId_key" ON "profiles"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "profiles_nikname_key" ON "public"."profiles"("nikname");
+CREATE UNIQUE INDEX "profiles_nikname_key" ON "profiles"("nikname");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "missions_userId_type_key" ON "public"."missions"("userId", "type");
+CREATE UNIQUE INDEX "missions_userId_type_key" ON "missions"("userId", "type");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "mines_userId_key" ON "public"."mines"("userId");
+CREATE UNIQUE INDEX "mines_userId_key" ON "mines"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "user_statistics_userId_key" ON "public"."user_statistics"("userId");
+CREATE UNIQUE INDEX "user_statistics_userId_key" ON "user_statistics"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "user_qi_skills_userId_key" ON "public"."user_qi_skills"("userId");
+CREATE INDEX "user_statistics_userId_idx" ON "user_statistics"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "meditations_userId_key" ON "public"."meditations"("userId");
+CREATE INDEX "user_daily_stats_date_idx" ON "user_daily_stats"("date");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "spirit_paths_userId_key" ON "public"."spirit_paths"("userId");
+CREATE UNIQUE INDEX "user_daily_stats_userId_date_key" ON "user_daily_stats"("userId", "date");
 
 -- CreateIndex
-CREATE INDEX "facts_userId_idx" ON "public"."facts"("userId");
+CREATE UNIQUE INDEX "user_qi_skills_userId_key" ON "user_qi_skills"("userId");
 
 -- CreateIndex
-CREATE INDEX "fights_attackerId_idx" ON "public"."fights"("attackerId");
+CREATE UNIQUE INDEX "meditations_userId_key" ON "meditations"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "spirit_paths_userId_key" ON "spirit_paths"("userId");
+
+-- CreateIndex
+CREATE INDEX "facts_userId_idx" ON "facts"("userId");
+
+-- CreateIndex
+CREATE INDEX "fights_attackerId_idx" ON "fights"("attackerId");
 
 -- AddForeignKey
-ALTER TABLE "public"."profiles" ADD CONSTRAINT "profiles_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "profiles" ADD CONSTRAINT "profiles_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."missions" ADD CONSTRAINT "missions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "missions" ADD CONSTRAINT "missions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."mines" ADD CONSTRAINT "mines_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "mines" ADD CONSTRAINT "mines_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."user_statistics" ADD CONSTRAINT "user_statistics_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "user_statistics" ADD CONSTRAINT "user_statistics_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."user_qi_skills" ADD CONSTRAINT "user_qi_skills_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "user_daily_stats" ADD CONSTRAINT "user_daily_stats_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."meditations" ADD CONSTRAINT "meditations_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "user_qi_skills" ADD CONSTRAINT "user_qi_skills_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."spirit_paths" ADD CONSTRAINT "spirit_paths_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "meditations" ADD CONSTRAINT "meditations_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."facts" ADD CONSTRAINT "facts_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "spirit_paths" ADD CONSTRAINT "spirit_paths_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."fights" ADD CONSTRAINT "fights_attackerId_fkey" FOREIGN KEY ("attackerId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "facts" ADD CONSTRAINT "facts_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."fights" ADD CONSTRAINT "fights_defenderId_fkey" FOREIGN KEY ("defenderId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "fights" ADD CONSTRAINT "fights_attackerId_fkey" FOREIGN KEY ("attackerId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fights" ADD CONSTRAINT "fights_defenderId_fkey" FOREIGN KEY ("defenderId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

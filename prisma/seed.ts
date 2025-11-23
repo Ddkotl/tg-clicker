@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { PrismaClient, MissionType, FactsType, FactsStatus } from "@/_generated/prisma";
+import { img_paths } from "@/shared/lib/img_paths";
 
 const prisma = new PrismaClient();
 
@@ -29,7 +30,7 @@ async function createUser() {
       fraktion: faker.helpers.arrayElement(["ADEPT", "NOVICE"]),
       nikname: faker.internet.displayName(),
       gender: faker.helpers.arrayElement(["MALE", "FEMALE"]),
-      avatar_url: faker.image.avatar(),
+      avatar_url: img_paths.fractions.adept_m(),
       player_motto: faker.word.words({ count: 3 }),
       lvl: faker.number.int({ min: 1, max: 60 }),
       exp: faker.number.int({ min: 0, max: 30000 }),
@@ -48,17 +49,12 @@ async function createUser() {
   await prisma.userStatistic.create({
     data: {
       userId: user.id,
-      wins: faker.number.int({ min: 0, max: 200 }),
-      loses: faker.number.int({ min: 0, max: 200 }),
       meditated_hours: faker.number.int({ min: 0, max: 500 }),
       spirit_path_minutes: faker.number.int({ min: 0, max: 700 }),
       mined_qi_stone: faker.number.int({ min: 0, max: 300 }),
       mined_count: faker.number.int({ min: 0, max: 1000 }),
       fights_total: faker.number.int({ min: 0, max: 500 }),
       fights_wins: faker.number.int({ min: 0, max: 250 }),
-      fights_loses: faker.number.int({ min: 0, max: 250 }),
-      pve_shadow_wins: faker.number.int({ min: 0, max: 200 }),
-      demonic_beasts_wins: faker.number.int({ min: 0, max: 200 }),
     },
   });
 
@@ -132,8 +128,8 @@ async function createUser() {
 }
 
 async function main() {
-  console.log("Seeding 500 users...");
-  for (let i = 0; i < 500; i++) {
+  console.log("Seeding 50 users...");
+  for (let i = 0; i < 50; i++) {
     await createUser();
     if (i % 20 === 0) console.log(`→ Created: ${i}`);
   }

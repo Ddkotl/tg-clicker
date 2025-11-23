@@ -1,5 +1,5 @@
 import z from "zod";
-import { OverallRatingsMAP_KEYS } from "./ratings_list_items";
+import { ratingMetrics, ratingsTypes } from "./ratings_list_items";
 
 export const userCountInFrResponseSchema = z.object({
   data: z.object({
@@ -18,60 +18,22 @@ const UserSchema = z.object({
   id: z.string(),
   profile: ProfileSchema.nullable(),
 });
-const RatingExpSchema = z.object({
-  rating_type: z.literal(OverallRatingsMAP_KEYS.exp),
+
+export const RatingUnionSchema = z.object({
+  rating_metric: z.enum(Object.values(ratingMetrics)),
+  rating_type: z.enum(Object.values(ratingsTypes)),
+  page: z.number(),
+  pageSize: z.number(),
+  total: z.number(),
+  pages: z.number(),
   data: z.array(
     z.object({
-      lvl: z.number(),
-      exp: z.number(),
-      user: UserSchema,
+      amount: z.number(),
+      user: UserSchema.nullable(),
     }),
   ),
 });
-const RatingMeditationSchema = z.object({
-  rating_type: z.literal(OverallRatingsMAP_KEYS.meditation),
-  data: z.array(
-    z.object({
-      meditated_hours: z.number(),
-      user: UserSchema,
-    }),
-  ),
-});
-const RatingSpiritSchema = z.object({
-  rating_type: z.literal(OverallRatingsMAP_KEYS.spirit),
-  data: z.array(
-    z.object({
-      spirit_path_minutes: z.number(),
-      user: UserSchema,
-    }),
-  ),
-});
-const RatingMiningSchema = z.object({
-  rating_type: z.literal(OverallRatingsMAP_KEYS.mining),
-  data: z.array(
-    z.object({
-      mined_qi_stone: z.number(),
-      user: UserSchema,
-    }),
-  ),
-});
-const RatingWinsSchema = z.object({
-  rating_type: z.literal(OverallRatingsMAP_KEYS.wins),
-  data: z.array(
-    z.object({
-      fights_wins: z.number(),
-      user: UserSchema,
-    }),
-  ),
-});
-export const RatingUnionSchema = z.discriminatedUnion("rating_type", [
-  RatingExpSchema,
-  RatingMeditationSchema,
-  RatingSpiritSchema,
-  RatingMiningSchema,
-  RatingWinsSchema,
-]);
-export const ratingsOverallResponseSchema = z.object({
+export const ratingsResponseSchema = z.object({
   data: RatingUnionSchema,
   message: z.string(),
   ok: z.boolean(),

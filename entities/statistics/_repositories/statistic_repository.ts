@@ -1,6 +1,8 @@
-import { Fraktion } from "@/_generated/prisma";
+import { Fraktion, UserDailyStats } from "@/_generated/prisma";
 import { dataBase, TransactionType } from "@/shared/connect/db_connect";
-import { OverallRatingsMAP_KEYS } from "../_domain/ratings_list_items";
+import { RatingsMetrics, RatingsTypes } from "../_domain/ratings_list_items";
+import { getStartOfToday } from "@/shared/lib/date";
+import { getPeriodRange } from "../_vm/get_period_range";
 
 export class StatisticRepository {
   async getUserCountsInFractions() {
@@ -25,166 +27,150 @@ export class StatisticRepository {
     }
   }
 
-  async getExpRating({ tx, page = 1, pageSize = 10 }: { tx?: TransactionType; page?: number; pageSize?: number }) {
+  async getRating({
+    ratingType,
+    metric,
+    tx,
+    page = 1,
+    pageSize = 10,
+  }: {
+    ratingType: RatingsTypes;
+    metric: RatingsMetrics;
+    tx?: TransactionType;
+    page?: number;
+    pageSize?: number;
+  }) {
     const db = tx ?? dataBase;
-    const users = await db.profile.findMany({
+    const isOverall = ratingType === "overall";
+
+    if (isOverall) {
+      // Берём пользователей с их profile / statistic
+      const users = await db.user.findMany({
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        orderBy: metric === "exp" ? { profile: { exp: "desc" } } : { user_statistic: { [metric]: "desc" } },
+        include: {
+          profile: true,
+          user_statistic: true,
+        },
+      });
+
+      const formatted = users.map((user) => ({
+        amount: metric === "exp" ? (user.profile?.exp ?? 0) : (user.user_statistic?.[metric] ?? 0),
+        user,
+      }));
+
+      const total = await db.user.count();
+
+      return {
+        type: ratingType,
+        metric,
+        total,
+        pages: Math.ceil(total / pageSize),
+        page,
+        pageSize,
+        data: formatted,
+      };
+    }
+
+    // Для периодических рейтингов
+    const range = getPeriodRange(ratingType);
+    if (!range) {
+      return {
+        type: ratingType,
+        metric,
+        total: 0,
+        pages: 0,
+        page,
+        pageSize,
+        data: [],
+      };
+    }
+    const { start, end } = range;
+
+    const grouped = await db.userDailyStats.groupBy({
+      by: ["userId"],
+      where: { date: { gte: start, lte: end } },
+      _sum: { [metric]: true },
+      orderBy: { _sum: { [metric]: "desc" } },
       skip: (page - 1) * pageSize,
       take: pageSize,
-      orderBy: [{ lvl: "desc" }, { exp: "desc" }],
-      select: {
-        lvl: true,
-        exp: true,
-        user: {
-          select: {
-            id: true,
-            profile: { select: { avatar_url: true, nikname: true } },
-          },
-        },
-      },
     });
 
-    const total = await db.profile.count();
+    const totalUsers = await db.userDailyStats.groupBy({
+      by: ["userId"],
+      where: { date: { gte: start, lte: end } },
+      _sum: { [metric]: true },
+    });
+
+    const detailedUsers = await Promise.all(
+      grouped.map(async (u) => ({
+        amount: u._sum[metric] ?? 0,
+        user: await db.user.findUnique({
+          where: { id: u.userId },
+          select: {
+            id: true,
+            profile: { select: { nikname: true, avatar_url: true } },
+          },
+        }),
+      })),
+    );
 
     return {
-      rating_type: OverallRatingsMAP_KEYS.exp,
+      type: ratingType,
+      metric,
+      total: totalUsers.length,
+      pages: Math.ceil(totalUsers.length / pageSize),
       page,
       pageSize,
-      total,
-      pages: Math.ceil(total / pageSize),
-      data: users,
+      data: detailedUsers,
     };
   }
 
-  async getMeditationRating({
+  async getUserDailyStats({ userId, tx }: { userId: string; tx?: TransactionType }) {
+    const db_client = tx ? tx : dataBase;
+    const today = getStartOfToday();
+    try {
+      const stat = await db_client.userDailyStats.findUnique({
+        where: {
+          userId_date: {
+            userId: userId,
+            date: today,
+          },
+        },
+      });
+      return stat;
+    } catch (error) {
+      console.error("getUserDailyStats error", error);
+      return null;
+    }
+  }
+  async updateUserDailyStats({
+    data,
+    userId,
     tx,
-    page = 1,
-    pageSize = 10,
   }: {
+    data: Partial<UserDailyStats>;
+    userId: string;
     tx?: TransactionType;
-    page?: number;
-    pageSize?: number;
   }) {
     const db_client = tx ? tx : dataBase;
-    const users = db_client.userStatistic.findMany({
-      skip: pageSize * (page - 1),
-      take: pageSize,
-      orderBy: { meditated_hours: "desc" },
-      select: {
-        meditated_hours: true,
-        user: {
-          select: {
-            id: true,
-            profile: {
-              select: { avatar_url: true, nikname: true },
-            },
-          },
+    const today = getStartOfToday();
+    try {
+      const stat = await db_client.userDailyStats.upsert({
+        where: { userId_date: { userId: userId, date: today } },
+        update: data,
+        create: {
+          userId,
+          date: today,
+          ...data,
         },
-      },
-    });
-    const total = await db_client.profile.count();
-    return {
-      rating_type: OverallRatingsMAP_KEYS.meditation,
-      page,
-      pageSize,
-      total,
-      pages: Math.ceil(total / pageSize),
-      data: users,
-    };
-  }
-
-  async getSpiritPathRating({
-    tx,
-    page = 1,
-    pageSize = 10,
-  }: {
-    tx?: TransactionType;
-    page?: number;
-    pageSize?: number;
-  }) {
-    const db_client = tx ? tx : dataBase;
-    const users = db_client.userStatistic.findMany({
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-      orderBy: { spirit_path_minutes: "desc" },
-      select: {
-        spirit_path_minutes: true,
-        user: {
-          select: {
-            id: true,
-            profile: {
-              select: { avatar_url: true, nikname: true },
-            },
-          },
-        },
-      },
-    });
-    const total = await db_client.profile.count();
-    return {
-      rating_type: OverallRatingsMAP_KEYS.spirit,
-      page,
-      pageSize,
-      total,
-      pages: Math.ceil(total / pageSize),
-      data: users,
-    };
-  }
-
-  async getMiningRating({ tx, page = 1, pageSize = 10 }: { tx?: TransactionType; page?: number; pageSize?: number }) {
-    const db_client = tx ? tx : dataBase;
-    const users = db_client.userStatistic.findMany({
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-      orderBy: { mined_qi_stone: "desc" },
-      select: {
-        mined_qi_stone: true,
-        user: {
-          select: {
-            id: true,
-            profile: {
-              select: { avatar_url: true, nikname: true },
-            },
-          },
-        },
-      },
-    });
-    const total = await db_client.profile.count();
-    return {
-      rating_type: OverallRatingsMAP_KEYS.mining,
-      page,
-      pageSize,
-      total,
-      pages: Math.ceil(total / pageSize),
-      data: users,
-    };
-  }
-
-  async getWinsRating({ tx, page = 1, pageSize = 10 }: { tx?: TransactionType; page?: number; pageSize?: number }) {
-    const db_client = tx ? tx : dataBase;
-    const users = db_client.userStatistic.findMany({
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-      orderBy: { fights_wins: "desc" },
-      select: {
-        fights_wins: true,
-        user: {
-          select: {
-            id: true,
-            profile: {
-              select: { avatar_url: true, nikname: true },
-            },
-          },
-        },
-      },
-    });
-    const total = await db_client.profile.count();
-    return {
-      rating_type: OverallRatingsMAP_KEYS.wins,
-      page,
-      pageSize,
-      total,
-      pages: Math.ceil(total / pageSize),
-      data: users,
-    };
+      });
+      return stat;
+    } catch (error) {
+      console.error("updateDailyStats error", error);
+      return null;
+    }
   }
 }
 
