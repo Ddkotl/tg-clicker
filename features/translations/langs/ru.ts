@@ -280,6 +280,7 @@ export const ru_lang: Messages = {
       daily: "Ежедневный",
       names_types: {
         exp: "Уровень",
+        exp_partial: "Получено опыта",
         exp_value: "Уровень",
         meditated_hours: "Часы медитации",
         meditated_hours_value: "Часы",

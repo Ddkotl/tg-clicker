@@ -6,7 +6,7 @@ import { ComponentSpinner } from "@/shared/components/custom_ui/component_spinne
 import { icons } from "@/shared/lib/icons";
 import { RankingCard } from "./RankingCard";
 import { useTranslation } from "@/features/translations/use_translation";
-import { ratingMetrics, RatingsMetrics, RatingsTypes } from "../_domain/ratings_list_items";
+import { ratingMetrics, RatingsMetrics, ratingsTypes, RatingsTypes } from "../_domain/ratings_list_items";
 import { getLevelByExp } from "@/shared/game_config/exp/get_lvl_by_exp";
 
 export function RankingList({ metric, type, page = 1 }: { metric: RatingsMetrics; type: RatingsTypes; page?: number }) {
@@ -19,7 +19,11 @@ export function RankingList({ metric, type, page = 1 }: { metric: RatingsMetrics
   return (
     <div className="flex flex-col gap-2 w-full pb-4">
       <div className="flex justify-between items-center w-full">
-        <h2 className="text-xl font-semibold capitalize"> {t(`ranking.ratings.names_types.${metric}`)}</h2>
+        <h2 className="text-xl font-semibold capitalize">
+          {metric === ratingMetrics.exp && type !== ratingsTypes.overall
+            ? t(`ranking.ratings.names_types.exp_partial`)
+            : t(`ranking.ratings.names_types.${metric}`)}
+        </h2>
         <Link
           href={ui_path.rankings_type_page(type, metric, 1)}
           className="underline text-sm opacity-80 hover:opacity-100"
@@ -30,9 +34,12 @@ export function RankingList({ metric, type, page = 1 }: { metric: RatingsMetrics
 
       <div className="grid grid-cols-3 gap-2 w-full">
         {items.map((player, i) => {
-          const valueLabel = t(`ranking.ratings.names_types.${metric}_value`);
+          const valueLabel =
+            metric === ratingMetrics.exp && type !== ratingsTypes.overall
+              ? t("experience")
+              : t(`ranking.ratings.names_types.${metric}_value`);
           let value = player.amount;
-          if (metric === ratingMetrics.exp) {
+          if (metric === ratingMetrics.exp && type === ratingsTypes.overall) {
             value = getLevelByExp(player.amount);
           }
           return (

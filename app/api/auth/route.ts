@@ -4,9 +4,11 @@ import { validateTelegramWebAppData } from "@/entities/auth/_vm/telegramAuth";
 import { UpdateOrCreateUser } from "@/entities/auth/index.server";
 import { deleteOldFacts } from "@/entities/facts/index.server";
 import { createDailyMissions } from "@/entities/missions/_repositories/create_daily_missions";
+import { statisticRepository } from "@/entities/statistics/index.server";
 import { recalcHp } from "@/features/hp_regen/recalc_hp";
 import { recalcQi } from "@/features/qi_regen/recalc_qi";
 import { makeError } from "@/shared/lib/api_helpers/make_error";
+import { getDaysAgoDate } from "@/shared/lib/date";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -41,6 +43,8 @@ export async function POST(request: NextRequest) {
 
     const deleted_facts_count = await deleteOldFacts(updated_user.id);
     if (deleted_facts_count === null) return makeError("deleteOldFacts error", 400);
+
+    await statisticRepository.deleteOldUserDailyStats({ beforeDate: getDaysAgoDate(35) });
     await createDailyMissions(updated_user.id);
 
     const payload: AppJWTPayload = {

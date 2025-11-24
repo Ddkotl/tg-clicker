@@ -18,14 +18,14 @@ import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lv
 import { GetResources } from "@/entities/profile/_repositories/get_resurces";
 import { createFact } from "@/entities/facts/index.server";
 import { InactivateMission } from "@/entities/missions/index.server";
+import { getCookieUserId } from "@/features/auth/get_cookie_userId";
+import { statisticRepository } from "@/entities/statistics/index.server";
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const lang = getCookieLang({ headers: req.headers });
+  const userId = getCookieUserId({ headers: req.headers });
   try {
-    const body = await req.json();
-    const parsed = miningRequestSchema.safeParse(body);
-    if (!parsed.success) return makeError(translate("api.invalid_request_data", lang), 400);
-    const userId = parsed.data.userId;
+    if (!userId) return makeError(translate("api.no_auth", lang), 401);
 
     const { allowed } = await rateLimitRedis(`rl:mine:${userId}`, 10, 60);
     if (!allowed) return makeError(translate("api.rate_limit_exceeded", lang), 429);
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     user_mine = await restoreEnergy(userId, user_mine, now);
 
     if (user_mine.last_mine_at && now.getTime() - user_mine.last_mine_at.getTime() < MINE_COOLDOWN) {
-      const remaining = Math.ceil((MINE_COOLDOWN - (now.getTime() - user_mine.last_mine_at.getTime())) / 1000);
+      const remaining = Math.ceil(MINE_COOLDOWN - (now.getTime() - user_mine.last_mine_at.getTime()));
       return makeError(translate("api.cooldown", lang, { remaining }), 429);
     }
 
@@ -58,7 +58,16 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     const result = await giveMineRevard(userId, reward, exp, now);
     if (!result || result === null) return makeError(translate("api.invalid_process", lang), 400);
-
+    const updated_daily_stats = await statisticRepository.updateUserDailyStats({
+      userId: userId,
+      data: {
+        mined_qi_stone: reward,
+        exp: exp,
+        mined_count: 1,
+      },
+    });
+    if (!updated_daily_stats || updated_daily_stats === null)
+      return makeError(translate("api.invalid_process", lang), 400);
     await pushToSubscriber(userId, result.fact.type);
     const completed_missions = [];
     const mine_mission = await UpdateProgressMission(userId, MissionType.MINE, 1);
@@ -71,6 +80,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         glory: mine_mission.reward_glory,
         exp: mine_mission.reward_exp,
       });
+      const updated_daily_stats = await statisticRepository.updateUserDailyStats({
+        userId: userId,
+        data: {
+          exp: exp,
+        },
+      });
+      if (!updated_daily_stats || updated_daily_stats === null)
+        return makeError(translate("api.invalid_process", lang), 400);
       await createFact({
         userId,
         fact_status: FactsStatus.NO_CHECKED,
@@ -100,6 +117,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         glory: mine_stone_mission.reward_glory,
         exp: mine_stone_mission.reward_exp,
       });
+      const updated_daily_stats = await statisticRepository.updateUserDailyStats({
+        userId: userId,
+        data: {
+          exp: exp,
+        },
+      });
+      if (!updated_daily_stats || updated_daily_stats === null)
+        return makeError(translate("api.invalid_process", lang), 400);
       await createFact({
         userId,
         fact_status: FactsStatus.NO_CHECKED,

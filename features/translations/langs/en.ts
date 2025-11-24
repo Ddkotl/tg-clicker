@@ -280,6 +280,7 @@ export const en_lang = {
       daily: "Daily",
       names_types: {
         exp: "Level",
+        exp_partial: "Gained Expierience",
         exp_value: "Level",
         meditated_hours: "Meditation Hours",
         meditated_hours_value: "Hours",
