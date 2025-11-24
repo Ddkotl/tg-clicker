@@ -6,6 +6,7 @@ export const fightRequestSchema = z.object({ enemyType: z.enum(EnemyType), fight
 
 export const fighterSnapshotSchema = z.object({
   userId: z.string().optional(),
+  avatar_url: z.string().optional(),
   name: z.string(),
   power: z.number(),
   protection: z.number(),

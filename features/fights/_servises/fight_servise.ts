@@ -7,6 +7,7 @@ import { recalcHp } from "@/features/hp_regen/recalc_hp";
 import { recalcQi } from "@/features/qi_regen/recalc_qi";
 import dayjs from "dayjs";
 import { dataBase, TransactionType } from "@/shared/connect/db_connect";
+import { img_paths } from "@/shared/lib/img_paths";
 
 export class FightService {
   constructor(
@@ -167,6 +168,7 @@ export class FightService {
 
     const attackerSnapshot: FighterSnapshot = {
       userId: restore.userId,
+      avatar_url: restore.avatar_url || img_paths.fractions.adept_m(),
       name: restore.nikname ?? "Unknown",
       power: restore.power,
       protection: restore.protection,

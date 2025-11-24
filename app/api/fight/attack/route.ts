@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       data: result,
     };
     fightResponseSchema.parse(response);
-    return NextResponse.json(result);
+    return NextResponse.json(response);
   } catch (e) {
     console.error("startFight error", e);
     return NextResponse.json({ ok: false, reason: "internal_error" }, { status: 500 });

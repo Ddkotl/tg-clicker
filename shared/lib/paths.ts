@@ -6,6 +6,7 @@ export const ui_path = {
   registration_page: () => `/registration`,
   facts_page: () => `/game/facts`,
   fight_page: () => `/game/fight`,
+  fight_result_page: (id: string) => `/game/fight/result/${id}`,
   fight_demon_page: () => `/game/fight/demon`,
   headquarter_page: () => `/game/headquarter`,
   city_page: () => `/game/city`,

@@ -1,24 +1,44 @@
-// components/FighterCard.tsx
+"use client";
 
+import Image from "next/image";
 import { FighterSnapshot } from "../_domain/types";
+import { img_paths } from "@/shared/lib/img_paths";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
+import { Badge } from "@/shared/components/ui/badge";
+import { Separator } from "@/shared/components/ui/separator";
 
 type Props = {
   fighter: FighterSnapshot;
-  title?: string;
 };
 
-export const FighterCard = ({ fighter, title }: Props) => {
+export const FighterCard = ({ fighter }: Props) => {
+  const avatar = fighter.avatar_url || img_paths.fractions.adept_m();
+
   return (
-    <div className="border p-4 rounded-lg shadow-md w-full max-w-sm">
-      {title && <h3 className="text-lg font-bold mb-2">{title}</h3>}
-      <p>Name: {fighter.name}</p>
-      <p>Power: {fighter.power}</p>
-      <p>Protection: {fighter.protection}</p>
-      <p>Speed: {fighter.speed}</p>
-      <p>Skill: {fighter.skill}</p>
-      <p>
-        HP: {fighter.currentHp} / {fighter.maxHp}
-      </p>
-    </div>
+    <Card className="p-1 w-full max-w-sm bg-card shadow-lg rounded-2xl overflow-hidden border">
+      <CardHeader className="p-1 flex flex-col items-center space-y-2 pb-2">
+        <Image src={avatar} alt={fighter.name} width={110} height={110} className="rounded-full border shadow" />
+
+        <CardTitle className="text-xl font-semibold">{fighter.name}</CardTitle>
+      </CardHeader>
+
+      <Separator className="my-3" />
+
+      <CardContent className="p-1 space-y-3 text-sm">
+        <div className="grid grid-cols-2 gap-2 text-muted-foreground">
+          <p>⚔️ Power:</p>
+          <p className="text-right text-foreground font-medium">{fighter.power}</p>
+
+          <p>🛡 Protection:</p>
+          <p className="text-right text-foreground font-medium">{fighter.protection}</p>
+
+          <p>🎯 Skill:</p>
+          <p className="text-right text-foreground font-medium">{fighter.skill}</p>
+
+          <p>⚡ Speed:</p>
+          <p className="text-right text-foreground font-medium">{fighter.speed}</p>
+        </div>
+      </CardContent>
+    </Card>
   );
 };

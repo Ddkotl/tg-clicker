@@ -14,10 +14,9 @@ export const useStartFightMutation = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });
-      const ans = res.json();
+      const ans = await res.json();
       if (!res.ok) throw ans;
-      return ans;
+      return ans as FightResponseType;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: queries_keys.current_fight() }),
   });
 };
