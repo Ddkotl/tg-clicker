@@ -1,3 +1,4 @@
+import { EnemyType } from "@/_generated/prisma";
 import { RatingsMetrics, RatingsTypes } from "@/entities/statistics/_domain/ratings_list_items";
 
 export const ui_path = {
@@ -7,7 +8,7 @@ export const ui_path = {
   facts_page: () => `/game/facts`,
   fight_page: () => `/game/fight`,
   fight_result_page: (id: string) => `/game/fight/result/${id}`,
-  fight_demon_page: () => `/game/fight/demon`,
+  fight_enemy_page: (type: EnemyType) => `/game/fight/${type}`,
   headquarter_page: () => `/game/headquarter`,
   city_page: () => `/game/city`,
   pet_page: () => `/game/pet`,

@@ -11,7 +11,7 @@ export const useCurrentFight = () => {
       if (!res.ok) return null;
       return res.json();
     },
-    gcTime: 5 * 1000,
-    staleTime: 5 * 1000,
+    // gcTime: 5 * 1000,
+    // staleTime: 5 * 1000,
   });
 };

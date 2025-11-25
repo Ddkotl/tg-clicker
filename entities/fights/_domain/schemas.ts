@@ -6,12 +6,13 @@ export const fightRequestSchema = z.object({ enemyType: z.enum(EnemyType), fight
 
 export const fighterSnapshotSchema = z.object({
   userId: z.string().optional(),
-  avatar_url: z.string().optional(),
+  avatar_url: z.string(),
   name: z.string(),
   power: z.number(),
   protection: z.number(),
   speed: z.number(),
   skill: z.number(),
+  qi_param: z.number(),
   currentHp: z.number(),
   maxHp: z.number(),
 });

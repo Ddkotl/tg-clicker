@@ -4,7 +4,6 @@ import Image from "next/image";
 import { FighterSnapshot } from "../_domain/types";
 import { img_paths } from "@/shared/lib/img_paths";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
-import { Badge } from "@/shared/components/ui/badge";
 import { Separator } from "@/shared/components/ui/separator";
 
 type Props = {
@@ -12,17 +11,21 @@ type Props = {
 };
 
 export const FighterCard = ({ fighter }: Props) => {
-  const avatar = fighter.avatar_url || img_paths.fractions.adept_m();
-
   return (
-    <Card className="p-1 w-full max-w-sm bg-card shadow-lg rounded-2xl overflow-hidden border">
+    <Card className="p-1 gap-2 w-full  overflow-hidden border">
       <CardHeader className="p-1 flex flex-col items-center space-y-2 pb-2">
-        <Image src={avatar} alt={fighter.name} width={110} height={110} className="rounded-full border shadow" />
+        <Image
+          src={fighter.avatar_url}
+          alt={fighter.name}
+          width={110}
+          height={110}
+          className="rounded-full border shadow"
+        />
 
-        <CardTitle className="text-xl font-semibold">{fighter.name}</CardTitle>
+        <CardTitle className="text-sm font-medium text-center truncate max-w-[90%]">{fighter.name}</CardTitle>
       </CardHeader>
 
-      <Separator className="my-3" />
+      <Separator />
 
       <CardContent className="p-1 space-y-3 text-sm">
         <div className="grid grid-cols-2 gap-2 text-muted-foreground">
@@ -37,6 +40,8 @@ export const FighterCard = ({ fighter }: Props) => {
 
           <p>⚡ Speed:</p>
           <p className="text-right text-foreground font-medium">{fighter.speed}</p>
+          <p>⚡ qi_param:</p>
+          <p className="text-right text-foreground font-medium">{fighter.qi_param}</p>
         </div>
       </CardContent>
     </Card>

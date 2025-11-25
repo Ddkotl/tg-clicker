@@ -13,18 +13,16 @@ import { useEffect } from "react";
 import { redirect } from "next/navigation";
 import { ui_path } from "@/shared/lib/paths";
 
-export default function Fight() {
+export default function Fight({ enemy_type }: { enemy_type: EnemyType }) {
   const { data: fight, isLoading } = useCurrentFight();
   const createFight = useCreateFightMutation();
   const attack = useStartFightMutation();
 
   useEffect(() => {
-    if (!fight) {
-      createFight.mutate({ enemyType: EnemyType.DEMONIC_BEAST, fightType: FightType.PVE });
-    }
-  }, [fight]);
+    createFight.mutate({ enemyType: enemy_type, fightType: FightType.PVE });
+  }, []);
   const handleStartFight = () => {
-    createFight.mutate({ enemyType: EnemyType.DEMONIC_BEAST, fightType: FightType.PVE });
+    createFight.mutate({ enemyType: enemy_type, fightType: FightType.PVE });
   };
 
   const handleAttack = async () => {
@@ -37,7 +35,7 @@ export default function Fight() {
   if (isLoading || !fight?.data.snapshot) return <ComponentSpinner />;
 
   return (
-    <div className="p-6 flex flex-col items-center space-y-4">
+    <div className=" flex flex-col items-center ">
       {fight && (
         <>
           <div className="flex space-x-4 w-full justify-center">

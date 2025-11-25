@@ -8,6 +8,8 @@ import { recalcQi } from "@/features/qi_regen/recalc_qi";
 import dayjs from "dayjs";
 import { dataBase, TransactionType } from "@/shared/connect/db_connect";
 import { img_paths } from "@/shared/lib/img_paths";
+import { SupportedLang } from "@/features/translations/translate_type";
+import { translate } from "@/features/translations/server/translate_fn";
 
 export class FightService {
   constructor(
@@ -127,13 +129,23 @@ export class FightService {
     };
   }
 
-  private async generateEnemy(playerSnapshot: FighterSnapshot) {
+  private async generateEnemy({
+    playerSnapshot,
+    enemyType,
+    lang,
+  }: {
+    playerSnapshot: FighterSnapshot;
+    enemyType: EnemyType;
+    lang: SupportedLang;
+  }) {
     const enemy: FighterSnapshot = {
-      name: "Демонический зверь",
+      name: translate(`fight.oponents.${enemyType}`, lang),
       power: Math.max(1, playerSnapshot.power + Math.floor(Math.random() * 5 - 2)),
       protection: Math.max(1, playerSnapshot.protection + Math.floor(Math.random() * 5 - 2)),
       speed: Math.max(1, playerSnapshot.speed + Math.floor(Math.random() * 5 - 2)),
       skill: Math.max(1, playerSnapshot.skill + Math.floor(Math.random() * 5 - 2)),
+      qi_param: Math.max(1, playerSnapshot.qi_param + Math.floor(Math.random() * 5 - 2)),
+      avatar_url: img_paths.fight_list.demonic_beast(),
       currentHp: 50 + Math.floor(Math.random() * 20),
       maxHp: 50 + Math.floor(Math.random() * 20),
     };
@@ -152,11 +164,13 @@ export class FightService {
     userId,
     enemyType,
     fightType,
+    lang,
     tx,
   }: {
     userId: string;
     enemyType: EnemyType;
     fightType: FightType;
+    lang: SupportedLang;
     tx?: TransactionType;
   }) {
     const hp = await recalcHp({ userId: userId, tx: tx });
@@ -174,10 +188,15 @@ export class FightService {
       protection: restore.protection,
       speed: restore.speed,
       skill: restore.skill,
+      qi_param: qi.qi_param,
       currentHp: restore.current_hitpoint,
       maxHp: restore.max_hitpoint,
     };
-    const enemySnapshot: FighterSnapshot = await this.generateEnemy(attackerSnapshot);
+    const enemySnapshot: FighterSnapshot = await this.generateEnemy({
+      playerSnapshot: attackerSnapshot,
+      enemyType: EnemyType.DEMONIC_BEAST,
+      lang: lang,
+    });
 
     const fightSnapshot: FightSnapshot = {
       player: attackerSnapshot,
@@ -194,7 +213,15 @@ export class FightService {
 
     return fight;
   }
-  private async getOrRefreshPendingFight({ userId, tx }: { userId: string; tx?: TransactionType }) {
+  private async getOrRefreshPendingFight({
+    userId,
+    lang,
+    tx,
+  }: {
+    userId: string;
+    lang: SupportedLang;
+    tx?: TransactionType;
+  }) {
     const hp = await recalcHp({ userId: userId, tx: tx });
     if (hp === null) return null;
     let fight = await this.fightRepo.getPendingFightByAtackserId({ attackserId: userId, tx: tx });
@@ -206,18 +233,18 @@ export class FightService {
 
     if (snapshotExpired) {
       if (fight) {
-        fight = await this.startFight({ userId: userId, enemyType: fight.enemyType, fightType: fight.type, tx });
+        fight = await this.startFight({ userId: userId, enemyType: fight.enemyType, fightType: fight.type, lang, tx });
       }
     }
 
     return fight;
   }
 
-  async atack(userId: string) {
+  async atack({ userId, lang }: { userId: string; lang: SupportedLang }) {
     return await dataBase.$transaction(async (tx) => {
       const check = await this.canFight({ userId: userId, tx: tx });
       if (!check) return check;
-      const fight = await this.getOrRefreshPendingFight({ userId: userId, tx: tx });
+      const fight = await this.getOrRefreshPendingFight({ userId: userId, lang: lang, tx: tx });
       if (!fight) return fight;
       const profile = await this.profileRepo.spendFightCharge({ userId: userId, tx: tx });
       if (!profile) return null;

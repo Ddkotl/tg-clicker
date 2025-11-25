@@ -266,7 +266,8 @@ export const en_lang = {
     highlight: "The true battle begins before the opponents meet.",
     text: "Strengthen the spirit, guide your energy, and each strike becomes the extension of your will. To initiate the battle, choose an enemy.",
     oponents: {
-      demonic_beasts: "Demonic Beasts",
+      DEMONIC_BEAST: "Demonic Beast",
+      PLAYER: "Opponent Player",
     },
   },
   ranking: {

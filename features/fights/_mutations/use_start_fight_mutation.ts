@@ -7,7 +7,6 @@ import { queries_keys } from "@/shared/lib/queries_keys";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useStartFightMutation = () => {
-  const queryClient = useQueryClient();
   return useMutation<FightResponseType, ErrorResponseType>({
     mutationFn: async () => {
       const res = await fetch(api_path.start_fight(), {

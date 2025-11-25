@@ -24,6 +24,7 @@ export async function POST(req: Request) {
       userId: userId,
       enemyType: data.data.enemyType,
       fightType: data.data.fightType,
+      lang: lang,
     });
     if (!result || result === null) return makeError(translate("api.invalid_process", lang), 400);
     const response: FightResponseType = {
