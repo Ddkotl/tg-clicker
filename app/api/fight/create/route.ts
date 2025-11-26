@@ -11,7 +11,6 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const data = fightRequestSchema.safeParse(body);
-    console.log("startPveShadowFight data:", data);
     if (!data.success) {
       return makeError(translate("api.invalid_request_data", lang), 400);
     }
@@ -35,7 +34,7 @@ export async function POST(req: Request) {
     fightResponseSchema.parse(response);
     return NextResponse.json(result);
   } catch (e) {
-    console.error("startPveShadowFight error", e);
+    console.error("startPveFight error", e);
     return NextResponse.json({ ok: false, reason: "internal_error" }, { status: 500 });
   }
 }

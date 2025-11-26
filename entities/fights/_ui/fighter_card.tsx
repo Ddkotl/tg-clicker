@@ -5,12 +5,16 @@ import { FighterSnapshot } from "../_domain/types";
 import { img_paths } from "@/shared/lib/img_paths";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Separator } from "@/shared/components/ui/separator";
+import { useTranslation } from "@/features/translations/use_translation";
+import { GenerateParamsConfig } from "@/shared/game_config/params/params_cost";
 
 type Props = {
   fighter: FighterSnapshot;
 };
 
 export const FighterCard = ({ fighter }: Props) => {
+  const { language } = useTranslation();
+  const params = Object.values(GenerateParamsConfig({ lang: language }));
   return (
     <Card className="p-1 gap-2 w-full  overflow-hidden border">
       <CardHeader className="p-1 flex flex-col items-center space-y-2 pb-2">
@@ -28,20 +32,26 @@ export const FighterCard = ({ fighter }: Props) => {
       <Separator />
 
       <CardContent className="p-1 space-y-3 text-sm">
-        <div className="grid grid-cols-2 gap-2 text-muted-foreground">
-          <p>⚔️ Power:</p>
-          <p className="text-right text-foreground font-medium">{fighter.power}</p>
-
-          <p>🛡 Protection:</p>
-          <p className="text-right text-foreground font-medium">{fighter.protection}</p>
-
-          <p>🎯 Skill:</p>
-          <p className="text-right text-foreground font-medium">{fighter.skill}</p>
-
-          <p>⚡ Speed:</p>
-          <p className="text-right text-foreground font-medium">{fighter.speed}</p>
-          <p>⚡ qi_param:</p>
-          <p className="text-right text-foreground font-medium">{fighter.qi_param}</p>
+        <div className="flex flex-col gap-2 text-muted-foreground">
+          {params.map((param) => {
+            return (
+              <div key={param.name} className="flex gap-2 items-center justify-between w-full text-muted-foreground">
+                <div className="flex gap-2 items-center justify-start">
+                  <Image
+                    className="object-fill h-5 w-5"
+                    src={param.icon || ""}
+                    alt={param.title ?? param.name}
+                    width={10}
+                    height={10}
+                  />
+                  <span>{param.title}:</span>{" "}
+                </div>
+                <span className="text-right text-foreground font-medium">
+                  {fighter[param.name as keyof FighterSnapshot]}
+                </span>
+              </div>
+            );
+          })}
         </div>
       </CardContent>
     </Card>

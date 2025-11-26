@@ -269,6 +269,8 @@ export const en_lang = {
       DEMONIC_BEAST: "Demonic Beast",
       PLAYER: "Opponent Player",
     },
+    attack: "Attack",
+    next_enemy: "Next Enemy",
   },
   ranking: {
     title: "Heart of Epoch",

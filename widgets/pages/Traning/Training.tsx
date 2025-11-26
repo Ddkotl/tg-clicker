@@ -8,11 +8,11 @@ import { Profile } from "@/_generated/prisma";
 
 import { useTranslation } from "@/features/translations/use_translation";
 import { ProfileErrorResponse, ProfileResponse } from "@/entities/profile";
-import { PARAMS } from "@/shared/game_config/params/params_cost";
+import { GenerateParamsConfig } from "@/shared/game_config/params/params_cost";
 import { useTrainParamMutation } from "@/entities/profile/_mutations/use_train_param_mutation";
 
 export function Training() {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const params = useParams<{ userId: string }>();
   const { data: profile, isLoading: isLoadingProfile } = useQuery<ProfileResponse, ProfileErrorResponse>({
     ...getProfileQuery(params.userId),
@@ -24,45 +24,7 @@ export function Training() {
     mutation.mutate(paramName);
   };
 
-  type ProfileKeys = keyof typeof PARAMS;
-
-  const trainingParams: {
-    name: ProfileKeys;
-    title: string;
-    description: string;
-    icon: string;
-  }[] = [
-    {
-      name: "power",
-      title: `${t("training.power")}`,
-      description: `${t("training.power_desc")}`,
-      icon: "/power.png",
-    },
-    {
-      name: "protection",
-      title: `${t("training.protection")}`,
-      description: `${t("training.protection_desc")}`,
-      icon: "/protection.png",
-    },
-    {
-      name: "speed",
-      title: `${t("training.speed")}`,
-      description: `${t("training.speed_desc")}`,
-      icon: "/speed.png",
-    },
-    {
-      name: "skill",
-      title: `${t("training.skill")}`,
-      description: `${t("training.skill_desc")}`,
-      icon: "/skill.png",
-    },
-    {
-      name: "qi_param",
-      title: `${t("training.qi_param")}`,
-      description: `${t("training.qi_param_desc")}`,
-      icon: "/qi_param.png",
-    },
-  ];
+  const trainingParams = Object.values(GenerateParamsConfig({ lang: language }));
   if (isLoadingProfile) return <p>{t("loading")}</p>;
   if (!profile?.data) return <p>{t("error")}</p>;
   return (
@@ -73,9 +35,9 @@ export function Training() {
         {trainingParams.map((param) => (
           <TrainingParam
             key={param.name}
-            title={param.title}
-            description={param.description}
-            icon={param.icon}
+            title={param.title ?? param.name}
+            description={param.description ?? param.name}
+            icon={param.icon ?? ""}
             value={profile.data?.[param.name as keyof Profile] as number}
             paramName={param.name}
             onUpgrade={handleUpgrade}

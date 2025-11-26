@@ -269,6 +269,8 @@ export const ru_lang: Messages = {
       DEMONIC_BEAST: "Демонический зверь",
       PLAYER: "Противник игрок",
     },
+    attack: "Атаковать",
+    next_enemy: "Следующий враг",
   },
   ranking: {
     title: "Сердце Эпохи",
