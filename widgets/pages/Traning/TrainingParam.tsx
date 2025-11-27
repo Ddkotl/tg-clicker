@@ -3,7 +3,7 @@
 import Image from "next/image";
 
 import { useTranslation } from "@/features/translations/use_translation";
-import { calcParamCost } from "@/shared/game_config/params/params_cost";
+import { calcParamCost, ParamsKeys } from "@/shared/game_config/params/params_cost";
 import { Progress } from "@/shared/components/ui/progress";
 import { Button } from "@/shared/components/ui/button";
 
@@ -12,7 +12,7 @@ type TrainingParamProps = {
   description: string;
   icon: string;
   value: number;
-  paramName: string;
+  paramName: ParamsKeys;
   hero_qi: number;
   isPending: boolean;
   onUpgrade: (paramName: string) => void;

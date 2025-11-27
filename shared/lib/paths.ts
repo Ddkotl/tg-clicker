@@ -1,4 +1,4 @@
-import { EnemyType } from "@/_generated/prisma";
+import { EnemyType, FightStatus } from "@/_generated/prisma";
 import { RatingsMetrics, RatingsTypes } from "@/entities/statistics/_domain/ratings_list_items";
 
 export const ui_path = {
@@ -44,7 +44,8 @@ export const api_path = {
   upgrade_user_qi_skills: (userId: string) => `/api/user/qi_skills/upgrade?userId=${userId}`,
   create_fight: () => `/api/fight/create`,
   start_fight: () => `/api/fight/attack`,
-  get_current_fight: () => `/api/fight/current`,
+  get_fight: (fightId?: string, status?: FightStatus) =>
+    `/api/fight?${fightId ? `fightId=${fightId}&` : ""}${status ? `status=${status}` : ""}`,
   get_ratings: (type: RatingsTypes, metric: RatingsMetrics, page: number) =>
     `/api/statistics/rating/${type}/${metric}?page=${page}`,
 };

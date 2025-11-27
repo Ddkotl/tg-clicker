@@ -1,11 +1,11 @@
 "use client";
 import { useStartFightMutation } from "@/features/fights/_mutations/use_start_fight_mutation";
-import { useCurrentFight } from "../_queries/use_get_pending_fight_query";
+import { useGetFightQuery } from "../_queries/use_get_fight_query";
 import { useCreateFightMutation } from "@/features/fights/_mutations/use_create_fight_mutation";
 import { Button } from "@/shared/components/ui/button";
 import { FighterCard } from "./fighter_card";
 import { FightSnapshot } from "../_domain/types";
-import { EnemyType, FightType } from "@/_generated/prisma";
+import { EnemyType, FightStatus, FightType } from "@/_generated/prisma";
 import { ComponentSpinner } from "@/shared/components/custom_ui/component_spinner";
 import { useEffect } from "react";
 import { ui_path } from "@/shared/lib/paths";
@@ -16,13 +16,13 @@ import { useRouter } from "next/navigation";
 export default function Fight({ enemy_type }: { enemy_type: EnemyType }) {
   const router = useRouter();
   const { t } = useTranslation();
-  const { data: fight, isLoading } = useCurrentFight();
+  const { data: fight, isLoading } = useGetFightQuery({ status: FightStatus.PENDING });
   const createFight = useCreateFightMutation();
   const attack = useStartFightMutation();
 
   useEffect(() => {
     createFight.mutate({ enemyType: enemy_type, fightType: FightType.PVE });
-  }, []);
+  }, [enemy_type]);
   const handleStartFight = () => {
     createFight.mutate({ enemyType: enemy_type, fightType: FightType.PVE });
   };

@@ -2,7 +2,7 @@ import { profileRepository } from "@/entities/profile/index.server";
 import { FIGHT_CHARGE_REGEN_INTERVAL, FIGHT_COOLDOWN, MAX_CHARGES } from "@/shared/game_config/fight/fight_const";
 import { FighterSnapshot, FightLog, FightResRewards, FightSnapshot } from "@/entities/fights/_domain/types";
 import { fightRepository } from "@/entities/fights/index.server";
-import { EnemyType, FightResult, FightType } from "@/_generated/prisma";
+import { EnemyType, FightResult, FightStatus, FightType } from "@/_generated/prisma";
 import { recalcHp } from "@/features/hp_regen/recalc_hp";
 import { recalcQi } from "@/features/qi_regen/recalc_qi";
 import dayjs from "dayjs";
@@ -213,18 +213,24 @@ export class FightService {
 
     return fight;
   }
-  private async getOrRefreshPendingFight({
-    userId,
+  async getOrRefreshPendingFight({
+    attackserId,
+    status,
     lang,
     tx,
   }: {
-    userId: string;
+    attackserId: string;
+    status: FightStatus;
     lang: SupportedLang;
     tx?: TransactionType;
   }) {
-    const hp = await recalcHp({ userId: userId, tx: tx });
+    const hp = await recalcHp({ userId: attackserId, tx: tx });
     if (hp === null) return null;
-    let fight = await this.fightRepo.getPendingFightByAtackserId({ attackserId: userId, tx: tx });
+    let fight = await this.fightRepo.getFightByAttackserId({
+      attackserId: attackserId,
+      status: status,
+      tx: tx,
+    });
 
     const snapshotExpired =
       !fight ||
@@ -233,10 +239,22 @@ export class FightService {
 
     if (snapshotExpired) {
       if (fight) {
-        fight = await this.startFight({ userId: userId, enemyType: fight.enemyType, fightType: fight.type, lang, tx });
+        fight = await this.startFight({
+          userId: attackserId,
+          enemyType: fight.enemyType,
+          fightType: fight.type,
+          lang,
+          tx,
+        });
       }
     }
 
+    return fight;
+  }
+
+  async getFinidhedFight({ fightId, tx }: { fightId: string; tx?: TransactionType }) {
+    const db_client = tx ? tx : dataBase;
+    const fight = await this.fightRepo.getFightById({ fightId: fightId, tx: db_client });
     return fight;
   }
 
@@ -244,7 +262,12 @@ export class FightService {
     return await dataBase.$transaction(async (tx) => {
       const check = await this.canFight({ userId: userId, tx: tx });
       if (!check) return check;
-      const fight = await this.getOrRefreshPendingFight({ userId: userId, lang: lang, tx: tx });
+      const fight = await this.getOrRefreshPendingFight({
+        attackserId: userId,
+        status: FightStatus.PENDING,
+        lang: lang,
+        tx: tx,
+      });
       if (!fight) return fight;
       const profile = await this.profileRepo.spendFightCharge({ userId: userId, tx: tx });
       if (!profile) return null;

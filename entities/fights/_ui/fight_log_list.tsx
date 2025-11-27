@@ -1,5 +1,3 @@
-// components/FightLogList.tsx
-
 import { FightLog } from "../_domain/types";
 
 type Props = {
