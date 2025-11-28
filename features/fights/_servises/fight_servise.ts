@@ -1,5 +1,5 @@
 import { profileRepository } from "@/entities/profile/index.server";
-import { FIGHT_CHARGE_REGEN_INTERVAL, FIGHT_COOLDOWN, MAX_CHARGES } from "@/shared/game_config/fight/fight_const";
+import { FIGHT_CHARGE_REGEN_INTERVAL, FIGHT_COOLDOWN, FIGHT_MAX_CHARGES } from "@/shared/game_config/fight/fight_const";
 import { FighterSnapshot, FightLog, FightResRewards, FightSnapshot } from "@/entities/fights/_domain/types";
 import { fightRepository } from "@/entities/fights/index.server";
 import { EnemyType, FightResult, FightStatus, FightType } from "@/_generated/prisma";
@@ -10,6 +10,7 @@ import { dataBase, TransactionType } from "@/shared/connect/db_connect";
 import { img_paths } from "@/shared/lib/img_paths";
 import { SupportedLang } from "@/features/translations/translate_type";
 import { translate } from "@/features/translations/server/translate_fn";
+import { getPastedIntervals } from "@/shared/game_config/getPastedIntervals";
 
 export class FightService {
   constructor(
@@ -21,22 +22,21 @@ export class FightService {
     let profile = await this.profileRepo.getByUserId({ userId: userId, tx: tx });
     if (!profile) return null;
 
-    const now = new Date();
-    const lastRecovery = profile.last_charge_recovery ?? now;
-    const diff_time = now.getTime() - lastRecovery.getTime();
-
-    if (diff_time < FIGHT_CHARGE_REGEN_INTERVAL) return profile;
-
-    const chargesToAdd = Math.floor(diff_time / FIGHT_CHARGE_REGEN_INTERVAL);
-    const newCharges = Math.min(MAX_CHARGES, profile.fight_charges + chargesToAdd);
-    const newLastChargeRecovery = new Date(lastRecovery.getTime() + chargesToAdd * FIGHT_CHARGE_REGEN_INTERVAL);
+    const now = new Date().getTime();
+    const lastRecovery = profile.last_charge_recovery?.getTime() ?? now;
+    const { past_intervals, new_last_action_date } = getPastedIntervals({
+      now_ms: now,
+      last_action_ms: lastRecovery,
+      interval_ms: FIGHT_CHARGE_REGEN_INTERVAL,
+    });
+    const newCharges = Math.min(FIGHT_MAX_CHARGES, profile.fight_charges + past_intervals);
 
     if (newCharges > profile.fight_charges) {
       profile = await this.profileRepo.updateFightCharges({
         userId: userId,
         tx: tx,
         fight_charges: newCharges,
-        last_charge_recovery: newLastChargeRecovery,
+        last_charge_recovery: new_last_action_date,
       });
     }
 

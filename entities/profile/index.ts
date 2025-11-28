@@ -1,4 +1,4 @@
-export { getProfileQuery, useInvalidateProfile } from "./_queries/profile_query";
+export { useProfileQuery } from "./_queries/use_profile_query";
 
 export {
   ProfileSchema,

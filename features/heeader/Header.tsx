@@ -1,29 +1,33 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { useGetSessionQuery } from "@/entities/auth/_queries/session_queries";
 import { HeaderItem } from "./_ui/header_item";
-import { getProfileQuery, ProfileResponse } from "@/entities/profile";
+import { useProfileQuery } from "@/entities/profile";
 import { HeaderProgressBars } from "./_ui/header_progress";
 import { icons } from "@/shared/lib/icons";
-import { MAX_CHARGES } from "@/shared/game_config/fight/fight_const";
+import { FIGHT_CHARGE_REGEN_INTERVAL, FIGHT_MAX_CHARGES } from "@/shared/game_config/fight/fight_const";
+import { getPastedIntervals } from "@/shared/game_config/getPastedIntervals";
+import { CountdownTimer } from "@/shared/components/custom_ui/timer";
+import { useQueryClient } from "@tanstack/react-query";
+import { queries_keys } from "@/shared/lib/queries_keys";
 
 export function Header() {
+  const queryClient = useQueryClient();
   const { data: session, isLoading: isLoadingSession } = useGetSessionQuery();
-  const {
-    data: profile,
-    isLoading: isLoadingProfile,
-    isFetching: isFetchingProfile,
-  } = useQuery<ProfileResponse>({
-    ...getProfileQuery(session?.data?.user.userId ?? ""),
-    enabled: !!session?.data?.user.userId,
-  });
-  const userId = profile?.data?.userId;
+  const userId = session?.data?.user.userId;
+  const { data: profile, isLoading: isLoadingProfile, isFetching: isFetchingProfile } = useProfileQuery(userId || "");
   const isLoading = isLoadingProfile || isLoadingSession;
   const isDisabled = isFetchingProfile;
-  const formattedTime = profile?.data?.last_fight_time
-    ? new Date(profile.data.last_fight_time).toLocaleTimeString()
-    : "00:00";
+
+  const { past_intervals, new_last_action_date } = getPastedIntervals({
+    now_ms: Date.now(),
+    last_action_ms: profile?.data?.last_charge_recovery
+      ? new Date(profile.data.last_charge_recovery).getTime()
+      : new Date().getTime(),
+    interval_ms: FIGHT_CHARGE_REGEN_INTERVAL,
+  });
+
+  const isChargesMax = profile?.data?.fight_charges === FIGHT_MAX_CHARGES;
 
   return (
     <div className="flex justify-center w-full">
@@ -89,7 +93,7 @@ export function Header() {
             href={`/game`}
             isDisabled={isDisabled}
             isLoading={isLoading}
-            value={`${profile?.data?.fight_charges}/${MAX_CHARGES}`}
+            value={`${Math.min(Number(profile?.data?.fight_charges ?? 0) + past_intervals, FIGHT_MAX_CHARGES)}/${FIGHT_MAX_CHARGES}`}
           />
           <HeaderItem
             icon={icons.clock({
@@ -98,7 +102,16 @@ export function Header() {
             href={`/game`}
             isDisabled={isDisabled}
             isLoading={isLoading}
-            value={formattedTime}
+            element={
+              !isChargesMax && (
+                <CountdownTimer
+                  endTime={new_last_action_date.getTime() + FIGHT_CHARGE_REGEN_INTERVAL}
+                  onComplete={() => {
+                    queryClient.invalidateQueries({ queryKey: queries_keys.profile_userId(userId || "") });
+                  }}
+                />
+              )
+            }
           />
         </div>
         <HeaderProgressBars

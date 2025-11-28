@@ -21,7 +21,9 @@ export const useCreateFightMutation = () => {
       return ans;
     },
     onSuccess: (data) =>
-      queryClient.invalidateQueries({ queryKey: queries_keys.get_fight({ status: data.data.status }) }),
+      queryClient.invalidateQueries({
+        queryKey: queries_keys.get_fight({ enemyType: data.data.enemyType, status: data.data.status }),
+      }),
     onError: (error) => {
       toast.error(error.message);
     },

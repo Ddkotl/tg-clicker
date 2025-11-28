@@ -1,4 +1,4 @@
-import { FightStatus } from "@/_generated/prisma";
+import { EnemyType, FightStatus } from "@/_generated/prisma";
 import { RatingsMetrics, RatingsTypes } from "@/entities/statistics/_domain/ratings_list_items";
 
 export const queries_keys = {
@@ -11,8 +11,9 @@ export const queries_keys = {
   facts_userId: (userId: string) => ["facts", userId],
   mine_userId: (userId: string) => ["mine", userId],
   qi_skills_userId: (userId: string) => ["qi_skills", userId],
-  get_fight: ({ fightId, status }: { fightId?: string; status?: FightStatus }) => [
+  get_fight: ({ enemyType, fightId, status }: { enemyType?: EnemyType; fightId?: string; status?: FightStatus }) => [
     "get_fight",
+    enemyType ?? null,
     fightId ?? null,
     status ?? null,
   ],

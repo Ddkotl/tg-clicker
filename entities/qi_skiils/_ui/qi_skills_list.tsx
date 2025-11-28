@@ -6,7 +6,7 @@ import { getUserQiSkillsQuery } from "../_queries/get_user_qi_skills_query";
 import { GetUserQiSkillsResponseType } from "../_domain/types";
 import { ComponentSpinner } from "@/shared/components/custom_ui/component_spinner";
 import { useUpdateQiSkillMutation } from "../_mutations/use_update_qi_skill_mutation";
-import { getProfileQuery, ProfileResponse } from "@/entities/profile";
+import { useProfileQuery } from "@/entities/profile";
 import { QiSkillItem } from "./qi_skill_item";
 import { useTranslation } from "@/features/translations/use_translation";
 import { TranslationKey } from "@/features/translations/translate_type";
@@ -16,10 +16,7 @@ export function QiSkillsList() {
   const { t } = useTranslation();
   const session = useGetSessionQuery();
   const userId = session.data?.data?.user.userId;
-  const profile = useQuery<ProfileResponse>({
-    ...getProfileQuery(session?.data?.data?.user.userId ?? ""),
-    enabled: !!session?.data?.data?.user.userId,
-  });
+  const profile = useProfileQuery(userId || "");
 
   const { data: skills, isLoading } = useQuery<GetUserQiSkillsResponseType>({
     ...getUserQiSkillsQuery(userId ?? ""),

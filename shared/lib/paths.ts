@@ -44,8 +44,8 @@ export const api_path = {
   upgrade_user_qi_skills: (userId: string) => `/api/user/qi_skills/upgrade?userId=${userId}`,
   create_fight: () => `/api/fight/create`,
   start_fight: () => `/api/fight/attack`,
-  get_fight: (fightId?: string, status?: FightStatus) =>
-    `/api/fight?${fightId ? `fightId=${fightId}&` : ""}${status ? `status=${status}` : ""}`,
+  get_fight: ({ enemyType, fightId, status }: { enemyType?: EnemyType; fightId?: string; status?: FightStatus }) =>
+    `/api/fight?${enemyType ? `enemyType=${enemyType}&` : ""}&${fightId ? `fightId=${fightId}&` : ""}${status ? `status=${status}` : ""}`,
   get_ratings: (type: RatingsTypes, metric: RatingsMetrics, page: number) =>
     `/api/statistics/rating/${type}/${metric}?page=${page}`,
 };

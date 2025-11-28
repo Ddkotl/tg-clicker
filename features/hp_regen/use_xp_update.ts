@@ -1,19 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useCallback } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { HP_REGEN_INTERVAL, HP_REGEN_PERCENT } from "@/shared/game_config/params/hp_regen";
 import { queries_keys } from "@/shared/lib/queries_keys";
-import { getProfileQuery, ProfileResponse } from "@/entities/profile";
+import { ProfileResponse, useProfileQuery } from "@/entities/profile";
 
 export function useProfileHPUpdate(userId?: string) {
   const queryClient = useQueryClient();
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const { data: profileQuery } = useQuery<ProfileResponse>({
-    ...getProfileQuery(userId ?? ""),
-    enabled: !!userId,
-  });
+  const { data: profileQuery } = useProfileQuery(userId || "");
 
   const clearTimeoutSafe = useCallback(() => {
     if (timeoutRef.current) {

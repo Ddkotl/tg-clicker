@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 export default function Fight({ enemy_type }: { enemy_type: EnemyType }) {
   const router = useRouter();
   const { t } = useTranslation();
-  const { data: fight, isLoading } = useGetFightQuery({ status: FightStatus.PENDING });
+  const { data: fight, isLoading } = useGetFightQuery({ enemyType: enemy_type, status: FightStatus.PENDING });
   const createFight = useCreateFightMutation();
   const attack = useStartFightMutation();
 
