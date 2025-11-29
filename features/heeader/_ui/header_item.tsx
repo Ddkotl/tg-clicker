@@ -32,7 +32,7 @@ export function HeaderItem({
       {isLoading && value ? (
         <Skeleton className="h-3 w-8 rounded-md" />
       ) : (
-        <span className="text-sm xs:text-base  font-medium">
+        <span className="text-sm xs:text-base   font-medium">
           {element}
           {value}
         </span>

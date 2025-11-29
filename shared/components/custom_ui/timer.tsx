@@ -3,15 +3,13 @@
 import React from "react";
 
 interface CountdownTimerProps {
-  /** Конечное время в миллисекундах (Date.now() + ...) */
   endTime: number;
-  /** Текст перед таймером, например "Осталось:" */
   label?: string;
-  /** Вызывается, когда таймер дойдет до нуля */
   onComplete?: () => void;
+  isDisabled?: boolean;
 }
 
-export function CountdownTimer({ endTime, label, onComplete }: CountdownTimerProps) {
+export function CountdownTimer({ endTime, label, onComplete, isDisabled }: CountdownTimerProps) {
   const [timeLeft, setTimeLeft] = React.useState(() => endTime - Date.now());
 
   React.useEffect(() => {
@@ -27,6 +25,8 @@ export function CountdownTimer({ endTime, label, onComplete }: CountdownTimerPro
 
     return () => clearInterval(interval);
   }, [endTime, onComplete]);
+
+  if (isDisabled) return <span>00:00</span>;
 
   const formatTime = (ms: number) => {
     const totalSeconds = Math.floor(ms / 1000);

@@ -36,7 +36,7 @@ export class FightService {
         userId: userId,
         tx: tx,
         fight_charges: newCharges,
-        last_charge_recovery: new_last_action_date,
+        last_charge_recovery: newCharges === FIGHT_MAX_CHARGES ? new Date() : new_last_action_date,
       });
     }
 
@@ -268,7 +268,7 @@ export class FightService {
         lang: lang,
         tx: tx,
       });
-      if (!fight) return fight;
+      if (!fight) return null;
       const profile = await this.profileRepo.spendFightCharge({ userId: userId, tx: tx });
       if (!profile) return null;
       const snapshot: FightSnapshot = fight.snapshot as FightSnapshot;

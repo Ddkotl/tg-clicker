@@ -8,14 +8,17 @@ import { icons } from "@/shared/lib/icons";
 import { FIGHT_CHARGE_REGEN_INTERVAL, FIGHT_MAX_CHARGES } from "@/shared/game_config/fight/fight_const";
 import { getPastedIntervals } from "@/shared/game_config/getPastedIntervals";
 import { CountdownTimer } from "@/shared/components/custom_ui/timer";
-import { useQueryClient } from "@tanstack/react-query";
-import { queries_keys } from "@/shared/lib/queries_keys";
+import { ui_path } from "@/shared/lib/paths";
 
 export function Header() {
-  const queryClient = useQueryClient();
   const { data: session, isLoading: isLoadingSession } = useGetSessionQuery();
   const userId = session?.data?.user.userId;
-  const { data: profile, isLoading: isLoadingProfile, isFetching: isFetchingProfile } = useProfileQuery(userId || "");
+  const {
+    data: profile,
+    isLoading: isLoadingProfile,
+    isFetching: isFetchingProfile,
+    refetch,
+  } = useProfileQuery(userId || "");
   const isLoading = isLoadingProfile || isLoadingSession;
   const isDisabled = isFetchingProfile;
 
@@ -27,7 +30,7 @@ export function Header() {
     interval_ms: FIGHT_CHARGE_REGEN_INTERVAL,
   });
 
-  const isChargesMax = profile?.data?.fight_charges === FIGHT_MAX_CHARGES;
+  const isChargesMax = Number(profile?.data?.fight_charges ?? 0) + past_intervals >= FIGHT_MAX_CHARGES;
 
   return (
     <div className="flex justify-center w-full">
@@ -46,7 +49,7 @@ export function Header() {
             icon={icons.backpack({
               className: "h-4 w-4 xs:h-5 xs:w-5",
             })}
-            href={`/game`}
+            href={ui_path.home_page()}
             isDisabled={isDisabled}
             isLoading={isLoading}
           />
@@ -72,7 +75,7 @@ export function Header() {
             icon={icons.stone({
               className: "h-4 w-4 xs:h-5 xs:w-5",
             })}
-            href={`/game`}
+            href={ui_path.mine_page()}
             isDisabled={isDisabled}
             isLoading={isLoading}
             value={profile?.data?.qi_stone}
@@ -90,27 +93,24 @@ export function Header() {
             icon={icons.fight({
               className: "h-4 w-4 xs:h-5 xs:w-5",
             })}
-            href={`/game`}
+            href={ui_path.fight_page()}
             isDisabled={isDisabled}
             isLoading={isLoading}
             value={`${Math.min(Number(profile?.data?.fight_charges ?? 0) + past_intervals, FIGHT_MAX_CHARGES)}/${FIGHT_MAX_CHARGES}`}
           />
           <HeaderItem
             icon={icons.clock({
-              className: "h-4 w-4 xs:h-5 xs:w-5",
+              className: "h-4 w-4 xs:h-5 xs:w-5 mr-1",
             })}
-            href={`/game`}
+            href={ui_path.meditation_page()}
             isDisabled={isDisabled}
             isLoading={isLoading}
             element={
-              !isChargesMax && (
-                <CountdownTimer
-                  endTime={new_last_action_date.getTime() + FIGHT_CHARGE_REGEN_INTERVAL}
-                  onComplete={() => {
-                    queryClient.invalidateQueries({ queryKey: queries_keys.profile_userId(userId || "") });
-                  }}
-                />
-              )
+              <CountdownTimer
+                isDisabled={isChargesMax}
+                endTime={new_last_action_date.getTime() + FIGHT_CHARGE_REGEN_INTERVAL}
+                onComplete={refetch}
+              />
             }
           />
         </div>

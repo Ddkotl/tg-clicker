@@ -15,7 +15,6 @@ export async function POST(req: Request) {
     }
 
     const result = await fightService.atack({ userId: userId, lang: lang });
-    console.log("Attack result:", result);
     if (!result || result === null) return makeError(translate("api.invalid_process", lang), 400);
     const response: FightResponseType = {
       ok: true,
