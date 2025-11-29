@@ -23,5 +23,12 @@ export const img_paths = {
     circulation_of_life: () => `/circulation_of_life.jpg`,
     spatial_vault: () => `/spatial_vault.jpg`,
   },
+  params_training: {
+    power: () => `/power.png`,
+    protection: () => `/protection.png`,
+    speed: () => `/speed.png`,
+    skill: () => `/skill.png`,
+    qi_param: () => `/qi_param.png`,
+  },
   ranking_page: () => `/ranking.jpg`,
 };

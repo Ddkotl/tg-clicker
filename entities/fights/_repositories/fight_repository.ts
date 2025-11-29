@@ -3,14 +3,33 @@ import { FightResult, FightStatus, FightType, EnemyType } from "@/_generated/pri
 import { FightLogStep, FightResRewards, FightSnapshot } from "../_domain/types";
 
 export class FightRepository {
-  async getPendingFightByAtackserId({ attackserId, tx }: { attackserId: string; tx?: TransactionType }) {
+  async getFightByAttackserId({
+    attackserId,
+    status,
+    tx,
+  }: {
+    attackserId: string;
+    status: FightStatus;
+    tx?: TransactionType;
+  }) {
     const db_client = tx ? tx : dataBase;
     try {
       return await db_client.fight.findFirst({
-        where: { attackerId: attackserId, status: FightStatus.PENDING },
+        where: { attackerId: attackserId, status: status },
       });
     } catch (e) {
-      console.error("getPendingFightByAtackserId", e);
+      console.error("getFightByAttackserId", e);
+      return null;
+    }
+  }
+  async getFightById({ fightId, tx }: { fightId: string; tx?: TransactionType }) {
+    const db_client = tx ? tx : dataBase;
+    try {
+      return await db_client.fight.findFirst({
+        where: { id: fightId },
+      });
+    } catch (e) {
+      console.error("getFightById", e);
       return null;
     }
   }
@@ -19,7 +38,6 @@ export class FightRepository {
     defenderId?: string | null;
     enemyType: EnemyType;
     fightType: FightType;
-    status?: FightStatus;
     fightSnapshot: FightSnapshot;
     tx?: TransactionType;
   }) {

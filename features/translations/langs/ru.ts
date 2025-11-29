@@ -165,6 +165,7 @@ export const ru_lang: Messages = {
       title: "Миссии",
       highlight: "Каждая миссия — вызов на твоем пути. Испытай себя, сохрани равновесие мира.",
       text: "Выбирай путь, соответствующий твоему уровню силы и осознанности — от мирных практик до схваток с тенями. Помни: каждая миссия — не просто испытание, а возможность постичь истину через действие.",
+      no_missions: "Нет активных миссий на сегодня",
       types: {
         MEDITATION: {
           title: "Медитируй {target}",
@@ -181,6 +182,25 @@ export const ru_lang: Messages = {
         MINE_STONE: {
           title: "Выкопай {target} камней Ци",
           highlight: "Там, где усилие встречается с удачей.",
+        },
+        DAMAGE: {
+          title: "Нанести {target} урона",
+          highlight: "Сила раскрывается в действии.",
+        },
+
+        FIGHTS_WINS: {
+          title: "Победить в {target} битвах",
+          highlight: "Победа благоволит подготовленным.",
+        },
+
+        GET_GLORY: {
+          title: "Получить {target} славы",
+          highlight: "Честь куётся в борьбе.",
+        },
+
+        ROBBERY_QI_ENERGY: {
+          title: "Похитить {target} единиц энергии Ци",
+          highlight: "Забери то, что судьба отказалась дать.",
         },
       },
     },
@@ -266,8 +286,11 @@ export const ru_lang: Messages = {
     highlight: "Истинный бой начинается прежде, чем соперники встретятся.",
     text: "Укрепи дух, направь энергию, и удар станет продолжением твоей воли.Для начала боя выбери врага.",
     oponents: {
-      demonic_beasts: "Демонические звери",
+      DEMONIC_BEAST: "Демонический зверь",
+      PLAYER: "Противник игрок",
     },
+    attack: "Атаковать",
+    next_enemy: "Следующий враг",
   },
   ranking: {
     title: "Сердце Эпохи",
@@ -280,6 +303,7 @@ export const ru_lang: Messages = {
       daily: "Ежедневный",
       names_types: {
         exp: "Уровень",
+        exp_partial: "Получено опыта",
         exp_value: "Уровень",
         meditated_hours: "Часы медитации",
         meditated_hours_value: "Часы",

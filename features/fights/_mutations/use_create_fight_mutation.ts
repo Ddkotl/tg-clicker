@@ -5,6 +5,7 @@ import { ErrorResponseType } from "@/shared/lib/api_helpers/types";
 import { api_path } from "@/shared/lib/paths";
 import { queries_keys } from "@/shared/lib/queries_keys";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export const useCreateFightMutation = () => {
   const queryClient = useQueryClient();
@@ -15,10 +16,16 @@ export const useCreateFightMutation = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ enemyType, fightType }),
       });
-      const ans = res.json();
+      const ans = await res.json();
       if (!res.ok) throw ans;
       return ans;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: queries_keys.current_fight() }),
+    onSuccess: (data) =>
+      queryClient.invalidateQueries({
+        queryKey: queries_keys.get_fight({ enemyType: data.data.enemyType, status: data.data.status }),
+      }),
+    onError: (error) => {
+      toast.error(error.message);
+    },
   });
 };

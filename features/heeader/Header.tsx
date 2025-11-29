@@ -1,29 +1,36 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { useGetSessionQuery } from "@/entities/auth/_queries/session_queries";
 import { HeaderItem } from "./_ui/header_item";
-import { getProfileQuery, ProfileResponse } from "@/entities/profile";
+import { useProfileQuery } from "@/entities/profile";
 import { HeaderProgressBars } from "./_ui/header_progress";
 import { icons } from "@/shared/lib/icons";
-import { MAX_CHARGES } from "@/shared/game_config/fight/fight_const";
+import { FIGHT_CHARGE_REGEN_INTERVAL, FIGHT_MAX_CHARGES } from "@/shared/game_config/fight/fight_const";
+import { getPastedIntervals } from "@/shared/game_config/getPastedIntervals";
+import { CountdownTimer } from "@/shared/components/custom_ui/timer";
+import { ui_path } from "@/shared/lib/paths";
 
 export function Header() {
   const { data: session, isLoading: isLoadingSession } = useGetSessionQuery();
+  const userId = session?.data?.user.userId;
   const {
     data: profile,
     isLoading: isLoadingProfile,
     isFetching: isFetchingProfile,
-  } = useQuery<ProfileResponse>({
-    ...getProfileQuery(session?.data?.user.userId ?? ""),
-    enabled: !!session?.data?.user.userId,
-  });
-  const userId = profile?.data?.userId;
+    refetch,
+  } = useProfileQuery(userId || "");
   const isLoading = isLoadingProfile || isLoadingSession;
   const isDisabled = isFetchingProfile;
-  const formattedTime = profile?.data?.last_fight_time
-    ? new Date(profile.data.last_fight_time).toLocaleTimeString()
-    : "00:00";
+
+  const { past_intervals, new_last_action_date } = getPastedIntervals({
+    now_ms: Date.now(),
+    last_action_ms: profile?.data?.last_charge_recovery
+      ? new Date(profile.data.last_charge_recovery).getTime()
+      : new Date().getTime(),
+    interval_ms: FIGHT_CHARGE_REGEN_INTERVAL,
+  });
+
+  const isChargesMax = Number(profile?.data?.fight_charges ?? 0) + past_intervals >= FIGHT_MAX_CHARGES;
 
   return (
     <div className="flex justify-center w-full">
@@ -42,7 +49,7 @@ export function Header() {
             icon={icons.backpack({
               className: "h-4 w-4 xs:h-5 xs:w-5",
             })}
-            href={`/game`}
+            href={ui_path.home_page()}
             isDisabled={isDisabled}
             isLoading={isLoading}
           />
@@ -68,7 +75,7 @@ export function Header() {
             icon={icons.stone({
               className: "h-4 w-4 xs:h-5 xs:w-5",
             })}
-            href={`/game`}
+            href={ui_path.mine_page()}
             isDisabled={isDisabled}
             isLoading={isLoading}
             value={profile?.data?.qi_stone}
@@ -86,19 +93,25 @@ export function Header() {
             icon={icons.fight({
               className: "h-4 w-4 xs:h-5 xs:w-5",
             })}
-            href={`/game`}
+            href={ui_path.fight_page()}
             isDisabled={isDisabled}
             isLoading={isLoading}
-            value={`${profile?.data?.fight_charges}/${MAX_CHARGES}`}
+            value={`${Math.min(Number(profile?.data?.fight_charges ?? 0) + past_intervals, FIGHT_MAX_CHARGES)}/${FIGHT_MAX_CHARGES}`}
           />
           <HeaderItem
             icon={icons.clock({
-              className: "h-4 w-4 xs:h-5 xs:w-5",
+              className: "h-4 w-4 xs:h-5 xs:w-5 mr-1",
             })}
-            href={`/game`}
+            href={ui_path.meditation_page()}
             isDisabled={isDisabled}
             isLoading={isLoading}
-            value={formattedTime}
+            element={
+              <CountdownTimer
+                isDisabled={isChargesMax}
+                endTime={new_last_action_date.getTime() + FIGHT_CHARGE_REGEN_INTERVAL}
+                onComplete={refetch}
+              />
+            }
           />
         </div>
         <HeaderProgressBars

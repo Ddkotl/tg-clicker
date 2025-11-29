@@ -24,6 +24,11 @@ export function MissionCard({
 
   const rewards = [
     {
+      value: mission.reward_glory,
+      label: t("glory"),
+      icon: icons.glory({}),
+    },
+    {
       value: mission.reward_exp,
       label: t("experience"),
       icon: icons.exp({}),
@@ -43,16 +48,12 @@ export function MissionCard({
       label: t("spirit_cristal"),
       icon: icons.crystal({}),
     },
-    {
-      value: mission.reward_glory,
-      label: t("glory"),
-      icon: icons.glory({}),
-    },
   ].filter((r) => r.value > 0);
   return (
-    <Card className="bg-background/50 border border-border">
-      <CardHeader className="flex gap-2 justify-between items-center">
-        <CardTitle className="text-sm font-semibold">{title}</CardTitle>
+    <Card className="bg-background/50  gap-2">
+      <CardHeader className=" flex gap-2 justify-between items-center">
+        <CardTitle className="max-w-full truncate text-sm font-semibold">{title}</CardTitle>
+
         <Link
           href={mission.path ?? ui_path.home_page()}
           className="text-primary hover:text-primary/80 font-medium underline underline-offset-2"
@@ -61,6 +62,7 @@ export function MissionCard({
         </Link>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
+        <div className="text-sm text-foreground/60">{t(`headquarter.missions.types.${mission.type}.highlight`)}</div>
         <Progress value={progressPercent} className="h-2" />
         <div className="text-xs text-muted-foreground">
           {t("progress")}: {mission.progress} / {mission.target_value}

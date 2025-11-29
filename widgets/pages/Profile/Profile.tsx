@@ -1,11 +1,9 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
 
 import { useTranslation } from "@/features/translations/use_translation";
-import { getProfileQuery } from "@/entities/profile/_queries/profile_query";
-import { ProfileResponse } from "@/entities/profile";
+import { useProfileQuery } from "@/entities/profile/_queries/use_profile_query";
 import { lvl_exp } from "@/shared/game_config/exp/lvl_exp";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { ProfileHeader } from "./_ui/profile_header";
@@ -17,9 +15,7 @@ export function Profile() {
   const { t } = useTranslation();
   const { userId } = useParams<{ userId: string }>();
   const { data: session, isLoading: isoadingSession } = useGetSessionQuery();
-  const { data: profile, isLoading } = useQuery<ProfileResponse>({
-    ...getProfileQuery(userId),
-  });
+  const { data: profile, isLoading } = useProfileQuery(userId || "");
 
   const user = profile?.data;
   const exp = user?.exp ?? 0;

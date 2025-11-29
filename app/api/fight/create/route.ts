@@ -11,7 +11,6 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const data = fightRequestSchema.safeParse(body);
-    console.log("startPveShadowFight data:", data);
     if (!data.success) {
       return makeError(translate("api.invalid_request_data", lang), 400);
     }
@@ -24,6 +23,7 @@ export async function POST(req: Request) {
       userId: userId,
       enemyType: data.data.enemyType,
       fightType: data.data.fightType,
+      lang: lang,
     });
     if (!result || result === null) return makeError(translate("api.invalid_process", lang), 400);
     const response: FightResponseType = {
@@ -32,9 +32,9 @@ export async function POST(req: Request) {
       data: result,
     };
     fightResponseSchema.parse(response);
-    return NextResponse.json(result);
+    return NextResponse.json(response);
   } catch (e) {
-    console.error("startPveShadowFight error", e);
+    console.error("startPveFight error", e);
     return NextResponse.json({ ok: false, reason: "internal_error" }, { status: 500 });
   }
 }

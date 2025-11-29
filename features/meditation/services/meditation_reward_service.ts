@@ -5,9 +5,17 @@ import { giveMeditationReward } from "@/entities/meditation/index.server";
 import { InactivateMission, UpdateProgressMission } from "@/entities/missions/index.server";
 import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lvl";
 import { GetResources } from "@/entities/profile/index.server";
+import { statisticRepository } from "@/entities/statistics/index.server";
 
 export async function MeditationRewardService(userId: string, break_meditation?: boolean) {
   const res = await giveMeditationReward(userId, break_meditation);
+  await statisticRepository.updateUserDailyStats({
+    userId: userId,
+    data: {
+      exp: res?.reward_exp,
+      meditated_hours: res?.hours,
+    },
+  });
   const new_fact = await createFact({
     fact_type: FactsType.MEDITATION,
     fact_status: FactsStatus.NO_CHECKED,
@@ -30,6 +38,12 @@ export async function MeditationRewardService(userId: string, break_meditation?:
         spirit_cristal: meditation_mission.reward_spirit_cristal,
         glory: meditation_mission.reward_glory,
         exp: meditation_mission.reward_exp,
+      });
+      await statisticRepository.updateUserDailyStats({
+        userId: userId,
+        data: {
+          exp: meditation_mission.reward_exp,
+        },
       });
       await createFact({
         userId,

@@ -7,9 +7,6 @@ import { ProfileResponse } from "@/entities/profile";
 import { getQiRegenPerInterval, QI_REGEN_INTERVAL } from "@/shared/game_config/params/qi_regen";
 import { GetUserQiSkillsResponseType } from "@/entities/qi_skiils";
 
-/**
- * Сколько миллисекунд до начала следующей "минуты" по часу
- */
 function getMsUntilNextMinute() {
   const now = new Date();
   return 60_000 - (now.getSeconds() * 1000 + now.getMilliseconds());
@@ -32,11 +29,9 @@ export function useQiRegen(userId?: string) {
 
       if (!profile || !skills) return;
 
-      // Округляем прошлое обновление до начала минуты
       const lastUpdate = new Date(profile.last_qi_update);
       lastUpdate.setSeconds(0, 0);
 
-      // Текущее время на фронте, округленное до минуты
       const now = new Date();
       const currentTime = new Date(now);
       currentTime.setSeconds(0, 0);
@@ -74,11 +69,9 @@ export function useQiRegen(userId?: string) {
         };
       });
 
-      // Планируем следующий тик через минуту
       timeoutRef.current = setTimeout(tick, getMsUntilNextMinute());
     };
 
-    // Первый тик
     timeoutRef.current = setTimeout(tick, getMsUntilNextMinute());
 
     return () => {

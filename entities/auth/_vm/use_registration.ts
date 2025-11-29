@@ -1,13 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { useTheme } from "@/features/themes/theme_context";
 import { Fraktion, Gender } from "@/_generated/prisma";
 
-import { getProfileQuery } from "@/entities/profile/_queries/profile_query";
+import { useProfileQuery } from "@/entities/profile/_queries/use_profile_query";
 import { useGetSessionQuery } from "@/entities/auth/_queries/session_queries";
-import { ProfileResponse } from "@/entities/profile";
 
 export function useRegistration() {
   const { theme, setTheme } = useTheme();
@@ -18,10 +16,7 @@ export function useRegistration() {
 
   const { data: session, isLoading: isLoadingSession } = useGetSessionQuery();
 
-  const { data: profile, isLoading: isLoadingProfile } = useQuery<ProfileResponse>({
-    ...getProfileQuery(session?.data?.user.userId || ""),
-    enabled: !!session?.data?.user.userId,
-  });
+  const { data: profile, isLoading: isLoadingProfile } = useProfileQuery(session?.data?.user.userId || "");
 
   useEffect(() => {
     if (profile) {

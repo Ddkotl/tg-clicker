@@ -157,9 +157,23 @@ export class StatisticRepository {
     const db_client = tx ? tx : dataBase;
     const today = getStartOfToday();
     try {
+      const { exp, fights_total, fights_wins, meditated_hours, mined_count, mined_qi_stone, spirit_path_minutes } =
+        data;
+      const dataToUpdate: Record<string, object> = {};
+      if (exp !== undefined) dataToUpdate.exp = { increment: exp };
+      if (fights_total !== undefined) dataToUpdate.fights_total = { increment: fights_total };
+      if (fights_wins !== undefined) dataToUpdate.fights_wins = { increment: fights_wins };
+      if (meditated_hours !== undefined) dataToUpdate.meditated_hours = { increment: meditated_hours };
+      if (mined_count !== undefined) dataToUpdate.mined_count = { increment: mined_count };
+      if (mined_qi_stone !== undefined) dataToUpdate.mined_qi_stone = { increment: mined_qi_stone };
+      if (spirit_path_minutes !== undefined) dataToUpdate.spirit_path_minutes = { increment: spirit_path_minutes };
+      if (Object.keys(dataToUpdate).length === 0) {
+        console.warn("⚠️ Нет данных для обновления");
+        return null;
+      }
       const stat = await db_client.userDailyStats.upsert({
         where: { userId_date: { userId: userId, date: today } },
-        update: data,
+        update: dataToUpdate,
         create: {
           userId,
           date: today,
@@ -170,6 +184,19 @@ export class StatisticRepository {
     } catch (error) {
       console.error("updateDailyStats error", error);
       return null;
+    }
+  }
+
+  async deleteOldUserDailyStats({ beforeDate, tx }: { beforeDate: Date; tx?: TransactionType }) {
+    const db_client = tx ? tx : dataBase;
+    try {
+      await db_client.userDailyStats.deleteMany({
+        where: {
+          date: { lt: beforeDate },
+        },
+      });
+    } catch (error) {
+      console.error("deleteOldUserDailyStats error", error);
     }
   }
 }

@@ -1,12 +1,17 @@
 import { profileRepository } from "@/entities/profile/index.server";
-import { FIGHT_CHARGE_REGEN_INTERVAL, FIGHT_COOLDOWN, MAX_CHARGES } from "@/shared/game_config/fight/fight_const";
+import { FIGHT_CHARGE_REGEN_INTERVAL, FIGHT_COOLDOWN, FIGHT_MAX_CHARGES } from "@/shared/game_config/fight/fight_const";
 import { FighterSnapshot, FightLog, FightResRewards, FightSnapshot } from "@/entities/fights/_domain/types";
 import { fightRepository } from "@/entities/fights/index.server";
-import { EnemyType, FightResult, FightType } from "@/_generated/prisma";
+import { EnemyType, FightResult, FightStatus, FightType } from "@/_generated/prisma";
 import { recalcHp } from "@/features/hp_regen/recalc_hp";
 import { recalcQi } from "@/features/qi_regen/recalc_qi";
 import dayjs from "dayjs";
 import { dataBase, TransactionType } from "@/shared/connect/db_connect";
+import { img_paths } from "@/shared/lib/img_paths";
+import { SupportedLang } from "@/features/translations/translate_type";
+import { translate } from "@/features/translations/server/translate_fn";
+import { getPastedIntervals } from "@/shared/game_config/getPastedIntervals";
+import { checkUserDeals } from "@/entities/user/_repositories/check_user_deals";
 
 export class FightService {
   constructor(
@@ -18,22 +23,21 @@ export class FightService {
     let profile = await this.profileRepo.getByUserId({ userId: userId, tx: tx });
     if (!profile) return null;
 
-    const now = new Date();
-    const lastRecovery = profile.last_charge_recovery ?? now;
-    const diff_time = now.getTime() - lastRecovery.getTime();
-
-    if (diff_time < FIGHT_CHARGE_REGEN_INTERVAL) return profile;
-
-    const chargesToAdd = Math.floor(diff_time / FIGHT_CHARGE_REGEN_INTERVAL);
-    const newCharges = Math.min(MAX_CHARGES, profile.fight_charges + chargesToAdd);
-    const newLastChargeRecovery = new Date(lastRecovery.getTime() + chargesToAdd * FIGHT_CHARGE_REGEN_INTERVAL);
+    const now = new Date().getTime();
+    const lastRecovery = profile.last_charge_recovery?.getTime() ?? now;
+    const { past_intervals, new_last_action_date } = getPastedIntervals({
+      now_ms: now,
+      last_action_ms: lastRecovery,
+      interval_ms: FIGHT_CHARGE_REGEN_INTERVAL,
+    });
+    const newCharges = Math.min(FIGHT_MAX_CHARGES, profile.fight_charges + past_intervals);
 
     if (newCharges > profile.fight_charges) {
       profile = await this.profileRepo.updateFightCharges({
         userId: userId,
         tx: tx,
         fight_charges: newCharges,
-        last_charge_recovery: newLastChargeRecovery,
+        last_charge_recovery: newCharges === FIGHT_MAX_CHARGES ? new Date() : new_last_action_date,
       });
     }
 
@@ -43,7 +47,8 @@ export class FightService {
   private async canFight({ userId, tx }: { userId: string; tx?: TransactionType }) {
     const profile = await this.restoreFightCharges({ userId: userId, tx: tx });
     if (!profile) return null;
-
+    const user_deals = await checkUserDeals({ userId: userId, tx: tx });
+    if (!user_deals || user_deals === null || user_deals !== "ок") return null;
     const now = new Date();
     if (profile.last_fight_time) {
       const diff = now.getTime() - profile.last_fight_time.getTime();
@@ -126,13 +131,23 @@ export class FightService {
     };
   }
 
-  private async generateEnemy(playerSnapshot: FighterSnapshot) {
+  private async generateEnemy({
+    playerSnapshot,
+    enemyType,
+    lang,
+  }: {
+    playerSnapshot: FighterSnapshot;
+    enemyType: EnemyType;
+    lang: SupportedLang;
+  }) {
     const enemy: FighterSnapshot = {
-      name: "Демонический зверь",
+      name: translate(`fight.oponents.${enemyType}`, lang),
       power: Math.max(1, playerSnapshot.power + Math.floor(Math.random() * 5 - 2)),
       protection: Math.max(1, playerSnapshot.protection + Math.floor(Math.random() * 5 - 2)),
       speed: Math.max(1, playerSnapshot.speed + Math.floor(Math.random() * 5 - 2)),
       skill: Math.max(1, playerSnapshot.skill + Math.floor(Math.random() * 5 - 2)),
+      qi_param: Math.max(1, playerSnapshot.qi_param + Math.floor(Math.random() * 5 - 2)),
+      avatar_url: img_paths.fight_list.demonic_beast(),
       currentHp: 50 + Math.floor(Math.random() * 20),
       maxHp: 50 + Math.floor(Math.random() * 20),
     };
@@ -151,11 +166,13 @@ export class FightService {
     userId,
     enemyType,
     fightType,
+    lang,
     tx,
   }: {
     userId: string;
     enemyType: EnemyType;
     fightType: FightType;
+    lang: SupportedLang;
     tx?: TransactionType;
   }) {
     const hp = await recalcHp({ userId: userId, tx: tx });
@@ -167,15 +184,21 @@ export class FightService {
 
     const attackerSnapshot: FighterSnapshot = {
       userId: restore.userId,
+      avatar_url: restore.avatar_url || img_paths.fractions.adept_m(),
       name: restore.nikname ?? "Unknown",
       power: restore.power,
       protection: restore.protection,
       speed: restore.speed,
       skill: restore.skill,
+      qi_param: qi.qi_param,
       currentHp: restore.current_hitpoint,
       maxHp: restore.max_hitpoint,
     };
-    const enemySnapshot: FighterSnapshot = await this.generateEnemy(attackerSnapshot);
+    const enemySnapshot: FighterSnapshot = await this.generateEnemy({
+      playerSnapshot: attackerSnapshot,
+      enemyType: EnemyType.DEMONIC_BEAST,
+      lang: lang,
+    });
 
     const fightSnapshot: FightSnapshot = {
       player: attackerSnapshot,
@@ -192,10 +215,24 @@ export class FightService {
 
     return fight;
   }
-  private async getOrRefreshPendingFight({ userId, tx }: { userId: string; tx?: TransactionType }) {
-    const hp = await recalcHp({ userId: userId, tx: tx });
+  async getOrRefreshPendingFight({
+    attackserId,
+    status,
+    lang,
+    tx,
+  }: {
+    attackserId: string;
+    status: FightStatus;
+    lang: SupportedLang;
+    tx?: TransactionType;
+  }) {
+    const hp = await recalcHp({ userId: attackserId, tx: tx });
     if (hp === null) return null;
-    let fight = await this.fightRepo.getPendingFightByAtackserId({ attackserId: userId, tx: tx });
+    let fight = await this.fightRepo.getFightByAttackserId({
+      attackserId: attackserId,
+      status: status,
+      tx: tx,
+    });
 
     const snapshotExpired =
       !fight ||
@@ -204,19 +241,36 @@ export class FightService {
 
     if (snapshotExpired) {
       if (fight) {
-        fight = await this.startFight({ userId: userId, enemyType: fight.enemyType, fightType: fight.type, tx });
+        fight = await this.startFight({
+          userId: attackserId,
+          enemyType: fight.enemyType,
+          fightType: fight.type,
+          lang,
+          tx,
+        });
       }
     }
 
     return fight;
   }
 
-  async atack(userId: string) {
+  async getFinidhedFight({ fightId, tx }: { fightId: string; tx?: TransactionType }) {
+    const db_client = tx ? tx : dataBase;
+    const fight = await this.fightRepo.getFightById({ fightId: fightId, tx: db_client });
+    return fight;
+  }
+
+  async atack({ userId, lang }: { userId: string; lang: SupportedLang }) {
     return await dataBase.$transaction(async (tx) => {
       const check = await this.canFight({ userId: userId, tx: tx });
       if (!check) return check;
-      const fight = await this.getOrRefreshPendingFight({ userId: userId, tx: tx });
-      if (!fight) return fight;
+      const fight = await this.getOrRefreshPendingFight({
+        attackserId: userId,
+        status: FightStatus.PENDING,
+        lang: lang,
+        tx: tx,
+      });
+      if (!fight) return null;
       const profile = await this.profileRepo.spendFightCharge({ userId: userId, tx: tx });
       if (!profile) return null;
       const snapshot: FightSnapshot = fight.snapshot as FightSnapshot;

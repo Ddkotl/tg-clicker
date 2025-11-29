@@ -5,9 +5,17 @@ import { InactivateMission, UpdateProgressMission } from "@/entities/missions/in
 import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lvl";
 import { GetResources } from "@/entities/profile/index.server";
 import { giveSpiritPathReward } from "@/entities/spirit_path/_repositories/give_spirit_path_reward";
+import { statisticRepository } from "@/entities/statistics/index.server";
 
 export async function SpiritPathRewardServices(userId: string, break_spirit_path?: boolean) {
   const res = await giveSpiritPathReward(userId, break_spirit_path);
+  await statisticRepository.updateUserDailyStats({
+    userId: userId,
+    data: {
+      exp: res?.reward_exp,
+      spirit_path_minutes: res?.minutes,
+    },
+  });
   const new_fact = await createFact({
     fact_type: FactsType.SPIRIT_PATH,
     fact_status: FactsStatus.NO_CHECKED,
@@ -31,6 +39,12 @@ export async function SpiritPathRewardServices(userId: string, break_spirit_path
         spirit_cristal: spirit_path_mission.reward_spirit_cristal,
         glory: spirit_path_mission.reward_glory,
         exp: spirit_path_mission.reward_exp,
+      });
+      await statisticRepository.updateUserDailyStats({
+        userId: userId,
+        data: {
+          exp: spirit_path_mission.reward_exp,
+        },
       });
       await createFact({
         userId,

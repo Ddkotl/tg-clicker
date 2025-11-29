@@ -10,15 +10,13 @@ import { getMineInfoQuery } from "../_queries/get_mine_info_query";
 import { useCheckUserDealsStatus } from "@/entities/user/_queries/use_check_user_deals";
 import { useGetSessionQuery } from "@/entities/auth";
 import { MAX_ENERGY, MINE_COOLDOWN } from "@/shared/game_config/mining/mining_const";
-import { Spinner } from "@/shared/components/ui/spinner";
-import { Button } from "@/shared/components/ui/button";
-import { cn } from "@/shared/lib/utils";
-import { CountdownTimer } from "@/shared/components/custom_ui/timer";
+import { useEffect, useState } from "react";
+import { MutateButton } from "../../../shared/components/custom_ui/mutate_button";
 import { useTranslation } from "@/features/translations/use_translation";
-import React, { useState } from "react";
 
 export default function Mine() {
   const { t } = useTranslation();
+
   const { data: session, isLoading: isSessionLoading } = useGetSessionQuery();
   const userId = session?.data?.user.userId;
   const deals = useCheckUserDealsStatus();
@@ -41,8 +39,7 @@ export default function Mine() {
     mine ? Date.now() < mine.data.last_mine_at + MINE_COOLDOWN : false,
   );
 
-  // пересчет при изменении last_mine_at
-  React.useEffect(() => {
+  useEffect(() => {
     if (mine?.data.last_mine_at) {
       setEnd(mine.data.last_mine_at + MINE_COOLDOWN);
       setIsCooldown(Date.now() < mine.data.last_mine_at + MINE_COOLDOWN);
@@ -50,8 +47,8 @@ export default function Mine() {
   }, [mine?.data.last_mine_at]);
 
   const handleCooldownEnd = () => {
-    setIsCooldown(false); // разблокируем кнопку
-    refetch(); // обновляем данные
+    setIsCooldown(false);
+    refetch();
   };
 
   if (isLoading || isSessionLoading || !mine?.data.last_energy_at || !mine?.data.last_mine_at) {
@@ -65,32 +62,18 @@ export default function Mine() {
       <Card className="shadow-lg border-border/50 bg-card/70 backdrop-blur p-1">
         <CardContent className="text-center space-y-3 p-3">
           <MineEnergySection energy={energy} lastEnergyAt={mine.data.last_energy_at} onEnergyRecovered={refetch} />
-
-          <Button
-            className={cn(
-              "w-full flex items-center justify-center gap-2 transition-opacity py-4",
-              disabled && "pointer-events-none opacity-40",
-            )}
-            size="lg"
-            disabled={disabled}
-            onClick={() => mutation.mutate({ userId: userId ?? "" })}
-          >
-            {deals.busy ? (
-              <span>{deals.reason}</span>
-            ) : (
-              <div className="flex items-center gap-2">
-                {isCooldown && <CountdownTimer endTime={end} onComplete={handleCooldownEnd} />}
-                {mutation.isPending ? (
-                  <div className="flex items-center gap-2">
-                    <Spinner className="w-4 h-4" />
-                    {t("headquarter.mine_page.mining_in_progress")}
-                  </div>
-                ) : (
-                  t("headquarter.mine_page.get_qi_stones")
-                )}
-              </div>
-            )}
-          </Button>
+          <MutateButton
+            cooldownEndMs={end}
+            handleCooldownEnd={handleCooldownEnd}
+            isDisabled={disabled}
+            isCooldown={isCooldown}
+            isBusy={deals.busy}
+            isMutatePending={mutation.isPending}
+            mutate={() => mutation.mutate({ userId: userId ?? "" })}
+            busyReason={deals.reason}
+            actionText={t("headquarter.mine_page.get_qi_stones")}
+            pendingText={t("headquarter.mine_page.mining_in_progress")}
+          />
         </CardContent>
       </Card>
     </div>

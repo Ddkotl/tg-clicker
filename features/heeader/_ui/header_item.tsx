@@ -1,15 +1,18 @@
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { cn } from "@/shared/lib/utils";
 import Link from "next/link";
+import React from "react";
 
 export function HeaderItem({
   icon,
+  element,
   value,
   isLoading,
   isDisabled,
   href,
 }: {
   icon: React.ReactNode;
+  element?: React.ReactNode;
   value?: string | number;
   color?: string;
   isLoading?: boolean;
@@ -29,7 +32,10 @@ export function HeaderItem({
       {isLoading && value ? (
         <Skeleton className="h-3 w-8 rounded-md" />
       ) : (
-        <span className="text-sm xs:text-base  font-medium">{value}</span>
+        <span className="text-sm xs:text-base   font-medium">
+          {element}
+          {value}
+        </span>
       )}
     </Link>
   );
