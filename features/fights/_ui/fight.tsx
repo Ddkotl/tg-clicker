@@ -86,6 +86,7 @@ export function Fight({ enemy_type }: { enemy_type: EnemyType }) {
               actionText={t("fight.next_enemy")}
               isMutatePending={createFight.isPending}
               mutate={handleStartFight}
+              isDisabled={attack.isPending || createFight.isPending || isFetching}
             />
           </div>
         </div>

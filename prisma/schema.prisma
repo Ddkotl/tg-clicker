@@ -221,6 +221,7 @@ model Facts {
   active_minutes        Int?
   target_value          Int?
   mission_type          MissionType?
+  fight_result          FightResult?
   createdAt             DateTime     @default(now())
 
   @@index([userId])

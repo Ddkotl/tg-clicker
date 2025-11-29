@@ -1,4 +1,4 @@
-import { Fraktion, UserDailyStats } from "@/_generated/prisma";
+import { Fraktion, UserDailyStats, UserStatistic } from "@/_generated/prisma";
 import { dataBase, TransactionType } from "@/shared/connect/db_connect";
 import { RatingsMetrics, RatingsTypes } from "../_domain/ratings_list_items";
 import { getStartOfToday } from "@/shared/lib/date";
@@ -183,6 +183,45 @@ export class StatisticRepository {
       return stat;
     } catch (error) {
       console.error("updateDailyStats error", error);
+      return null;
+    }
+  }
+  async updateUserOverallStats({
+    data,
+    userId,
+    tx,
+  }: {
+    data: Partial<UserStatistic>;
+    userId: string;
+    tx?: TransactionType;
+  }) {
+    const db_client = tx ? tx : dataBase;
+    try {
+      const { exp, fights_total, fights_wins, meditated_hours, mined_count, mined_qi_stone, spirit_path_minutes } =
+        data;
+      const dataToUpdate: Record<string, object> = {};
+      if (exp !== undefined) dataToUpdate.exp = { increment: exp };
+      if (fights_total !== undefined) dataToUpdate.fights_total = { increment: fights_total };
+      if (fights_wins !== undefined) dataToUpdate.fights_wins = { increment: fights_wins };
+      if (meditated_hours !== undefined) dataToUpdate.meditated_hours = { increment: meditated_hours };
+      if (mined_count !== undefined) dataToUpdate.mined_count = { increment: mined_count };
+      if (mined_qi_stone !== undefined) dataToUpdate.mined_qi_stone = { increment: mined_qi_stone };
+      if (spirit_path_minutes !== undefined) dataToUpdate.spirit_path_minutes = { increment: spirit_path_minutes };
+      if (Object.keys(dataToUpdate).length === 0) {
+        console.warn("⚠️ Нет данных для обновления");
+        return null;
+      }
+      const stat = await db_client.userStatistic.upsert({
+        where: { userId: userId },
+        update: dataToUpdate,
+        create: {
+          userId,
+          ...data,
+        },
+      });
+      return stat;
+    } catch (error) {
+      console.error("updateUserOverallStats error", error);
       return null;
     }
   }

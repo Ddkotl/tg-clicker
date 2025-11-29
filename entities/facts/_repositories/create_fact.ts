@@ -1,5 +1,5 @@
-import { FactsStatus, FactsType, MissionType } from "@/_generated/prisma";
-import { dataBase } from "@/shared/connect/db_connect";
+import { FactsStatus, FactsType, FightResult, MissionType } from "@/_generated/prisma";
+import { dataBase, TransactionType } from "@/shared/connect/db_connect";
 
 export async function createFact({
   userId,
@@ -14,6 +14,8 @@ export async function createFact({
   reward_glory,
   target,
   mission_type,
+  fight_result,
+  tx,
 }: {
   userId: string;
   fact_type: FactsType;
@@ -27,9 +29,12 @@ export async function createFact({
   reward_glory?: number;
   target?: number;
   mission_type?: MissionType;
+  fight_result?: FightResult;
+  tx?: TransactionType;
 }) {
+  const db_client = tx ? tx : dataBase;
   try {
-    const new_fact = await dataBase.facts.create({
+    const new_fact = await db_client.facts.create({
       data: {
         userId,
         type: fact_type,
@@ -43,6 +48,7 @@ export async function createFact({
         qi_stone_reward: qi_stone_reward,
         target_value: target,
         mission_type: mission_type,
+        fight_result: fight_result,
       },
     });
     return new_fact;

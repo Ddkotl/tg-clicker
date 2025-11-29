@@ -2,7 +2,7 @@ import { profileRepository } from "@/entities/profile/index.server";
 import { FIGHT_CHARGE_REGEN_INTERVAL, FIGHT_COOLDOWN, FIGHT_MAX_CHARGES } from "@/shared/game_config/fight/fight_const";
 import { FighterSnapshot, FightLog, FightResRewards, FightSnapshot } from "@/entities/fights/_domain/types";
 import { fightRepository } from "@/entities/fights/index.server";
-import { EnemyType, FightResult, FightStatus, FightType } from "@/_generated/prisma";
+import { EnemyType, FactsStatus, FactsType, FightResult, FightStatus, FightType } from "@/_generated/prisma";
 import { recalcHp } from "@/features/hp_regen/recalc_hp";
 import { recalcQi } from "@/features/qi_regen/recalc_qi";
 import dayjs from "dayjs";
@@ -12,6 +12,8 @@ import { SupportedLang } from "@/features/translations/translate_type";
 import { translate } from "@/features/translations/server/translate_fn";
 import { getPastedIntervals } from "@/shared/game_config/getPastedIntervals";
 import { checkUserDeals } from "@/entities/user/_repositories/check_user_deals";
+import { statisticRepository } from "@/entities/statistics/index.server";
+import { createFact } from "@/entities/facts/index.server";
 
 export class FightService {
   constructor(
@@ -263,50 +265,72 @@ export class FightService {
   async atack({ userId, lang }: { userId: string; lang: SupportedLang }) {
     return await dataBase.$transaction(async (tx) => {
       const check = await this.canFight({ userId: userId, tx: tx });
-      if (!check) return check;
+      if (!check) throw new Error("Failed canFight");
       const fight = await this.getOrRefreshPendingFight({
         attackserId: userId,
         status: FightStatus.PENDING,
         lang: lang,
         tx: tx,
       });
-      if (!fight) return null;
+      if (!fight) throw new Error("Failed getOrRefreshPendingFight");
       const profile = await this.profileRepo.spendFightCharge({ userId: userId, tx: tx });
-      if (!profile) return null;
+      if (!profile) throw new Error("Failed spendFightCharge");
       const snapshot: FightSnapshot = fight.snapshot as FightSnapshot;
       const { log, result } = await this.simulateBattle(snapshot.player, snapshot.enemy);
-      if (result === FightResult.WIN) {
-        const rewards: FightResRewards = await this.calculateRewards(snapshot.enemy);
-        await this.profileRepo.updateResources({
-          userId: userId,
-          resources: {
-            exp: rewards.exp,
-            qi: rewards.qi,
-            qi_stone: rewards.qiStone,
-            spirit_cristal: rewards.spiritCristal,
-            glory: rewards.glory,
-          },
-          tx: tx,
-        });
-
-        const finished_fight = await this.fightRepo.finishFight({
-          fightId: fight.id,
-          fightLog: log,
-          result: "WIN",
-          rewards: rewards,
-          tx: tx,
-        });
-        return finished_fight;
-      } else {
-        const finished_fight = await this.fightRepo.finishFight({
-          fightId: fight.id,
-          fightLog: log,
-          result: "LOSE",
-          rewards: { exp: 0, qi: 0, qiStone: 0, glory: 0 },
-          tx: tx,
-        });
-        return finished_fight;
-      }
+      const isWin = result === FightResult.WIN;
+      const rewards: FightResRewards = await this.calculateRewards(snapshot.enemy);
+      const up_res = await this.profileRepo.updateResources({
+        userId: userId,
+        resources: {
+          exp: isWin ? rewards.exp : 0,
+          qi: isWin ? { add: rewards.qi } : { remove: rewards.qi },
+          qi_stone: isWin ? { add: rewards.qiStone } : { remove: rewards.qiStone },
+          glory: isWin ? rewards.glory : 0,
+        },
+        tx: tx,
+      });
+      if (!up_res) throw new Error("Failed updateResources");
+      const daily_stat = await statisticRepository.updateUserDailyStats({
+        userId: userId,
+        data: {
+          exp: isWin ? rewards.exp : 0,
+          fights_total: 1,
+          fights_wins: isWin ? rewards.exp : 0,
+        },
+        tx: tx,
+      });
+      if (!daily_stat) throw new Error("Failed updateUserDailyStats");
+      const overal_stat = await statisticRepository.updateUserOverallStats({
+        userId: userId,
+        data: {
+          exp: isWin ? rewards.exp : 0,
+          fights_total: 1,
+          fights_wins: isWin ? rewards.exp : 0,
+        },
+        tx: tx,
+      });
+      if (!overal_stat) throw new Error("Failed updateUserOverallStats");
+      const fact = await createFact({
+        userId: userId,
+        fact_type: FactsType.FIGHT,
+        fact_status: FactsStatus.CHECKED,
+        fight_result: result,
+        exp_reward: rewards.exp,
+        qi_reward: rewards.qi,
+        qi_stone_reward: rewards.qiStone,
+        reward_spirit_cristal: rewards.spiritCristal,
+        reward_glory: rewards.glory,
+        tx: tx,
+      });
+      if (!fact) throw new Error("Failed createFact");
+      const finished_fight = await this.fightRepo.finishFight({
+        fightId: fight.id,
+        fightLog: log,
+        result: result,
+        rewards: rewards,
+        tx: tx,
+      });
+      return { finished_fight, up_res, fact, overal_stat, daily_stat };
     });
   }
 }
