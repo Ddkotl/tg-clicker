@@ -20,24 +20,25 @@ export async function GET(req: NextRequest) {
       return makeError(translate("api.no_auth", lang), 401);
     }
     let result = null;
-    if (status)
+    if (status) {
       result = await fightService.getOrRefreshPendingFight({
         attackserId: userId,
         status: status as FightStatus,
         lang: lang,
       });
-    if (fightId) result = await fightService.getFinidhedFight({ fightId: fightId });
-    if (!result || result === null) {
-      if (!enemyType) {
-        return makeError(translate("api.invalid_request_data", lang), 400);
+      if (!result || result === null) {
+        if (!enemyType) {
+          return makeError(translate("api.invalid_request_data", lang), 400);
+        }
+        result = await fightService.startFight({
+          userId: userId,
+          enemyType: enemyType as EnemyType,
+          fightType: enemyType === EnemyType.PLAYER ? FightType.PVP : FightType.PVE,
+          lang: lang,
+        });
       }
-      result = await fightService.startFight({
-        userId: userId,
-        enemyType: enemyType as EnemyType,
-        fightType: enemyType === EnemyType.PLAYER ? FightType.PVP : FightType.PVE,
-        lang: lang,
-      });
     }
+    if (fightId) result = await fightService.getFinidhedFight({ fightId: fightId });
 
     if (!result || result === null) return makeError(translate("api.invalid_process", lang), 400);
     const response: FightResponseType = {

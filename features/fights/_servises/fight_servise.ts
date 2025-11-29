@@ -11,6 +11,7 @@ import { img_paths } from "@/shared/lib/img_paths";
 import { SupportedLang } from "@/features/translations/translate_type";
 import { translate } from "@/features/translations/server/translate_fn";
 import { getPastedIntervals } from "@/shared/game_config/getPastedIntervals";
+import { checkUserDeals } from "@/entities/user/_repositories/check_user_deals";
 
 export class FightService {
   constructor(
@@ -46,7 +47,8 @@ export class FightService {
   private async canFight({ userId, tx }: { userId: string; tx?: TransactionType }) {
     const profile = await this.restoreFightCharges({ userId: userId, tx: tx });
     if (!profile) return null;
-
+    const user_deals = await checkUserDeals({ userId: userId, tx: tx });
+    if (!user_deals || user_deals === null || user_deals !== "ок") return null;
     const now = new Date();
     if (profile.last_fight_time) {
       const diff = now.getTime() - profile.last_fight_time.getTime();

@@ -1,8 +1,9 @@
-import { dataBase } from "@/shared/connect/db_connect";
+import { dataBase, TransactionType } from "@/shared/connect/db_connect";
 
-export async function checkUserDeals(userId: string): Promise<"ok" | string | null> {
+export async function checkUserDeals({ userId, tx }: { userId: string; tx?: TransactionType }) {
+  const db_client = tx ? tx : dataBase;
   try {
-    const user = await dataBase.user.findUnique({
+    const user = await db_client.user.findUnique({
       where: { id: userId },
       select: {
         meditation: { select: { on_meditation: true } },

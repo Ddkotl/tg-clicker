@@ -15,16 +15,16 @@ export const MutateButton = ({
   actionText,
   pendingText,
 }: {
-  isDisabled: boolean;
-  isCooldown: boolean;
-  isBusy: boolean;
+  isDisabled?: boolean;
+  isCooldown?: boolean;
+  isBusy?: boolean;
   busyReason?: string;
-  handleCooldownEnd: () => void;
-  cooldownEndMs: number;
+  handleCooldownEnd?: () => void;
+  cooldownEndMs?: number;
   mutate: () => void;
   isMutatePending: boolean;
   actionText: string;
-  pendingText: string;
+  pendingText?: string;
 }) => {
   return (
     <Button
@@ -40,10 +40,10 @@ export const MutateButton = ({
         <span>{busyReason}</span>
       ) : (
         <div className="flex items-center gap-2">
-          {isCooldown && <CountdownTimer endTime={cooldownEndMs} onComplete={handleCooldownEnd} />}
+          {isCooldown && cooldownEndMs && <CountdownTimer endTime={cooldownEndMs} onComplete={handleCooldownEnd} />}
           {isMutatePending ? (
             <div className="flex items-center gap-2">
-              <Spinner className="w-4 h-4" />
+              <Spinner />
               {pendingText}
             </div>
           ) : (

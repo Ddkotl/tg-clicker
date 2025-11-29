@@ -32,7 +32,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     const tokenError = await validateActionToken(req, "action-token");
     if (tokenError) return makeError(translate("api.invalid_token", lang), 401);
-    const user_deals = await checkUserDeals(userId);
+    const user_deals = await checkUserDeals({ userId: userId });
     if (!user_deals || user_deals === null) return makeError(translate("api.invalid_process", lang), 400);
     if (user_deals !== "ок") return makeError(user_deals, 400);
     const now = new Date();
