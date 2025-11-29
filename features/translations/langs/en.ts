@@ -164,6 +164,7 @@ export const en_lang = {
       title: "Missions",
       highlight: "Every mission is a challenge on your path. Test yourself and maintain the balance of the world.",
       text: "Choose a path that matches your level of strength and awareness—from peaceful practices to shadow battles. Remember: every mission is not just a test, but an opportunity to attain truth through action.",
+      no_missions: "There are no active missions today.",
       types: {
         MEDITATION: {
           title: "Meditate for {target}",
@@ -180,6 +181,25 @@ export const en_lang = {
         MINE_STONE: {
           title: "Extract {target} Qi stones",
           highlight: "Where effort meets fortune.",
+        },
+        DAMAGE: {
+          title: "Deal {target} damage",
+          highlight: "Power is revealed through action.",
+        },
+
+        FIGHTS_WINS: {
+          title: "Win {target} battles",
+          highlight: "Victory favors the prepared.",
+        },
+
+        GET_GLORY: {
+          title: "Earn {target} glory",
+          highlight: "Honor is forged in struggle.",
+        },
+
+        ROBBERY_QI_ENERGY: {
+          title: "Steal {target} Qi energy",
+          highlight: "Take what fate refuses to grant.",
         },
       },
     },

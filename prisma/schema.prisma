@@ -105,6 +105,11 @@ enum MissionType {
   SPIRIT_PATH
   MINE
   MINE_STONE
+  FIGHTS_WINS
+  ROBBERY_QI_ENERGY
+  GET_GLORY
+  DAMAGE
+
 }
 
 model Mine {
@@ -232,6 +237,7 @@ enum FactsType {
   MINE
   SPIRIT_PATH
   MISSION
+  FIGHT
 }
 
 enum Fraktion {

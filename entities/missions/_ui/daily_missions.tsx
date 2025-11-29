@@ -24,7 +24,7 @@ export function DailyMissions() {
   const missionList = missions?.data.missions ?? [];
 
   if (missionList.length === 0) {
-    return <div>Нет активных миссий на сегодня</div>;
+    return <div>{t("headquarter.missions.no_missions")}</div>;
   }
 
   return (
