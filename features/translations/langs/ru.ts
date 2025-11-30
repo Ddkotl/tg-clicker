@@ -31,6 +31,7 @@ export const ru_lang: Messages = {
   error: "что-то пошло не так",
   upgrade_cost: "Стоимость улучшения",
   upgrade_button: "Улучшить",
+  details: "Детали",
   lvl: "Уровень",
   price: "Цена",
   progress: "Прогресс",
@@ -151,6 +152,12 @@ export const ru_lang: Messages = {
     spirit_path_fact2: "Ци",
     spirit_path_fact3: "Кристаллы",
     spirit_path_fact4: "Опыт",
+    fight: {
+      fight_win1: "Вы атаковали и победили {opponent}, получив:",
+      fight_win2: "Вас атаковал {opponent}, и вы победили, получив:",
+      fight_lose1: "Вы атаковали и проиграли {opponent}. Вы потеряли:",
+      fight_lose2: "Вас атаковал {opponent}, и вы проиграли. Вы потеряли:",
+    },
     notification: {
       new_events: "Есть новые события",
       сheck: "проверить",

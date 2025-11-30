@@ -1,6 +1,12 @@
 import { profileRepository } from "@/entities/profile/index.server";
 import { FIGHT_CHARGE_REGEN_INTERVAL, FIGHT_COOLDOWN, FIGHT_MAX_CHARGES } from "@/shared/game_config/fight/fight_const";
-import { FighterSnapshot, FightLog, FightResRewards, FightSnapshot } from "@/entities/fights/_domain/types";
+import {
+  FighterSnapshot,
+  FightLog,
+  FightResLossesSchema,
+  FightResRewards,
+  FightSnapshot,
+} from "@/entities/fights/_domain/types";
 import { fightRepository } from "@/entities/fights/index.server";
 import { EnemyType, FactsStatus, FactsType, FightResult, FightStatus, FightType } from "@/_generated/prisma";
 import { recalcHp } from "@/features/hp_regen/recalc_hp";
@@ -164,6 +170,12 @@ export class FightService {
       glory: 1,
     };
   }
+  private async calculateLosses(player: FighterSnapshot) {
+    return {
+      qi: player.power,
+      qiStone: Math.floor(player.power / 5),
+    };
+  }
 
   async startFight({
     userId,
@@ -280,12 +292,13 @@ export class FightService {
       const { log, result } = await this.simulateBattle(snapshot.player, snapshot.enemy);
       const isWin = result === FightResult.WIN;
       const rewards: FightResRewards = await this.calculateRewards(snapshot.enemy);
+      const losses: FightResLossesSchema = await this.calculateLosses(snapshot.player);
       const up_res = await this.profileRepo.updateResources({
         userId: userId,
         resources: {
           exp: isWin ? rewards.exp : 0,
-          qi: isWin ? { add: rewards.qi } : { remove: rewards.qi },
-          qi_stone: isWin ? { add: rewards.qiStone } : { remove: rewards.qiStone },
+          qi: isWin ? { add: rewards.qi } : { remove: losses.qi },
+          qi_stone: isWin ? { add: rewards.qiStone } : { remove: losses.qiStone },
           glory: isWin ? rewards.glory : 0,
         },
         tx: tx,
@@ -313,14 +326,16 @@ export class FightService {
       if (!overal_stat) throw new Error("Failed updateUserOverallStats");
       const fact = await this.factsRepo.createFact({
         userId: userId,
-        fact_type: FactsType.FIGHT,
+        fact_type: isWin ? FactsType.FIGHTS_WIN : FactsType.FIGHTS_LOSE,
         fact_status: FactsStatus.CHECKED,
         fight_result: result,
-        exp_reward: rewards.exp,
-        qi_reward: rewards.qi,
-        qi_stone_reward: rewards.qiStone,
-        reward_spirit_cristal: rewards.spiritCristal,
-        reward_glory: rewards.glory,
+        rewards: isWin ? rewards : undefined,
+        fight_id: fight.id,
+        fightLog: log,
+        losses: isWin ? undefined : losses,
+        fight_atacker_id: fight.attackerId,
+        enemy_type: fight.enemyType,
+        defender_id: fight.defenderId,
         tx: tx,
       });
       if (!fact) throw new Error("Failed createFact");

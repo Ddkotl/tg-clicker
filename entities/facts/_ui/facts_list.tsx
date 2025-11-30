@@ -8,6 +8,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { getFactsInfiniteQuery } from "../_queries/facts_query";
 import { pageSize } from "@/shared/game_config/facts/facts_const";
+import { ComponentSpinner } from "@/shared/components/custom_ui/component_spinner";
 
 export function FactsList({ t }: { t: (key: TranslationKey, vars?: Record<string, string | number>) => string }) {
   const { data: session, isLoading: isLoadingSession } = useGetSessionQuery();
@@ -39,11 +40,7 @@ export function FactsList({ t }: { t: (key: TranslationKey, vars?: Record<string
   }, [hasNextPage, fetchNextPage]);
 
   if (isLoading || isLoadingSession) {
-    return (
-      <div className="flex items-center justify-center h-40">
-        <Spinner className="w-6 h-6 text-muted-foreground" />
-      </div>
-    );
+    return <ComponentSpinner />;
   }
 
   const facts = data?.pages.flatMap((page) => page.data) ?? [];
