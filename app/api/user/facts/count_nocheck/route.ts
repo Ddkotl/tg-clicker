@@ -1,4 +1,5 @@
-import { FactCoutNocheckResponseType, factCoutNocheckResponseSchema, getFactNocheckCount } from "@/entities/facts";
+import { FactCoutNocheckResponseType, factCoutNocheckResponseSchema } from "@/entities/facts";
+import { factsRepository } from "@/entities/facts/index.server";
 import { makeError } from "@/shared/lib/api_helpers/make_error";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -11,7 +12,7 @@ export async function GET(req: NextRequest) {
       return makeError("Missing userId", 400);
     }
 
-    const result = await getFactNocheckCount(userId);
+    const result = await factsRepository.getFactNocheckCount({ userId: userId });
     if (result === null || result === undefined) {
       return makeError("Failed to fetch user facts", 500);
     }

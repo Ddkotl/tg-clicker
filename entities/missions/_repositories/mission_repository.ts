@@ -85,12 +85,13 @@ export class MissionRepository {
   }) {
     const db_client = tx ? tx : dataBase;
     try {
-      await db_client.mission.update({
+      const mission = await db_client.mission.update({
         where: { userId_type: { userId: userId, type: mission_type } },
         data: {
           is_active: false,
         },
       });
+      return mission;
     } catch (error) {
       console.log("InactivateMission error", error);
       return null;

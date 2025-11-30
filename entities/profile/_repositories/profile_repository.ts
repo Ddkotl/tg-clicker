@@ -69,8 +69,8 @@ export class ProfileRepository {
       const data: Record<string, any> = {};
 
       for (const [key, value] of Object.entries(resources)) {
+        if (value === 0 || value === undefined) continue;
         if (typeof value === "number") {
-          // number -> increment или decrement по знаку
           data[key] = { increment: value };
         } else if (typeof value === "object" && value !== null) {
           if (value.add !== undefined) data[key] = { increment: value.add };

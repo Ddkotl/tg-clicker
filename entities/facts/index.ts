@@ -19,5 +19,4 @@ export type {
 } from "./_domain/types";
 export { getFactsInfiniteQuery } from "./_queries/facts_query";
 export { useCheckAllFactsMutation } from "./_mutation/check_all_facts_mutation";
-export { getFactNocheckCount } from "./_repositories/get_facts_nocheck_count";
 export { getFactCountNocheckQuery } from "./_queries/get_facts_count_query";

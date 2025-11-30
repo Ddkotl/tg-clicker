@@ -15,10 +15,10 @@ import { translate } from "@/features/translations/server/translate_fn";
 import { FactsStatus, FactsType, MissionType } from "@/_generated/prisma";
 import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lvl";
 import { GetResources } from "@/entities/profile/_repositories/get_resurces";
-import { createFact } from "@/entities/facts/index.server";
 import { getCookieUserId } from "@/features/auth/get_cookie_userId";
 import { statisticRepository } from "@/entities/statistics/index.server";
 import { missionRepository } from "@/entities/missions/index.server";
+import { factsRepository } from "@/entities/facts/index.server";
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const lang = getCookieLang({ headers: req.headers });
@@ -91,7 +91,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       });
       if (!updated_daily_stats || updated_daily_stats === null)
         return makeError(translate("api.invalid_process", lang), 400);
-      await createFact({
+      await factsRepository.createFact({
         userId,
         fact_status: FactsStatus.NO_CHECKED,
         fact_type: FactsType.MISSION,
@@ -128,7 +128,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       });
       if (!updated_daily_stats || updated_daily_stats === null)
         return makeError(translate("api.invalid_process", lang), 400);
-      await createFact({
+      await factsRepository.createFact({
         userId,
         fact_status: FactsStatus.NO_CHECKED,
         fact_type: FactsType.MISSION,

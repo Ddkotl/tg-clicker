@@ -5,7 +5,7 @@ import {
   checkAllFactsResponseSchema,
   CheckAllFactsResponseType,
 } from "@/entities/facts";
-import { CheckAllFacts } from "@/entities/facts/index.server";
+import { factsRepository } from "@/entities/facts/index.server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
       });
     }
     const { userId } = parsed.data;
-    const res = await CheckAllFacts(userId);
+    const res = await factsRepository.CheckAllFacts({ userId: userId });
     if (!res) {
       const errorResponse: CheckAllFactsErrorResponseType = {
         data: {},

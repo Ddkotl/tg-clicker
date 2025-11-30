@@ -1,6 +1,7 @@
 import { FactsStatus, FactsType, MissionType } from "@/_generated/prisma";
 import { pushToSubscriber } from "@/app/api/user/facts/stream/route";
-import { createFact } from "@/entities/facts/index.server";
+import { factsRepository } from "@/entities/facts/index.server";
+
 import { giveMeditationReward } from "@/entities/meditation/index.server";
 import { missionRepository } from "@/entities/missions/index.server";
 import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lvl";
@@ -16,7 +17,7 @@ export async function MeditationRewardService(userId: string, break_meditation?:
       meditated_hours: res?.hours,
     },
   });
-  const new_fact = await createFact({
+  const new_fact = await factsRepository.createFact({
     fact_type: FactsType.MEDITATION,
     fact_status: FactsStatus.NO_CHECKED,
     userId: userId,
@@ -49,7 +50,7 @@ export async function MeditationRewardService(userId: string, break_meditation?:
           exp: meditation_mission.reward_exp,
         },
       });
-      await createFact({
+      await factsRepository.createFact({
         userId,
         fact_status: FactsStatus.NO_CHECKED,
         fact_type: FactsType.MISSION,

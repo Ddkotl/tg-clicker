@@ -1,6 +1,6 @@
 import { FactsStatus, FactsType, MissionType } from "@/_generated/prisma";
 import { pushToSubscriber } from "@/app/api/user/facts/stream/route";
-import { createFact } from "@/entities/facts/index.server";
+import { factsRepository } from "@/entities/facts/index.server";
 import { missionRepository } from "@/entities/missions/index.server";
 import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lvl";
 import { GetResources } from "@/entities/profile/index.server";
@@ -16,7 +16,7 @@ export async function SpiritPathRewardServices(userId: string, break_spirit_path
       spirit_path_minutes: res?.minutes,
     },
   });
-  const new_fact = await createFact({
+  const new_fact = await factsRepository.createFact({
     fact_type: FactsType.SPIRIT_PATH,
     fact_status: FactsStatus.NO_CHECKED,
     userId: userId,
@@ -50,7 +50,7 @@ export async function SpiritPathRewardServices(userId: string, break_spirit_path
           exp: spirit_path_mission.reward_exp,
         },
       });
-      await createFact({
+      await factsRepository.createFact({
         userId,
         fact_status: FactsStatus.NO_CHECKED,
         fact_type: FactsType.MISSION,

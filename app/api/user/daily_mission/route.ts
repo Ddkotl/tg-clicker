@@ -6,7 +6,8 @@ import {
   getDailyMissionsResponseSchema,
   GetDailyMissionsResponseType,
 } from "@/entities/missions";
-import { createDailyMissions, missionRepository } from "@/entities/missions/index.server";
+import { missionRepository } from "@/entities/missions/index.server";
+import { missionService } from "@/features/missions/servisces/mission_service";
 import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
 import { translate } from "@/features/translations/server/translate_fn";
 import { makeError } from "@/shared/lib/api_helpers/make_error";
@@ -48,7 +49,7 @@ export async function POST(req: NextRequest) {
     }
     const { userId } = parsed.data;
 
-    await createDailyMissions(userId);
+    await missionService.createDailyMissions({ userId: userId });
 
     const response: CreateDailyMissionsResponseType = {
       data: {

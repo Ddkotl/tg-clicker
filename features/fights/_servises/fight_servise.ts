@@ -13,12 +13,13 @@ import { translate } from "@/features/translations/server/translate_fn";
 import { getPastedIntervals } from "@/shared/game_config/getPastedIntervals";
 import { checkUserDeals } from "@/entities/user/_repositories/check_user_deals";
 import { statisticRepository } from "@/entities/statistics/index.server";
-import { createFact } from "@/entities/facts/index.server";
+import { factsRepository } from "@/entities/facts/index.server";
 
 export class FightService {
   constructor(
     private profileRepo = profileRepository,
     private fightRepo = fightRepository,
+    private factsRepo = factsRepository,
   ) {}
 
   async restoreFightCharges({ userId, tx }: { userId: string; tx?: TransactionType }) {
@@ -310,7 +311,7 @@ export class FightService {
         tx: tx,
       });
       if (!overal_stat) throw new Error("Failed updateUserOverallStats");
-      const fact = await createFact({
+      const fact = await this.factsRepo.createFact({
         userId: userId,
         fact_type: FactsType.FIGHT,
         fact_status: FactsStatus.CHECKED,
