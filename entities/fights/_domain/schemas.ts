@@ -40,6 +40,11 @@ export const fightResRewardsSchema = z.object({
   spiritCristal: z.number().optional(),
   glory: z.number().optional(),
 });
+export const fightResLossesSchema = z.object({
+  qi: z.number(),
+  qiStone: z.number().optional(),
+  spiritCristal: z.number().optional(),
+});
 
 export const fightSchema = z.object({
   enemyType: z.enum(EnemyType),

@@ -27,11 +27,12 @@ export function RankingPaginatedList({
   return (
     <div className="flex flex-col gap-4">
       {data.data.data.map((player, i) => {
-        const valueLabel = t(`ranking.ratings.names_types.${metric}_value`);
-        let value = player.amount;
-        if (metric === ratingMetrics.exp) {
-          value = getLevelByExp(player.amount);
-        }
+        const valueLabel =
+          metric === ratingMetrics.exp ? t("experience") : t(`ranking.ratings.names_types.${metric}_value`);
+        const value = player.amount;
+        // if (metric === ratingMetrics.exp) {
+        //   value = getLevelByExp(player.amount);
+        // }
         return (
           <RankingPaginatedCard
             key={player.user?.id}

@@ -1,4 +1,6 @@
-import { FactsStatus, FactsType, FightResult, MissionType } from "@/_generated/prisma";
+import { EnemyType, FactsStatus, FactsType, FightResult, MissionType } from "@/_generated/prisma";
+import { FightLog, FightResRewards } from "@/entities/fights";
+import { FightResLossesSchema } from "@/entities/fights/_domain/types";
 import { dataBase, TransactionType } from "@/shared/connect/db_connect";
 
 export class FactsRepository {
@@ -15,7 +17,14 @@ export class FactsRepository {
     reward_glory,
     target,
     mission_type,
+    fight_atacker_id,
     fight_result,
+    fightLog,
+    rewards,
+    losses,
+    fight_id,
+    enemy_type,
+    defender_id,
     tx,
   }: {
     userId: string;
@@ -30,7 +39,14 @@ export class FactsRepository {
     reward_glory?: number;
     target?: number;
     mission_type?: MissionType;
+    fight_atacker_id?: string;
     fight_result?: FightResult;
+    fightLog?: FightLog;
+    rewards?: FightResRewards;
+    losses?: FightResLossesSchema;
+    fight_id?: string;
+    enemy_type?: EnemyType;
+    defender_id?: string | null;
     tx?: TransactionType;
   }) {
     const db_client = tx ? tx : dataBase;
@@ -49,7 +65,14 @@ export class FactsRepository {
           qi_stone_reward: qi_stone_reward,
           target_value: target,
           mission_type: mission_type,
+          fight_atacker_id: fight_atacker_id,
           fight_result: fight_result,
+          fightLog: fightLog,
+          fight_rewards: rewards,
+          fight_losses: losses,
+          fight_id: fight_id,
+          enemy_type: enemy_type,
+          fight_defender_id: defender_id,
         },
       });
       return new_fact;
