@@ -1,7 +1,7 @@
 import { FactsStatus, FactsType, MissionType } from "@/_generated/prisma";
 import { pushToSubscriber } from "@/app/api/user/facts/stream/route";
-import { createFact } from "@/entities/facts/index.server";
-import { InactivateMission, UpdateProgressMission } from "@/entities/missions/index.server";
+import { factsRepository } from "@/entities/facts/index.server";
+import { missionRepository } from "@/entities/missions/index.server";
 import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lvl";
 import { GetResources } from "@/entities/profile/index.server";
 import { giveSpiritPathReward } from "@/entities/spirit_path/_repositories/give_spirit_path_reward";
@@ -16,7 +16,7 @@ export async function SpiritPathRewardServices(userId: string, break_spirit_path
       spirit_path_minutes: res?.minutes,
     },
   });
-  const new_fact = await createFact({
+  const new_fact = await factsRepository.createFact({
     fact_type: FactsType.SPIRIT_PATH,
     fact_status: FactsStatus.NO_CHECKED,
     userId: userId,
@@ -30,7 +30,11 @@ export async function SpiritPathRewardServices(userId: string, break_spirit_path
   }
   const completed_missions = [];
   if (!break_spirit_path && res?.minutes) {
-    const spirit_path_mission = await UpdateProgressMission(userId, MissionType.SPIRIT_PATH, res.minutes);
+    const spirit_path_mission = await missionRepository.UpdateProgressMission({
+      userId: userId,
+      mission_type: MissionType.SPIRIT_PATH,
+      progress: res.minutes,
+    });
     if (spirit_path_mission?.is_completed && spirit_path_mission?.is_active) {
       await GetResources({
         userId,
@@ -46,7 +50,7 @@ export async function SpiritPathRewardServices(userId: string, break_spirit_path
           exp: spirit_path_mission.reward_exp,
         },
       });
-      await createFact({
+      await factsRepository.createFact({
         userId,
         fact_status: FactsStatus.NO_CHECKED,
         fact_type: FactsType.MISSION,
@@ -58,7 +62,10 @@ export async function SpiritPathRewardServices(userId: string, break_spirit_path
         target: spirit_path_mission.target_value,
         mission_type: spirit_path_mission.type,
       });
-      await InactivateMission(spirit_path_mission.userId, spirit_path_mission.type);
+      await missionRepository.InactivateMission({
+        userId: spirit_path_mission.userId,
+        mission_type: spirit_path_mission.type,
+      });
       completed_missions.push(spirit_path_mission);
     }
   }

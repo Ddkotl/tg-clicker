@@ -2,10 +2,10 @@ import { authRequestSchema, authResponseSchema, AuthResponseType } from "@/entit
 import { AppJWTPayload, encrypt, SESSION_DURATION } from "@/entities/auth/_vm/session";
 import { validateTelegramWebAppData } from "@/entities/auth/_vm/telegramAuth";
 import { UpdateOrCreateUser } from "@/entities/auth/index.server";
-import { deleteOldFacts } from "@/entities/facts/index.server";
-import { createDailyMissions } from "@/entities/missions/_repositories/create_daily_missions";
+import { factsRepository } from "@/entities/facts/index.server";
 import { statisticRepository } from "@/entities/statistics/index.server";
 import { recalcHp } from "@/features/hp_regen/recalc_hp";
+import { missionService } from "@/features/missions/servisces/mission_service";
 import { recalcQi } from "@/features/qi_regen/recalc_qi";
 import { makeError } from "@/shared/lib/api_helpers/make_error";
 import { getDaysAgoDate } from "@/shared/lib/date";
@@ -41,11 +41,11 @@ export async function POST(request: NextRequest) {
     const qi = await recalcQi({ userId: updated_user.id });
     if (qi === null) return makeError("recalcQi error", 400);
 
-    const deleted_facts_count = await deleteOldFacts(updated_user.id);
+    const deleted_facts_count = await factsRepository.deleteOldFacts({ userId: updated_user.id });
     if (deleted_facts_count === null) return makeError("deleteOldFacts error", 400);
 
     await statisticRepository.deleteOldUserDailyStats({ beforeDate: getDaysAgoDate(35) });
-    await createDailyMissions(updated_user.id);
+    await missionService.createDailyMissions({ userId: updated_user.id });
 
     const payload: AppJWTPayload = {
       user: {

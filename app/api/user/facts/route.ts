@@ -1,5 +1,5 @@
 import { factResponseSchema, FactResponseType } from "@/entities/facts";
-import { getUserFacts } from "@/entities/facts/index.server";
+import { factsRepository } from "@/entities/facts/index.server";
 import { makeError } from "@/shared/lib/api_helpers/make_error";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
       return makeError("Missing page", 400);
     }
 
-    const result = await getUserFacts(userId, page, page_size);
+    const result = await factsRepository.getUserFacts({ userId: userId, page: page, page_size: page_size });
     if (!result || result === null) {
       return makeError("Failed to fetch user facts", 500);
     }

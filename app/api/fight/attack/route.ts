@@ -6,10 +6,9 @@ import { NextResponse } from "next/server";
 import { fightResponseSchema, FightResponseType, FightResRewards } from "@/entities/fights";
 import { fightService } from "@/features/fights/_servises/fight_servise";
 import { pushToSubscriber } from "../../user/facts/stream/route";
-import { FactsStatus, FactsType, MissionType } from "@/_generated/prisma";
-import { GetResources } from "@/entities/profile/index.server";
-import { InactivateMission, UpdateProgressMission } from "@/entities/missions/index.server";
-import { createFact } from "@/entities/facts/index.server";
+import { MissionType } from "@/_generated/prisma";
+import { missionService } from "@/features/missions/servisces/mission_service";
+import { fight_missions } from "@/shared/game_config/missions/missions_lists";
 import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lvl";
 
 export async function POST(req: Request) {
@@ -24,35 +23,21 @@ export async function POST(req: Request) {
     const rewards = atack_result.finished_fight.rewards as FightResRewards;
     if (!atack_result || !rewards) return makeError(translate("api.invalid_process", lang), 400);
     await pushToSubscriber(userId, atack_result.fact.type);
-    // const completed_missions = [];
-    // const mine_mission = await UpdateProgressMission(userId, MissionType.MINE, 1);
-    // if (mine_mission?.is_completed && mine_mission?.is_active) {
-    //   await GetResources({
-    //     userId,
-    //     qi: mine_mission.reward_qi,
-    //     qi_stone: mine_mission.reward_qi_stone,
-    //     spirit_cristal: mine_mission.reward_spirit_cristal,
-    //     glory: mine_mission.reward_glory,
-    //     exp: mine_mission.reward_exp,
-    //   });
 
-    //   await createFact({
-    //     userId,
-    //     fact_status: FactsStatus.NO_CHECKED,
-    //     fact_type: FactsType.MISSION,
-    //     exp_reward: mine_mission.reward_exp,
-    //     qi_reward: mine_mission.reward_qi,
-    //     reward_spirit_cristal: mine_mission.reward_spirit_cristal,
-    //     qi_stone_reward: mine_mission.reward_qi_stone,
-    //     reward_glory: mine_mission.reward_glory,
-    //     target: mine_mission.target_value,
-    //     mission_type: mine_mission.type,
-    //   });
-    //   await InactivateMission(mine_mission.userId, mine_mission.type);
-    //   completed_missions.push(mine_mission);
-    // }
+    const completed_missions = [];
 
-    // const lvl = await CheckUpdateLvl(userId);
+    for (const mission of fight_missions) {
+      const win_fights_mission = await missionService.updateMissionAndFinish({
+        userId: userId,
+        mission_type: MissionType[mission],
+        progress: 1,
+      });
+      if (win_fights_mission?.is_completed && !win_fights_mission?.is_active) {
+        completed_missions.push(win_fights_mission);
+      }
+    }
+
+    await CheckUpdateLvl(userId);
     const response: FightResponseType = {
       ok: true,
       message: "Fight started",

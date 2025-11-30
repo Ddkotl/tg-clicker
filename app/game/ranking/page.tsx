@@ -33,22 +33,22 @@ export default async function RankingPage() {
           <TabsTrigger value={ratingsTypes.daily}>{translate("ranking.ratings.daily", lang)}</TabsTrigger>
         </TabsList>
         <TabsContent value={ratingsTypes.overall}>
-          {Object.entries(ratingMetrics).map(([_k, m]) => (
+          {Object.values(ratingMetrics).map((m) => (
             <RankingList key={m} metric={m as RatingsMetrics} type={ratingsTypes.overall as RatingsTypes} />
           ))}
         </TabsContent>
         <TabsContent value={ratingsTypes.monthly}>
-          {Object.entries(ratingMetrics).map(([_k, m]) => (
+          {Object.values(ratingMetrics).map((m) => (
             <RankingList key={m} metric={m as RatingsMetrics} type={ratingsTypes.monthly as RatingsTypes} />
           ))}
         </TabsContent>
         <TabsContent value={ratingsTypes.weekly}>
-          {Object.entries(ratingMetrics).map(([_k, m]) => (
+          {Object.values(ratingMetrics).map((m) => (
             <RankingList key={m} metric={m as RatingsMetrics} type={ratingsTypes.weekly as RatingsTypes} />
           ))}
         </TabsContent>
         <TabsContent value={ratingsTypes.daily}>
-          {Object.entries(ratingMetrics).map(([_k, m]) => (
+          {Object.values(ratingMetrics).map((m) => (
             <RankingList key={m} metric={m as RatingsMetrics} type={ratingsTypes.daily as RatingsTypes} />
           ))}
         </TabsContent>
