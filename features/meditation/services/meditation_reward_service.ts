@@ -2,7 +2,7 @@ import { FactsStatus, FactsType, MissionType } from "@/_generated/prisma";
 import { pushToSubscriber } from "@/app/api/user/facts/stream/route";
 import { createFact } from "@/entities/facts/index.server";
 import { giveMeditationReward } from "@/entities/meditation/index.server";
-import { InactivateMission, UpdateProgressMission } from "@/entities/missions/index.server";
+import { missionRepository } from "@/entities/missions/index.server";
 import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lvl";
 import { GetResources } from "@/entities/profile/index.server";
 import { statisticRepository } from "@/entities/statistics/index.server";
@@ -29,7 +29,11 @@ export async function MeditationRewardService(userId: string, break_meditation?:
   }
   const completed_missions = [];
   if (!break_meditation && res?.hours) {
-    const meditation_mission = await UpdateProgressMission(userId, MissionType.MEDITATION, res.hours);
+    const meditation_mission = await missionRepository.UpdateProgressMission({
+      userId: userId,
+      mission_type: MissionType.MEDITATION,
+      progress: res.hours,
+    });
     if (meditation_mission?.is_completed && meditation_mission?.is_active) {
       await GetResources({
         userId,
@@ -57,7 +61,10 @@ export async function MeditationRewardService(userId: string, break_meditation?:
         target: meditation_mission.target_value,
         mission_type: meditation_mission.type,
       });
-      await InactivateMission(meditation_mission.userId, meditation_mission.type);
+      await missionRepository.InactivateMission({
+        userId: meditation_mission.userId,
+        mission_type: meditation_mission.type,
+      });
       completed_missions.push(meditation_mission);
     }
   }

@@ -1,6 +1,17 @@
 import { MissionType } from "@/_generated/prisma";
 import { ui_path } from "@/shared/lib/paths";
 
+export type DailyMission = {
+  type: MissionType;
+  target_value: number;
+  reward_glory: number;
+  reward_exp: number;
+  reward_qi: number;
+  reward_qi_stone: number;
+  reward_spirit_cristal: number;
+  path: string;
+};
+
 export function generateDailyMissions(
   lvl: number,
   power: number,
@@ -16,7 +27,7 @@ export function generateDailyMissions(
   const rewardBase = (base: number) => Math.floor(base * difficulty);
 
   // 🔹 Определяем миссии с учётом уровня
-  const daily_missions = [
+  const daily_missions: DailyMission[] = [
     {
       type: MissionType.MEDITATION,
       target_value: 1 + Math.floor(lvl / 2),

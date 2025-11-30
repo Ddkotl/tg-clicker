@@ -6,8 +6,7 @@ import {
   getDailyMissionsResponseSchema,
   GetDailyMissionsResponseType,
 } from "@/entities/missions";
-import { getUserDailyMissions } from "@/entities/missions/_repositories/get_daily_missions";
-import { createDailyMissions } from "@/entities/missions/index.server";
+import { createDailyMissions, missionRepository } from "@/entities/missions/index.server";
 import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
 import { translate } from "@/features/translations/server/translate_fn";
 import { makeError } from "@/shared/lib/api_helpers/make_error";
@@ -20,7 +19,7 @@ export async function GET(req: NextRequest) {
     const userId = searchParams.get("userId");
     if (!userId) return makeError(translate("api.no_auth", lang), 401);
 
-    const missions = await getUserDailyMissions(userId);
+    const missions = await missionRepository.getUserDailyMissions({ userId: userId });
     if (!missions) return makeError(translate("api.info_not_found", lang), 400);
 
     const response: GetDailyMissionsResponseType = {

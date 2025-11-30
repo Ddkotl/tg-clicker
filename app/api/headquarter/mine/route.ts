@@ -1,4 +1,4 @@
-import { miningRequestSchema, miningResponseSchema, MiningResponseType } from "@/entities/mining";
+import { miningResponseSchema, MiningResponseType } from "@/entities/mining";
 import { CalcMineReward } from "@/shared/game_config/mining/calc_mine_reward";
 import { rateLimitRedis } from "@/shared/lib/redis_limiter";
 import { NextRequest, NextResponse } from "next/server";
@@ -12,14 +12,13 @@ import { MINE_COOLDOWN } from "@/shared/game_config/mining/mining_const";
 import { checkUserDeals } from "@/entities/user/_repositories/check_user_deals";
 import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
 import { translate } from "@/features/translations/server/translate_fn";
-import { UpdateProgressMission } from "@/entities/missions/_repositories/update_progress_mission";
 import { FactsStatus, FactsType, MissionType } from "@/_generated/prisma";
 import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lvl";
 import { GetResources } from "@/entities/profile/_repositories/get_resurces";
 import { createFact } from "@/entities/facts/index.server";
-import { InactivateMission } from "@/entities/missions/index.server";
 import { getCookieUserId } from "@/features/auth/get_cookie_userId";
 import { statisticRepository } from "@/entities/statistics/index.server";
+import { missionRepository } from "@/entities/missions/index.server";
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const lang = getCookieLang({ headers: req.headers });
@@ -70,7 +69,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       return makeError(translate("api.invalid_process", lang), 400);
     await pushToSubscriber(userId, result.fact.type);
     const completed_missions = [];
-    const mine_mission = await UpdateProgressMission(userId, MissionType.MINE, 1);
+    const mine_mission = await missionRepository.UpdateProgressMission({
+      userId: userId,
+      mission_type: MissionType.MINE,
+      progress: 1,
+    });
     if (mine_mission?.is_completed && mine_mission?.is_active) {
       await GetResources({
         userId,
@@ -100,14 +103,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         target: mine_mission.target_value,
         mission_type: mine_mission.type,
       });
-      await InactivateMission(mine_mission.userId, mine_mission.type);
+      await missionRepository.InactivateMission({ userId: mine_mission.userId, mission_type: mine_mission.type });
       completed_missions.push(mine_mission);
     }
-    const mine_stone_mission = await UpdateProgressMission(
-      userId,
-      MissionType.MINE_STONE,
-      result.fact.qi_stone_reward!,
-    );
+    const mine_stone_mission = await missionRepository.UpdateProgressMission({
+      userId: userId,
+      mission_type: MissionType.MINE_STONE,
+      progress: result.fact.qi_stone_reward!,
+    });
     if (mine_stone_mission?.is_completed && mine_stone_mission?.is_active) {
       await GetResources({
         userId,
@@ -137,7 +140,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         target: mine_stone_mission.target_value,
         mission_type: mine_stone_mission.type,
       });
-      await InactivateMission(mine_stone_mission.userId, mine_stone_mission.type);
+      await missionRepository.InactivateMission({
+        userId: mine_stone_mission.userId,
+        mission_type: mine_stone_mission.type,
+      });
       completed_missions.push(mine_stone_mission);
     }
     const lvl = await CheckUpdateLvl(userId);
