@@ -58,6 +58,8 @@ export const fightSchema = z.object({
   snapshot: z.custom<JsonValue>().nullable(),
   fightLog: z.custom<JsonValue>().nullable(),
   rewards: z.custom<JsonValue>().nullable(),
+  loses: z.custom<JsonValue>().nullable(),
+
   startedAt: z.date(),
   finishedAt: z.date().nullable(),
 });
