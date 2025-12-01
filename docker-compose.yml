@@ -34,10 +34,13 @@ services:
     container_name: redis
     restart: always
     ports:
-      - "6379:6379"
+      - "127.0.0.1:6379:6379"
     volumes:
       - redis_data:/data
-    command: ["redis-server", "--appendonly", "yes"]
+    networks:
+      - tg_clicker_net
+    command:
+      ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD}", "--masterauth", "${REDIS_PASSWORD}"]
 
 volumes:
   postgres_tg_clicker_volume:
