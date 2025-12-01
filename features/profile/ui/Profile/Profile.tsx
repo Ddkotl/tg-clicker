@@ -5,33 +5,28 @@ import { useParams } from "next/navigation";
 import { useTranslation } from "@/features/translations/use_translation";
 import { useProfileQuery } from "@/entities/profile/_queries/use_profile_query";
 import { lvl_exp } from "@/shared/game_config/exp/lvl_exp";
-import { Skeleton } from "@/shared/components/ui/skeleton";
-import { ProfileHeader } from "./_ui/profile_header";
-import { ProfileStat } from "./_ui/profile_stat";
-import { ProfileNav } from "./_ui/profile_nav";
+import { ProfileHeader } from "./profile_header";
+import { ProfileStat } from "./profile_stat";
+import { ProfileNav } from "./profile_nav";
 import { useGetSessionQuery } from "@/entities/auth";
+import { getLevelByExp } from "@/shared/game_config/exp/get_lvl_by_exp";
+import { ComponentSpinner } from "@/shared/components/custom_ui/component_spinner";
 
 export function Profile() {
   const { t } = useTranslation();
   const { userId } = useParams<{ userId: string }>();
   const { data: session, isLoading: isoadingSession } = useGetSessionQuery();
-  const { data: profile, isLoading } = useProfileQuery(userId || "");
+  const { data: profile, isLoading } = useProfileQuery(userId);
 
   const user = profile?.data;
   const exp = user?.exp ?? 0;
-  const lvl = user?.lvl ?? 1;
-  const progress = Math.min((exp / (lvl_exp[lvl] ?? 1)) * 100, 100);
-  const nextExp = lvl_exp[lvl + 1] ?? lvl_exp[lvl];
+  const lvl = getLevelByExp(exp);
+  const nextExp = lvl_exp[lvl + 1];
+  const progress = Math.min((exp / nextExp) * 100, 100);
   const isMyProfile = session?.data?.user.userId === userId;
 
   if (isLoading || isoadingSession) {
-    return (
-      <div className="space-y-4">
-        <Skeleton className="w-32 h-32 rounded-xl" />
-        <Skeleton className="h-4 w-48" />
-        <Skeleton className="h-2 w-full" />
-      </div>
-    );
+    return <ComponentSpinner />;
   }
 
   if (!user) {
