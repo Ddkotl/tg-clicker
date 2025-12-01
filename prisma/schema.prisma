@@ -71,6 +71,8 @@ model Profile {
   last_hp_update   DateTime @default(now())
   last_qi_update   DateTime @default(now())
 
+  last_online_at DateTime @default(now())
+
   @@map("profiles")
 }
 

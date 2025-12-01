@@ -14,11 +14,11 @@ import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
 import { translate } from "@/features/translations/server/translate_fn";
 import { FactsStatus, FactsType, MissionType } from "@/_generated/prisma";
 import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lvl";
-import { GetResources } from "@/entities/profile/_repositories/get_resurces";
 import { getCookieUserId } from "@/features/auth/get_cookie_userId";
 import { statisticRepository } from "@/entities/statistics/index.server";
 import { missionRepository } from "@/entities/missions/index.server";
 import { factsRepository } from "@/entities/facts/index.server";
+import { profileRepository } from "@/entities/profile/index.server";
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const lang = getCookieLang({ headers: req.headers });
@@ -75,13 +75,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       progress: 1,
     });
     if (mine_mission?.is_completed && mine_mission?.is_active) {
-      await GetResources({
+      await profileRepository.updateResources({
         userId,
-        qi: mine_mission.reward_qi,
-        qi_stone: mine_mission.reward_qi_stone,
-        spirit_cristal: mine_mission.reward_spirit_cristal,
-        glory: mine_mission.reward_glory,
-        exp: mine_mission.reward_exp,
+        resources: {
+          qi: mine_mission.reward_qi,
+          qi_stone: mine_mission.reward_qi_stone,
+          spirit_cristal: mine_mission.reward_spirit_cristal,
+          glory: mine_mission.reward_glory,
+          exp: mine_mission.reward_exp,
+        },
       });
       const updated_daily_stats = await statisticRepository.updateUserDailyStats({
         userId: userId,
@@ -112,13 +114,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       progress: result.fact.qi_stone_reward!,
     });
     if (mine_stone_mission?.is_completed && mine_stone_mission?.is_active) {
-      await GetResources({
+      await profileRepository.updateResources({
         userId,
-        qi: mine_stone_mission.reward_qi,
-        qi_stone: mine_stone_mission.reward_qi_stone,
-        spirit_cristal: mine_stone_mission.reward_spirit_cristal,
-        glory: mine_stone_mission.reward_glory,
-        exp: mine_stone_mission.reward_exp,
+        resources: {
+          qi: mine_stone_mission.reward_qi,
+          qi_stone: mine_stone_mission.reward_qi_stone,
+          spirit_cristal: mine_stone_mission.reward_spirit_cristal,
+          glory: mine_stone_mission.reward_glory,
+          exp: mine_stone_mission.reward_exp,
+        },
       });
       const updated_daily_stats = await statisticRepository.updateUserDailyStats({
         userId: userId,

@@ -1,7 +1,7 @@
 import { errorResponseSchema } from "@/entities/auth";
-import { getUserProfileByUserId } from "@/entities/auth/_repositories/user_repository";
 import { AppJWTPayload, getSession } from "@/entities/auth/_vm/session";
 import { ProfileErrorResponse, ProfileResponse, profileResponseSchema } from "@/entities/profile";
+import { profileRepository } from "@/entities/profile/index.server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -27,14 +27,14 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(response, { status: 401 });
     }
 
-    const profile = await getUserProfileByUserId(userIdToFetch);
-    if (!profile || !profile.profile) {
+    const profile = await profileRepository.getByUserId({ userId: userIdToFetch });
+    if (!profile || profile === null) {
       return NextResponse.json({ data: {}, message: "User not found" }, { status: 404 });
     }
 
     const response: ProfileResponse = {
       data: {
-        ...profile.profile,
+        ...profile,
       },
       message: "Profile fetched successfully",
     };

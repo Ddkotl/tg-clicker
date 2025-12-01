@@ -1,6 +1,8 @@
 import { Profile } from "@/_generated/prisma";
 import { dataBase, TransactionType } from "@/shared/connect/db_connect";
-import { ResourceUpdateParams } from "../_domain/types";
+import { ParamNameType, ResourceUpdateParams } from "../_domain/types";
+import { calcParamCost } from "@/shared/game_config/params/params_cost";
+import { calcMaxHP } from "@/shared/game_config/params/calc_max_xp";
 
 export class ProfileRepository {
   async getByUserId({ userId, tx }: { userId: string; tx?: TransactionType }) {
@@ -12,6 +14,25 @@ export class ProfileRepository {
       return profile;
     } catch (error) {
       console.error("GetProfileByUserId error", error);
+      return null;
+    }
+  }
+  async getPofileWithQiSkillsByUserId({ userId, tx }: { userId: string; tx?: TransactionType }) {
+    const db_client = tx ? tx : dataBase;
+    try {
+      const profile = await db_client.profile.findUnique({
+        where: { userId: userId },
+        include: {
+          user: {
+            select: {
+              qi_skills: true,
+            },
+          },
+        },
+      });
+      return profile;
+    } catch (error) {
+      console.error("getPofilewithQiSkillsByUserId", error);
       return null;
     }
   }
@@ -102,6 +123,82 @@ export class ProfileRepository {
     tx?: TransactionType;
   }) {
     return this.update({ userId, data: { current_hitpoint, last_hp_update }, tx: tx });
+  }
+  async updateQi({
+    userId,
+    current_qi,
+    last_qi_update,
+    tx,
+  }: {
+    userId: string;
+    current_qi: number;
+    last_qi_update: Date;
+    tx?: TransactionType;
+  }) {
+    return this.update({ userId, data: { qi: current_qi, last_qi_update }, tx: tx });
+  }
+
+  async updateOnline({ userId, tx }: { userId: string; tx?: TransactionType }) {
+    const db_client = tx ? tx : dataBase;
+    try {
+      return await db_client.profile.update({
+        where: { userId },
+        data: {
+          last_online_at: new Date(),
+        },
+      });
+    } catch (error) {
+      console.error("ProfileRepository.updateOnline error", error);
+      return null;
+    }
+  }
+
+  async updateUserParam({ userId, paramName, tx }: { userId: string; paramName: ParamNameType; tx?: TransactionType }) {
+    const db_client = tx ? tx : dataBase;
+    try {
+      const user = await db_client.user.findUnique({
+        where: { id: userId },
+        select: { profile: true },
+      });
+
+      if (!user || !user.profile) {
+        throw new Error("User or profile not found");
+      }
+
+      const currentValue = user.profile[paramName];
+      const updateCost = calcParamCost(paramName, currentValue);
+
+      if (user.profile.qi < updateCost) {
+        throw new Error("Not enough qi");
+      }
+      const new_max_hitpoints = calcMaxHP({
+        power: user.profile.power,
+        protection: user.profile.protection,
+        speed: user.profile.speed,
+        skill: user.profile.skill,
+        qi_param: user.profile.qi_param,
+        level: user.profile.lvl,
+      });
+      const updated_user = await db_client.user.update({
+        where: { id: userId },
+        data: {
+          profile: {
+            update: {
+              [paramName]: { increment: 1 },
+              qi: { decrement: updateCost },
+              max_hitpoint: new_max_hitpoints,
+              last_hp_update: new Date(),
+            },
+          },
+        },
+        select: { profile: true },
+      });
+
+      return updated_user;
+    } catch (error) {
+      console.error("Failed to update user param:", error);
+      return null;
+    }
   }
 }
 

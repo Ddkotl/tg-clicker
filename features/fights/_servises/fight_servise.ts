@@ -9,7 +9,6 @@ import {
 } from "@/entities/fights/_domain/types";
 import { fightRepository } from "@/entities/fights/index.server";
 import { EnemyType, FactsStatus, FactsType, FightResult, FightStatus, FightType } from "@/_generated/prisma";
-import { recalcHp } from "@/features/hp_regen/recalc_hp";
 import { recalcQi } from "@/features/qi_regen/recalc_qi";
 import dayjs from "dayjs";
 import { dataBase, TransactionType } from "@/shared/connect/db_connect";
@@ -21,12 +20,14 @@ import { checkUserDeals } from "@/entities/user/_repositories/check_user_deals";
 import { statisticRepository } from "@/entities/statistics/index.server";
 import { factsRepository } from "@/entities/facts/index.server";
 import { IsCooldown } from "@/shared/game_config/isColdown";
+import { profileService } from "@/features/profile/services/profile_service";
 
 export class FightService {
   constructor(
     private profileRepo = profileRepository,
     private fightRepo = fightRepository,
     private factsRepo = factsRepository,
+    private profileServ = profileService,
   ) {}
 
   async restoreFightCharges({ userId, tx }: { userId: string; tx?: TransactionType }) {
@@ -197,7 +198,7 @@ export class FightService {
     lang: SupportedLang;
     tx?: TransactionType;
   }) {
-    const hp = await recalcHp({ userId: userId, tx: tx });
+    const hp = await this.profileServ.recalcHp({ userId: userId, tx: tx });
     if (hp === null) return null;
     const qi = await recalcQi({ userId: userId, tx: tx });
     if (qi === null) return null;
@@ -248,7 +249,7 @@ export class FightService {
     lang: SupportedLang;
     tx?: TransactionType;
   }) {
-    const hp = await recalcHp({ userId: attackserId, tx: tx });
+    const hp = await this.profileServ.recalcHp({ userId: attackserId, tx: tx });
     if (hp === null) return null;
     let fight = await this.fightRepo.getFightByAttackserId({
       attackserId: attackserId,

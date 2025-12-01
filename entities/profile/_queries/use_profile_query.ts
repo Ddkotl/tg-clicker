@@ -13,7 +13,7 @@ export const useProfileQuery = (userId: string) => {
       return await res.json();
     },
     staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
+    gcTime: 5 * 60 * 1000,
     enabled: !!userId,
   });
 };

@@ -11,7 +11,7 @@ interface ValidatedData {
   [key: string]: string;
 }
 
-interface ValidationResult {
+export interface ValidationResult {
   validatedData: ValidatedData | null;
   user: User;
   message: string;
