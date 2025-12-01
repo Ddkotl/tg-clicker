@@ -1,6 +1,6 @@
 import "dotenv/config";
 import amqp from "amqplib";
-import { RABBITMQ_URL } from "@/shared/lib/consts";
+import { RABBITMQ_URL } from "@/shared/connect/consts";
 import { SPIRIT_PATH_EXCHANGE, SPIRIT_PATH_QUEUE } from "@/features/spirit_path/mq_spirit_path_connect";
 import { dataBase } from "@/shared/connect/db_connect";
 import { SpiritPathRewardServices } from "@/features/spirit_path/services/spirit_path_reward_services";

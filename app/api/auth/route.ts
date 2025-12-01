@@ -1,14 +1,11 @@
 import { authRequestSchema, authResponseSchema, AuthResponseType } from "@/entities/auth";
 import { AppJWTPayload, encrypt, SESSION_DURATION } from "@/entities/auth/_vm/session";
 import { validateTelegramWebAppData } from "@/entities/auth/_vm/telegramAuth";
-import { UpdateOrCreateUser } from "@/entities/auth/index.server";
-import { factsRepository } from "@/entities/facts/index.server";
-import { statisticRepository } from "@/entities/statistics/index.server";
-import { recalcHp } from "@/features/hp_regen/recalc_hp";
-import { missionService } from "@/features/missions/servisces/mission_service";
-import { recalcQi } from "@/features/qi_regen/recalc_qi";
+import { authService } from "@/features/auth/services/auth_servise";
+import { translate } from "@/features/translations/server/translate_fn";
+import { SupportedLang } from "@/features/translations/translate_type";
 import { makeError } from "@/shared/lib/api_helpers/make_error";
-import { getDaysAgoDate } from "@/shared/lib/date";
+import { rateLimitRedis } from "@/shared/lib/redis_limiter";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -16,42 +13,24 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const parsedBody = authRequestSchema.safeParse(body);
     if (!parsedBody.success) return makeError("Invalid request data", 400);
-
     const { initData, ref } = parsedBody.data;
+
     const validationResult = validateTelegramWebAppData(initData);
     if (!validationResult.validatedData || !validationResult.user.id) return makeError(validationResult.message, 401);
-    const updated_user = await UpdateOrCreateUser(
-      {
-        telegram_id: validationResult.user.id,
-        first_name: validationResult.user.first_name,
-        last_name: validationResult.user.last_name,
-        username: validationResult.user.username,
-        language_code: validationResult.user.language_code,
-        allows_write_to_pm: validationResult.user.allows_write_to_pm,
-        photo_url: validationResult.user.photo_url,
-        auth_date: validationResult.validatedData.auth_date,
-      },
-      ref,
-    );
+    const lang = validationResult.user.language_code === "ru" ? "ru" : ("en" as SupportedLang);
+    const telegram_id = validationResult.user.id;
 
-    if (!updated_user) return makeError("User not created", 401);
+    const { allowed } = await rateLimitRedis(`rl:auth:${telegram_id}`, 10, 60);
+    if (!allowed) return makeError(translate("api.rate_limit_exceeded", lang), 429);
 
-    const hp = await recalcHp({ userId: updated_user.id });
-    if (hp === null) return makeError("recalcHp error", 400);
-    const qi = await recalcQi({ userId: updated_user.id });
-    if (qi === null) return makeError("recalcQi error", 400);
+    const updated_user = await authService.authenticateUser({ lang, validationResult, referer_id: ref });
 
-    const deleted_facts_count = await factsRepository.deleteOldFacts({ userId: updated_user.id });
-    if (deleted_facts_count === null) return makeError("deleteOldFacts error", 400);
-
-    await statisticRepository.deleteOldUserDailyStats({ beforeDate: getDaysAgoDate(35) });
-    await missionService.createDailyMissions({ userId: updated_user.id });
-
+    if (!updated_user) return makeError(translate("api.invalid_registration_user", lang), 401);
     const payload: AppJWTPayload = {
       user: {
         telegram_id: updated_user.telegram_id,
         userId: updated_user.id,
-        lang: updated_user.language_code === "ru" ? "ru" : "en",
+        lang: lang,
       },
       exp: Math.floor(Date.now() / 1000) + SESSION_DURATION / 1000,
     };
@@ -81,6 +60,6 @@ export async function POST(request: NextRequest) {
     return res;
   } catch (error) {
     console.error("POST /auth error:", error);
-    return makeError("Internal server error", 500);
+    return makeError(translate("api.internal_server_error", "en"), 500);
   }
 }

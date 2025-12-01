@@ -30,4 +30,4 @@ export {
 
 export { TelegramAuth } from "./_ui/TelegramAuth";
 export { useAuthQuery } from "./_queries/auth_query";
-export { useGetSessionQuery, useInvalidateGetSessionQuery } from "./_queries/session_queries";
+export { useGetSessionQuery } from "./_queries/session_queries";

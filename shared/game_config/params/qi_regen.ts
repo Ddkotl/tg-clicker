@@ -22,8 +22,9 @@ export function getQiRegenPerInterval({
   interval: number;
 }): number {
   const baseGainToHour =
+    10 +
     (1 + qi_param * 0.8 + (power + protection + speed + skill) * 0.3 + lvl * 0.5) *
-    (10 + QiSkillsConfig.circulation_of_life.effects(circulation_of_life) * 10);
+      QiSkillsConfig.circulation_of_life.effects(circulation_of_life);
 
   const regen_to_interval = (baseGainToHour * interval) / (60 * 60 * 1000);
   return Math.floor(regen_to_interval);

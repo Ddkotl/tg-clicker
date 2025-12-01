@@ -1,7 +1,7 @@
 import amqp from "amqplib";
 import { MEDITATION_EXCHANGE, MEDITATION_QUEUE } from "@/features/meditation/rabit_meditation_connect";
-import { RABBITMQ_URL } from "@/shared/lib/consts";
-import { meditationWorkerCongig } from "@/shared/productivity_config/workers";
+import { RABBITMQ_URL } from "@/shared/connect/consts";
+import { meditationWorkerCongig } from "@/shared/lib/workers";
 import { dataBase } from "@/shared/connect/db_connect";
 import { MeditationRewardService } from "@/features/meditation/services/meditation_reward_service";
 

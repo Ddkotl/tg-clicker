@@ -9,7 +9,6 @@ import {
 } from "@/entities/fights/_domain/types";
 import { fightRepository } from "@/entities/fights/index.server";
 import { EnemyType, FactsStatus, FactsType, FightResult, FightStatus, FightType } from "@/_generated/prisma";
-import { recalcHp } from "@/features/hp_regen/recalc_hp";
 import { recalcQi } from "@/features/qi_regen/recalc_qi";
 import dayjs from "dayjs";
 import { dataBase, TransactionType } from "@/shared/connect/db_connect";
@@ -20,17 +19,20 @@ import { getPastedIntervals } from "@/shared/game_config/getPastedIntervals";
 import { checkUserDeals } from "@/entities/user/_repositories/check_user_deals";
 import { statisticRepository } from "@/entities/statistics/index.server";
 import { factsRepository } from "@/entities/facts/index.server";
+import { IsCooldown } from "@/shared/game_config/isColdown";
+import { profileService } from "@/features/profile/services/profile_service";
 
 export class FightService {
   constructor(
     private profileRepo = profileRepository,
     private fightRepo = fightRepository,
     private factsRepo = factsRepository,
+    private profileServ = profileService,
   ) {}
 
   async restoreFightCharges({ userId, tx }: { userId: string; tx?: TransactionType }) {
     let profile = await this.profileRepo.getByUserId({ userId: userId, tx: tx });
-    if (!profile) return null;
+    if (!profile) throw new Error("Profile not found");
 
     const now = new Date().getTime();
     const lastRecovery = profile.last_charge_recovery?.getTime() ?? now;
@@ -49,19 +51,21 @@ export class FightService {
         last_charge_recovery: newCharges === FIGHT_MAX_CHARGES ? new Date() : new_last_action_date,
       });
     }
-
+    if (!profile) throw new Error("Profile not updated");
     return profile;
   }
 
   private async canFight({ userId, tx }: { userId: string; tx?: TransactionType }) {
     const profile = await this.restoreFightCharges({ userId: userId, tx: tx });
-    if (!profile) return null;
+    if (!profile) throw new Error("Profile not found");
     const user_deals = await checkUserDeals({ userId: userId, tx: tx });
-    if (!user_deals || user_deals === null || user_deals !== "ок") return null;
-    const now = new Date();
+    if (!user_deals || user_deals === null || user_deals !== "ок") throw new Error("User deals check failed");
     if (profile.last_fight_time) {
-      const diff = now.getTime() - profile.last_fight_time.getTime();
-      if (diff < FIGHT_COOLDOWN) {
+      const is_cooldown = IsCooldown({
+        cooldown_time: FIGHT_COOLDOWN,
+        last_action_time: profile.last_fight_time.getTime(),
+      });
+      if (is_cooldown) {
         return null;
       }
     }
@@ -131,12 +135,16 @@ export class FightService {
       // Damage equal → compare HP
       if (playerHp > enemyHp) result = "WIN";
       else if (enemyHp > playerHp) result = "LOSE";
-      else result = "DRAW";
+      else result = "LOSE";
     }
 
     return {
       result,
       log,
+      totalPlayerDamage,
+      totalEnemyDamage,
+      playerHp,
+      enemyHp,
     };
   }
 
@@ -190,7 +198,7 @@ export class FightService {
     lang: SupportedLang;
     tx?: TransactionType;
   }) {
-    const hp = await recalcHp({ userId: userId, tx: tx });
+    const hp = await this.profileServ.recalcHp({ userId: userId, tx: tx });
     if (hp === null) return null;
     const qi = await recalcQi({ userId: userId, tx: tx });
     if (qi === null) return null;
@@ -241,7 +249,7 @@ export class FightService {
     lang: SupportedLang;
     tx?: TransactionType;
   }) {
-    const hp = await recalcHp({ userId: attackserId, tx: tx });
+    const hp = await this.profileServ.recalcHp({ userId: attackserId, tx: tx });
     if (hp === null) return null;
     let fight = await this.fightRepo.getFightByAttackserId({
       attackserId: attackserId,

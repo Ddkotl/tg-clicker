@@ -1,4 +1,3 @@
-import { getUserProfileByUserId } from "@/entities/auth/_repositories/user_repository";
 import {
   goMeditationErrorResponseSchema,
   goMeditationErrorResponseType,
@@ -11,6 +10,7 @@ import {
 } from "@/entities/meditation";
 import { calcMeditationReward } from "@/entities/meditation/_vm/calc_meditation_reward";
 import { getMeditationInfo, goMeditation } from "@/entities/meditation/index.server";
+import { profileRepository } from "@/entities/profile/index.server";
 import {
   createRabbitMeditationConnection,
   MEDITATION_EXCHANGE,
@@ -72,18 +72,18 @@ export async function POST(req: NextRequest) {
       });
     }
     const { userId, hours } = parsed.data;
-    const user_params = await getUserProfileByUserId(userId);
+    const user_params = await profileRepository.getByUserId({ userId });
     if (
       !user_params ||
-      user_params.profile?.power === undefined ||
-      user_params.profile?.protection === undefined ||
-      user_params.profile?.speed === undefined ||
-      user_params.profile?.skill === undefined ||
-      user_params.profile?.qi_param === undefined
+      user_params.power === undefined ||
+      user_params.protection === undefined ||
+      user_params.speed === undefined ||
+      user_params.skill === undefined ||
+      user_params.qi_param === undefined
     ) {
       const errorResponse: goMeditationErrorResponseType = {
         data: {},
-        message: "getUserProfileByUserId error",
+        message: "getUserProfile error",
       };
       goMeditationErrorResponseSchema.parse(errorResponse);
       return NextResponse.json(errorResponse, {
@@ -91,11 +91,11 @@ export async function POST(req: NextRequest) {
       });
     }
     const meditation_revard = calcMeditationReward({
-      power: user_params.profile.power,
-      protection: user_params.profile.protection,
-      speed: user_params.profile.speed,
-      skill: user_params.profile.skill,
-      qi_param: user_params.profile.qi_param,
+      power: user_params.power,
+      protection: user_params.protection,
+      speed: user_params.speed,
+      skill: user_params.skill,
+      qi_param: user_params.qi_param,
       hours,
     });
     const meditate = await goMeditation(userId, hours, meditation_revard);

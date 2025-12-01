@@ -1,4 +1,4 @@
-import { getUserProfileByUserId } from "@/entities/auth/_repositories/user_repository";
+import { profileRepository } from "@/entities/profile/index.server";
 import {
   goSpiritPathRequestSchema,
   goSpiritPathResponseSchema,
@@ -26,23 +26,23 @@ export async function POST(req: NextRequest) {
       return makeError(translate("api.invalid_request_data", lang), 400);
     }
     const { userId, minutes } = parsed.data;
-    const user_params = await getUserProfileByUserId(userId);
+    const user_params = await profileRepository.getByUserId({ userId });
     if (
       !user_params ||
-      user_params.profile?.power === undefined ||
-      user_params.profile?.protection === undefined ||
-      user_params.profile?.speed === undefined ||
-      user_params.profile?.skill === undefined ||
-      user_params.profile?.qi_param === undefined
+      user_params.power === undefined ||
+      user_params.protection === undefined ||
+      user_params.speed === undefined ||
+      user_params.skill === undefined ||
+      user_params.qi_param === undefined
     ) {
       return makeError(translate("api.info_not_found", lang), 400);
     }
     const spirit_path_reward = calcSpiritPathReward({
-      power: user_params.profile.power,
-      protection: user_params.profile.protection,
-      speed: user_params.profile.speed,
-      skill: user_params.profile.skill,
-      qi_param: user_params.profile.qi_param,
+      power: user_params.power,
+      protection: user_params.protection,
+      speed: user_params.speed,
+      skill: user_params.skill,
+      qi_param: user_params.qi_param,
       minutes,
     });
     const spirit_path = await goSpiritPath(userId, minutes, spirit_path_reward);

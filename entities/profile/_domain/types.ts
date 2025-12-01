@@ -21,3 +21,5 @@ export type ResourceUpdateParams = {
   userId: string;
   resources: Partial<Record<Resurses, number | ResourceOperation>>;
 };
+
+export type ParamNameType = "power" | "protection" | "speed" | "skill" | "qi_param";

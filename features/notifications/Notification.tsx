@@ -16,10 +16,10 @@ import { getMineInfoQuery } from "@/entities/mining/_queries/get_mine_info_query
 import { ActionAlert } from "./_ui/action_alert";
 import { icons } from "@/shared/lib/icons";
 import { getSpiritPathInfoQuery, SpiritPathInfoResponseType } from "@/entities/spirit_path";
-import { useProfileHPUpdate } from "../hp_regen/use_xp_update";
+import { useProfileHPUpdate } from "../profile/vm/use_xp_update";
 import { getAllDailyMissionsQuery, GetDailyMissionsResponseType } from "@/entities/missions";
 import { useMidnightUpdate } from "./_vm/useMidnightUpdate";
-import { useQiRegen } from "../qi_regen/use_qi_update";
+import { useQiRegen } from "../profile/vm/use_qi_update";
 import { getUserQiSkillsQuery, GetUserQiSkillsResponseType } from "@/entities/qi_skiils";
 
 export function Notifications() {

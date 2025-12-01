@@ -1,4 +1,4 @@
-import { RABBITMQ_URL } from "@/shared/lib/consts";
+import { RABBITMQ_URL } from "@/shared/connect/consts";
 import amqp from "amqplib";
 
 export const MEDITATION_EXCHANGE = "meditation_delayed";

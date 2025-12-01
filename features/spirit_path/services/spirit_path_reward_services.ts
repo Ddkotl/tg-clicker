@@ -3,7 +3,7 @@ import { pushToSubscriber } from "@/app/api/user/facts/stream/route";
 import { factsRepository } from "@/entities/facts/index.server";
 import { missionRepository } from "@/entities/missions/index.server";
 import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lvl";
-import { GetResources } from "@/entities/profile/index.server";
+import { profileRepository } from "@/entities/profile/index.server";
 import { giveSpiritPathReward } from "@/entities/spirit_path/_repositories/give_spirit_path_reward";
 import { statisticRepository } from "@/entities/statistics/index.server";
 
@@ -36,13 +36,15 @@ export async function SpiritPathRewardServices(userId: string, break_spirit_path
       progress: res.minutes,
     });
     if (spirit_path_mission?.is_completed && spirit_path_mission?.is_active) {
-      await GetResources({
+      await profileRepository.updateResources({
         userId,
-        qi: spirit_path_mission.reward_qi,
-        qi_stone: spirit_path_mission.reward_qi_stone,
-        spirit_cristal: spirit_path_mission.reward_spirit_cristal,
-        glory: spirit_path_mission.reward_glory,
-        exp: spirit_path_mission.reward_exp,
+        resources: {
+          qi: spirit_path_mission.reward_qi,
+          qi_stone: spirit_path_mission.reward_qi_stone,
+          spirit_cristal: spirit_path_mission.reward_spirit_cristal,
+          glory: spirit_path_mission.reward_glory,
+          exp: spirit_path_mission.reward_exp,
+        },
       });
       await statisticRepository.updateUserDailyStats({
         userId: userId,
