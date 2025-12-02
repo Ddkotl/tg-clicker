@@ -1,10 +1,11 @@
 import { EnemyType, FightStatus } from "@/_generated/prisma";
-import { RatingsMetrics, RatingsTypes } from "@/entities/statistics/_domain/ratings_list_items";
+import { RatingsMetrics, RatingsTypes } from "@/entities/statistics/_domain/types";
 
 export const ui_path = {
   auth_page: () => `/`,
   home_page: () => `/game`,
   registration_page: () => `/registration`,
+  profile_page: (userId: string) => `/game/profile/${userId}`,
   facts_page: () => `/game/facts`,
   fight_page: () => `/game/fight`,
   fight_result_page: (id: string) => `/game/fight/result/${id}`,
@@ -13,8 +14,8 @@ export const ui_path = {
   city_page: () => `/game/city`,
   pet_page: () => `/game/pet`,
   rankings_page: () => `/game/ranking`,
-  rankings_type_page: (type: RatingsTypes, metric: RatingsMetrics, page: number) =>
-    `/game/ranking/${type}/${metric}?page=${page}`,
+  rankings_type_page: (type: RatingsTypes, metric: RatingsMetrics, page?: number) =>
+    `/game/ranking/${type}/${metric}${page ? `?page=${page}` : ""}`,
   qi_skills_page: () => `/game/headquarter/qi_skills`,
   missions_page: () => `/game/headquarter/missions`,
   mine_page: () => `/game/headquarter/mine`,
@@ -27,6 +28,7 @@ export const api_path = {
   auth: () => `/api/auth`,
   registration: () => `/api/auth/registration`,
   get_session: () => `api/session`,
+  get_profile: (userId: string) => `/api/user/profile?userId=${userId}`,
   go_meditation: () => `/api/headquarter/meditation`,
   go_spirit_path: () => `/api/headquarter/spirit_path/go_spirit_path`,
   get_meditation_revard: () => `/api/headquarter/meditation/get_meditation_reward`,

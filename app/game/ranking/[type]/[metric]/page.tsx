@@ -1,4 +1,4 @@
-import { RatingsMetrics, RatingsTypes } from "@/entities/statistics/_domain/ratings_list_items";
+import { RatingsMetrics, RatingsTypes } from "@/entities/statistics/_domain/types";
 import { RankingPaginatedList } from "@/entities/statistics/_ui/RankingPaginatedList";
 
 export default async function Page({

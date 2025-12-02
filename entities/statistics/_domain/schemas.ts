@@ -1,5 +1,5 @@
 import z from "zod";
-import { ratingMetrics, ratingsTypes } from "./ratings_list_items";
+import { ratingMetrics, ratingsTypes } from "./types";
 
 export const userCountInFrResponseSchema = z.object({
   data: z.object({

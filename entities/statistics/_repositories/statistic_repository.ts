@@ -1,6 +1,6 @@
 import { Fraktion, UserDailyStats, UserStatistic } from "@/_generated/prisma";
 import { dataBase, TransactionType } from "@/shared/connect/db_connect";
-import { RatingsMetrics, RatingsTypes } from "../_domain/ratings_list_items";
+import { RatingsMetrics, RatingsTypes } from "../_domain/types";
 import { getStartOfToday } from "@/shared/lib/date";
 import { getPeriodRange } from "../_vm/get_period_range";
 

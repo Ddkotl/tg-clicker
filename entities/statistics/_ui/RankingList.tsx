@@ -2,28 +2,40 @@
 import Link from "next/link";
 import { useGetRatingsQuery } from "../_queries/use_get_overall_ratings_query";
 import { ui_path } from "@/shared/lib/paths";
-import { ComponentSpinner } from "@/shared/components/custom_ui/component_spinner";
 import { icons } from "@/shared/lib/icons";
-import { RankingCard } from "./RankingCard";
+import { RankingCard, RankingCardSkeleton } from "./RankingCard";
 import { useTranslation } from "@/features/translations/use_translation";
-import { ratingMetrics, RatingsMetrics, ratingsTypes, RatingsTypes } from "../_domain/ratings_list_items";
-import { getLevelByExp } from "@/shared/game_config/exp/get_lvl_by_exp";
+import { RatingsMetrics, RatingsTypes } from "../_domain/types";
+import { getRatingValueLable } from "../_vm/get_rating_value_lable";
+import { getRatingValue } from "../_vm/get_rating_value";
+import { GetBaseRank } from "../_vm/get_base_rank";
+import { getRatingTitle } from "../_vm/get_rating_title";
 
 export function RankingList({ metric, type, page = 1 }: { metric: RatingsMetrics; type: RatingsTypes; page?: number }) {
-  const { t } = useTranslation();
-  const { data, isLoading } = useGetRatingsQuery(type, metric, page);
-  if (isLoading || !data) return <ComponentSpinner />;
+  const { language } = useTranslation();
+  const { data, isLoading, isFetching } = useGetRatingsQuery(type, metric, page);
+  if (!data || isLoading) {
+    return (
+      <div className="flex flex-col gap-2 w-full pb-4">
+        <div className="flex justify-between items-center w-full">
+          <div className="h-7 w-32 rounded bg-white/10 animate-pulse" />
+          <div className="h-5 w-5 rounded bg-white/10 animate-pulse" />
+        </div>
 
+        <div className="grid grid-cols-3 gap-2 w-full">
+          {[...Array(3)].map((_, i) => (
+            <RankingCardSkeleton key={i} />
+          ))}
+        </div>
+      </div>
+    );
+  }
   const items = data.data.data.slice(0, 3);
 
   return (
     <div className="flex flex-col gap-2 w-full pb-4">
       <div className="flex justify-between items-center w-full">
-        <h2 className="text-xl font-semibold capitalize">
-          {metric === ratingMetrics.exp && type !== ratingsTypes.overall
-            ? t(`ranking.ratings.names_types.exp_partial`)
-            : t(`ranking.ratings.names_types.${metric}`)}
-        </h2>
+        <h2 className="text-xl font-semibold capitalize">{getRatingTitle({ metric, type, language })}</h2>
         <Link
           href={ui_path.rankings_type_page(type, metric, 1)}
           className="underline text-sm opacity-80 hover:opacity-100"
@@ -34,22 +46,16 @@ export function RankingList({ metric, type, page = 1 }: { metric: RatingsMetrics
 
       <div className="grid grid-cols-3 gap-2 w-full">
         {items.map((player, i) => {
-          const valueLabel =
-            metric === ratingMetrics.exp && type !== ratingsTypes.overall
-              ? t("experience")
-              : t(`ranking.ratings.names_types.${metric}_value`);
-          let value = player.amount;
-          if (metric === ratingMetrics.exp && type === ratingsTypes.overall) {
-            value = getLevelByExp(player.amount);
-          }
           return (
             <RankingCard
               key={player?.user?.id}
-              rank={i + 1}
+              userId={player?.user?.id || ""}
+              rank={GetBaseRank({ page, index: i })}
               img={player?.user?.profile?.avatar_url ?? null}
               nickname={player?.user?.profile?.nikname ?? null}
-              valueLabel={valueLabel}
-              value={value}
+              valueLabel={getRatingValueLable({ metric, type, language: language })}
+              value={getRatingValue({ metric, amount: player.amount })}
+              isFetching={isFetching}
             />
           );
         })}

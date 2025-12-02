@@ -1,9 +1,4 @@
-import {
-  ratingMetrics,
-  RatingsMetrics,
-  RatingsTypes,
-  ratingsTypes,
-} from "@/entities/statistics/_domain/ratings_list_items";
+import { ratingMetrics, RatingsMetrics, RatingsTypes, ratingsTypes } from "@/entities/statistics/_domain/types";
 import { RankingList } from "@/entities/statistics/_ui/RankingList";
 import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
 import { translate } from "@/features/translations/server/translate_fn";
@@ -24,7 +19,7 @@ export default async function RankingPage() {
         img={img_paths.ranking_page()}
       />
       <Tabs defaultValue={ratingsTypes.overall}>
-        <TabsList className="w-full grid grid-cols-2 h-auto">
+        <TabsList className="w-full grid grid-cols-2 h-auto gap-2 bg-inherit shadow-2xl">
           <TabsTrigger value={ratingsTypes.overall}>
             {translate("ranking.ratings.overall_game_rating", lang)}
           </TabsTrigger>
@@ -32,7 +27,16 @@ export default async function RankingPage() {
           <TabsTrigger value={ratingsTypes.weekly}>{translate("ranking.ratings.weekly", lang)}</TabsTrigger>
           <TabsTrigger value={ratingsTypes.daily}>{translate("ranking.ratings.daily", lang)}</TabsTrigger>
         </TabsList>
-        <TabsContent value={ratingsTypes.overall}>
+        {Object.keys(ratingsTypes).map((type) => {
+          return (
+            <TabsContent key={type} value={type}>
+              {Object.values(ratingMetrics).map((m) => (
+                <RankingList key={m} metric={m as RatingsMetrics} type={type as RatingsTypes} />
+              ))}
+            </TabsContent>
+          );
+        })}
+        {/* <TabsContent value={ratingsTypes.overall}>
           {Object.values(ratingMetrics).map((m) => (
             <RankingList key={m} metric={m as RatingsMetrics} type={ratingsTypes.overall as RatingsTypes} />
           ))}
@@ -51,7 +55,7 @@ export default async function RankingPage() {
           {Object.values(ratingMetrics).map((m) => (
             <RankingList key={m} metric={m as RatingsMetrics} type={ratingsTypes.daily as RatingsTypes} />
           ))}
-        </TabsContent>
+        </TabsContent> */}
       </Tabs>
     </div>
   );

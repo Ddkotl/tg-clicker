@@ -35,12 +35,12 @@ export function Header() {
   return (
     <div className="flex justify-center w-full">
       <div className="fixed top-0 z-50 bg-header-gradient  w-full max-w-md">
-        <div className="flex flex-wrap gap-2 justify-evenly w-full  items-center  p-2">
+        <div className="flex flex-wrap gap-2 justify-evenly w-full  items-center  p-1">
           <HeaderItem
             icon={icons.user({
               className: "h-4 w-4 xs:h-5 xs:w-5",
             })}
-            href={`/game/profile/${userId}`}
+            href={ui_path.profile_page(userId || "")}
             isDisabled={isDisabled}
             isLoading={isLoading}
             value={`${profile?.data?.nikname}[${profile?.data?.lvl}]`}

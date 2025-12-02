@@ -2,16 +2,13 @@ import {
   getEndOfMonth,
   getEndOfToday,
   getEndOfWeek,
-  getNowTime,
   getStartOfMonth,
   getStartOfToday,
   getStartOfWeek,
 } from "@/shared/lib/date";
-import { RatingsTypes } from "../_domain/ratings_list_items";
+import { RatingsTypes } from "../_domain/types";
 
 export function getPeriodRange(type: RatingsTypes) {
-  const now = getNowTime();
-
   switch (type) {
     case "daily":
       return {

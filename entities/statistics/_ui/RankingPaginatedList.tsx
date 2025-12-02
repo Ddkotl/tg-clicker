@@ -1,14 +1,15 @@
 "use client";
 
-import { ComponentSpinner } from "@/shared/components/custom_ui/component_spinner";
 import { useGetRatingsQuery } from "../_queries/use_get_overall_ratings_query";
-import Link from "next/link";
-import { RankingPaginatedCard } from "./RankingPaginatedCard";
 import { useTranslation } from "@/features/translations/use_translation";
-import { icons } from "@/shared/lib/icons";
-import { cn } from "@/shared/lib/utils";
-import { ratingMetrics, RatingsMetrics, RatingsTypes } from "../_domain/ratings_list_items";
-import { getLevelByExp } from "@/shared/game_config/exp/get_lvl_by_exp";
+import { RatingsMetrics, RatingsTypes } from "../_domain/types";
+import { PaginationControl, PaginationControlSkeleton } from "@/shared/components/custom_ui/pagination";
+import { ui_path } from "@/shared/lib/paths";
+import { getRatingTitle } from "../_vm/get_rating_title";
+import { GetBaseRank } from "../_vm/get_base_rank";
+import { getRatingValue } from "../_vm/get_rating_value";
+import { getRatingValueLable } from "../_vm/get_rating_value_lable";
+import { RankingPaginatedListCard, RankingPaginatedListCardSkeleton } from "./RankingPaginatedListCard";
 
 export function RankingPaginatedList({
   type,
@@ -19,50 +20,53 @@ export function RankingPaginatedList({
   metric: RatingsMetrics;
   page: number;
 }) {
-  const { t } = useTranslation();
-  const { data, isLoading } = useGetRatingsQuery(type, metric, page);
+  const { language } = useTranslation();
+  const { data, isLoading, isFetching } = useGetRatingsQuery(type, metric, page);
 
-  if (isLoading || !data) return <ComponentSpinner />;
+  if (!data || isLoading) {
+    return (
+      <div className="flex flex-col gap-4">
+        <h2 className="text-xl font-semibold capitalize opacity-50">{getRatingTitle({ metric, type, language })}</h2>
+
+        {[...Array(10)].map((_, i) => (
+          <RankingPaginatedListCardSkeleton key={i} />
+        ))}
+
+        <PaginationControlSkeleton />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4">
-      {data.data.data.map((player, i) => {
-        const valueLabel =
-          metric === ratingMetrics.exp ? t("experience") : t(`ranking.ratings.names_types.${metric}_value`);
-        const value = player.amount;
-        // if (metric === ratingMetrics.exp) {
-        //   value = getLevelByExp(player.amount);
-        // }
+      <h2 className="text-xl font-semibold capitalize">{getRatingTitle({ metric, type, language })}</h2>
+
+      {data?.data.data.map((player, i) => {
         return (
-          <RankingPaginatedCard
+          <RankingPaginatedListCard
             key={player.user?.id}
-            rank={(page - 1) * 10 + i + 1}
+            userId={player.user?.id || ""}
+            rank={GetBaseRank({ page, index: i })}
             img={player.user?.profile?.avatar_url ?? null}
             nickname={player.user?.profile?.nikname ?? null}
-            valueLabel={valueLabel}
-            value={value}
+            valueLabel={getRatingValueLable({ metric, type, language })}
+            value={getRatingValue({ metric, amount: player.amount })}
+            isFetching={isFetching}
           />
         );
       })}
 
-      <div className="flex gap-3 mt-4 items-center justify-between">
-        {page >= 1 && (
-          <Link href={`?page=${page - 1}`} className={cn(page <= 1 && "pointer-events-none opacity-50")}>
-            {icons.arrow_right({ className: "rotate-180 inline-block text-white/80 h-8 w-8" })}
-          </Link>
-        )}
-        {page && (
-          <Link href={`?page=${page}`} className="px-4 py-2 bg-white/50 rounded">
-            {page}
-          </Link>
-        )}
-
-        {page <= data.data.pages && (
-          <Link href={`?page=${page + 1}`} className={cn(page >= data.data.pages && "pointer-events-none opacity-50")}>
-            {icons.arrow_right({ className: " inline-block text-white/80 h-8 w-8" })}
-          </Link>
-        )}
-      </div>
+      {/* Пагинация (рендер только если есть данные) */}
+      {!isLoading && data && (
+        <PaginationControl
+          basePath={ui_path.rankings_type_page(type, metric)}
+          currentPage={data.data.page}
+          pageSize={data.data.pageSize}
+          totalItems={data.data.total}
+          totalPages={data.data.pages}
+          isFetching={isFetching}
+        />
+      )}
     </div>
   );
 }

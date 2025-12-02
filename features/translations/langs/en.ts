@@ -15,6 +15,8 @@ export const en_lang = {
     no_energy: "No energy",
   },
   pagination: {
+    shows: "Showing",
+    of: "of",
     next: "Next",
     previous: "Previous",
   },

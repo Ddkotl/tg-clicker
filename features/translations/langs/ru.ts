@@ -17,6 +17,8 @@ export const ru_lang: Messages = {
     no_energy: "Нет энергии",
   },
   pagination: {
+    shows: "Показано",
+    of: "из",
     next: "Вперёд",
     previous: "Назад",
   },
