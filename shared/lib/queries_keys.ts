@@ -1,5 +1,5 @@
 import { EnemyType, FightStatus } from "@/_generated/prisma";
-import { RatingsMetrics, RatingsTypes } from "@/entities/statistics/_domain/ratings_list_items";
+import { RatingsMetrics, RatingsTypes } from "@/entities/statistics/_domain/types";
 
 export const queries_keys = {
   tg_auth: () => ["telegramAuth"],

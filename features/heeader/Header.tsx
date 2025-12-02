@@ -40,7 +40,7 @@ export function Header() {
             icon={icons.user({
               className: "h-4 w-4 xs:h-5 xs:w-5",
             })}
-            href={`/game/profile/${userId}`}
+            href={ui_path.profile_page(userId || "")}
             isDisabled={isDisabled}
             isLoading={isLoading}
             value={`${profile?.data?.nikname}[${profile?.data?.lvl}]`}

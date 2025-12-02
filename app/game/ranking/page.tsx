@@ -1,9 +1,4 @@
-import {
-  ratingMetrics,
-  RatingsMetrics,
-  RatingsTypes,
-  ratingsTypes,
-} from "@/entities/statistics/_domain/ratings_list_items";
+import { ratingMetrics, RatingsMetrics, RatingsTypes, ratingsTypes } from "@/entities/statistics/_domain/types";
 import { RankingList } from "@/entities/statistics/_ui/RankingList";
 import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
 import { translate } from "@/features/translations/server/translate_fn";

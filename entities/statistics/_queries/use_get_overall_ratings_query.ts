@@ -2,7 +2,7 @@
 
 import { queries_keys } from "@/shared/lib/queries_keys";
 import { useQuery } from "@tanstack/react-query";
-import { RatingsMetrics, RatingsTypes } from "../_domain/ratings_list_items";
+import { RatingsMetrics, RatingsTypes } from "../_domain/types";
 import { api_path } from "@/shared/lib/paths";
 import { ErrorResponseType } from "@/shared/lib/api_helpers/types";
 import { RatingsResponseType } from "../_domain/types";

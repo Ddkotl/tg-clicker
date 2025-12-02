@@ -3,12 +3,7 @@ import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
 import { translate } from "@/features/translations/server/translate_fn";
 import { makeError } from "@/shared/lib/api_helpers/make_error";
 import { ratingsResponseSchema, RatingUnionSchema } from "@/entities/statistics";
-import {
-  ratingMetrics,
-  RatingsMetrics,
-  RatingsTypes,
-  ratingsTypes,
-} from "@/entities/statistics/_domain/ratings_list_items";
+import { ratingMetrics, RatingsMetrics, RatingsTypes, ratingsTypes } from "@/entities/statistics/_domain/types";
 import { statisticRepository } from "@/entities/statistics/index.server";
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ type: string; metric: string }> }) {
