@@ -28,6 +28,7 @@ export const api_path = {
   auth: () => `/api/auth`,
   registration: () => `/api/auth/registration`,
   get_session: () => `api/session`,
+  get_profile: (userId: string) => `/api/user/profile?userId=${userId}`,
   go_meditation: () => `/api/headquarter/meditation`,
   go_spirit_path: () => `/api/headquarter/spirit_path/go_spirit_path`,
   get_meditation_revard: () => `/api/headquarter/meditation/get_meditation_reward`,
