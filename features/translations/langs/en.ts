@@ -26,6 +26,8 @@ export const en_lang = {
   spirit_cristal: "Spirit cristal",
   experience: "Exp",
   glory: "Glory",
+  max_hp: "Hitpoints",
+  params: "Parameters",
   close: "Close",
   loading: "loading",
   error: "anithing went wrong",
@@ -87,9 +89,9 @@ export const en_lang = {
   },
   fraction: {
     adept: "Adept of the mountain",
-    novice: "Novice of the Valley",
+    novice: "Novice of the valley",
     adepts: "Adept of the mountain",
-    novices: "Novice of the Valley",
+    novices: "Novice of the valley",
   },
   theme: {
     select: "Select color theme",
@@ -113,6 +115,8 @@ export const en_lang = {
   profile: {
     no_motto_adept: "The rock will not shake - and neither will I.",
     no_motto_novice: "The wind of change only helps my path.",
+    online: "Online",
+    offline: "Was online",
     not_found: "Profile not found",
     avatar_alt: "Avatar of {nikname}",
     development: "Development",
@@ -133,9 +137,9 @@ export const en_lang = {
     protection_desc: "Reduces incoming damage",
     speed: "Speed",
     speed_desc: "Increases evasion chance",
-    skill: "Skill",
+    skill: "Accuracy",
     skill_desc: "Increases critical hit chance",
-    qi_param: "Qi",
+    qi_param: "Qi Power",
     qi_param_desc: "Gives superiority in battle",
   },
   facts: {

@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo } from "react";
 import { useTranslation } from "@/features/translations/use_translation";
 import { MainButton } from "@/shared/components/custom_ui/main-button";
+import { nav_items } from "@/shared/lib/nav_items";
+import { translate } from "@/features/translations/server/translate_fn";
 
 interface ProfileButtonsProps {
   isMyProfile: boolean;
@@ -11,52 +12,9 @@ interface ProfileButtonsProps {
 }
 
 export function ProfileNav({ isMyProfile, userId, isLoading }: ProfileButtonsProps) {
-  const { t } = useTranslation();
+  const { language } = useTranslation();
 
-  const buttons = useMemo(() => {
-    const base = [
-      {
-        label: t("profile.statistics"),
-        href: "/game/profile",
-      },
-      {
-        label: t("profile.questionnaire"),
-        href: "/game/profile",
-      },
-    ];
-
-    if (!isMyProfile) return base;
-
-    return [
-      {
-        label: t("profile.development"),
-        href: `/game/profile/training/${userId}`,
-      },
-      ...base,
-      // {
-      //   label: t("profile.equipment"),
-      //   href: "/game/profile/equipment",
-      // },
-      // {
-      //   label: t("profile.friends"),
-      //   href: "/game/profile/friends",
-      // },
-      // ...base,
-      // {
-      //   label: t("profile.description"),
-      //   href: "/game/profile/description",
-      // },
-      // {
-      //   label: t("profile.avatars"),
-      //   href: "/game/profile/avatars",
-      // },
-      // {
-      //   label: t("profile.invite"),
-      //   href: "/game/profile/invite",
-      // },
-    ];
-  }, [t, isMyProfile, userId]);
-
+  const buttons = nav_items.getProfileNavButtons(isMyProfile, userId, translate, language);
   return (
     <div className="flex flex-col gap-2">
       {buttons.map((btn) => (

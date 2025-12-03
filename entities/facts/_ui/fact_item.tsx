@@ -1,7 +1,5 @@
 "use client";
 
-import { format } from "date-fns";
-import { ru, enUS } from "date-fns/locale";
 import { Facts, FactsType } from "@/_generated/prisma";
 import { TranslationKey } from "@/features/translations/translate_type";
 import { useLanguage } from "@/features/translations/lang_context";
@@ -13,6 +11,7 @@ import { ui_path } from "@/shared/lib/paths";
 import Link from "next/link";
 import { FightResRewards } from "@/entities/fights";
 import { FightResLossesSchema } from "@/entities/fights/_domain/types";
+import { getLocalFormatedDate } from "@/shared/lib/date";
 
 export function FactItem({
   fact,
@@ -147,11 +146,7 @@ export function FactItem({
     }
   })();
 
-  const formattedDate = fact.createdAt
-    ? format(fact.createdAt, "d MMMM yyyy, HH:mm", {
-        locale: language === "ru" ? ru : enUS,
-      })
-    : "";
+  const formattedDate = getLocalFormatedDate({ date: fact.createdAt, lang: language });
 
   if (!config) return null;
 

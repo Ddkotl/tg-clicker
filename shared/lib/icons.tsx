@@ -12,6 +12,7 @@ import {
 import { ReactNode } from "react";
 import {
   ArrowRightCircle,
+  ArrowUpFromDot,
   Backpack,
   BellDot,
   Calendar,
@@ -34,14 +35,15 @@ type IconProps = {
 };
 
 export const icons = {
-  heart: ({ className }: IconProps): ReactNode => <HeartPulse className={cn("h-4 w-4 text-red-700", className)} />,
+  lvl: ({ className }: IconProps): ReactNode => <ArrowUpFromDot className={cn("h-4 w-4 text-amber-500", className)} />,
+  heart: ({ className }: IconProps): ReactNode => <HeartPulse className={cn("h-4 w-4 text-red-600", className)} />,
   user: ({ className }: IconProps): ReactNode => <User className={cn("h-4 w-4 text-primary", className)} />,
   backpack: ({ className }: IconProps): ReactNode => <Backpack className={cn("h-4 w-4 text-green-700", className)} />,
   clock: ({ className }: IconProps): ReactNode => <Clock className={cn("h-4 w-4 text-white/80", className)} />,
   qi_energy: ({ className }: IconProps): ReactNode => <GiFire className={cn("h-4 w-4 text-blue-400", className)} />,
-  glory: ({ className }: IconProps): ReactNode => <GiLaurelCrown className={cn("h-4 w-4 text-green-400", className)} />,
+  glory: ({ className }: IconProps): ReactNode => <GiLaurelCrown className={cn("h-4 w-4 text-green-500", className)} />,
 
-  exp: ({ className }: IconProps): ReactNode => <GiDodging className={cn("h-4 w-4 text-green-400", className)} />,
+  exp: ({ className }: IconProps): ReactNode => <GiDodging className={cn("h-4 w-4 text-green-500", className)} />,
 
   stone: ({ className }: IconProps): ReactNode => <GiStonePile className={cn("h-4 w-4 text-yellow-400", className)} />,
 
