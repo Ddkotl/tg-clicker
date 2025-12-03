@@ -79,4 +79,26 @@ export const nav_items = {
       href: ui_path.fight_enemy_page(EnemyType.DEMONIC_BEAST),
     },
   ],
+
+  getProfileNavButtons: (
+    isMyProfile: boolean,
+    userId: string,
+    translate: TranslateFn,
+    lang: SupportedLang,
+  ): NavItem[] => {
+    const base = [
+      {
+        label: translate("profile.statistics", lang),
+        href: `/game/profile${userId}`,
+      },
+    ];
+    if (!isMyProfile) return base;
+    return [
+      {
+        label: translate("profile.development", lang),
+        href: `/game/profile/training/${userId}`,
+      },
+      ...base,
+    ];
+  },
 };

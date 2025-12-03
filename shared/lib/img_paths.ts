@@ -29,6 +29,7 @@ export const img_paths = {
     speed: () => `/speed.png`,
     skill: () => `/skill.png`,
     qi_param: () => `/qi_param.png`,
+    max_hp: () => `/max_hp.png`,
   },
   ranking_page: () => `/ranking.jpg`,
 };

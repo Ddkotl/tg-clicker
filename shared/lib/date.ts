@@ -3,11 +3,14 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import isoWeek from "dayjs/plugin/isoWeek";
 import weekOfYear from "dayjs/plugin/weekOfYear";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+import { SupportedLang } from "@/features/translations/translate_type";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(isoWeek);
 dayjs.extend(weekOfYear);
+dayjs.extend(localizedFormat);
 
 export function getNowTime() {
   return dayjs().tz("UTC");
@@ -38,4 +41,11 @@ export function getEndOfMonth() {
 }
 export function getDaysAgoDate(days: number) {
   return dayjs().tz("UTC").subtract(days, "day").toDate();
+}
+
+export function getLocalFormatedDate({ date, lang }: { date: Date; lang: SupportedLang }) {
+  const formattedDate = dayjs(date)
+    .locale(lang === "ru" ? "ru" : "en")
+    .format("D MMMM YYYY, HH:mm");
+  return formattedDate;
 }
