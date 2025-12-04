@@ -1,5 +1,14 @@
 import z from "zod";
-import { ratingsResponseSchema, RatingUnionSchema, userCountInFrResponseSchema } from "./schemas";
+import {
+  ratingsResponseSchema,
+  RatingUnionSchema,
+  userCountInFrResponseSchema,
+  UserStatItemSchema,
+  UserStatsRequestParamsSchema,
+  UserStatsResponseDataSchema,
+  UserStatsResponseSchema,
+  UserStatsTypeSchema,
+} from "./schemas";
 
 export type UserCountInFrResponseType = z.infer<typeof userCountInFrResponseSchema>;
 export type RatingUnionType = z.infer<typeof RatingUnionSchema>;
@@ -30,3 +39,13 @@ export const ratingMetrics = {
   fights_wins: "fights_wins",
 };
 export type RatingsMetrics = keyof typeof ratingMetrics;
+
+export type UserStatsType = z.infer<typeof UserStatsTypeSchema>;
+
+export type UserStatsRequestParams = z.infer<typeof UserStatsRequestParamsSchema>;
+
+export type UserStatItem = z.infer<typeof UserStatItemSchema>;
+
+export type UserStatsResponseData = z.infer<typeof UserStatsResponseDataSchema>;
+
+export type UserStatsResponse = z.infer<typeof UserStatsResponseSchema>;

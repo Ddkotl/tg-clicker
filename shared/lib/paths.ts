@@ -51,4 +51,5 @@ export const api_path = {
     `/api/fight?${enemyType ? `enemyType=${enemyType}&` : ""}&${fightId ? `fightId=${fightId}&` : ""}${status ? `status=${status}` : ""}`,
   get_ratings: (type: RatingsTypes, metric: RatingsMetrics, page: number) =>
     `/api/statistics/rating/${type}/${metric}?page=${page}`,
+  get_user_stats: (type: RatingsTypes, userId: string) => `/api/user/statistics/${userId}/${type}`,
 };

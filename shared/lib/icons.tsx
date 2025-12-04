@@ -1,4 +1,5 @@
 import {
+  GiCrackedShield,
   GiDigDug,
   GiDodging,
   GiFire,
@@ -64,7 +65,9 @@ export const icons = {
   ),
 
   fight: ({ className }: IconProps): ReactNode => <Swords className={cn("h-5 w-5 text-white/80", className)} />,
-
+  defeat: ({ className }: IconProps): ReactNode => (
+    <GiCrackedShield className={cn("h-5 w-5 text-red-800/80", className)} />
+  ),
   pet: ({ className }: IconProps): ReactNode => <PawPrint className={cn("h-5 w-5 text-white/80", className)} />,
 
   trophy: ({ className }: IconProps): ReactNode => <GiHolyGrail className={cn("h-8 w-8 text-white/80", className)} />,

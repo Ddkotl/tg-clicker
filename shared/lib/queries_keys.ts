@@ -18,4 +18,5 @@ export const queries_keys = {
     status ?? null,
   ],
   ratings_type: (type: RatingsTypes, metric: RatingsMetrics, page: number) => ["rating", type, metric, page],
+  user_stats: (type: RatingsTypes, userId: string) => ["user_statistics", type, userId],
 };
