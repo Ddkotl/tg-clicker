@@ -36,26 +36,6 @@ export default async function RankingPage() {
             </TabsContent>
           );
         })}
-        {/* <TabsContent value={ratingsTypes.overall}>
-          {Object.values(ratingMetrics).map((m) => (
-            <RankingList key={m} metric={m as RatingsMetrics} type={ratingsTypes.overall as RatingsTypes} />
-          ))}
-        </TabsContent>
-        <TabsContent value={ratingsTypes.monthly}>
-          {Object.values(ratingMetrics).map((m) => (
-            <RankingList key={m} metric={m as RatingsMetrics} type={ratingsTypes.monthly as RatingsTypes} />
-          ))}
-        </TabsContent>
-        <TabsContent value={ratingsTypes.weekly}>
-          {Object.values(ratingMetrics).map((m) => (
-            <RankingList key={m} metric={m as RatingsMetrics} type={ratingsTypes.weekly as RatingsTypes} />
-          ))}
-        </TabsContent>
-        <TabsContent value={ratingsTypes.daily}>
-          {Object.values(ratingMetrics).map((m) => (
-            <RankingList key={m} metric={m as RatingsMetrics} type={ratingsTypes.daily as RatingsTypes} />
-          ))}
-        </TabsContent> */}
       </Tabs>
     </div>
   );

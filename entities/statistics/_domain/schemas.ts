@@ -38,3 +38,39 @@ export const ratingsResponseSchema = z.object({
   message: z.string(),
   ok: z.boolean(),
 });
+
+export const UserStatsTypeSchema = z.enum(["overall", "daily", "weekly", "monthly"]);
+
+export const UserStatsRequestParamsSchema = z.object({
+  type: UserStatsTypeSchema,
+  userId: z.string().min(1),
+});
+
+export const UserStatItemSchema = z.object({
+  exp: z.number().nullable(),
+  meditated_hours: z.number().nullable(),
+  spirit_path_minutes: z.number().nullable(),
+  mined_qi_stone: z.number().nullable(),
+  mined_count: z.number().nullable(),
+  fights_total: z.number().nullable(),
+  fights_wins: z.number().nullable(),
+
+  qi_looted: z.number().nullable(),
+  qi_lost: z.number().nullable(),
+  qi_stone_looted: z.number().nullable(),
+  qi_stone_lost: z.number().nullable(),
+
+  missions: z.number().nullable(),
+});
+
+export const UserStatsResponseDataSchema = z.object({
+  userId: z.string(),
+  type: UserStatsTypeSchema,
+  stats: UserStatItemSchema.nullable(),
+});
+
+export const UserStatsResponseSchema = z.object({
+  ok: z.literal(true),
+  message: z.string(),
+  data: UserStatsResponseDataSchema,
+});

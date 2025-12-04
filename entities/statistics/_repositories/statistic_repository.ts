@@ -126,25 +126,58 @@ export class StatisticRepository {
       data: detailedUsers,
     };
   }
+  async getUserStats({ userId, type, tx }: { userId: string; type: RatingsTypes; tx?: TransactionType }) {
+    const db = tx ?? dataBase;
 
-  async getUserDailyStats({ userId, tx }: { userId: string; tx?: TransactionType }) {
-    const db_client = tx ? tx : dataBase;
-    const today = getStartOfToday();
+    // 🔹 Общая статистика
+    if (type === "overall") {
+      try {
+        return await db.userStatistic.findUnique({
+          where: { userId },
+        });
+      } catch (error) {
+        console.error("getUserStats overall error:", error);
+        return null;
+      }
+    }
+
+    // 🔹 Периоды (day/week/month)
+    const range = getPeriodRange(type);
+    if (!range) return null;
+
+    const { start, end } = range;
+
     try {
-      const stat = await db_client.userDailyStats.findUnique({
+      const grouped = await db.userDailyStats.groupBy({
+        by: ["userId"],
         where: {
-          userId_date: {
-            userId: userId,
-            date: today,
-          },
+          userId,
+          date: { gte: start, lte: end },
+        },
+        _sum: {
+          exp: true,
+          glory: true,
+          meditated_hours: true,
+          spirit_path_minutes: true,
+          mined_qi_stone: true,
+          mined_count: true,
+          fights_total: true,
+          fights_wins: true,
+          qi_looted: true,
+          qi_lost: true,
+          qi_stone_looted: true,
+          qi_stone_lost: true,
+          missions: true,
         },
       });
-      return stat;
+
+      return grouped.length ? grouped[0]._sum : null;
     } catch (error) {
-      console.error("getUserDailyStats error", error);
+      console.error("getUserStats period error:", error);
       return null;
     }
   }
+
   async updateUserDailyStats({
     data,
     userId,
