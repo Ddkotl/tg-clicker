@@ -12,7 +12,7 @@ import { Title } from "@/shared/components/custom_ui/title";
 import { Separator } from "@/shared/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { ProfileParamsList } from "./profile_params_list";
-import { Profile } from "@/_generated/prisma";
+import { Profile } from "@/_generated/prisma/client";
 import { ProfileStatisticsList } from "./profile_statistics_list";
 
 export function PlayerProfile({ userId }: { userId: string }) {

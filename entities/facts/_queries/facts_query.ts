@@ -1,4 +1,4 @@
-import { Facts } from "@/_generated/prisma";
+import { Facts } from "@/_generated/prisma/client";
 import { api_path } from "@/shared/lib/paths";
 import { queries_keys } from "@/shared/lib/queries_keys";
 

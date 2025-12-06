@@ -1,4 +1,4 @@
-import { FactsStatus, FactsType } from "@/_generated/prisma";
+import { FactsStatus, FactsType } from "@/_generated/prisma/enums";
 import z from "zod";
 
 export const factSchema = z.object({

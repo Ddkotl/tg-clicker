@@ -11,7 +11,7 @@ import { NicknameField } from "./nickname_field";
 import { ThemeSelector } from "./theme_selector";
 import { GenderSelector } from "./gender_selector";
 import { FraktionSelector } from "./fraktion_selector";
-import { Fraktion } from "@/_generated/prisma";
+import { Fraktion } from "@/_generated/prisma/enums";
 import { Button } from "@/shared/components/ui/button";
 import { Spinner } from "@/shared/components/ui/spinner";
 

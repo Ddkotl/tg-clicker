@@ -1,3 +1,4 @@
+import "dotenv/config";
 import amqp from "amqplib";
 import { MEDITATION_EXCHANGE, MEDITATION_QUEUE } from "@/features/meditation/rabit_meditation_connect";
 import { RABBITMQ_URL } from "@/shared/connect/consts";

@@ -2,7 +2,7 @@ import { icons } from "@/shared/lib/icons";
 import { ProfileParam } from "./profile_param";
 import { TranslationKey } from "@/features/translations/translate_type";
 import { img_paths } from "@/shared/lib/img_paths";
-import { Profile } from "@/_generated/prisma";
+import { Profile } from "@/_generated/prisma/client";
 import { getLevelByExp } from "@/shared/game_config/exp/get_lvl_by_exp";
 import { lvl_exp } from "@/shared/game_config/exp/lvl_exp";
 

@@ -1,5 +1,5 @@
 import { dataBase } from "@/shared/connect/db_connect";
-import { Fraktion, Gender } from "@/_generated/prisma";
+import { Fraktion, Gender } from "@/_generated/prisma/enums";
 
 export async function RegistrationUser({
   userId,

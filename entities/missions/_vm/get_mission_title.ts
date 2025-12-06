@@ -1,4 +1,4 @@
-import { MissionType } from "@/_generated/prisma";
+import { MissionType } from "@/_generated/prisma/enums";
 import { getHoursString } from "@/entities/meditation/_vm/getHoursString";
 import { TranslationKey } from "@/features/translations/translate_type";
 

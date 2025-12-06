@@ -1,4 +1,4 @@
-import { MissionType } from "@/_generated/prisma";
+import { MissionType } from "@/_generated/prisma/enums";
 import { dataBase, TransactionType } from "@/shared/connect/db_connect";
 import { DailyMission } from "@/shared/game_config/missions/generate_daily_missions";
 import { getStartOfToday } from "@/shared/lib/date";

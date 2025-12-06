@@ -1,4 +1,4 @@
-import { UserQiSkills } from "@/_generated/prisma";
+import { UserQiSkills } from "@/_generated/prisma/client";
 
 type QiSkillTableKey = keyof UserQiSkills;
 export type QiSkillKey = Exclude<QiSkillTableKey, "id" | "userId">;

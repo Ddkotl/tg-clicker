@@ -1,5 +1,5 @@
 import { RadioGroup, RadioGroupItem } from "@/shared/components/ui/radio-group";
-import { Gender } from "@/_generated/prisma";
+import { Gender } from "@/_generated/prisma/enums";
 import { useTranslation } from "@/features/translations/use_translation";
 import { Label } from "@/shared/components/ui/label";
 

@@ -1,4 +1,4 @@
-import { Mine } from "@/_generated/prisma";
+import { Mine } from "@/_generated/prisma/client";
 import { ENERGY_RECHARGE_INTERVAL, MAX_ENERGY } from "@/shared/game_config/mining/mining_const";
 import { RestoreMineEnergy } from "../index.server";
 

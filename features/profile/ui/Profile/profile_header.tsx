@@ -1,5 +1,5 @@
 "use client";
-import { Fraktion } from "@/_generated/prisma";
+import { Fraktion } from "@/_generated/prisma/enums";
 import { useTranslation } from "@/features/translations/use_translation";
 import { Separator } from "@/shared/components/ui/separator";
 

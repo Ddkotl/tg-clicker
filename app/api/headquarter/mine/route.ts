@@ -12,7 +12,7 @@ import { MINE_COOLDOWN } from "@/shared/game_config/mining/mining_const";
 import { checkUserDeals } from "@/entities/user/_repositories/check_user_deals";
 import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
 import { translate } from "@/features/translations/server/translate_fn";
-import { FactsStatus, FactsType, MissionType } from "@/_generated/prisma";
+import { FactsStatus, FactsType, MissionType } from "@/_generated/prisma/enums";
 import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lvl";
 import { getCookieUserId } from "@/features/auth/get_cookie_userId";
 import { statisticRepository } from "@/entities/statistics/index.server";

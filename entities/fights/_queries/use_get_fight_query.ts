@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { FightResponseType } from "../_domain/types";
 import { api_path } from "@/shared/lib/paths";
 import { queries_keys } from "@/shared/lib/queries_keys";
-import { EnemyType, FightStatus } from "@/_generated/prisma";
+import { EnemyType, FightStatus } from "@/_generated/prisma/enums";
 
 export const useGetFightQuery = ({
   enemyType,

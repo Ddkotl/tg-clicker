@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { AppJWTPayload, getSession } from "./entities/auth/_vm/session";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   if (
     // request.nextUrl.pathname === "/api/test" ||
     request.nextUrl.pathname === "/api/auth"

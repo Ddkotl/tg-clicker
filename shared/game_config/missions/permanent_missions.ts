@@ -1,4 +1,4 @@
-import { MissionTime, MissionType } from "@/_generated/prisma";
+import { MissionTime, MissionType } from "@/_generated/prisma/enums";
 import { ui_path } from "@/shared/lib/paths";
 
 export type PermanentMission = {

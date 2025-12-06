@@ -1,4 +1,4 @@
-import { EnemyType, FightStatus } from "@/_generated/prisma";
+import { EnemyType, FightStatus } from "@/_generated/prisma/enums";
 import { RatingsMetrics, RatingsTypes } from "@/entities/statistics/_domain/types";
 
 export const queries_keys = {

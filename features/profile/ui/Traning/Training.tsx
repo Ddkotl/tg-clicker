@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { useProfileQuery } from "@/entities/profile/_queries/use_profile_query";
 import { TrainingParam } from "./TrainingParam";
-import { Profile } from "@/_generated/prisma";
+import { Profile } from "@/_generated/prisma/client";
 
 import { useTranslation } from "@/features/translations/use_translation";
 import { GenerateParamsConfig } from "@/shared/game_config/params/params_cost";

@@ -1,5 +1,5 @@
 import { dataBase, TransactionType } from "@/shared/connect/db_connect";
-import { FightResult, FightStatus, FightType, EnemyType } from "@/_generated/prisma";
+import { FightResult, FightStatus, FightType, EnemyType } from "@/_generated/prisma/enums";
 import { FightLogStep, FightResRewards, FightSnapshot } from "../_domain/types";
 
 export class FightRepository {
