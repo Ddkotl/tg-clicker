@@ -83,6 +83,7 @@ model Mission {
 
   path                  String?
   type                  MissionType
+  time                  MissionTime
   reward_exp            Int         @default(0)
   reward_qi             Int         @default(0)
   reward_qi_stone       Int         @default(0)
@@ -102,6 +103,11 @@ model Mission {
   @@map("missions")
 }
 
+enum MissionTime {
+  DAILY
+  PERMANENT
+}
+
 enum MissionType {
   MEDITATION
   SPIRIT_PATH
@@ -111,6 +117,8 @@ enum MissionType {
   ROBBERY_QI_ENERGY
   GET_GLORY
   DAMAGE
+  INVITE_FRIEND
+  SUBSCRIBE
 }
 
 model Mine {

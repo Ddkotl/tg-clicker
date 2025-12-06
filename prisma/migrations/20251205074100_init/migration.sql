@@ -1,11 +1,14 @@
 -- CreateEnum
-CREATE TYPE "MissionType" AS ENUM ('MEDITATION', 'SPIRIT_PATH', 'MINE', 'MINE_STONE', 'FIGHTS_WINS', 'ROBBERY_QI_ENERGY', 'GET_GLORY', 'DAMAGE');
+CREATE TYPE "MissionTime" AS ENUM ('DAILY', 'PERMANENT');
+
+-- CreateEnum
+CREATE TYPE "MissionType" AS ENUM ('MEDITATION', 'SPIRIT_PATH', 'MINE', 'MINE_STONE', 'FIGHTS_WINS', 'ROBBERY_QI_ENERGY', 'GET_GLORY', 'DAMAGE', 'INVITE_FRIEND', 'SUBSCRIBE');
 
 -- CreateEnum
 CREATE TYPE "FactsStatus" AS ENUM ('CHECKED', 'NO_CHECKED');
 
 -- CreateEnum
-CREATE TYPE "FactsType" AS ENUM ('MEDITATION', 'MINE', 'SPIRIT_PATH', 'MISSION', 'FIGHT');
+CREATE TYPE "FactsType" AS ENUM ('MEDITATION', 'MINE', 'SPIRIT_PATH', 'MISSION', 'FIGHTS_WIN', 'FIGHTS_LOSE');
 
 -- CreateEnum
 CREATE TYPE "Fraktion" AS ENUM ('ADEPT', 'NOVICE');
@@ -71,6 +74,7 @@ CREATE TABLE "profiles" (
     "max_hitpoint" INTEGER NOT NULL DEFAULT 100,
     "last_hp_update" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "last_qi_update" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "last_online_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "profiles_pkey" PRIMARY KEY ("id")
 );
@@ -81,6 +85,7 @@ CREATE TABLE "missions" (
     "userId" TEXT NOT NULL,
     "path" TEXT,
     "type" "MissionType" NOT NULL,
+    "time" "MissionTime" NOT NULL,
     "reward_exp" INTEGER NOT NULL DEFAULT 0,
     "reward_qi" INTEGER NOT NULL DEFAULT 0,
     "reward_qi_stone" INTEGER NOT NULL DEFAULT 0,
@@ -110,12 +115,18 @@ CREATE TABLE "user_statistics" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "exp" INTEGER NOT NULL DEFAULT 0,
+    "glory" INTEGER NOT NULL DEFAULT 0,
     "meditated_hours" INTEGER NOT NULL DEFAULT 0,
     "spirit_path_minutes" INTEGER NOT NULL DEFAULT 0,
     "mined_qi_stone" INTEGER NOT NULL DEFAULT 0,
     "mined_count" INTEGER NOT NULL DEFAULT 0,
     "fights_total" INTEGER NOT NULL DEFAULT 0,
     "fights_wins" INTEGER NOT NULL DEFAULT 0,
+    "qi_looted" INTEGER NOT NULL DEFAULT 0,
+    "qi_lost" INTEGER NOT NULL DEFAULT 0,
+    "qi_stone_looted" INTEGER NOT NULL DEFAULT 0,
+    "qi_stone_lost" INTEGER NOT NULL DEFAULT 0,
+    "missions" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "user_statistics_pkey" PRIMARY KEY ("id")
 );
@@ -126,12 +137,18 @@ CREATE TABLE "user_daily_stats" (
     "userId" TEXT NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
     "exp" INTEGER NOT NULL DEFAULT 0,
+    "glory" INTEGER NOT NULL DEFAULT 0,
     "meditated_hours" INTEGER NOT NULL DEFAULT 0,
     "spirit_path_minutes" INTEGER NOT NULL DEFAULT 0,
     "mined_qi_stone" INTEGER NOT NULL DEFAULT 0,
     "mined_count" INTEGER NOT NULL DEFAULT 0,
     "fights_total" INTEGER NOT NULL DEFAULT 0,
     "fights_wins" INTEGER NOT NULL DEFAULT 0,
+    "qi_looted" INTEGER NOT NULL DEFAULT 0,
+    "qi_lost" INTEGER NOT NULL DEFAULT 0,
+    "qi_stone_looted" INTEGER NOT NULL DEFAULT 0,
+    "qi_stone_lost" INTEGER NOT NULL DEFAULT 0,
+    "missions" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "user_daily_stats_pkey" PRIMARY KEY ("id")
 );
@@ -191,6 +208,14 @@ CREATE TABLE "facts" (
     "active_minutes" INTEGER,
     "target_value" INTEGER,
     "mission_type" "MissionType",
+    "fight_atacker_id" TEXT,
+    "fight_defender_id" TEXT,
+    "enemy_type" "EnemyType",
+    "fight_id" TEXT,
+    "fight_result" "FightResult",
+    "fightLog" JSONB,
+    "fight_rewards" JSONB,
+    "fight_losses" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "facts_pkey" PRIMARY KEY ("id")
@@ -209,6 +234,7 @@ CREATE TABLE "fights" (
     "snapshot" JSONB NOT NULL,
     "fightLog" JSONB,
     "rewards" JSONB,
+    "loses" JSONB,
     "startedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "finishedAt" TIMESTAMP(3),
 
