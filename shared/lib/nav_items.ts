@@ -3,7 +3,7 @@ import { NavItem } from "../components/custom_ui/page_nav";
 import { icons } from "./icons";
 import { ui_path } from "./paths";
 import { SupportedLang } from "@/features/translations/translate_type";
-import { EnemyType } from "@/_generated/prisma";
+import { EnemyType } from "@/_generated/prisma/enums";
 
 export const nav_items = {
   headquarter_page_nav_items: (translate: TranslateFn, lang: SupportedLang): NavItem[] => [

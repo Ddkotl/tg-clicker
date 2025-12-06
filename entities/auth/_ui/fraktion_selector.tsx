@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Fraktion, Gender } from "@/_generated/prisma";
+import { Fraktion, Gender } from "@/_generated/prisma/enums";
 import { useTranslation } from "@/features/translations/use_translation";
 import { ChooseDefaultAvatarUrl } from "../_vm/choose_default_avatar_url";
 

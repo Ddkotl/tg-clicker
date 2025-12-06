@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useTheme } from "@/features/themes/theme_context";
-import { Fraktion, Gender } from "@/_generated/prisma";
+import { Fraktion, Gender } from "@/_generated/prisma/enums";
 
 import { useProfileQuery } from "@/entities/profile/_queries/use_profile_query";
 import { useGetSessionQuery } from "@/entities/auth/_queries/session_queries";

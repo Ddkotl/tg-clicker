@@ -1,5 +1,5 @@
 import z from "zod";
-import { MissionType } from "@/_generated/prisma";
+import { MissionType } from "@/_generated/prisma/enums";
 
 export const DailyMissionSchema = z.object({
   id: z.string(),

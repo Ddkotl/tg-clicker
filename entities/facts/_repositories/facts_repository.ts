@@ -1,4 +1,4 @@
-import { EnemyType, FactsStatus, FactsType, FightResult, MissionType } from "@/_generated/prisma";
+import { EnemyType, FactsStatus, FactsType, FightResult, MissionType } from "@/_generated/prisma/enums";
 import { FightLog, FightResRewards } from "@/entities/fights";
 import { FightResLossesSchema } from "@/entities/fights/_domain/types";
 import { dataBase, TransactionType } from "@/shared/connect/db_connect";

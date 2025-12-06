@@ -4,7 +4,7 @@ import { makeError } from "@/shared/lib/api_helpers/make_error";
 import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
 import { NextRequest, NextResponse } from "next/server";
 import { fightResponseSchema, FightResponseType } from "@/entities/fights";
-import { EnemyType, FightStatus, FightType } from "@/_generated/prisma";
+import { EnemyType, FightStatus, FightType } from "@/_generated/prisma/enums";
 import { fightService } from "@/features/fights/_servises/fight_servise";
 
 export async function GET(req: NextRequest) {

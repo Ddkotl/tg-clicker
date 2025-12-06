@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { FactsType } from "@/_generated/prisma";
+import { FactsType } from "@/_generated/prisma/enums";
 import { api_path } from "@/shared/lib/paths";
 import { queries_keys } from "@/shared/lib/queries_keys";
 import { pageSize } from "@/shared/game_config/facts/facts_const";

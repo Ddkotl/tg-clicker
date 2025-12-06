@@ -1,4 +1,4 @@
-import { Fraktion, Gender } from "@/_generated/prisma";
+import { Fraktion, Gender } from "@/_generated/prisma/enums";
 import z from "zod";
 
 export const authRequestSchema = z.object({

@@ -1,4 +1,4 @@
-import { Facts } from "@/_generated/prisma";
+import { Facts } from "@/_generated/prisma/client";
 import { factErrorResponseSchema, FactErrorResponseType } from "@/entities/facts";
 import { NextRequest, NextResponse } from "next/server";
 import Redis from "ioredis";

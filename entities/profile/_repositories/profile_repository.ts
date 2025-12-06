@@ -1,4 +1,4 @@
-import { Profile } from "@/_generated/prisma";
+import { Profile } from "@/_generated/prisma/client";
 import { dataBase, TransactionType } from "@/shared/connect/db_connect";
 import { ParamNameType, ResourceUpdateParams } from "../_domain/types";
 import { calcParamCost } from "@/shared/game_config/params/params_cost";

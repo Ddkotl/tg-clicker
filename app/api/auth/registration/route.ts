@@ -4,7 +4,7 @@ import { RegistrationUser } from "@/entities/auth/index.server";
 import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
 import { translate } from "@/features/translations/server/translate_fn";
 import { makeError } from "@/shared/lib/api_helpers/make_error";
-import { Fraktion, Gender } from "@/_generated/prisma";
+import { Fraktion, Gender } from "@/_generated/prisma/enums";
 
 export async function POST(req: NextRequest) {
   const lang = getCookieLang({ headers: req.headers });

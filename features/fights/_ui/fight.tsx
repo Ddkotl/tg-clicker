@@ -4,7 +4,7 @@ import { useGetFightQuery } from "../../../entities/fights/_queries/use_get_figh
 import { useCreateFightMutation } from "@/features/fights/_mutations/use_create_fight_mutation";
 import { FighterCard } from "../../../entities/fights/_ui/fighter_card";
 import { FightSnapshot } from "../../../entities/fights/_domain/types";
-import { EnemyType, FightStatus, FightType } from "@/_generated/prisma";
+import { EnemyType, FightStatus, FightType } from "@/_generated/prisma/enums";
 import { ComponentSpinner } from "@/shared/components/custom_ui/component_spinner";
 import { useEffect } from "react";
 import { ui_path } from "@/shared/lib/paths";

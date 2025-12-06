@@ -1,4 +1,4 @@
-import { FactsStatus, FactsType, MissionType } from "@/_generated/prisma";
+import { FactsStatus, FactsType, MissionType } from "@/_generated/prisma/enums";
 import { pushToSubscriber } from "@/shared/connect/redis_connect";
 import { factsRepository } from "@/entities/facts/index.server";
 import { missionRepository } from "@/entities/missions/index.server";

@@ -7,7 +7,7 @@
     "dev:worker": "concurrently -n meditation,spiritPath -c blue,magenta \"tsx --watch workers/meditationWorker.ts\" \"tsx --watch workers/spiritPathWorker.ts\"",
     "dev": "concurrently -k -n web,worker -c blue,green \"npm run dev:web\" \"npm run dev:worker\"",
     "build": "NODE_OPTIONS=--max-old-space-size=512 NEXT_CPU_COUNT=1 SWC_THREAD_COUNT=1 next build && npm run build:workers",
-    "build:workers": "rm -rf dist && tsx scripts/build-workers.ts ",
+    "build:workers": "rm -rf dist && tsx --format esm scripts/build-workers.ts ",
     "start:workers": "concurrently -n meditation,spiritPath -c blue,magenta \"node dist/meditationWorker.js\" \"node dist/spiritPathWorker.js\"",
     "start": "concurrently \"npm run start:web\" \"npm run start:workers\"",
     "start:web": "next start -p 3004",

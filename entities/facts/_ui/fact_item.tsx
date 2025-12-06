@@ -1,6 +1,5 @@
 "use client";
 
-import { Facts, FactsType } from "@/_generated/prisma";
 import { TranslationKey } from "@/features/translations/translate_type";
 import { useLanguage } from "@/features/translations/lang_context";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/shared/components/ui/card";
@@ -12,6 +11,8 @@ import Link from "next/link";
 import { FightResRewards } from "@/entities/fights";
 import { FightResLossesSchema } from "@/entities/fights/_domain/types";
 import { getLocalFormatedDate } from "@/shared/lib/date";
+import { FactsType } from "@/_generated/prisma/enums";
+import { Facts } from "@/_generated/prisma/client";
 
 export function FactItem({
   fact,

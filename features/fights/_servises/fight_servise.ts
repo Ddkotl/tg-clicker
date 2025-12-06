@@ -8,7 +8,7 @@ import {
   FightSnapshot,
 } from "@/entities/fights/_domain/types";
 import { fightRepository } from "@/entities/fights/index.server";
-import { EnemyType, FactsStatus, FactsType, FightResult, FightStatus, FightType } from "@/_generated/prisma";
+import { EnemyType, FactsStatus, FactsType, FightResult, FightStatus, FightType } from "@/_generated/prisma/enums";
 import { recalcQi } from "@/features/qi_regen/recalc_qi";
 import dayjs from "dayjs";
 import { dataBase, TransactionType } from "@/shared/connect/db_connect";

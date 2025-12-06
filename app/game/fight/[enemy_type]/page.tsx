@@ -1,4 +1,4 @@
-import { EnemyType } from "@/_generated/prisma";
+import { EnemyType } from "@/_generated/prisma/enums";
 import { Fight } from "@/features/fights/_ui/fight";
 
 export default async function EnemyFightPage({ params }: { params: Promise<{ enemy_type: EnemyType }> }) {

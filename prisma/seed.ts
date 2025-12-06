@@ -1,8 +1,9 @@
 import { faker } from "@faker-js/faker";
-import { PrismaClient, MissionType, FactsType, FactsStatus, MissionTime } from "@/_generated/prisma";
 import { img_paths } from "@/shared/lib/img_paths";
+import { dataBase } from "@/shared/connect/db_connect";
+import { FactsStatus, FactsType, MissionTime, MissionType } from "@/_generated/prisma/enums";
 
-const prisma = new PrismaClient();
+const prisma = dataBase;
 
 function randomEnum<T extends Record<string, unknown>>(e: T): T[keyof T] {
   const values = Object.values(e);

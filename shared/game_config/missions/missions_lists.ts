@@ -1,4 +1,4 @@
-import { MissionType } from "@/_generated/prisma";
+import { MissionType } from "@/_generated/prisma/enums";
 
 export const fight_missions = [
   MissionType.FIGHTS_WINS,

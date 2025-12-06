@@ -1,5 +1,5 @@
-import { EnemyType, FightResult, FightStatus, FightType } from "@/_generated/prisma";
-import { JsonValue } from "@/_generated/prisma/runtime/library";
+import { EnemyType, FightResult, FightStatus, FightType } from "@/_generated/prisma/enums";
+import { JsonValue } from "@prisma/client/runtime/client";
 import z from "zod";
 
 export const fightRequestSchema = z.object({ enemyType: z.enum(EnemyType), fightType: z.enum(FightType) });

@@ -1,4 +1,4 @@
-import { Profile } from "@/_generated/prisma";
+import { Profile } from "@/_generated/prisma/client";
 import { translate } from "@/features/translations/server/translate_fn";
 import { SupportedLang } from "@/features/translations/translate_type";
 import { img_paths } from "@/shared/lib/img_paths";

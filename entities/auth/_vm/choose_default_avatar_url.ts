@@ -1,4 +1,4 @@
-import { Fraktion, Gender } from "@/_generated/prisma";
+import { Fraktion, Gender } from "@/_generated/prisma/enums";
 
 export function ChooseDefaultAvatarUrl(fraktion: Fraktion, gender: Gender) {
   return gender === Gender.FEMALE
