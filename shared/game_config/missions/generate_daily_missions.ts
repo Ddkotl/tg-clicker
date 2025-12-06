@@ -1,8 +1,9 @@
-import { MissionType } from "@/_generated/prisma";
+import { MissionTime, MissionType } from "@/_generated/prisma";
 import { ui_path } from "@/shared/lib/paths";
 
 export type DailyMission = {
   type: MissionType;
+  time: MissionTime;
   target_value: number;
   reward_glory: number;
   reward_exp: number;
@@ -29,7 +30,19 @@ export function generateDailyMissions(
   // 🔹 Определяем миссии с учётом уровня
   const daily_missions: DailyMission[] = [
     {
+      type: MissionType.INVITE_FRIEND,
+      time: MissionTime.DAILY,
+      target_value: 1,
+      reward_glory: rewardBase(0),
+      reward_exp: rewardBase(0),
+      reward_qi: rewardBase(0),
+      reward_qi_stone: rewardBase(0),
+      reward_spirit_cristal: 100,
+      path: ui_path.referals_page(),
+    },
+    {
       type: MissionType.MEDITATION,
+      time: MissionTime.DAILY,
       target_value: 1 + Math.floor(lvl / 2),
       reward_glory: rewardBase(1),
       reward_exp: rewardBase(5),
@@ -40,6 +53,7 @@ export function generateDailyMissions(
     },
     {
       type: MissionType.SPIRIT_PATH,
+      time: MissionTime.DAILY,
       target_value: Math.min(10 * lvl, 480),
       reward_glory: rewardBase(1),
       reward_exp: rewardBase(5),
@@ -50,6 +64,7 @@ export function generateDailyMissions(
     },
     {
       type: MissionType.MINE,
+      time: MissionTime.DAILY,
       target_value: 5 + Math.floor(lvl / 3),
       reward_glory: rewardBase(1),
       reward_exp: rewardBase(5),
@@ -60,6 +75,7 @@ export function generateDailyMissions(
     },
     {
       type: MissionType.MINE_STONE,
+      time: MissionTime.DAILY,
       target_value: 10 + lvl * 1,
       reward_glory: rewardBase(1),
       reward_exp: rewardBase(5),
@@ -70,6 +86,7 @@ export function generateDailyMissions(
     },
     {
       type: MissionType.DAMAGE,
+      time: MissionTime.DAILY,
       target_value: 200 * lvl,
       reward_glory: rewardBase(1),
       reward_exp: rewardBase(5),
@@ -80,6 +97,7 @@ export function generateDailyMissions(
     },
     {
       type: MissionType.FIGHTS_WINS,
+      time: MissionTime.DAILY,
       target_value: 5 + lvl,
       reward_glory: rewardBase(1),
       reward_exp: rewardBase(5),
@@ -90,6 +108,7 @@ export function generateDailyMissions(
     },
     {
       type: MissionType.GET_GLORY,
+      time: MissionTime.DAILY,
       target_value: 10 + lvl * 2,
       reward_glory: rewardBase(1),
       reward_exp: rewardBase(5),
@@ -100,6 +119,7 @@ export function generateDailyMissions(
     },
     {
       type: MissionType.ROBBERY_QI_ENERGY,
+      time: MissionTime.DAILY,
       target_value: 400 * lvl,
       reward_glory: rewardBase(1),
       reward_exp: rewardBase(5),

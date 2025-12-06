@@ -5,11 +5,11 @@ import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
 import { NextResponse } from "next/server";
 import { FightLog, fightResponseSchema, FightResponseType, FightResRewards } from "@/entities/fights";
 import { fightService } from "@/features/fights/_servises/fight_servise";
-import { pushToSubscriber } from "../../user/facts/stream/route";
 import { FightResult, MissionType } from "@/_generated/prisma";
 import { missionService } from "@/features/missions/servisces/mission_service";
 import { fight_missions } from "@/shared/game_config/missions/missions_lists";
 import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lvl";
+import { pushToSubscriber } from "@/shared/connect/redis_connect";
 
 export async function POST(req: Request) {
   const lang = getCookieLang({ headers: req.headers });

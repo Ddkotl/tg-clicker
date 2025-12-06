@@ -1,5 +1,5 @@
 import { FactsStatus, FactsType, MissionType } from "@/_generated/prisma";
-import { pushToSubscriber } from "@/app/api/user/facts/stream/route";
+import { pushToSubscriber } from "@/shared/connect/redis_connect";
 import { factsRepository } from "@/entities/facts/index.server";
 
 import { giveMeditationReward } from "@/entities/meditation/index.server";

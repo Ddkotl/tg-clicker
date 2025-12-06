@@ -7,6 +7,7 @@ import {
   GetDailyMissionsResponseType,
 } from "@/entities/missions";
 import { missionRepository } from "@/entities/missions/index.server";
+import { getCookieUserId } from "@/features/auth/get_cookie_userId";
 import { missionService } from "@/features/missions/servisces/mission_service";
 import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
 import { translate } from "@/features/translations/server/translate_fn";
@@ -15,9 +16,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   const lang = getCookieLang({ headers: req.headers });
+  const userId = getCookieUserId({ headers: req.headers });
   try {
-    const { searchParams } = new URL(req.url);
-    const userId = searchParams.get("userId");
     if (!userId) return makeError(translate("api.no_auth", lang), 401);
 
     const missions = await missionRepository.getUserDailyMissions({ userId: userId });

@@ -192,6 +192,8 @@ export const en_lang = {
       highlight: "Every mission is a challenge on your path. Test yourself and maintain the balance of the world.",
       text: "Choose a path that matches your level of strength and awareness—from peaceful practices to shadow battles. Remember: every mission is not just a test, but an opportunity to attain truth through action.",
       no_missions: "There are no active missions today.",
+      daily_missions: "Daily",
+      permanents: "Permanents",
       types: {
         MEDITATION: {
           title: "Meditate for {target}",
@@ -227,6 +229,15 @@ export const en_lang = {
         ROBBERY_QI_ENERGY: {
           title: "Steal {target} Qi energy",
           highlight: "Take what fate refuses to grant.",
+        },
+        INVITE_FRIEND: {
+          title: "Invite friend",
+          highlight: "Strength grows with loyal allies.",
+        },
+
+        SUBSCRIBE: {
+          title: "Subscribe to the channel",
+          highlight: "Stay connected to the source of wisdom.",
         },
       },
     },

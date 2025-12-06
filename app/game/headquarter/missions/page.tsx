@@ -1,4 +1,4 @@
-import { DailyMissions } from "@/entities/missions/_ui/daily_missions";
+import { Missions } from "@/entities/missions/_ui/missions";
 import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
 import { translate } from "@/features/translations/server/translate_fn";
 import { PageDescription } from "@/shared/components/custom_ui/page_description";
@@ -17,7 +17,7 @@ export default async function MisiionsPage() {
         text={translate("headquarter.missions.text", lang)}
         img={img_paths.mission()}
       />
-      <DailyMissions />
+      <Missions />
     </div>
   );
 }

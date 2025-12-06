@@ -8,6 +8,7 @@ export const ui_path = {
   profile_page: (userId: string) => `/game/profile/${userId}`,
   facts_page: () => `/game/facts`,
   fight_page: () => `/game/fight`,
+  referals_page: () => `/game/referals`,
   fight_result_page: (id: string) => `/game/fight/result/${id}`,
   fight_enemy_page: (type: EnemyType) => `/game/fight/${type}`,
   headquarter_page: () => `/game/headquarter`,

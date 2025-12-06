@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { PrismaClient, MissionType, FactsType, FactsStatus } from "@/_generated/prisma";
+import { PrismaClient, MissionType, FactsType, FactsStatus, MissionTime } from "@/_generated/prisma";
 import { img_paths } from "@/shared/lib/img_paths";
 
 const prisma = new PrismaClient();
@@ -117,6 +117,7 @@ async function createUser() {
       data: {
         userId: user.id,
         type,
+        time: MissionTime.DAILY,
         target_value: faker.number.int({ min: 1, max: 10 }),
         progress: faker.number.int({ min: 0, max: 10 }),
         reward_exp: faker.number.int({ min: 0, max: 200 }),
