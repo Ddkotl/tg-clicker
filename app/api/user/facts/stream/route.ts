@@ -2,7 +2,7 @@ import { Facts } from "@/_generated/prisma";
 import { factErrorResponseSchema, FactErrorResponseType } from "@/entities/facts";
 import { NextRequest, NextResponse } from "next/server";
 import Redis from "ioredis";
-import { redis, redis_conf } from "@/shared/connect/redis_connect";
+import { redis_conf } from "@/shared/connect/redis_connect";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -69,9 +69,4 @@ export async function GET(req: NextRequest) {
       "Transfer-Encoding": "chunked",
     },
   });
-}
-
-export async function pushToSubscriber(userId: string, payload: Facts["type"]) {
-  console.log("payload", payload);
-  await redis.publish(`user:${userId}`, JSON.stringify(payload));
 }

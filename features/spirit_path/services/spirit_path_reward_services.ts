@@ -1,5 +1,5 @@
 import { FactsStatus, FactsType, MissionType } from "@/_generated/prisma";
-import { pushToSubscriber } from "@/app/api/user/facts/stream/route";
+import { pushToSubscriber } from "@/shared/connect/redis_connect";
 import { factsRepository } from "@/entities/facts/index.server";
 import { missionRepository } from "@/entities/missions/index.server";
 import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lvl";

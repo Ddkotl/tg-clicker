@@ -1,3 +1,4 @@
+import { Facts } from "@/_generated/prisma";
 import Redis from "ioredis";
 
 export const redis_conf = {
@@ -7,3 +8,8 @@ export const redis_conf = {
 };
 
 export const redis = new Redis(redis_conf);
+
+export async function pushToSubscriber(userId: string, payload: Facts["type"]) {
+  console.log("payload", payload);
+  await redis.publish(`user:${userId}`, JSON.stringify(payload));
+}

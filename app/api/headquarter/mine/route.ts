@@ -2,7 +2,7 @@ import { miningResponseSchema, MiningResponseType } from "@/entities/mining";
 import { CalcMineReward } from "@/shared/game_config/mining/calc_mine_reward";
 import { rateLimitRedis } from "@/shared/lib/redis_limiter";
 import { NextRequest, NextResponse } from "next/server";
-import { pushToSubscriber } from "../../user/facts/stream/route";
+import { pushToSubscriber } from "@/shared/connect/redis_connect";
 import { getMineExperience } from "@/shared/game_config/exp/give_expirience";
 import { makeError } from "@/shared/lib/api_helpers/make_error";
 import { validateActionToken } from "@/shared/lib/api_helpers/action_token/validate_action_oken";

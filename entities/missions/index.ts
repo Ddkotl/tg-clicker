@@ -11,4 +11,4 @@ export type {
   CreateDailyMissionsResponseType,
 } from "./_domain/types";
 export { getAllDailyMissionsQuery } from "./_queries/get_all_missions_query";
-export { DailyMissions } from "./_ui/missions";
+export { Missions } from "./_ui/missions";
