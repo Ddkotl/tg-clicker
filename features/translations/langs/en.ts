@@ -230,6 +230,15 @@ export const en_lang = {
           title: "Steal {target} Qi energy",
           highlight: "Take what fate refuses to grant.",
         },
+        INVITE_FRIEND: {
+          title: "Invite friend",
+          highlight: "Strength grows with loyal allies.",
+        },
+
+        SUBSCRIBE: {
+          title: "Subscribe to the channel",
+          highlight: "Stay connected to the source of wisdom.",
+        },
       },
     },
 

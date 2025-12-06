@@ -231,6 +231,15 @@ export const ru_lang: Messages = {
           title: "Похитить {target} единиц энергии Ци",
           highlight: "Забери то, что судьба отказалась дать.",
         },
+        INVITE_FRIEND: {
+          title: "Пригласить друга",
+          highlight: "Сила растёт с верными союзниками",
+        },
+
+        SUBSCRIBE: {
+          title: "Подписаться на канал",
+          highlight: "Оставайтесь на связи с источником мудрости",
+        },
       },
     },
     headquarter_welcome:
