@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev:web": "next dev --turbopack ",
+    "dev:web": "next dev --turbopack -p 3004 ",
     "dev:worker": "concurrently -n meditation,spiritPath -c blue,magenta \"tsx --watch workers/meditationWorker.ts\" \"tsx --watch workers/spiritPathWorker.ts\"",
     "dev": "concurrently -k -n web,worker -c blue,green \"npm run dev:web\" \"npm run dev:worker\"",
-    "build": "NODE_OPTIONS=--max-old-space-size=512 NEXT_CPU_COUNT=1 SWC_THREAD_COUNT=1 next build && npm run build:workers",
-    "build:workers": "rm -rf dist && tsx --format esm scripts/build-workers.ts ",
+    "build": "next build && npm run build:workers",
+    "build:workers": "rm -rf dist && tsx  scripts/build-workers.ts ",
     "start:workers": "concurrently -n meditation,spiritPath -c blue,magenta \"node dist/meditationWorker.js\" \"node dist/spiritPathWorker.js\"",
     "start": "concurrently \"npm run start:web\" \"npm run start:workers\"",
     "start:web": "next start -p 3004",
@@ -15,7 +15,7 @@
     "lint:types": "tsc --noEmit",
     "prettier": "prettier -w .",
     "ngrok_tunel": "tsx scripts/ngrok.ts",
-    "cloud_tunel": "cloudflared tunnel --url http://localhost:3000",
+    "cloud_tunel": "cloudflared tunnel --url http://localhost:3004",
     "prepare": "git config core.hooksPath .git-hooks && chmod +x .git-hooks/pre-commit",
     "test": "jest --passWithNoTests",
     "seed": "tsx prisma/seed.ts"

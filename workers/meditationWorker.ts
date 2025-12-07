@@ -5,6 +5,7 @@ import { RABBITMQ_URL } from "@/shared/connect/consts";
 import { meditationWorkerCongig } from "@/shared/lib/workers";
 import { dataBase } from "@/shared/connect/db_connect";
 import { MeditationRewardService } from "@/features/meditation/services/meditation_reward_service";
+import { api_path } from "@/shared/lib/paths";
 
 async function startWorker() {
   const connection = await amqp.connect(RABBITMQ_URL);
@@ -29,45 +30,17 @@ async function startWorker() {
       if (!msg) return;
 
       try {
-        const { userId, start_meditation } = JSON.parse(msg.content.toString());
-        const meditation = await dataBase.meditation.findUnique({
-          where: { userId },
+        const { userId } = JSON.parse(msg.content.toString());
+        const res = await fetch(`${process.env.APP_DOMEN}${api_path.get_meditation_revard()}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId, break_meditation: false }),
         });
-        if (!meditation) return channel.ack(msg);
-
-        // 1️⃣ Проверка массива отменённых путей
-        if (meditation.canceled_meditated_dates?.some((d) => d.getTime() === new Date(start_meditation).getTime())) {
-          await dataBase.meditation.update({
-            where: { userId },
-            data: {
-              canceled_meditated_dates: {
-                set: meditation.canceled_meditated_dates.filter(
-                  (d) => d.getTime() !== new Date(start_meditation).getTime(),
-                ),
-              },
-            },
-          });
-          return channel.ack(msg); // путь отменён, сообщение удаляем
-        }
-
-        // 2️⃣ Проверка текущего активного пути
-        if (
-          !meditation.on_meditation ||
-          meditation.start_meditation?.getTime() !== new Date(start_meditation).getTime()
-        ) {
-          return channel.ack(msg); // сообщение устарело, удаляем
-        }
-        console.log(`💫 Meditation completed for user ${userId}`);
-
-        const { res } = await MeditationRewardService(userId);
-        console.log(res);
-        if (res) {
-          console.log(`✅ Meditation reward given to ${userId}`);
-        } else {
-          console.warn(`⚠️ No reward for user ${userId}`);
-        }
-
+        const json = await res.json();
+        if (!res.ok) throw json;
+        console.log(`✅ Meditation reward given to ${userId}`);
         channel.ack(msg);
+        return json;
       } catch (err) {
         console.error("❌ Meditation worker failed:", err);
         channel.nack(msg, false, true);

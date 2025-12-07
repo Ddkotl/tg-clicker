@@ -4,6 +4,7 @@ import { RABBITMQ_URL } from "@/shared/connect/consts";
 import { SPIRIT_PATH_EXCHANGE, SPIRIT_PATH_QUEUE } from "@/features/spirit_path/mq_spirit_path_connect";
 import { dataBase } from "@/shared/connect/db_connect";
 import { SpiritPathRewardServices } from "@/features/spirit_path/services/spirit_path_reward_services";
+import { api_path } from "@/shared/lib/paths";
 
 async function startWorker() {
   const connection = await amqp.connect(RABBITMQ_URL);
@@ -27,45 +28,17 @@ async function startWorker() {
       if (!msg) return;
 
       try {
-        const { userId, start_spirit_paths } = JSON.parse(msg.content.toString());
-        const spiritPath = await dataBase.spiritPath.findUnique({
-          where: { userId },
+        const { userId } = JSON.parse(msg.content.toString());
+        const res = await fetch(`${process.env.APP_DOMEN}${api_path.get_spirit_path_reward()}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId, break_spirit_path: false }),
         });
-        if (!spiritPath) return channel.ack(msg);
-
-        // 1️⃣ Проверка массива отменённых путей
-        if (spiritPath.canceled_paths_dates?.some((d) => d.getTime() === new Date(start_spirit_paths).getTime())) {
-          await dataBase.spiritPath.update({
-            where: { userId },
-            data: {
-              canceled_paths_dates: {
-                set: spiritPath.canceled_paths_dates.filter(
-                  (d) => d.getTime() !== new Date(start_spirit_paths).getTime(),
-                ),
-              },
-            },
-          });
-          return channel.ack(msg); // путь отменён, сообщение удаляем
-        }
-
-        // 2️⃣ Проверка текущего активного пути
-        if (
-          !spiritPath.on_spirit_paths ||
-          spiritPath.start_spirit_paths?.getTime() !== new Date(start_spirit_paths).getTime()
-        ) {
-          return channel.ack(msg); // сообщение устарело, удаляем
-        }
-        console.log(`💫 Spirit Path completed for user ${userId}`);
-
-        const { res } = await SpiritPathRewardServices(userId);
-        console.log(res);
-        if (res) {
-          console.log(`✅ SPIRIT_PATH reward given to ${userId}`);
-        } else {
-          console.warn(`⚠️ No reward for user ${userId}`);
-        }
-
+        const json = await res.json();
+        if (!res.ok) throw json;
+        console.log(`✅ SPIRIT_PATH reward given to ${userId}`);
         channel.ack(msg);
+        return json;
       } catch (err) {
         console.error("❌ SPIRIT_PATH worker failed:", err);
         channel.nack(msg, false, true);
