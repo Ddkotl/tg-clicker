@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { getReferrals, getReferrer } from "@/entities/user/_repositories/referral_repository";
 import { NextRequest, NextResponse } from "next/server";
+import { userRepository } from "@/entities/user/_repositories/user_repository";
 
 const querySchema = z.object({
   userId: z.string(),
@@ -38,8 +38,8 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const referrals = await getReferrals(parsed.data.userId);
-    const referrerData = await getReferrer(parsed.data.userId);
+    const referrals = await userRepository.getReferrals({ userId: parsed.data.userId });
+    const referrerData = await userRepository.getReferer({ userId: parsed.data.userId });
     const referrer = referrerData?.referrerId || null;
 
     const response: ReferralResponse = {

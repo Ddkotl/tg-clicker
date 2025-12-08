@@ -197,8 +197,11 @@ export class SpiritPathServise {
         console.log("updated_mission", updated_mission);
         console.log("updated_profile_for_mission", updated_profile_for_mission);
         if (!updated_mission) throw new Error("updated_mission error");
-        if (!updated_profile_for_mission) throw new Error("updated_profile_for_mission error");
-        if (updated_mission?.is_active === false && updated_mission.is_completed === true) {
+        if (
+          updated_mission?.is_active === false &&
+          updated_mission.is_completed === true &&
+          updated_profile_for_mission
+        ) {
           completed_missions.push(updated_mission);
           updated_profile = updated_profile_for_mission;
         }

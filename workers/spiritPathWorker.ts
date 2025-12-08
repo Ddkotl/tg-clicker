@@ -36,6 +36,7 @@ async function startWorker() {
         if (!res.ok) throw json;
         console.log(`✅ SPIRIT_PATH reward given to ${userId}`);
         channel.ack(msg);
+        console.log(JSON.stringify(json));
         return json;
       } catch (err) {
         console.error("❌ SPIRIT_PATH worker failed:", err);

@@ -17,7 +17,7 @@ import { ActionAlert } from "./_ui/action_alert";
 import { icons } from "@/shared/lib/icons";
 import { getSpiritPathInfoQuery, SpiritPathInfoResponseType } from "@/entities/spirit_path";
 import { useProfileHPUpdate } from "../profile/vm/use_xp_update";
-import { getAllDailyMissionsQuery, GetDailyMissionsResponseType } from "@/entities/missions";
+import { GetDailyMissionsResponseType, useMissionsQuery } from "@/entities/missions";
 import { useMidnightUpdate } from "./_vm/useMidnightUpdate";
 import { useQiRegen } from "../profile/vm/use_qi_update";
 import { getUserQiSkillsQuery, GetUserQiSkillsResponseType } from "@/entities/qi_skiils";
@@ -51,10 +51,7 @@ export function Notifications() {
     ...getMineInfoQuery(userId ?? ""),
     enabled: !!userId,
   });
-  const mission = useQuery<GetDailyMissionsResponseType>({
-    ...getAllDailyMissionsQuery(userId ?? ""),
-    enabled: !!userId,
-  });
+  const mission = useMissionsQuery(userId || "");
   const { isLoading: isLoadingQiSkills } = useQuery<GetUserQiSkillsResponseType>({
     ...getUserQiSkillsQuery(userId ?? ""),
     enabled: !!userId,

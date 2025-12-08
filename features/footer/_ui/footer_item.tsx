@@ -3,6 +3,7 @@ import { cn } from "@/shared/lib/utils";
 import type { FooterItemType } from "../_domain/types";
 import { Badge } from "@/shared/components/ui/badge";
 import { Soon } from "@/shared/components/custom_ui/Soon";
+import { Counter } from "@/shared/components/custom_ui/counter";
 
 export function FooterItem({
   item,
@@ -27,11 +28,7 @@ export function FooterItem({
       <div className="relative">
         <item.Icon className="w-7 h-7 xs:h-8 xs:w-8 text-foreground/70" />
 
-        {count && count >= 0 && (
-          <Badge className="absolute -top-1 -right-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary  px-1 text-[12px] font-bold text-white">
-            {count > 99 ? "99+" : count}
-          </Badge>
-        )}
+        {count && count >= 0 && <Counter count={count} />}
 
         {soon && <Soon soon={soon} />}
       </div>

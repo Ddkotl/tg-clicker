@@ -1,8 +1,8 @@
-import { userRepository } from "@/entities/auth/_repositories/user_repository";
 import { ValidationResult } from "@/entities/auth/_vm/telegramAuth";
 import { factsRepository } from "@/entities/facts/index.server";
 import { profileRepository } from "@/entities/profile/index.server";
 import { statisticRepository } from "@/entities/statistics/index.server";
+import { userRepository } from "@/entities/user/_repositories/user_repository";
 import { missionService } from "@/features/missions/servisces/mission_service";
 import { profileService } from "@/features/profile/services/profile_service";
 import { translate } from "@/features/translations/server/translate_fn";

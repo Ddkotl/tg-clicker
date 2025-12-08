@@ -1,30 +1,26 @@
 "use client";
 
 import { useGetSessionQuery } from "@/entities/auth";
-import { useQuery } from "@tanstack/react-query";
-import { getAllDailyMissionsQuery } from "../_queries/get_all_missions_query";
+import { useMissionsQuery } from "../_queries/get_all_missions_query";
 import { ComponentSpinner } from "@/shared/components/custom_ui/component_spinner";
-import { GetDailyMissionsResponseType } from "../_domain/types";
 import { useTranslation } from "@/features/translations/use_translation";
 import { MissionCard } from "./mission_card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { Title } from "@/shared/components/custom_ui/title";
-import { Counter } from "./counter";
+import { MissionTime } from "@/_generated/prisma/enums";
+import { Counter } from "@/shared/components/custom_ui/counter";
 
 export function Missions() {
   const { t } = useTranslation();
-  const { data: session, isLoading: isSessionLoading } = useGetSessionQuery();
+  const session = useGetSessionQuery();
 
-  const { data: missions, isLoading: isMissionsLoading } = useQuery<GetDailyMissionsResponseType>({
-    ...getAllDailyMissionsQuery(session?.data?.user.userId ?? ""),
-    enabled: !!session?.data?.user.userId,
-  });
+  const missions = useMissionsQuery(session.data?.data?.user.userId || "");
 
-  if (isSessionLoading || isMissionsLoading) {
+  if (session.isLoading || missions.isLoading) {
     return <ComponentSpinner />;
   }
 
-  const missionList = missions?.data.missions ?? [];
+  const missionList = missions.data?.data.missions ?? [];
 
   if (missionList.length === 0) {
     return <div>{t("headquarter.missions.no_missions")}</div>;
@@ -46,14 +42,23 @@ export function Missions() {
       </TabsList>
       <TabsContent value="daily">
         <div className="flex flex-col gap-2">
-          {missionList.map((mission) => (
-            <MissionCard key={mission.id} mission={mission} t={t} />
-          ))}
+          {missionList.map((mission) =>
+            mission.time === MissionTime.DAILY ? (
+              <MissionCard key={mission.id} mission={mission} t={t} />
+            ) : (
+              <div>{t("headquarter.missions.no_missions")}</div>
+            ),
+          )}
         </div>
       </TabsContent>
       <TabsContent value="permanents">
-        <Title text={t("profile.statistics")} align="center" size="md" />
-        <div>permanent</div>
+        {missionList.map((mission) =>
+          mission.time === MissionTime.PERMANENT ? (
+            <MissionCard key={mission.id} mission={mission} t={t} />
+          ) : (
+            <div>{t("headquarter.missions.no_missions")}</div>
+          ),
+        )}
       </TabsContent>
     </Tabs>
   );

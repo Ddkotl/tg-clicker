@@ -10,8 +10,7 @@ import Leaderboard from "@/shared/components/icons/Leaderboard";
 import Settings from "@/shared/components/icons/Settings";
 import { FooterItem } from "./_ui/footer_item";
 import { ui_path } from "@/shared/lib/paths";
-import { useQuery } from "@tanstack/react-query";
-import { getAllDailyMissionsQuery, GetDailyMissionsResponseType } from "@/entities/missions";
+import { useMissionsQuery } from "@/entities/missions";
 
 export function Footer() {
   const { t } = useTranslation();
@@ -21,10 +20,7 @@ export function Footer() {
     data: missions,
     isLoading: isLoadingMissions,
     isFetching: isFetchingMissions,
-  } = useQuery<GetDailyMissionsResponseType>({
-    ...getAllDailyMissionsQuery(userId || ""),
-    enabled: !!userId,
-  });
+  } = useMissionsQuery(userId || "");
   const items: FooterItemType[] = [
     {
       id: "home",

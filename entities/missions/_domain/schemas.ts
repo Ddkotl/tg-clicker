@@ -1,13 +1,14 @@
 import z from "zod";
-import { MissionType } from "@/_generated/prisma/enums";
+import { MissionTime, MissionType } from "@/_generated/prisma/enums";
 
-export const DailyMissionSchema = z.object({
+export const MissionSchema = z.object({
   id: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
   userId: z.string(),
   path: z.string().nullable(),
   type: z.enum(MissionType),
+  time: z.enum(MissionTime),
   reward_exp: z.number(),
   reward_qi: z.number(),
   reward_qi_stone: z.number(),
@@ -25,7 +26,7 @@ export const getDailyMissionsRequestSchema = z.object({
 
 export const getDailyMissionsResponseSchema = z.object({
   data: z.object({
-    missions: z.array(DailyMissionSchema),
+    missions: z.array(MissionSchema),
   }),
   message: z.string(),
   type: z.literal("success"),

@@ -7,6 +7,6 @@ export const color_themes: {
   { value: "red", color: "bg-red-500" },
   { value: "purple", color: "bg-purple-500" },
   { value: "green", color: "bg-green-500" },
-  { value: "yellow", color: "bg-yellow-400" },
+  { value: "yellow", color: "bg-yellow-700" },
   { value: "blue", color: "bg-blue-500" },
 ];
