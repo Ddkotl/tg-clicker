@@ -1,8 +1,44 @@
+import { CreateUserType } from "@/entities/auth";
 import { dataBase, TransactionType } from "@/shared/connect/db_connect";
-import { CreateUserType } from "../_domain/types";
 import { getStartOfToday } from "@/shared/lib/date";
 
 export class UserRepository {
+  async getUserById({ userId, tx }: { userId: string; tx?: TransactionType }) {
+    const db_client = tx ? tx : dataBase;
+    return await db_client.user.findUnique({
+      where: { id: userId },
+      include: { profile: true },
+    });
+  }
+  async getUserByTelegramId({ telegramId, tx }: { telegramId: string; tx?: TransactionType }) {
+    const db_client = tx ? tx : dataBase;
+    return await db_client.user.findUnique({
+      where: { telegram_id: telegramId },
+      include: { profile: true },
+    });
+  }
+
+  async getReferer({ userId, tx }: { userId: string; tx?: TransactionType }) {
+    const db_client = tx ? tx : dataBase;
+    const refererId = await db_client.user.findUnique({
+      where: { id: userId },
+      select: {
+        referrerId: true,
+      },
+    });
+    return await this.getUserByTelegramId({ telegramId: refererId?.referrerId || "", tx });
+  }
+
+  async getReferrals({ userId, tx }: { userId: string; tx?: TransactionType }) {
+    const db_client = tx ? tx : dataBase;
+    const user = await this.getUserById({ userId, tx });
+    if (!user) return [];
+    return await db_client.user.findMany({
+      where: { referrerId: user.telegram_id },
+      include: { profile: true },
+    });
+  }
+
   async updateOrCreateUser({
     user,
     tx,
@@ -66,5 +102,4 @@ export class UserRepository {
     }
   }
 }
-
 export const userRepository = new UserRepository();

@@ -1,5 +1,5 @@
 import { spiritPathInfoResponseSchema, SpiritPathInfoResponseType } from "@/entities/spirit_path";
-import { getSpiritPathInfo } from "@/entities/spirit_path/index.server";
+import { spiritPathRepository } from "@/entities/spirit_path/index.server";
 import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
 import { translate } from "@/features/translations/server/translate_fn";
 import { makeError } from "@/shared/lib/api_helpers/make_error";
@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
       return makeError(translate("api.no_auth", lang), 401);
     }
 
-    const spirit_path_info = await getSpiritPathInfo(requestedUserId);
+    const spirit_path_info = await spiritPathRepository.getSpiritPathInfo({ userId: requestedUserId });
     if (!spirit_path_info || spirit_path_info === null) {
       return makeError(translate("api.info_not_found", lang), 404);
     }

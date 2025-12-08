@@ -137,6 +137,9 @@ export class ProfileRepository {
   }) {
     return this.update({ userId, data: { qi: current_qi, last_qi_update }, tx: tx });
   }
+  async updateLvl({ userId, lvl, tx }: { userId: string; lvl: number; tx?: TransactionType }) {
+    return this.update({ userId, data: { lvl: lvl }, tx: tx });
+  }
 
   async updateOnline({ userId, tx }: { userId: string; tx?: TransactionType }) {
     const db_client = tx ? tx : dataBase;

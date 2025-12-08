@@ -1,5 +1,6 @@
 import { profileRepository } from "@/entities/profile/index.server";
 import { TransactionType } from "@/shared/connect/db_connect";
+import { lvl_exp } from "@/shared/game_config/exp/lvl_exp";
 import { getPastedIntervals } from "@/shared/game_config/getPastedIntervals";
 import { HP_REGEN_INTERVAL, HP_REGEN_PERCENT } from "@/shared/game_config/params/hp_regen";
 import { getQiRegenPerInterval, QI_REGEN_INTERVAL } from "@/shared/game_config/params/qi_regen";
@@ -72,6 +73,30 @@ export class ProfileService {
     } catch (err) {
       console.error("recalcQi error:", err);
       return null;
+    }
+  }
+
+  async CheckUpdateLvl({ userId, tx }: { userId: string; tx?: TransactionType }) {
+    try {
+      const profile = await this.profileRepo.getByUserId({ userId, tx });
+      if (!profile) throw new Error("User profile not found");
+
+      const { exp, lvl } = profile;
+      let newLvl = lvl;
+
+      while (lvl_exp[newLvl + 1] !== undefined && exp >= lvl_exp[newLvl + 1]) {
+        newLvl += 1;
+      }
+
+      if (newLvl !== lvl) {
+        const updatedProfile = await this.profileRepo.updateLvl({ userId, lvl: newLvl, tx });
+        if (!updatedProfile) throw new Error("Failed to update level");
+      }
+
+      return newLvl;
+    } catch (error) {
+      console.error("update lvl error", error);
+      throw new Error("update lvl error");
     }
   }
 }

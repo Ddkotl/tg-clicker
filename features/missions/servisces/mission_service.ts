@@ -1,14 +1,17 @@
 import { FactsStatus, FactsType, MissionType } from "@/_generated/prisma/enums";
 import { factsRepository } from "@/entities/facts/index.server";
-import { missionRepository } from "@/entities/missions/index.server";
+import { MissionRepository, missionRepository } from "@/entities/missions/index.server";
+import { ProfileRepository } from "@/entities/profile/_repositories/profile_repository";
 import { profileRepository } from "@/entities/profile/index.server";
+import { statisticService, StatisticService } from "@/features/statistic/servise/statistic_servise";
 import { dataBase, TransactionType } from "@/shared/connect/db_connect";
 import { generateDailyMissions } from "@/shared/game_config/missions/generate_daily_missions";
 
 export class MissionService {
   constructor(
-    private profileRepo = profileRepository,
-    private missionRepo = missionRepository,
+    private profileRepo: ProfileRepository,
+    private missionRepo: MissionRepository,
+    private statisticServ: StatisticService,
   ) {}
 
   async createDailyMissions({ userId, tx }: { userId: string; tx?: TransactionType }) {
@@ -35,13 +38,11 @@ export class MissionService {
 
     const { lvl, power, qi_param, speed, protection, skill } = profile;
     const daily_missions = generateDailyMissions(lvl, power, qi_param, speed, protection, skill);
-
     const created_missions = await this.missionRepo.createMissions({
       daily_missions,
       userId,
       tx,
     });
-
     if (!created_missions) {
       console.error(`❌ Ошибка при создании миссий для пользователя ${userId}`);
       return;
@@ -90,9 +91,10 @@ export class MissionService {
     progress: number;
     tx?: TransactionType;
   }) {
+    let updated_profile;
     let updated_mission = await this.missionRepo.UpdateProgressMission({ userId, mission_type, progress, tx });
     if (updated_mission?.is_completed && updated_mission?.is_active) {
-      const updated_res = await this.profileRepo.updateResources({
+      updated_profile = await this.profileRepo.updateResources({
         userId: userId,
         resources: {
           qi: updated_mission.reward_qi,
@@ -103,7 +105,21 @@ export class MissionService {
         },
         tx,
       });
-      if (!updated_res) throw new Error("Failed to update resources");
+      if (!updated_profile) throw new Error("Failed to update resources");
+      const up_stats = await this.statisticServ.udateUserStatistics({
+        userId,
+        tx,
+        data: {
+          qi_looted: updated_mission.reward_qi,
+          qi_stone_looted: updated_mission.reward_qi_stone,
+          exp: updated_mission.reward_exp,
+          glory: updated_mission.reward_glory,
+          missions: 1,
+        },
+      });
+
+      if (!up_stats.updated) throw new Error("Cannot update daily stat");
+
       const new_fact = await factsRepository.createFact({
         userId,
         fact_status: FactsStatus.NO_CHECKED,
@@ -125,8 +141,8 @@ export class MissionService {
       });
       if (!updated_mission) throw new Error("Failed to inactivate mission");
     }
-    return updated_mission;
+    return { updated_mission, updated_profile };
   }
 }
 
-export const missionService = new MissionService();
+export const missionService = new MissionService(profileRepository, missionRepository, statisticService);

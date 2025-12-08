@@ -11,8 +11,9 @@ interface ProcessAlertProps {
   href: string;
   description: string;
   label: string;
+  endTimeAction?: () => void;
 }
-export function ProcessAlert({ icon, endTime, description, label, href }: ProcessAlertProps) {
+export function ProcessAlert({ icon, endTime, description, label, href, endTimeAction }: ProcessAlertProps) {
   return (
     <Alert className="px-2 w-full justify-between py-1 relative flex items-center gap-2 bg-card border border-border shadow-md rounded-lg">
       <div className="flex-1 flex gap-3">
@@ -20,7 +21,7 @@ export function ProcessAlert({ icon, endTime, description, label, href }: Proces
         <AlertTitle className="font-semibold">{`${description}: `}</AlertTitle>
         <AlertDescription className="text-sm text-muted-foreground">
           <div className="text-primary hover:text-primary/80 font-medium underline underline-offset-2">
-            <CountdownTimer endTime={endTime} label={label} />
+            <CountdownTimer endTime={endTime} label={label} onComplete={endTimeAction} />
           </div>
         </AlertDescription>
       </div>

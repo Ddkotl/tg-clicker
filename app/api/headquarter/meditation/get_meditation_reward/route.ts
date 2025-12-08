@@ -11,15 +11,23 @@ import { makeError } from "@/shared/lib/api_helpers/make_error";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  const headers = request.headers;
-  const lang = getCookieLang({ headers });
-  const userIdCookie = getCookieUserId({ headers });
+  const lang = getCookieLang({ headers: request.headers }) || "en";
+  const userIdCookie = getCookieUserId({ headers: request.headers });
+  const workerSecret = request.headers.get("x-worker-secret");
   try {
     const body = await request.json();
     const parsed = getMeditationRewardRequestSchema.safeParse(body);
     if (!parsed.success) return makeError(translate("api.invalid_request_data", lang), 400);
     const { userId, break_meditation } = parsed.data;
-    if (!userIdCookie || !userId || userIdCookie !== userId) return makeError(translate("api.no_auth", lang), 401);
+    if (workerSecret) {
+      if (workerSecret !== process.env.WORKER_SECRET) {
+        return makeError(translate("api.no_auth", lang), 401);
+      }
+    } else {
+      if (!userIdCookie || !userId || userIdCookie !== userId) {
+        return makeError(translate("api.no_auth", lang), 401);
+      }
+    }
     const { res, completed_missions, lvl } = await MeditationRewardService(userId, break_meditation);
     if (!res || res === null) return makeError(translate("api.invalid_process", lang), 400);
 

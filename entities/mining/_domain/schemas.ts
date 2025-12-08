@@ -1,4 +1,4 @@
-import { DailyMissionSchema } from "@/entities/missions";
+import { MissionSchema } from "@/entities/missions";
 import z from "zod";
 
 export const miningRequestSchema = z.object({
@@ -14,7 +14,7 @@ export const miningResponseSchema = z.object({
     energy: z.number(),
     last_mine_at: z.number().nullable(),
     last_energy_at: z.number().nullable(),
-    missions: z.array(DailyMissionSchema),
+    missions: z.array(MissionSchema),
   }),
   message: z.string(),
   type: z.literal("ok"),

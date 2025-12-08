@@ -5,14 +5,16 @@ import {
   GoSpiritPathResponseType,
 } from "@/entities/spirit_path";
 import { calcSpiritPathReward } from "@/entities/spirit_path/_vm/calc_spirit_path_reward";
-import { goSpiritPath } from "@/entities/spirit_path/index.server";
+import { spiritPathRepository } from "@/entities/spirit_path/index.server";
 import {
   createMqSpiritPathConnection,
   SPIRIT_PATH_EXCHANGE,
   SPIRIT_PATH_QUEUE,
 } from "@/features/spirit_path/mq_spirit_path_connect";
+import { spiritPathServise } from "@/features/spirit_path/services/spirit_path_servise";
 import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
 import { translate } from "@/features/translations/server/translate_fn";
+import { dataBase } from "@/shared/connect/db_connect";
 import { makeError } from "@/shared/lib/api_helpers/make_error";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -26,29 +28,34 @@ export async function POST(req: NextRequest) {
       return makeError(translate("api.invalid_request_data", lang), 400);
     }
     const { userId, minutes } = parsed.data;
-    const user_params = await profileRepository.getByUserId({ userId });
-    if (
-      !user_params ||
-      user_params.power === undefined ||
-      user_params.protection === undefined ||
-      user_params.speed === undefined ||
-      user_params.skill === undefined ||
-      user_params.qi_param === undefined
-    ) {
-      return makeError(translate("api.info_not_found", lang), 400);
-    }
-    const spirit_path_reward = calcSpiritPathReward({
-      power: user_params.power,
-      protection: user_params.protection,
-      speed: user_params.speed,
-      skill: user_params.skill,
-      qi_param: user_params.qi_param,
-      minutes,
+
+    const { spirit_path } = await dataBase.$transaction(async (tx) => {
+      const user_params = await profileRepository.getByUserId({ userId });
+      if (
+        !user_params ||
+        user_params.power === undefined ||
+        user_params.protection === undefined ||
+        user_params.speed === undefined ||
+        user_params.skill === undefined ||
+        user_params.qi_param === undefined
+      ) {
+        throw new Error("User params not found");
+      }
+      const spirit_path_reward = calcSpiritPathReward({
+        power: user_params.power,
+        protection: user_params.protection,
+        speed: user_params.speed,
+        skill: user_params.skill,
+        qi_param: user_params.qi_param,
+        minutes,
+      });
+      const spirit_path = await spiritPathServise.goSpiritPath({ minutes, spirit_path_reward, userId, tx });
+      if (!spirit_path || spirit_path === null) {
+        throw new Error("Spirit path not found");
+      }
+      return { spirit_path };
     });
-    const spirit_path = await goSpiritPath(userId, minutes, spirit_path_reward);
-    if (!spirit_path || spirit_path === null) {
-      return makeError(translate("api.invalid_process", lang), 400);
-    }
+    console.log("start spirit_path", spirit_path);
     const delay = minutes * 60 * 1000;
     const start_spirit_paths = spirit_path.start_spirit_paths;
     const { channel, connection } = await createMqSpiritPathConnection();

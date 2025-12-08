@@ -43,6 +43,9 @@ export function getDaysAgoDate(days: number) {
   return dayjs().tz("UTC").subtract(days, "day").toDate();
 }
 
+export function isSameDay(date1: Date, date2: Date) {
+  return dayjs(date1).isSame(dayjs(date2), "day");
+}
 export function getLocalFormatedDate({ date, lang }: { date: Date; lang: SupportedLang }) {
   const formattedDate = dayjs(date)
     .locale(lang === "ru" ? "ru" : "en")

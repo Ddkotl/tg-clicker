@@ -11,30 +11,29 @@ import {
 import { calcMeditationReward } from "@/entities/meditation/_vm/calc_meditation_reward";
 import { getMeditationInfo, goMeditation } from "@/entities/meditation/index.server";
 import { profileRepository } from "@/entities/profile/index.server";
+import { getCookieUserId } from "@/features/auth/get_cookie_userId";
 import {
   createRabbitMeditationConnection,
   MEDITATION_EXCHANGE,
   MEDITATION_QUEUE,
 } from "@/features/meditation/rabit_meditation_connect";
+import { getCookieLang } from "@/features/translations/server/get_cookie_lang";
+import { translate } from "@/features/translations/server/translate_fn";
+import { calculateMeditationTimeMS } from "@/shared/game_config/miditation/meditation";
+import { makeError } from "@/shared/lib/api_helpers/make_error";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
+  const lang = getCookieLang({ headers: req.headers });
+  const userId = getCookieUserId({ headers: req.headers });
   try {
-    const { searchParams } = new URL(req.url);
-    const requestedUserId = searchParams.get("userId");
-
-    if (!requestedUserId) {
-      const response: goMeditationErrorResponseType = {
-        data: {},
-        message: "User not authenticated",
-      };
-      goMeditationErrorResponseSchema.parse(response);
-      return NextResponse.json(response, { status: 401 });
+    if (!userId) {
+      return makeError(translate("api.no_auth", lang), 401);
     }
 
-    const meditation_info = await getMeditationInfo(requestedUserId);
+    const meditation_info = await getMeditationInfo(userId);
     if (!meditation_info || meditation_info === null) {
-      return NextResponse.json({ data: {}, message: "Meditation info not found" }, { status: 404 });
+      return makeError(translate("api.info_not_found", lang), 404);
     }
 
     const response: MeditationInfoResponse = {
@@ -48,28 +47,19 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(response);
   } catch (error) {
     console.error("GET /api/headquarter/meditation error:", error);
-    const response: MeditationInfoErrorResponse = {
-      data: {},
-      message: "Internal server error",
-    };
-    return NextResponse.json(response, { status: 500 });
+    return makeError(translate("api.internal_server_error", lang), 500);
   }
 }
 
 export async function POST(req: NextRequest) {
+  const lang = getCookieLang({ headers: req.headers });
+  const cookie_userId = getCookieUserId({ headers: req.headers });
   try {
     const body = await req.json();
     const parsed = goMeditationRequestSchema.safeParse(body);
 
-    if (!parsed.success) {
-      const errorResponse: goMeditationErrorResponseType = {
-        data: {},
-        message: "Invalid request data",
-      };
-      goMeditationErrorResponseSchema.parse(errorResponse);
-      return NextResponse.json(errorResponse, {
-        status: 400,
-      });
+    if (!parsed.success || cookie_userId !== parsed.data.userId) {
+      return makeError(translate("api.no_auth", lang), 401);
     }
     const { userId, hours } = parsed.data;
     const user_params = await profileRepository.getByUserId({ userId });
@@ -81,14 +71,7 @@ export async function POST(req: NextRequest) {
       user_params.skill === undefined ||
       user_params.qi_param === undefined
     ) {
-      const errorResponse: goMeditationErrorResponseType = {
-        data: {},
-        message: "getUserProfile error",
-      };
-      goMeditationErrorResponseSchema.parse(errorResponse);
-      return NextResponse.json(errorResponse, {
-        status: 400,
-      });
+      return makeError(translate("api.info_not_found", lang), 404);
     }
     const meditation_revard = calcMeditationReward({
       power: user_params.power,
@@ -100,16 +83,9 @@ export async function POST(req: NextRequest) {
     });
     const meditate = await goMeditation(userId, hours, meditation_revard);
     if (!meditate) {
-      const errorResponse: goMeditationErrorResponseType = {
-        data: {},
-        message: "goMeditation error",
-      };
-      goMeditationErrorResponseSchema.parse(errorResponse);
-      return NextResponse.json(errorResponse, {
-        status: 400,
-      });
+      return makeError(translate("api.invalid_process", lang), 400);
     }
-    const delay = hours * 60 * 60 * 1000;
+    const delay = calculateMeditationTimeMS(hours);
     const start_meditation = meditate.start_meditation;
     // const delay = hours * 1000;
     const { channel, connection } = await createRabbitMeditationConnection();
@@ -133,12 +109,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(response);
   } catch (error) {
     console.error("POST /headquarer/meditation error:", error);
-    const errorResponse: goMeditationErrorResponseType = {
-      data: {},
-      message: "Internal server error",
-    };
-    return NextResponse.json(errorResponse, {
-      status: 500,
-    });
+    return makeError(translate("api.internal_server_error", lang), 500);
   }
 }
