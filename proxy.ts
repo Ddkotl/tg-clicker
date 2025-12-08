@@ -3,6 +3,9 @@ import type { NextRequest } from "next/server";
 import { AppJWTPayload, getSession } from "./entities/auth/_vm/session";
 
 export async function proxy(request: NextRequest) {
+  if (request.headers.get("x-worker-secret") === process.env.WORKER_SECRET) {
+    return NextResponse.next();
+  }
   if (
     // request.nextUrl.pathname === "/api/test" ||
     request.nextUrl.pathname === "/api/auth"

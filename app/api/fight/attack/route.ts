@@ -47,7 +47,7 @@ export async function POST(req: Request) {
         mission_type: MissionType[mission],
         progress: progress,
       });
-      if (win_fights_mission?.is_completed && !win_fights_mission?.is_active) {
+      if (win_fights_mission?.updated_mission?.is_completed && !win_fights_mission?.updated_mission?.is_active) {
         completed_missions.push(win_fights_mission);
       }
     }

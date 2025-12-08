@@ -2,8 +2,6 @@ import "dotenv/config";
 import amqp from "amqplib";
 import { RABBITMQ_URL } from "@/shared/connect/consts";
 import { SPIRIT_PATH_EXCHANGE, SPIRIT_PATH_QUEUE } from "@/features/spirit_path/mq_spirit_path_connect";
-import { dataBase } from "@/shared/connect/db_connect";
-import { SpiritPathRewardServices } from "@/features/spirit_path/services/spirit_path_reward_services";
 import { api_path } from "@/shared/lib/paths";
 
 async function startWorker() {
@@ -31,7 +29,7 @@ async function startWorker() {
         const { userId } = JSON.parse(msg.content.toString());
         const res = await fetch(`${process.env.APP_DOMEN}${api_path.get_spirit_path_reward()}`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", "x-worker-secret": process.env.WORKER_SECRET || "" },
           body: JSON.stringify({ userId, break_spirit_path: false }),
         });
         const json = await res.json();
@@ -41,7 +39,11 @@ async function startWorker() {
         return json;
       } catch (err) {
         console.error("❌ SPIRIT_PATH worker failed:", err);
-        channel.nack(msg, false, true);
+        channel.ack(msg);
+
+        channel.publish(SPIRIT_PATH_EXCHANGE, SPIRIT_PATH_QUEUE, Buffer.from(msg.content), {
+          headers: { "x-delay": 3000 },
+        });
       }
     },
     { noAck: false },

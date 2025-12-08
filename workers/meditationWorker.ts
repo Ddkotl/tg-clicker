@@ -33,7 +33,7 @@ async function startWorker() {
         const { userId } = JSON.parse(msg.content.toString());
         const res = await fetch(`${process.env.APP_DOMEN}${api_path.get_meditation_revard()}`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", "x-worker-secret": process.env.WORKER_SECRET || "" },
           body: JSON.stringify({ userId, break_meditation: false }),
         });
         const json = await res.json();
