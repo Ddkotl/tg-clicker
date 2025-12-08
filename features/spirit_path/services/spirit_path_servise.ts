@@ -26,7 +26,6 @@ export class SpiritPathServise {
   constructor(
     private spiritRepo: SpiritPathRepository,
     private profileRepo: ProfileRepository,
-    private statisticRepo: StatisticRepository,
     private factsRepo: FactsRepository,
     private profileServ: ProfileService,
     private statisticServ: StatisticService,
@@ -101,7 +100,6 @@ export class SpiritPathServise {
     tx?: TransactionType;
   }) {
     try {
-      // 1️⃣ Проверяем, если пользователь прерывает путь — достаточно ли у него spirit_cristal
       if (break_spirit_path) {
         const profile = await this.profileRepo.getByUserId({ userId, tx });
 
@@ -150,6 +148,7 @@ export class SpiritPathServise {
         data: spiritPathUpdateData,
         tx,
       });
+      console.log("updated_spirit_path", updated_spirit_path);
       if (!updated_spirit_path) throw new Error("Cannot end spirit path");
       let updated_profile = await this.profileRepo.updateResources({
         userId,
@@ -182,6 +181,7 @@ export class SpiritPathServise {
         reward_spirit_cristal: break_spirit_path ? 0 : reward_spirit_cristal,
         tx,
       });
+      console.log("new_fact", new_fact);
       if (!new_fact) throw new Error("Cannot create fact");
       await pushToSubscriber(userId, new_fact.type);
 
@@ -194,6 +194,8 @@ export class SpiritPathServise {
             progress: minutes,
             tx,
           });
+        console.log("updated_mission", updated_mission);
+        console.log("updated_profile_for_mission", updated_profile_for_mission);
         if (!updated_mission) throw new Error("updated_mission error");
         if (!updated_profile_for_mission) throw new Error("updated_profile_for_mission error");
         if (updated_mission?.is_active === false && updated_mission.is_completed === true) {
@@ -229,7 +231,6 @@ export class SpiritPathServise {
 export const spiritPathServise = new SpiritPathServise(
   spiritPathRepository,
   profileRepository,
-  statisticRepository,
   factsRepository,
   profileService,
   statisticService,

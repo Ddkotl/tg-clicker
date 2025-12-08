@@ -38,13 +38,11 @@ export class MissionService {
 
     const { lvl, power, qi_param, speed, protection, skill } = profile;
     const daily_missions = generateDailyMissions(lvl, power, qi_param, speed, protection, skill);
-
     const created_missions = await this.missionRepo.createMissions({
       daily_missions,
       userId,
       tx,
     });
-
     if (!created_missions) {
       console.error(`❌ Ошибка при создании миссий для пользователя ${userId}`);
       return;

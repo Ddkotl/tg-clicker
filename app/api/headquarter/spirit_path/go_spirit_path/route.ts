@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
       }
       return { spirit_path };
     });
-    console.log("spirit_path", spirit_path);
+    console.log("start spirit_path", spirit_path);
     const delay = minutes * 60 * 1000;
     const start_spirit_paths = spirit_path.start_spirit_paths;
     const { channel, connection } = await createMqSpiritPathConnection();

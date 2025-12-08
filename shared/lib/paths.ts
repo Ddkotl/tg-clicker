@@ -35,8 +35,8 @@ export const api_path = {
   get_meditation_revard: () => `/api/headquarter/meditation/get_meditation_reward`,
   get_spirit_path_reward: () => `/api/headquarter/spirit_path/get_spirit_path_reward`,
   get_spirit_path_info: (userId: string) => `/api/headquarter/spirit_path?userId=${userId}`,
-  get_daily_missions: (userId: string) => `/api/user/daily_mission?userId=${userId}`,
-  create_daily_missions: (userId: string) => `/api/user/daily_mission?userId=${userId}`,
+  get_daily_missions: (userId: string) => `/api/user/mission?userId=${userId}`,
+  create_daily_missions: (userId: string) => `/api/user/mission?userId=${userId}`,
   get_action_token: () => `/api/auth/action-token`,
   get_facts: (userId: string, page: number, pageSize: number) =>
     `/api/user/facts?userId=${userId}&page=${page}&pageSize=${pageSize}`,

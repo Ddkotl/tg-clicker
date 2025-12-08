@@ -21,6 +21,7 @@ import { getAllDailyMissionsQuery, GetDailyMissionsResponseType } from "@/entiti
 import { useMidnightUpdate } from "./_vm/useMidnightUpdate";
 import { useQiRegen } from "../profile/vm/use_qi_update";
 import { getUserQiSkillsQuery, GetUserQiSkillsResponseType } from "@/entities/qi_skiils";
+import { useProfileQuery } from "@/entities/profile";
 
 export function Notifications() {
   const { t } = useTranslation();
@@ -30,7 +31,8 @@ export function Notifications() {
 
   const userId = session?.data?.user.userId;
 
-  const { data: facts_count, isLoading: isLoadingFacts } = useQuery<FactCoutNocheckResponseType>({
+  const profile = useProfileQuery(userId ?? "");
+  const facts_count = useQuery<FactCoutNocheckResponseType>({
     ...getFactCountNocheckQuery(userId ?? ""),
     enabled: !!userId,
   });
@@ -40,7 +42,7 @@ export function Notifications() {
     enabled: !!userId,
   });
 
-  const { data: spirit_path_info, isLoading: isLoadingPathInfo } = useQuery<SpiritPathInfoResponseType>({
+  const spirit_path = useQuery<SpiritPathInfoResponseType>({
     ...getSpiritPathInfoQuery(userId ?? ""),
     enabled: !!userId,
   });
@@ -49,7 +51,7 @@ export function Notifications() {
     ...getMineInfoQuery(userId ?? ""),
     enabled: !!userId,
   });
-  const { data: mission, isLoading: isLoadingMission } = useQuery<GetDailyMissionsResponseType>({
+  const mission = useQuery<GetDailyMissionsResponseType>({
     ...getAllDailyMissionsQuery(userId ?? ""),
     enabled: !!userId,
   });
@@ -70,13 +72,13 @@ export function Notifications() {
     mutation.mutate({ userId });
   };
   // spirit path
-  const spirit_path = spirit_path_info?.data;
-  const isSpiritPath = spirit_path?.on_spirit_paths ?? false;
+  const spirit_path_data = spirit_path?.data?.data;
+  const isSpiritPath = spirit_path_data?.on_spirit_paths ?? false;
   let spirit_path_end: number | null = null;
 
-  if (isSpiritPath && spirit_path?.start_spirit_paths && spirit_path?.spirit_paths_minutes) {
-    const start = new Date(spirit_path.start_spirit_paths).getTime();
-    spirit_path_end = start + spirit_path.spirit_paths_minutes * 60 * 1000;
+  if (isSpiritPath && spirit_path_data?.start_spirit_paths && spirit_path_data?.spirit_paths_minutes) {
+    const start = new Date(spirit_path_data.start_spirit_paths).getTime();
+    spirit_path_end = start + spirit_path_data.spirit_paths_minutes * 60 * 1000;
   }
   // Медитация
   const meditation = meditation_info?.data;
@@ -88,7 +90,14 @@ export function Notifications() {
     end = start + meditation.meditation_hours * 60 * 60 * 1000;
   }
 
-  const isLoading = isLoadingSession || isLoadingFacts || isLoadingMeditation || isLoadingPathInfo || isLoadingQiSkills;
+  const isLoading =
+    isLoadingSession ||
+    facts_count.isLoading ||
+    isLoadingMeditation ||
+    spirit_path.isLoading ||
+    isLoadingQiSkills ||
+    profile.isLoading ||
+    mission.isLoading;
   if (isLoading) return null;
 
   return (
@@ -114,11 +123,17 @@ export function Notifications() {
           href={ui_path.spirit_path_page()}
           description={t("headquarter.spirit_path.spirit_path_in_progress")}
           label={t("headquarter.remaining")}
+          endTimeAction={() => {
+            profile.refetch();
+            facts_count.refetch();
+            spirit_path.refetch();
+            mission.refetch();
+          }}
         />
       )}
 
-      {facts_count?.data !== undefined && facts_count?.data > 0 && (
-        <FactsAlert count={facts_count?.data} onClose={handleCloseClick} />
+      {facts_count?.data !== undefined && facts_count?.data.data > 0 && (
+        <FactsAlert count={facts_count?.data.data} onClose={handleCloseClick} />
       )}
       {!isLoadingMine && mine?.data.energy !== undefined && mine?.data.energy > 0 && (
         <ActionAlert
@@ -129,7 +144,7 @@ export function Notifications() {
           className="shine-effect"
         />
       )}
-      {!isLoadingMission && mission?.data.missions.length !== 0 && (
+      {!mission.isLoading && mission.data?.data.missions.length !== 0 && (
         <ActionAlert
           icon={icons.missions({
             className: "text-primary",
