@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { FighterSnapshot } from "../_domain/types";
-import { img_paths } from "@/shared/lib/img_paths";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Separator } from "@/shared/components/ui/separator";
 import { useTranslation } from "@/features/translations/use_translation";

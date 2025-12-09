@@ -2,12 +2,11 @@ import { useState, useEffect } from "react";
 import { init, openTelegramLink } from "@telegram-apps/sdk";
 
 interface ReferralSystemProps {
-  initData: string;
   userId: string;
   startParam: string;
 }
 
-export const ReferralSystem: React.FC<ReferralSystemProps> = ({ initData, userId, startParam }) => {
+export const ReferralSystem: React.FC<ReferralSystemProps> = ({ userId, startParam }) => {
   const [referrals, setReferrals] = useState<string[]>([]);
   const [referrer, setReferrer] = useState<string | null>(null);
 

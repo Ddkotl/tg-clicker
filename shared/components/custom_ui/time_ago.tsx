@@ -4,10 +4,9 @@ import { cn } from "@/shared/lib/utils";
 import { useEffect, useState } from "react";
 
 export const TimeAgo = ({ date, className }: { date: number; className?: string }) => {
-  const [currentTime, setCurrentTime] = useState<number | null>(null);
+  const [currentTime, setCurrentTime] = useState<number>(() => Date.now());
 
   useEffect(() => {
-    setCurrentTime(new Date().getTime());
     const intervalId = setInterval(() => {
       setCurrentTime(new Date().getTime());
     }, 60 * 1000);

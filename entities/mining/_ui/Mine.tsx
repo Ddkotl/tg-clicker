@@ -11,7 +11,7 @@ import { useCheckUserDealsStatus } from "@/entities/user/_queries/use_check_user
 import { useGetSessionQuery } from "@/entities/auth";
 import { MAX_ENERGY, MINE_COOLDOWN } from "@/shared/game_config/mining/mining_const";
 import { useEffect, useState } from "react";
-import { MutateButton } from "../../../shared/components/custom_ui/mutate_button";
+import { MutateButton } from "@/shared/components/custom_ui/mutate_button";
 import { useTranslation } from "@/features/translations/use_translation";
 
 export default function Mine() {
@@ -21,6 +21,7 @@ export default function Mine() {
   const userId = session?.data?.user.userId;
   const deals = useCheckUserDealsStatus();
 
+  // 1️⃣ Загружаем данные шахты
   const {
     data: mine,
     isLoading,
@@ -33,38 +34,37 @@ export default function Mine() {
   const mutation = useGetMiningReward();
   const energy = mine?.data.energy ?? MAX_ENERGY;
 
-  // состояние кулдауна для кнопки
-  const [end, setEnd] = useState(Date.now());
-  const [isCooldown, setIsCooldown] = useState(() =>
-    mine ? Date.now() < mine.data.last_mine_at + MINE_COOLDOWN : false,
-  );
+  // 2️⃣ Тик раз в секунду — единственный источник текущего времени
+  const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
-    if (mine?.data.last_mine_at) {
-      setEnd(mine.data.last_mine_at + MINE_COOLDOWN);
-      setIsCooldown(Date.now() < mine.data.last_mine_at + MINE_COOLDOWN);
-    }
-  }, [mine?.data.last_mine_at]);
+    const id = setInterval(() => {
+      setNow(Date.now());
+    }, 1000);
 
-  const handleCooldownEnd = () => {
-    setIsCooldown(false);
-    refetch();
-  };
+    return () => clearInterval(id);
+  }, []);
+
+  // 3️⃣ Derived values — вычисляются без useState
+  const lastMine = mine?.data.last_mine_at ?? 0;
+  const cooldownEnd = lastMine + MINE_COOLDOWN;
+  const isCooldown = now < cooldownEnd;
+
+  const disabled = energy <= 0 || isCooldown || mutation.isPending || deals.busy;
 
   if (isLoading || isSessionLoading || !mine?.data.last_energy_at || !mine?.data.last_mine_at) {
     return <ComponentSpinner />;
   }
-
-  const disabled = energy <= 0 || isCooldown || mutation.isPending || deals.busy;
 
   return (
     <div className="max-w-md mx-auto w-full">
       <Card className="shadow-lg border-border/50 bg-card/70 backdrop-blur p-1">
         <CardContent className="text-center space-y-3 p-3">
           <MineEnergySection energy={energy} lastEnergyAt={mine.data.last_energy_at} onEnergyRecovered={refetch} />
+
           <MutateButton
-            cooldownEndMs={end}
-            handleCooldownEnd={handleCooldownEnd}
+            cooldownEndMs={cooldownEnd}
+            handleCooldownEnd={refetch}
             isDisabled={disabled}
             isCooldown={isCooldown}
             isBusy={deals.busy}

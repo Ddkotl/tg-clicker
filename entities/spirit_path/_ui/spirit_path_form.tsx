@@ -3,10 +3,9 @@
 import { useGetSessionQuery } from "@/entities/auth";
 import { useTranslation } from "@/features/translations/use_translation";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
 import { SpiritPathInfoResponseType } from "../_domain/types";
 import { getSpiritPathInfoQuery } from "../_queries/get_spirit_path_info_query";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { spiritPathFormSchema, spititPathTimeOptions } from "../_domain/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useGoSpiritPathMutation } from "../_mutations/use_go_spirit_path_mutation";
@@ -15,75 +14,71 @@ import { toast } from "sonner";
 import { Spinner } from "@/shared/components/ui/spinner";
 import { SpiritPathInProgress } from "./spirit_path_in_progress";
 import { cn } from "@/shared/lib/utils";
+import dayjs from "dayjs";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";
 import { Button } from "@/shared/components/ui/button";
 import { useCheckUserDealsStatus } from "@/entities/user/_queries/use_check_user_deals";
-import dayjs from "dayjs";
 
 export function SpiritPathForm() {
-  const [selectedMinutes, setSelectedMinutes] = useState("10");
   const { t } = useTranslation();
   const { data: session, isLoading: isSessionLoading } = useGetSessionQuery();
-  console.log("selectedMinutes", selectedMinutes);
-  const { data: spirit_path_info, isLoading: isSpiritPathLoading } = useQuery<SpiritPathInfoResponseType>({
+  const { data: spiritInfo, isLoading: isSpiritPathLoading } = useQuery<SpiritPathInfoResponseType>({
     ...getSpiritPathInfoQuery(session?.data?.user.userId ?? ""),
     enabled: !!session?.data?.user.userId,
   });
-  const user_deals = useCheckUserDealsStatus();
+
+  const userDeals = useCheckUserDealsStatus();
 
   const form = useForm<z.infer<typeof spiritPathFormSchema>>({
     resolver: zodResolver(spiritPathFormSchema),
-    defaultValues: {
-      time: "10",
-    },
+    defaultValues: { time: "10" },
   });
-  const timeValue = form.watch("time");
 
-  useEffect(() => {
-    setSelectedMinutes(timeValue);
-  }, [timeValue, setSelectedMinutes]);
+  const timeValue = useWatch({
+    control: form.control,
+    name: "time",
+  });
 
   const mutation = useGoSpiritPathMutation();
 
   const onSubmit = (data: z.infer<typeof spiritPathFormSchema>) => {
     const userId = session?.data?.user.userId;
-    if (!userId) {
-      toast.error(t("auth_error"));
-      return;
-    }
+    if (!userId) return toast.error(t("auth_error"));
     mutation.mutate({ userId, minutes: Number(data.time) });
   };
-  const isSameDay = dayjs(spirit_path_info?.data?.date_today).isSame(new Date(), "day") ?? false;
-  const minutes_today = isSameDay ? (spirit_path_info?.data?.minutes_today ?? 0) : 0;
-  const minutesLeftToday = Math.max(480 - minutes_today, 0);
-  const isLoading = isSessionLoading || isSpiritPathLoading;
-  const spirit_path = spirit_path_info?.data;
 
-  const isSpiritPath = spirit_path?.on_spirit_paths ?? false;
+  const isSameDay = dayjs(spiritInfo?.data?.date_today).isSame(new Date(), "day") ?? false;
+  const minutesToday = isSameDay ? (spiritInfo?.data?.minutes_today ?? 0) : 0;
+  const minutesLeftToday = Math.max(480 - minutesToday, 0);
+
+  const spiritPath = spiritInfo?.data;
+  const isSpiritPath = spiritPath?.on_spirit_paths ?? false;
+
   let end: number | null = null;
-
-  if (isSpiritPath && spirit_path?.start_spirit_paths && spirit_path?.spirit_paths_minutes) {
-    const start = new Date(spirit_path.start_spirit_paths).getTime();
-    end = start + spirit_path.spirit_paths_minutes * 60 * 1000;
+  if (isSpiritPath && spiritPath?.start_spirit_paths && spiritPath?.spirit_paths_minutes) {
+    const start = new Date(spiritPath.start_spirit_paths).getTime();
+    end = start + spiritPath.spirit_paths_minutes * 60 * 1000;
   }
+
+  const isLoading = isSessionLoading || isSpiritPathLoading;
 
   if (isLoading || !session?.data?.user.userId) {
     return (
       <div className="flex items-center justify-center h-40">
-        <Spinner className="w-6 h-6  text-muted-foreground" />
+        <Spinner className="w-6 h-6 text-muted-foreground" />
       </div>
     );
   }
 
   return (
     <>
-      {isSpiritPath && <SpiritPathInProgress t={t} end={end} userId={session?.data?.user.userId} />}
+      {isSpiritPath && <SpiritPathInProgress t={t} end={end} userId={session.data.user.userId} />}
+
       <div
         className={cn(
           "relative transition-opacity",
-          (mutation.isPending || (isSameDay && minutesLeftToday === 0) || user_deals.busy) &&
-            "opacity-50 pointer-events-none",
+          (mutation.isPending || userDeals.busy || minutesLeftToday === 0) && "opacity-50 pointer-events-none",
         )}
       >
         <Form {...form}>
@@ -94,12 +89,13 @@ export function SpiritPathForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("headquarter.spirit_path.select_spirit_path_time")}</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value} disabled={minutesLeftToday === 0}>
+                  <Select onValueChange={field.onChange} value={timeValue} disabled={minutesLeftToday === 0}>
                     <FormControl>
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder={`${form.getValues("time")} ${t("minutes")}`} />
+                        <SelectValue placeholder={`${timeValue} ${t("minutes")}`} />
                       </SelectTrigger>
                     </FormControl>
+
                     <SelectContent>
                       {spititPathTimeOptions
                         .filter((value) => Number(value) <= minutesLeftToday)
@@ -114,14 +110,15 @@ export function SpiritPathForm() {
                 </FormItem>
               )}
             />
+
             <Button
               type="submit"
-              disabled={mutation.isPending || isSpiritPath || user_deals.busy || (isSameDay && minutesLeftToday === 0)}
+              disabled={mutation.isPending || isSpiritPath || userDeals.busy || minutesLeftToday === 0}
             >
               {minutesLeftToday === 0
                 ? t("headquarter.spirit_path.no_minutes_left")
-                : user_deals.busy
-                  ? user_deals.reason
+                : userDeals.busy
+                  ? userDeals.reason
                   : t("headquarter.spirit_path.start_spirit_path")}
             </Button>
           </form>

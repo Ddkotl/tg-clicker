@@ -1,9 +1,10 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { useEffect } from "react";
 
 import { useTranslation } from "@/features/translations/use_translation";
 import { getHoursString } from "../_vm/getHoursString";
@@ -18,7 +19,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";
 import { Button } from "@/shared/components/ui/button";
 import { TranslationKey } from "@/features/translations/translate_type";
-import { useEffect } from "react";
 import { Spinner } from "@/shared/components/ui/spinner";
 import { MeditationInProgress } from "./meditation_in_progtrss";
 import { useCheckUserDealsStatus } from "@/entities/user/_queries/use_check_user_deals";
@@ -35,38 +35,37 @@ export function MeditationForm({ onTimeChange }: { onTimeChange?: (time: string)
     ...getMeditationInfoQuery(session?.data?.user.userId ?? ""),
     enabled: !!session?.data?.user.userId,
   });
+
   const user_deals = useCheckUserDealsStatus();
+  const meditationMutation = useGoMeditationMutation();
+
   const form = useForm<z.infer<typeof MeditatonFormSchema>>({
     resolver: zodResolver(MeditatonFormSchema),
-    defaultValues: {
-      time: "1",
-    },
+    defaultValues: { time: "1" },
   });
-  const timeValue = form.watch("time");
 
+  const timeValue = useWatch({
+    control: form.control,
+    name: "time",
+  });
+
+  // Вызываем callback при изменении времени
   useEffect(() => {
-    if (onTimeChange) {
-      onTimeChange(timeValue);
-    }
+    if (timeValue) onTimeChange?.(timeValue);
   }, [timeValue, onTimeChange]);
-
-  const meditationMutation = useGoMeditationMutation();
 
   const onSubmit = (data: z.infer<typeof MeditatonFormSchema>) => {
     const userId = session?.data?.user.userId;
-    if (!userId) {
-      toast.error(t("auth_error"));
-      return;
-    }
+    if (!userId) return toast.error(t("auth_error"));
+
     meditationMutation.mutate({ userId, hours: Number(data.time) }, { onSuccess: () => refetch() });
   };
 
   const isLoading = isSessionLoading || isMeditationLoading;
   const meditation = meditation_info?.data;
-
   const isMeditating = meditation?.on_meditation ?? false;
-  let end: number | null = null;
 
+  let end: number | null = null;
   if (isMeditating && meditation?.start_meditation && meditation?.meditation_hours) {
     const start = new Date(meditation.start_meditation).getTime();
     end = start + meditation.meditation_hours * 60 * 60 * 1000;
@@ -75,18 +74,19 @@ export function MeditationForm({ onTimeChange }: { onTimeChange?: (time: string)
   if (isLoading || !session?.data?.user.userId) {
     return (
       <div className="flex items-center justify-center h-40">
-        <Spinner className="w-6 h-6  text-muted-foreground" />
+        <Spinner className="w-6 h-6 text-muted-foreground" />
       </div>
     );
   }
 
   return (
     <>
-      {isMeditating && <MeditationInProgress t={t} end={end} userId={session?.data?.user.userId} />}
+      {isMeditating && <MeditationInProgress t={t} end={end} userId={session.data.user.userId} />}
+
       <div
         className={cn(
           "relative transition-opacity",
-          (user_deals.busy || meditationMutation.isPending) && "opacity-50 pointer-events-none",
+          (meditationMutation.isPending || user_deals.busy || isMeditating) && "opacity-50 pointer-events-none",
         )}
       >
         <Form {...form}>
@@ -97,7 +97,7 @@ export function MeditationForm({ onTimeChange }: { onTimeChange?: (time: string)
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("headquarter.meditation_time")}</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select onValueChange={field.onChange} value={timeValue}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder={`1 ${t("hour.one")}`} />
