@@ -46,4 +46,4 @@ jobs:
       run: npm run lint:types
       
     - name: Shutdown Docker
-      run: docker-compose down
+      run: docker compose down
