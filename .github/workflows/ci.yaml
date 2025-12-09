@@ -19,9 +19,19 @@ jobs:
       with:
         node-version: '24'
 
-    - name: Run install
+    - name: Install dependencies
       run: npm install
-    
+
+    - name: Start Docker containers
+      run: docker compose up -d
+
+    - name: Run Prisma migrations
+      run: |
+        npx prisma migrate deploy
+        npx prisma generate
+
     - name: Run lint
       run: npm run lint
-      
+
+    - name: Check TypeScript types
+      run: npm run lint:types
