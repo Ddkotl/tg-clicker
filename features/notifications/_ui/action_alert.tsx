@@ -2,7 +2,7 @@
 
 import { X } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/shared/components/ui/alert";
 import { Button } from "@/shared/components/ui/button";
 import { usePathname } from "next/navigation";
@@ -18,27 +18,25 @@ interface ActionAlert {
 }
 
 export function ActionAlert({ icon, title, description, actionText, href, onClose, className = "" }: ActionAlert) {
-  const [visible, setVisible] = useState(true);
   const pathname = usePathname();
+  const [closedManually, setClosedManually] = useState(false);
 
-  useEffect(() => {
-    if (pathname === href) {
-      setVisible(false);
-    }
-  }, [pathname, href]);
+  const visible = !closedManually && pathname !== href;
+
   const handleClose = () => {
-    setVisible(false);
+    setClosedManually(true);
     onClose?.();
   };
 
   if (!visible) return null;
+
   return (
     <Alert
       className={`px-2 w-full justify-between py-1 relative flex items-center gap-2 bg-card border border-border shadow-md rounded-lg ${className}`}
     >
       <div className="flex-1 flex gap-3 items-start">
         <div className="shrink-0">{icon}</div>
-        <div className="flex  gap-2">
+        <div className="flex gap-2">
           <AlertTitle className="font-semibold text-foreground">{title}</AlertTitle>
           <AlertDescription className="text-sm text-muted-foreground">
             {description}{" "}

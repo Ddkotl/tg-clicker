@@ -1,14 +1,11 @@
 import { FactsStatus, FactsType, MissionType, SpiritPath } from "@/_generated/prisma/client";
 import { FactsRepository, factsRepository } from "@/entities/facts/index.server";
-import { missionRepository, MissionRepository } from "@/entities/missions/index.server";
-import { CheckUpdateLvl } from "@/entities/profile/_repositories/check_update_lvl";
 import { profileRepository, ProfileRepository } from "@/entities/profile/_repositories/profile_repository";
 import {
   spiritPathRepository,
   SpiritPathRepository,
 } from "@/entities/spirit_path/_repositories/spirit_path_repository";
 import { calcSpiritPathSpiritCristalReward } from "@/entities/spirit_path/_vm/calc_spirit_path_spirit_cristal_reward";
-import { statisticRepository, StatisticRepository } from "@/entities/statistics/_repositories/statistic_repository";
 import { missionService, MissionService } from "@/features/missions/servisces/mission_service";
 import { profileService, ProfileService } from "@/features/profile/services/profile_service";
 import { statisticService, StatisticService } from "@/features/statistic/servise/statistic_servise";
@@ -57,6 +54,7 @@ export class SpiritPathServise {
       }
       return { canGo: true, sameDay };
     } catch (error) {
+      console.error("canGoSpiritPath error", error);
       return { canGo: false };
     }
   }

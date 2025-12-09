@@ -20,6 +20,7 @@ export function useRegistration() {
 
   useEffect(() => {
     if (profile) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setNickname(profile?.data?.nikname || "");
       setFraktion(profile.data?.fraktion || Fraktion.ADEPT);
       setGender(profile.data?.gender || Gender.MALE);

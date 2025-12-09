@@ -5,7 +5,6 @@ import {
   GoSpiritPathResponseType,
 } from "@/entities/spirit_path";
 import { calcSpiritPathReward } from "@/entities/spirit_path/_vm/calc_spirit_path_reward";
-import { spiritPathRepository } from "@/entities/spirit_path/index.server";
 import {
   createMqSpiritPathConnection,
   SPIRIT_PATH_EXCHANGE,

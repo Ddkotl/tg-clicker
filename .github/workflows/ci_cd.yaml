@@ -1,0 +1,49 @@
+name: ci_cd
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '24'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Start Docker containers
+      run: docker compose up -d
+      env:
+        POSTGRES_CONTAINER: postgres
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_DB: postgres
+        POSTGRES_PORT: 5436
+        REDIS_PASSWORD: redis
+        
+    - name: Run Prisma migrations
+      run: |
+        npx prisma migrate deploy
+        npx prisma generate
+      env : 
+        DATABASE_URL : postgresql://postgres:postgres@localhost:5436/postgres
+        
+    - name: Run lint
+      run: npm run lint
+
+    - name: Check TypeScript types
+      run: npm run lint:types
+      
+    - name: Shutdown Docker
+      run: docker compose down

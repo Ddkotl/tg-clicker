@@ -42,9 +42,9 @@ async function startWorker() {
         console.error("❌ SPIRIT_PATH worker failed:", err);
         channel.ack(msg);
 
-        channel.publish(SPIRIT_PATH_EXCHANGE, SPIRIT_PATH_QUEUE, Buffer.from(msg.content), {
-          headers: { "x-delay": 3000 },
-        });
+        // channel.publish(SPIRIT_PATH_EXCHANGE, SPIRIT_PATH_QUEUE, Buffer.from(msg.content), {
+        //   headers: { "x-delay": 3000 },
+        // });
       }
     },
     { noAck: false },
