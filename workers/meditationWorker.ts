@@ -41,7 +41,8 @@ async function startWorker() {
         return json;
       } catch (err) {
         console.error("❌ Meditation worker failed:", err);
-        channel.nack(msg, false, true);
+        channel.ack(msg);
+        // channel.nack(msg, false, true);
       }
     },
     { noAck: false },

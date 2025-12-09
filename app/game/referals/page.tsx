@@ -1,3 +1,5 @@
+import { ReferralSystem } from "@/features/referal_system/ReferalSystem";
+
 export default async function ReferalPage() {
-  return <div>Referal Page</div>;
+  return <ReferralSystem />;
 }

@@ -11,18 +11,28 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  // Инициализация состояния через lazy initializer
-  const [language, setLanguage] = useState<SupportedLang>(() => {
-    if (typeof window !== "undefined") {
-      return (localStorage.getItem("language") as SupportedLang | null) ?? "en";
-    }
-    return "en"; // серверный рендер
-  });
+  const [language, setLanguage] = useState<SupportedLang>("en");
+  const [loaded, setLoaded] = useState(false);
 
-  // Синхронизация в localStorage — это ВНЕШНЯЯ система → идеально подходит для effect
+  // Загружаем язык только на клиенте
   useEffect(() => {
-    localStorage.setItem("language", language);
-  }, [language]);
+    const storedLang = localStorage.getItem("language") as SupportedLang | null;
+    if (storedLang) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setLanguage(storedLang);
+    }
+    setLoaded(true);
+  }, []);
+
+  // Сохраняем при изменении
+  useEffect(() => {
+    if (loaded) localStorage.setItem("language", language);
+  }, [language, loaded]);
+
+  if (!loaded) {
+    // Показываем безопасную заглушку, пока язык не загружен (избегаем рассинхронизации)
+    return <div suppressHydrationWarning />;
+  }
 
   return <LanguageContext.Provider value={{ language, setLanguage }}>{children}</LanguageContext.Provider>;
 }
