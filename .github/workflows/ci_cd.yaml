@@ -56,7 +56,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: tests
-    if: ${{ github.ref == 'refs/heads/main' && github.actor == secrets.ACTOR }}
+    if: github.actor == 'Ddkotl' 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -102,4 +102,7 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
         run: |
-          ssh -o StrictHostKeyChecking=yes "${SSH_USER}@${SSH_HOST}" "cd /home/www/tg-clicker && git pull && npm ci && pm2 restart all || true"
+          ssh ${SSH_USER}@${SSH_HOST} cd /home/www/tg-clicker && rm -r ./.next && rm -r ./dist
+          scp -R ./.next ${SSH_USER}@${SSH_HOST}:/home/admin/tg-clicker
+          scp -R ./dist ${SSH_USER}@${SSH_HOST}:/home/admin/tg-clicker
+          ssh  ${SSH_USER}@${SSH_HOST} cd /home/www/tg-clicker && git pull && npm ci && npx prisma migrate deploy && npx prisma generate && npx pm2 restart all 
