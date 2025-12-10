@@ -121,5 +121,13 @@ jobs:
           
       - name: Deploy to server
         run: |
-          rsync -az --delete .next dist ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/admin/www/tg-clicker/
+          rsync -az --delete .next dist node_modules ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/admin/www/tg-clicker/
+          ssh -vvv ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
+          source ~/.nvm/nvm.sh &&
+          cd /home/admin/www/tg-clicker &&
+          git pull &&
+          npx prisma migrate deploy &&
+          npx prisma generate &&
+          pm2 restart all
+          " 
 
