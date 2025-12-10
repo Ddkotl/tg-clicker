@@ -120,18 +120,18 @@ jobs:
         run: |
           rsync -az --delete .next ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/admin/www/tg-clicker/
           rsync -az --delete dist ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/admin/www/tg-clicker/
-          ssh -ov ServerAliveInterval=30 -o ServerAliveCountMax=10 \
+          ssh -o ServerAliveInterval=30 -o ServerAliveCountMax=10 \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
             "bash -lc 'cd /home/admin/www/tg-clicker && git pull'"
 
-          ssh -ov ServerAliveInterval=30 -o ServerAliveCountMax=10 \
+          ssh -o ServerAliveInterval=30 -o ServerAliveCountMax=10 \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
             "bash -lc 'cd /home/admin/www/tg-clicker && npm ci'"
 
-          ssh -ov ServerAliveInterval=30 -o ServerAliveCountMax=10 \
+          ssh -o ServerAliveInterval=30 -o ServerAliveCountMax=10 \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
             "bash -lc 'cd /home/admin/www/tg-clicker && npx prisma migrate deploy && npx prisma generate'"
 
-          ssh -ov ServerAliveInterval=30 -o ServerAliveCountMax=10 \
+          ssh -o ServerAliveInterval=30 -o ServerAliveCountMax=10 \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
             "bash -lc 'cd /home/admin/www/tg-clicker && pm2 restart all'"
