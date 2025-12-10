@@ -47,6 +47,8 @@ jobs:
 
     - name: Run build
       run: npm run build
+      env: 
+        REDIS_PASSWORD: redis
       
     - name: Shutdown Docker
       run: docker compose down
