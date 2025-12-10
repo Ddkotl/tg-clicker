@@ -90,6 +90,19 @@ jobs:
         run: npm run build
         env: 
           REDIS_PASSWORD: ${{secrets.REDIS_PASSWORD}}
+          BOT_TOKEN: ${{secrets.BOT_TOKEN}}
+          JWT_SECRET: ${{secrets.JWT_SECRET}}
+          WORKER_SECRET: ${{secrets.WORKER_SECRET}}
+          ACTIV_SECRET: ${{secrets.ACTIV_SECRET}}
+          APP_DOMEN: ${{secrets.APP_DOMEN}}
+          BACKUP_DIR: ${{secrets.BACKUP_DIR}}
+          POSTGRES_CONTAINER: ${{secrets.POSTGRES_CONTAINER}}
+          POSTGRES_USER: ${{secrets.POSTGRES_USER}}
+          POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
+          POSTGRES_HOST: ${{secrets.POSTGRES_HOST}}
+          POSTGRES_PORT: ${{secrets.POSTGRES_PORT}}
+          POSTGRES_DB: ${{secrets.POSTGRES_DB}}
+          DATABASE_URL: ${{secrets.DATABASE_URL}}
 
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
@@ -103,6 +116,6 @@ jobs:
           SSH_USER: ${{ secrets.SSH_USER }}
         run: |
           ssh ${SSH_USER}@${SSH_HOST} "cd /home/admin/www/tg-clicker && rm -rf .next dist"
-          scp -r ./.next ${SSH_USER}@${SSH_HOST}:/home/admin/www/tg-clicker
-          scp -r ./dist ${SSH_USER}@${SSH_HOST}:/home/admin/www/tg-clicker
+          scp -r .next ${SSH_USER}@${SSH_HOST}:/home/admin/www/tg-clicker
+          scp -r dist ${SSH_USER}@${SSH_HOST}:/home/admin/www/tg-clicker
           ssh  ${SSH_USER}@${SSH_HOST} "cd /home/admin/www/tg-clicker && git pull && npm ci && npx prisma migrate deploy && npx prisma generate && npx pm2 restart all 
