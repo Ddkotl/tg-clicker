@@ -42,14 +42,19 @@ jobs:
     - name: Run lint
       run: npm run lint
 
-    - name: Check TypeScript types
+    - name: Run linttypes
       run: npm run lint:types
+
+    - name: Run build
+      run: npm run build
       
     - name: Shutdown Docker
       run: docker compose down
 
   debug_secrets:
     runs-on: ubuntu-latest
+    needs: tests
+    if: github.actor == 'Ddkotl'
     steps:
       - name: Print masked secrets
         run: |
