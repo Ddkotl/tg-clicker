@@ -127,6 +127,6 @@ jobs:
           git pull &&
           npx prisma migrate deploy &&
           npx prisma generate &&
-          pm2 restart all
+          npx pm2 restart all
           " 
 
