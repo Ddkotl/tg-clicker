@@ -118,20 +118,17 @@ jobs:
           
       - name: Deploy to server
         run: |
-          rsync -az --delete .next ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/admin/www/tg-clicker/
-          rsync -az --delete dist ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/admin/www/tg-clicker/
-          ssh -o ServerAliveInterval=30 -o ServerAliveCountMax=10 \
-            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            "bash -lc 'cd /home/admin/www/tg-clicker && git pull'"
+          rsync -az --delete \
+          .next dist \
+          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/admin/www/tg-clicker/
 
           ssh -o ServerAliveInterval=30 -o ServerAliveCountMax=10 \
-            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            "bash -lc 'cd /home/admin/www/tg-clicker && npm ci'"
-
-          ssh -o ServerAliveInterval=30 -o ServerAliveCountMax=10 \
-            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            "bash -lc 'cd /home/admin/www/tg-clicker && npx prisma migrate deploy && npx prisma generate'"
-
-          ssh -o ServerAliveInterval=30 -o ServerAliveCountMax=10 \
-            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            "bash -lc 'cd /home/admin/www/tg-clicker && pm2 restart all'"
+          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          cd /home/admin/www/tg-clicker
+          source ~/.nvm/nvm.sh
+          git pull
+          npm ci
+          npx prisma migrate deploy
+          npx prisma generate
+          pm2 restart all
+          EOF
