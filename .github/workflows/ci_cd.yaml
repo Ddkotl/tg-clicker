@@ -58,6 +58,9 @@ jobs:
     needs: tests
     if: github.actor == 'Ddkotl' 
     steps:
+      - name: Show runner IP
+        run: curl ifconfig.me
+    
       - name: Checkout code
         uses: actions/checkout@v3
       
