@@ -121,4 +121,4 @@ jobs:
           ssh -vvv ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /home/admin/www/tg-clicker && rm -rf .next dist"
           rsync -avz --delete .next ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/admin/www/tg-clicker/
           rsync -avz --delete dist ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/admin/www/tg-clicker/
-          ssh -vvv ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /home/admin/www/tg-clicker && git pull && npm ci && npx prisma migrate deploy && npx prisma generate && npx pm2 restart all" 
+          ssh -vvv ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /home/admin/www/tg-clicker && source ~/.nvm/nvm.sh && git pull && npm ci && npx prisma migrate deploy && npx prisma generate && npx pm2 restart all" 
