@@ -122,7 +122,7 @@ jobs:
       - name: Deploy to server
         run: |
           rsync -az --delete .next dist node_modules ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/admin/www/tg-clicker/
-          ssh -vvv ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
           cd /home/admin/www/tg-clicker &&
           git pull &&
           npx prisma migrate deploy &&
