@@ -126,7 +126,6 @@ jobs:
           source ~/.nvm/nvm.sh &&
           cd /home/admin/www/tg-clicker &&
           git pull &&
-          npm ci &&
           npx prisma migrate deploy &&
           npx prisma generate &&
           pm2 restart all
