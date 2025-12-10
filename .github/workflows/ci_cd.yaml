@@ -117,11 +117,8 @@ jobs:
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
           
       - name: Deploy to server
-        env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USER: ${{ secrets.SSH_USER }}
         run: |
-          ssh ${SSH_USER}@${SSH_HOST} "cd /home/admin/www/tg-clicker && rm -rf .next dist"
-          scp -r .next ${SSH_USER}@${SSH_HOST}:/home/admin/www/tg-clicker
-          scp -r dist ${SSH_USER}@${SSH_HOST}:/home/admin/www/tg-clicker
-          ssh  ${SSH_USER}@${SSH_HOST} "cd /home/admin/www/tg-clicker && git pull && npm ci && npx prisma migrate deploy && npx prisma generate && npx pm2 restart all 
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /home/admin/www/tg-clicker && rm -rf .next dist"
+          scp -r .next ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/admin/www/tg-clicker
+          scp -r dist ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/admin/www/tg-clicker
+          ssh  ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /home/admin/www/tg-clicker && git pull && npm ci && npx prisma migrate deploy && npx prisma generate && npx pm2 restart all 
