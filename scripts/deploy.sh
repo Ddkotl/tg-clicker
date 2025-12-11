@@ -20,4 +20,4 @@ echo "=== DEPLOY START: $(date) ==="
 #echo "Restarting PM2..."
 #pm2 restart all
 
-echo "=== DEPLOY FINISH: $(date) ==="
+#echo "=== DEPLOY FINISH: $(date) ==="
