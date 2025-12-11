@@ -18,17 +18,11 @@ nvm use 24
 
 cd ~/www/tg-clicker
 
-echo "--- GIT FETCH ---"
-git fetch origin main
-
-echo "--- GIT RESET ---"
-git reset --hard origin/main
-
 echo "--- PRISMA MIGRATE ---"
-npx prisma migrate deploy --no-color
+npx prisma migrate deploy 
 
 echo "--- PRISMA GENERATE ---"
-npx prisma generate --no-color
+npx prisma generate 
 
 echo "--- PM2 RESTART ---"
 pm2 restart all
