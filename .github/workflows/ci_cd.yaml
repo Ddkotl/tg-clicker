@@ -130,8 +130,6 @@ jobs:
           git reset --hard origin/main &&
           chmod +x ~/www/tg-clicker/scripts/deploy.sh
           " 
-      - name: Run deploy script 
-        run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
-          bash ~/www/tg-clicker/scripts/deploy.sh
-          " 
+      - name: Run deploy script
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'bash -l ~/www/tg-clicker/scripts/deploy.sh'
+
