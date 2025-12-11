@@ -126,6 +126,7 @@ jobs:
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
           cd ~/www/tg-clicker &&
+          git fetch --all &&
           git reset --hard origin/main &&
           chmod +x ~/www/tg-clicker/scripts/deploy.sh
           " 
