@@ -122,7 +122,7 @@ jobs:
       - name: Deploy to server
         run: |
           rsync -az --delete .next dist node_modules ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/www/tg-clicker/
-          ssh -vvv ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
           export NVM_DIR=\"\$HOME/.nvm\";
           [ -s \"\$NVM_DIR/nvm.sh\" ] && \. \"\$NVM_DIR/nvm.sh\";
           nvm use node 24;
