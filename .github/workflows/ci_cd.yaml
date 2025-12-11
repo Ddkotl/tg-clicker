@@ -122,4 +122,11 @@ jobs:
       - name: Deploy to server
         run: |
           rsync -az --delete .next dist node_modules ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/admin/www/tg-clicker/
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'cd /home/admin/www/tg-clicker && "git reset --hard otigin/main" && cd scripts && "chmod +x deploy.sh" && ./deploy.sh'
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
+            cd /home/admin/www/tg-clicker &&
+            git fetch origin &&
+            git reset --hard origin/main &&
+            cd scripts &&
+           chmod +x deploy.sh &&
+           ./deploy.sh
+           '
