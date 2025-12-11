@@ -1,6 +1,6 @@
 #!/bin/bash
 set -euo pipefail
-exec > >(tee -i logs/deploy.log) 2>&1   # Все stdout и stderr пишем в лог
+exec > >(tee -i deploy.log) 2>&1   # Все stdout и stderr пишем в лог
 
 echo "=== DEPLOY START: $(date) ==="
 
