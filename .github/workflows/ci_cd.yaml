@@ -120,18 +120,17 @@ jobs:
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
       - name: Copy builded files to server
-        run: |
-          rsync -az --delete .next dist node_modules ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/www/tg-clicker/
+        run: rsync -az --delete .next dist node_modules ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/www/tg-clicker/
 
       - name: Update server 
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
           cd ~/www/tg-clicker &&
           git reset --hard origin/main &&
-          chmod +x ~/www/tg-clicker/deploy.sh
+          chmod +x ~/www/tg-clicker/scripts/deploy.sh
           " 
       - name: Run deploy script 
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
-          bash ~/www/tg-clicker/deploy.sh
+          bash ~/www/tg-clicker/scripts/deploy.sh
           " 
