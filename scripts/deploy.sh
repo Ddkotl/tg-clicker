@@ -4,20 +4,20 @@
 
 echo "=== DEPLOY START: $(date) ==="
 
-cd /home/admin/www/tg-clicker || exit 1
+cd /home/admin/www/tg-clicker
 #export NVM_DIR="$HOME/.nvm"
 #[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
 echo "Using node version:"
-nvm use 24.11.1
+##nvm use 24.11.1
 
 echo "Running Prisma migrate..."
-npx prisma migrate deploy
+#npx prisma migrate deploy
 
 echo "Generating Prisma client..."
-npx prisma generate
+#npx prisma generate
 
 echo "Restarting PM2..."
-pm2 restart all
+#pm2 restart all
 
 echo "=== DEPLOY FINISH: $(date) ==="
