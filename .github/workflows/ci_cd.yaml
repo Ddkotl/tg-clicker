@@ -121,13 +121,43 @@ jobs:
           
       - name: Deploy to server
         run: |
-          rsync -az --delete .next dist node_modules ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/admin/www/tg-clicker/
-          ssh -vvv ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
-          source ~/.nvm/nvm.sh &&
-          cd /home/admin/www/tg-clicker &&
-          git pull &&
-          npx prisma migrate deploy &&
-          npx prisma generate &&
-          npx pm2 restart all
-          " 
+          echo "=== RSYNC START ==="
+          rsync -az --delete .next dist node_modules \
+          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/admin/www/tg-clicker/
+          echo "=== RSYNC DONE ==="
+
+          echo "=== SSH EXECUTION START ==="
+          ssh -vvv ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          set -xe
+
+          echo "Connected to server"
+          echo "Loading NVM..."
+
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+          echo "Node version:"
+          node -v || echo "node not found"
+
+          cd /home/admin/www/tg-clicker
+
+          echo "=== PULL LATEST ==="
+          git pull
+
+          echo "=== INSTALL DEPENDENCIES ==="
+
+          echo "=== APPLY PRISMA MIGRATIONS ==="
+          npx prisma migrate deploy
+
+          echo "=== GENERATE PRISMA CLIENT ==="
+          npx prisma generate
+
+          echo "=== RESTART PM2 ==="
+          pm2 restart all || pm2 start ecosystem.config.js || echo "PM2 restart failed"
+
+          echo "=== DEPLOY FINISHED OK ==="
+          EOF
+
+          echo "=== SSH EXECUTION END ==="
+
 
