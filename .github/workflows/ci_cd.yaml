@@ -125,5 +125,9 @@ jobs:
       - name: Sunc server with origin/main
         run:  ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /home/admin/www/tg-clicker && git reset --hard origin/main"
 
+      - name: Debug SSH
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "ls -la /home/admin/www/tg-clicker/scripts"
+
+
       - name: Run deploy.sh
         run : ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} " cd /home/admin/www/tg-clicker/scripts && chmod +x deploy.sh && ./deploy.sh "
