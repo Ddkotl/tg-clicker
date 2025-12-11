@@ -126,7 +126,8 @@ jobs:
 
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
           cd /home/admin/www/tg-clicker &&
-          git pull
+          git pull &&
+          bash -lc 'source /home/admin/.nvm/nvm.sh && nvm use 24.11.1 &&
           npx prisma migrate deploy
-          "
+          '"
 
