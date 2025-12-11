@@ -119,13 +119,11 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
           
-      - name: Deploy to server
-        run: |
-          rsync -az --delete .next dist node_modules ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/admin/www/tg-clicker/
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} bash -lc "
-            cd /home/admin/www/tg-clicker &&
-            git reset --hard origin/main &&
-            cd scripts &&
-            chmod +x deploy.sh &&
-           ./deploy.sh
-           "
+      - name: Copy builded files to server
+        run: rsync -az --delete .next dist node_modules ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{secrets.SSH_USER}}/www/tg-clicker/
+
+      - name: Sunc server with origin/main
+        run:  ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /home/admin/www/tg-clicker && git reset --hard origin/main"
+
+      - name: Run deploy.sh
+        run : ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} " cd /home/admin/www/tg-clicker/scripts && chmod +x deploy.sh && ./deploy.sh "
