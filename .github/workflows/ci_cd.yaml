@@ -9,7 +9,6 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
-    if: github.actor !== 'Ddkotl'
     
     steps:
     - name: Checkout code
