@@ -132,4 +132,4 @@ jobs:
           user: ${{ secrets.SSH_USER}}
           private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           host_fingerprint: ${{ secrets.KNOWN_HOSTS }}
-          command: source ~/.nvm/nvm.sh; ~home/admin/www/tg-clicker/scripts/deploy.sh
+          command: source ~/.nvm/nvm.sh; /home/admin/www/tg-clicker/scripts/deploy.sh
