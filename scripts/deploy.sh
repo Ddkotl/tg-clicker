@@ -1,22 +1,22 @@
 #!/bin/bash
-set -e  # остановка при любой ошибке
+set -euo pipefail
+exec > >(tee -i logs/deploy.log) 2>&1   # Все stdout и stderr пишем в лог
 
-# Переходим в папку
-cd /home/admin/www/tg-clicker
+echo "=== DEPLOY START: $(date) ==="
 
-# Подгружаем nvm
+cd /home/admin/www/tg-clicker || exit 1
+
+# Подгружаем NVM
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-# Выбираем нужную версию Node
-nvm use 24.11.1
+nvm use 24.11.1 || { echo "NVM failed"; exit 1; }
 
-# Обновляем код
-git pull
+# Prisma
+npx prisma migrate deploy || { echo "Prisma migrate failed"; exit 1; }
+npx prisma generate || { echo "Prisma generate failed"; exit 1; }
 
-# Миграции Prisma
-npx prisma migrate deploy
-npx prisma generate
+# PM2
+pm2 restart all || { echo "PM2 restart failed"; exit 1; }
 
-# Перезапуск PM2
-pm2 restart all
+echo "=== DEPLOY FINISH: $(date) ==="
