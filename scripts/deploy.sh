@@ -1,6 +1,6 @@
 #!/bin/bash
-set -euo pipefail
-exec > >(tee -i deploy.log) 2>&1
+#set -euo pipefail
+#exec > >(tee -i deploy.log) 2>&1
 
 echo "=== DEPLOY START: $(date) ==="
 
