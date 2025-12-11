@@ -9,11 +9,11 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-      
+
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
@@ -31,14 +31,14 @@ jobs:
         POSTGRES_DB: postgres
         POSTGRES_PORT: 5436
         REDIS_PASSWORD: redis
-        
+
     - name: Run Prisma migrations
       run: |
         npx prisma migrate deploy
         npx prisma generate
       env : 
         DATABASE_URL : postgresql://postgres:postgres@localhost:5436/postgres
-        
+
     - name: Run lint
       run: npm run lint
 
@@ -49,7 +49,7 @@ jobs:
       run: npm run build
       env: 
         REDIS_PASSWORD: redis
-      
+
     - name: Shutdown Docker
       run: docker compose down
 
@@ -60,10 +60,10 @@ jobs:
     steps:
       - name: Show runner IP
         run: curl ifconfig.me
-    
+
       - name: Checkout code
         uses: actions/checkout@v3
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -81,7 +81,7 @@ jobs:
           POSTGRES_DB: ${{secrets.POSTGRES_DB}}
           POSTGRES_PORT: ${{secrets.POSTGRES_PORT}}
           REDIS_PASSWORD: ${{secrets.REDIS_PASSWORD}}
-        
+
       - name: Run Prisma migrations
         run: |
           npx prisma migrate deploy
@@ -94,7 +94,7 @@ jobs:
 
       - name: Run linttypes
         run: npm run lint:types
-        
+
       - name: Run build
         run: npm run build
         env: 
@@ -118,18 +118,16 @@ jobs:
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
-          
-      - name: Copy builded files to server
-        run: rsync -az --delete .next dist node_modules ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{secrets.SSH_USER}}/www/tg-clicker/
 
-      - name: Sunc server with origin/main
-        run:  ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ~/www/tg-clicker && git reset --hard origin/main && chmod +x ~/www/tg-clicker/scripts/deploy.sh"
-
-      - name: SSH Command
-        uses: D3rHase/ssh-command-action@v0.2.2
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          user: ${{ secrets.SSH_USER}}
-          private_key: ${{ secrets.SSH_PRIVATE_KEY }}
-          host_fingerprint: ${{ secrets.KNOWN_HOSTS }}
-          command: source ~/.nvm/nvm.sh; ~/www/tg-clicker/scripts/deploy.sh
+      - name: Deploy to server
+        run: |
+          rsync -az --delete .next dist ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/www/tg-clicker/
+          rsync -az --delete .next dist node_modules ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/www/tg-clicker/
+          ssh -vvv ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
+          source ~/.nvm/nvm.sh &&
+          cd ~/www/tg-clicker &&
+          git pull &&
+          npx prisma migrate deploy &&
+          npx prisma generate &&
+          pm2 restart all
+          " 
