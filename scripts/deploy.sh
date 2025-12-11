@@ -5,8 +5,8 @@ exec > >(tee -i deploy.log) 2>&1
 echo "=== DEPLOY START: $(date) ==="
 
 cd /home/admin/www/tg-clicker || exit 1
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+#export NVM_DIR="$HOME/.nvm"
+#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
 echo "Using node version:"
 nvm use 24.11.1
