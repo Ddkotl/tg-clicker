@@ -25,6 +25,6 @@ echo "--- PRISMA GENERATE ---"
 npx prisma generate 
 
 echo "--- PM2 RESTART ---"
-pm2 restart all
+npx pm2 restart all
 
 echo "=== DEPLOY FINISHED: $(date) ==="
