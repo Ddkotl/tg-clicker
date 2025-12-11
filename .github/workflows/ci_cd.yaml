@@ -122,12 +122,15 @@ jobs:
       - name: Deploy to server
         run: |
           rsync -az --delete .next dist node_modules \
-          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/admin/www/tg-clicker/
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          set -e
 
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
-          cd /home/admin/www/tg-clicker &&
-          git pull &&
-          bash -lc 'source /home/admin/.nvm/nvm.sh && nvm use 24.11.1 &&
-          npx prisma migrate deploy
-          '"
+          cd /home/admin/www/tg-clicker
 
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+          nvm use 24.11.1
+
+          git pull
+          EOF
