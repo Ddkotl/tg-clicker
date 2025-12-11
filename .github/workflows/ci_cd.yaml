@@ -121,18 +121,11 @@ jobs:
           
       - name: Deploy to server
         run: |
-          echo "=== RSYNC START ==="
           rsync -az --delete .next dist node_modules \
           ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/admin/www/tg-clicker/
-          echo "=== RSYNC DONE ==="
 
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "bash -lc '
-          source ~/.nvm/nvm.sh &&
-          nvm use 24 &&
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
           cd /home/admin/www/tg-clicker &&
-          git pull &&
-          npx prisma migrate deploy &&
-          npx prisma generate &&
-          pm2 restart all
-          '"
+          git pull
+          "
 
