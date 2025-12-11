@@ -123,7 +123,7 @@ jobs:
         run: rsync -az --delete .next dist node_modules ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{secrets.SSH_USER}}/www/tg-clicker/
 
       - name: Sunc server with origin/main
-        run:  ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /home/admin/www/tg-clicker && git reset --hard origin/main"
+        run:  ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ~/www/tg-clicker && git reset --hard origin/main && chmod +x ~/www/tg-clicker/scripts/deploy.sh"
 
       - name: SSH Command
         uses: D3rHase/ssh-command-action@v0.2.2
@@ -132,4 +132,4 @@ jobs:
           user: ${{ secrets.SSH_USER}}
           private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           host_fingerprint: ${{ secrets.KNOWN_HOSTS }}
-          command: source ~/.nvm/nvm.sh; /home/admin/www/tg-clicker/scripts/deploy.sh
+          command: source ~/.nvm/nvm.sh; ~/www/tg-clicker/scripts/deploy.sh
