@@ -1,23 +1,36 @@
 #!/bin/bash
-#set -euo pipefail
-#exec > >(tee -i deploy.log) 2>&1
+set -e  # Останавливает скрипт при любой ошибке
+set -o pipefail
 
 echo "=== DEPLOY START: $(date) ==="
 
-#cd /home/admin/www/tg-clicker
-#export NVM_DIR="$HOME/.nvm"
-#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+export NVM_DIR="$HOME/.nvm"
+# загружаем nvm если он существует
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  . "$NVM_DIR/nvm.sh"
+else
+  echo "ERROR: NVM not found!"
+  exit 1
+fi
 
-#echo "Using node version:"
-##nvm use 24.11.1
+echo "Using Node version:"
+nvm use 24
 
-#echo "Running Prisma migrate..."
-#npx prisma migrate deploy
+cd ~/www/tg-clicker
 
-#echo "Generating Prisma client..."
-#npx prisma generate
+echo "--- GIT FETCH ---"
+git fetch origin main
 
-#echo "Restarting PM2..."
-#pm2 restart all
+echo "--- GIT RESET ---"
+git reset --hard origin/main
 
-#echo "=== DEPLOY FINISH: $(date) ==="
+echo "--- PRISMA MIGRATE ---"
+npx prisma migrate deploy --no-color
+
+echo "--- PRISMA GENERATE ---"
+npx prisma generate --no-color
+
+echo "--- PM2 RESTART ---"
+pm2 restart all
+
+echo "=== DEPLOY FINISHED: $(date) ==="
