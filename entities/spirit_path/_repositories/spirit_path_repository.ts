@@ -1,6 +1,5 @@
 import { SpiritPath } from "@/_generated/prisma/client";
 import { dataBase, TransactionType } from "@/shared/connect/db_connect";
-import { getStartOfToday } from "@/shared/lib/date";
 
 export class SpiritPathRepository {
   async getSpiritPathInfo({ userId, tx }: { userId: string; tx?: TransactionType }) {

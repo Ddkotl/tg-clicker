@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { cn } from "@/shared/lib/utils";
 import type { FooterItemType } from "../_domain/types";
-import { Badge } from "@/shared/components/ui/badge";
 import { Soon } from "@/shared/components/custom_ui/Soon";
 import { Counter } from "@/shared/components/custom_ui/counter";
 

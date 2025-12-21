@@ -1,10 +1,7 @@
 import {
-  goMeditationErrorResponseSchema,
-  goMeditationErrorResponseType,
   goMeditationRequestSchema,
   goMeditationResponseSchema,
   goMeditationResponseType,
-  MeditationInfoErrorResponse,
   MeditationInfoResponse,
   meditationInfoResponseSchema,
 } from "@/entities/meditation";

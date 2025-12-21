@@ -32,9 +32,9 @@ export function Fight({ enemy_type }: { enemy_type: EnemyType }) {
   const { busy, reason } = useCheckUserDealsStatus();
   const createFight = useCreateFightMutation();
   const attack = useStartFightMutation();
-
   useEffect(() => {
     createFight.mutate({ enemyType: enemy_type, fightType: FightType.PVE });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enemy_type]);
   const handleStartFight = () => {
     createFight.mutate({ enemyType: enemy_type, fightType: FightType.PVE });

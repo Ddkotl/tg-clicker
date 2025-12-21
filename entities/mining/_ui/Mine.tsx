@@ -34,13 +34,14 @@ export default function Mine() {
   const energy = mine?.data.energy ?? MAX_ENERGY;
 
   // состояние кулдауна для кнопки
-  const [end, setEnd] = useState(Date.now());
+  const [end, setEnd] = useState(() => Date.now());
   const [isCooldown, setIsCooldown] = useState(() =>
     mine ? Date.now() < mine.data.last_mine_at + MINE_COOLDOWN : false,
   );
 
   useEffect(() => {
     if (mine?.data.last_mine_at) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setEnd(mine.data.last_mine_at + MINE_COOLDOWN);
       setIsCooldown(Date.now() < mine.data.last_mine_at + MINE_COOLDOWN);
     }

@@ -23,7 +23,7 @@ export function Header() {
   const isDisabled = isFetchingProfile;
 
   const { past_intervals, new_last_action_date } = getPastedIntervals({
-    now_ms: Date.now(),
+    now_ms: new Date().getTime(),
     last_action_ms: profile?.data?.last_charge_recovery
       ? new Date(profile.data.last_charge_recovery).getTime()
       : new Date().getTime(),
