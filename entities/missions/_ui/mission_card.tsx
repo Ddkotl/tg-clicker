@@ -50,7 +50,7 @@ export function MissionCard({
     },
   ].filter((r) => r.value > 0);
   return (
-    <Card className="bg-background/50  gap-2">
+    <Card className="bg-background/50  gap-2 w-full">
       <CardHeader className=" flex gap-2 justify-between items-center">
         <CardTitle className="max-w-full truncate text-sm font-semibold">{title}</CardTitle>
 

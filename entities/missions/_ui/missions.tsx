@@ -21,7 +21,8 @@ export function Missions() {
   }
 
   const missionList = missions.data?.data.missions ?? [];
-
+  const daily_missions = missionList.filter((e) => e.time === MissionTime.DAILY);
+  const permanent_missions = missionList.filter((e) => e.time === MissionTime.PERMANENT);
   if (missionList.length === 0) {
     return <div>{t("headquarter.missions.no_missions")}</div>;
   }
@@ -31,34 +32,27 @@ export function Missions() {
       <TabsList className="w-full grid grid-cols-2 h-auto gap-2 bg-inherit shadow-2xl">
         <TabsTrigger value="daily" className="relative">
           <Title text={t("headquarter.missions.daily_missions")} align="center" size="sm" />
-          {missionList.length && missionList.length >= 0 && (
-            <Counter count={missionList.length} className="-top-1 -right-1" />
-          )}
+          {daily_missions.length >= 0 && <Counter count={daily_missions.length} className="-top-1 -right-1" />}
         </TabsTrigger>
         <TabsTrigger value="permanents">
           {" "}
           <Title text={t("headquarter.missions.permanents")} align="center" size="sm" />
+          {permanent_missions.length >= 0 && <Counter count={permanent_missions.length} className="-top-1 -right-1" />}
         </TabsTrigger>
       </TabsList>
       <TabsContent value="daily">
-        <div className="flex flex-col gap-2">
-          {missionList.map((mission) =>
-            mission.time === MissionTime.DAILY ? (
-              <MissionCard key={mission.id} mission={mission} t={t} />
-            ) : (
-              <div>{t("headquarter.missions.no_missions")}</div>
-            ),
-          )}
+        <div className="flex flex-col gap-2 items-center ">
+          {daily_missions.length <= 0 && <div>{t("headquarter.missions.no_missions")}</div>}
+          {daily_missions.length >= 0 &&
+            daily_missions.map((mission) => <MissionCard key={mission.id} mission={mission} t={t} />)}
         </div>
       </TabsContent>
       <TabsContent value="permanents">
-        {missionList.map((mission) =>
-          mission.time === MissionTime.PERMANENT ? (
-            <MissionCard key={mission.id} mission={mission} t={t} />
-          ) : (
-            <div>{t("headquarter.missions.no_missions")}</div>
-          ),
-        )}
+        <div className="flex flex-col gap-2 items-center ">
+          {permanent_missions.length <= 0 && <div>{t("headquarter.missions.no_missions")}</div>}
+          {permanent_missions.length >= 0 &&
+            permanent_missions.map((mission) => <MissionCard key={mission.id} mission={mission} t={t} />)}
+        </div>
       </TabsContent>
     </Tabs>
   );

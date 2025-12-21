@@ -3,8 +3,6 @@ import amqp from "amqplib";
 import { MEDITATION_EXCHANGE, MEDITATION_QUEUE } from "@/features/meditation/rabit_meditation_connect";
 import { RABBITMQ_URL } from "@/shared/connect/consts";
 import { meditationWorkerCongig } from "@/shared/lib/workers";
-import { dataBase } from "@/shared/connect/db_connect";
-import { MeditationRewardService } from "@/features/meditation/services/meditation_reward_service";
 import { api_path } from "@/shared/lib/paths";
 
 async function startWorker() {

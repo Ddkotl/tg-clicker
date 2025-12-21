@@ -14,7 +14,6 @@ export async function POST(request: NextRequest) {
     const parsedBody = authRequestSchema.safeParse(body);
     if (!parsedBody.success) return makeError("Invalid request data", 400);
     const { initData, ref } = parsedBody.data;
-
     const validationResult = validateTelegramWebAppData(initData);
     if (!validationResult.validatedData || !validationResult.user.id) return makeError(validationResult.message, 401);
     const lang = validationResult.user.language_code === "ru" ? "ru" : ("en" as SupportedLang);
@@ -24,7 +23,6 @@ export async function POST(request: NextRequest) {
     if (!allowed) return makeError(translate("api.rate_limit_exceeded", lang), 429);
 
     const updated_user = await authService.authenticateUser({ lang, validationResult, referer_id: ref });
-
     if (!updated_user) return makeError(translate("api.invalid_registration_user", lang), 401);
     const payload: AppJWTPayload = {
       user: {
