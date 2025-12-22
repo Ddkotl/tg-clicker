@@ -39,7 +39,7 @@ export function PlayerProfile({ userId }: { userId: string }) {
           <ProfileAvatar avatarUrl={user.avatar_url || ""} nickname={user.nikname || ""} className="w-24 h-24" />
         }
         title={<Title text={user.nikname || ""} align="left" size="xl" />}
-        online={<DisplayPlayerOnline date={user.last_online_at} t={t} />}
+        online={<DisplayPlayerOnline text={true} date={user.last_online_at} t={t} />}
         playerMotto={user.player_motto}
         fraktion={user.fraktion}
       />
@@ -57,7 +57,7 @@ export function PlayerProfile({ userId }: { userId: string }) {
         </TabsList>
         <TabsContent value="params">
           <Title text={t("params")} align="center" size="md" />
-          <ProfileParamsList user={user} t={t} />
+          <ProfileParamsList isMyProfile={isMyProfile} user={user} t={t} />
         </TabsContent>
         <TabsContent value="statistics">
           <Title text={t("profile.statistics")} align="center" size="md" />

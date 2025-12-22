@@ -24,11 +24,15 @@ export const fightSnapshotSchema = z.object({
 
 export const fightLogStepSchema = z.object({
   timestamp: z.string(),
-  attacker: z.enum(["player", "enemy"]),
+  attacker: z.string(),
+  defender: z.string(),
   damage: z.number(),
   attackerHpAfter: z.number(),
   defenderHpAfter: z.number(),
-  text: z.string(),
+  crit: z.boolean(),
+  block: z.boolean(),
+  dodge: z.boolean(),
+  penetration: z.number(),
 });
 
 export const fightLogSchema = z.array(fightLogStepSchema);

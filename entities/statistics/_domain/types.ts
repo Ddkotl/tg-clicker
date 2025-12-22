@@ -16,12 +16,13 @@ export type RatingsResponseType = z.infer<typeof ratingsResponseSchema>;
 
 export type RankingCardProps = {
   userId: string;
-  rank: number;
+  rank?: number;
   img?: string | null;
   nickname: string | null;
   valueLabel: string;
   value: number;
   isFetching?: boolean;
+  lastOnline?: Date;
 };
 
 export const ratingsTypes = {

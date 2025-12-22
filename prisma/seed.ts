@@ -3,8 +3,6 @@ import { img_paths } from "@/shared/lib/img_paths";
 import { dataBase } from "@/shared/connect/db_connect";
 import { FactsStatus, FactsType, MissionTime, MissionType } from "@/_generated/prisma/enums";
 
-const prisma = dataBase;
-
 function randomEnum<T extends Record<string, unknown>>(e: T): T[keyof T] {
   const values = Object.values(e);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -12,7 +10,7 @@ function randomEnum<T extends Record<string, unknown>>(e: T): T[keyof T] {
 }
 
 async function createUser() {
-  const user = await prisma.user.create({
+  const user = await dataBase.user.create({
     data: {
       telegram_id: faker.string.uuid(),
       username: faker.internet.username(),
@@ -25,7 +23,7 @@ async function createUser() {
     },
   });
 
-  await prisma.profile.create({
+  await dataBase.profile.create({
     data: {
       userId: user.id,
       fraktion: faker.helpers.arrayElement(["ADEPT", "NOVICE"]),
@@ -47,7 +45,7 @@ async function createUser() {
     },
   });
 
-  await prisma.userStatistic.create({
+  await dataBase.userStatistic.create({
     data: {
       userId: user.id,
       meditated_hours: faker.number.int({ min: 0, max: 500 }),
@@ -59,7 +57,7 @@ async function createUser() {
     },
   });
 
-  await prisma.meditation.create({
+  await dataBase.meditation.create({
     data: {
       userId: user.id,
       on_meditation: false,
@@ -68,7 +66,7 @@ async function createUser() {
     },
   });
 
-  await prisma.spiritPath.create({
+  await dataBase.spiritPath.create({
     data: {
       userId: user.id,
       on_spirit_paths: false,
@@ -78,14 +76,14 @@ async function createUser() {
     },
   });
 
-  await prisma.mine.create({
+  await dataBase.mine.create({
     data: {
       userId: user.id,
       energy: faker.number.int({ min: 0, max: 25 }),
     },
   });
 
-  await prisma.userQiSkills.create({
+  await dataBase.userQiSkills.create({
     data: {
       userId: user.id,
       qi_veil: faker.number.int({ min: 0, max: 10 }),
@@ -99,7 +97,7 @@ async function createUser() {
   const factsCount = faker.number.int({ min: 3, max: 10 });
 
   for (let i = 0; i < factsCount; i++) {
-    await prisma.facts.create({
+    await dataBase.facts.create({
       data: {
         userId: user.id,
         type: randomEnum(FactsType),
@@ -114,7 +112,7 @@ async function createUser() {
 
   // ===== missions =====
   for (const type of Object.values(MissionType)) {
-    await prisma.mission.create({
+    await dataBase.mission.create({
       data: {
         userId: user.id,
         type,
@@ -140,4 +138,4 @@ async function main() {
 
 main()
   .catch(console.error)
-  .finally(() => prisma.$disconnect());
+  .finally(() => dataBase.$disconnect());

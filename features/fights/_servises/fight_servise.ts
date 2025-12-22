@@ -1,12 +1,6 @@
 import { profileRepository } from "@/entities/profile/index.server";
 import { FIGHT_CHARGE_REGEN_INTERVAL, FIGHT_COOLDOWN, FIGHT_MAX_CHARGES } from "@/shared/game_config/fight/fight_const";
-import {
-  FighterSnapshot,
-  FightLog,
-  FightResLossesSchema,
-  FightResRewards,
-  FightSnapshot,
-} from "@/entities/fights/_domain/types";
+import { FighterSnapshot, FightResLossesSchema, FightResRewards, FightSnapshot } from "@/entities/fights/_domain/types";
 import { fightRepository } from "@/entities/fights/index.server";
 import { EnemyType, FactsStatus, FactsType, FightResult, FightStatus, FightType } from "@/_generated/prisma/enums";
 import { recalcQi } from "@/features/qi_regen/recalc_qi";
@@ -21,6 +15,7 @@ import { statisticRepository } from "@/entities/statistics/index.server";
 import { factsRepository } from "@/entities/facts/index.server";
 import { IsCooldown } from "@/shared/game_config/isColdown";
 import { profileService } from "@/features/profile/services/profile_service";
+import { simulateBattle } from "../fight_core/simulate_battle";
 
 export class FightService {
   constructor(
@@ -75,77 +70,6 @@ export class FightService {
     }
 
     return profile;
-  }
-  private async simulateBattle(player: FighterSnapshot, enemy: FighterSnapshot) {
-    const log: FightLog = [];
-
-    let playerHp = player.currentHp;
-    let enemyHp = enemy.currentHp;
-
-    let totalPlayerDamage = 0;
-    let totalEnemyDamage = 0;
-
-    for (let round = 1; round <= 10; round++) {
-      // Если кто-то уже умер — прекращаем
-      if (playerHp <= 0 || enemyHp <= 0) break;
-
-      // === Player attacks ===
-      const playerDamage = Math.max(1, player.power - enemy.protection);
-      enemyHp -= playerDamage;
-      totalPlayerDamage += playerDamage;
-
-      log.push({
-        timestamp: new Date().toISOString(),
-        attacker: "player",
-        damage: playerDamage,
-        attackerHpAfter: playerHp,
-        defenderHpAfter: Math.max(0, enemyHp),
-        text: `Round ${round}: ${player.name} attacks ${enemy.name} for ${playerDamage} damage.`,
-      });
-
-      if (enemyHp <= 0) break;
-
-      // === Enemy attacks ===
-      const enemyDamage = Math.max(1, enemy.power - player.protection);
-      playerHp -= enemyDamage;
-      totalEnemyDamage += enemyDamage;
-
-      log.push({
-        timestamp: new Date().toISOString(),
-        attacker: "enemy",
-        damage: enemyDamage,
-        attackerHpAfter: enemyHp,
-        defenderHpAfter: Math.max(0, playerHp),
-        text: `Round ${round}: ${enemy.name} attacks ${player.name} for ${enemyDamage} damage.`,
-      });
-    }
-
-    // === Determine result ===
-    let result: FightResult;
-
-    if (playerHp <= 0 && enemyHp > 0) {
-      result = "LOSE";
-    } else if (enemyHp <= 0 && playerHp > 0) {
-      result = "WIN";
-    } else if (totalPlayerDamage > totalEnemyDamage) {
-      result = "WIN";
-    } else if (totalEnemyDamage > totalPlayerDamage) {
-      result = "LOSE";
-    } else {
-      // Damage equal → compare HP
-      if (playerHp > enemyHp) result = "WIN";
-      else if (enemyHp > playerHp) result = "LOSE";
-      else result = "LOSE";
-    }
-
-    return {
-      result,
-      log,
-      totalPlayerDamage,
-      totalEnemyDamage,
-      playerHp,
-      enemyHp,
-    };
   }
 
   private async generateEnemy({
@@ -297,7 +221,7 @@ export class FightService {
       const profile = await this.profileRepo.spendFightCharge({ userId: userId, tx: tx });
       if (!profile) throw new Error("Failed spendFightCharge");
       const snapshot: FightSnapshot = fight.snapshot as FightSnapshot;
-      const { log, result } = await this.simulateBattle(snapshot.player, snapshot.enemy);
+      const { log, result } = await simulateBattle(snapshot.player, snapshot.enemy);
       const isWin = result === FightResult.WIN;
       const rewards: FightResRewards = await this.calculateRewards(snapshot.enemy);
       const losses: FightResLossesSchema = await this.calculateLosses(snapshot.player);

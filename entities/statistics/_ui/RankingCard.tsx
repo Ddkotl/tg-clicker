@@ -8,8 +8,20 @@ import { cn } from "@/shared/lib/utils";
 import { ui_path } from "@/shared/lib/paths";
 import { RankingCardProps } from "../_domain/types";
 import { Skeleton } from "@/shared/components/ui/skeleton";
+import { DisplayPlayerOnline } from "@/entities/profile/_ui/DisplayPlayerOnline";
+import { useTranslation } from "@/features/translations/use_translation";
 
-export function RankingCard({ rank, img, nickname, valueLabel, value, userId, isFetching }: RankingCardProps) {
+export function RankingCard({
+  rank,
+  img,
+  nickname,
+  valueLabel,
+  value,
+  userId,
+  isFetching,
+  lastOnline,
+}: RankingCardProps) {
+  const { t } = useTranslation();
   return (
     <Link
       href={ui_path.profile_page(userId)}
@@ -24,7 +36,12 @@ export function RankingCard({ rank, img, nickname, valueLabel, value, userId, is
               fill
               className="rounded-full object-cover border border-white/20 shadow"
             />
-            <div className="absolute top-0 left-0 text-xs bg-primary/50 px-2 py-0.5 rounded-full">{rank}</div>
+            {rank && <div className="absolute top-0 left-0 text-xs bg-primary/50 px-2 py-0.5 rounded-full">{rank}</div>}
+            {lastOnline && (
+              <div className="absolute bottom-0 left-0 text-xs  px-2 py-0.5 rounded-full">
+                <DisplayPlayerOnline text={false} date={lastOnline} t={t} />
+              </div>
+            )}
           </div>
 
           {/* Nickname */}

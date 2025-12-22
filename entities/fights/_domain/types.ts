@@ -20,3 +20,11 @@ export type FightLog = FightLogStep[];
 
 export type FightResRewards = z.infer<typeof fightResRewardsSchema>;
 export type FightResLossesSchema = z.infer<typeof fightResLossesSchema>;
+export interface FightResult {
+  result: "WIN" | "LOSE";
+  log: FightLog;
+  playerHp: number;
+  enemyHp: number;
+  totalPlayerDamage: number;
+  totalEnemyDamage: number;
+}

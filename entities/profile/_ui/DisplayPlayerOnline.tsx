@@ -9,9 +9,11 @@ const FIVE_MINUTES = 5 * 60 * 1000;
 export function DisplayPlayerOnline({
   date,
   t,
+  text = true,
 }: {
   date: string | number | Date;
   t?: (key: TranslationKey, vars?: Record<string, string | number>) => string;
+  text: boolean;
 }) {
   const lastActive = new Date(date).getTime();
 
@@ -28,7 +30,7 @@ export function DisplayPlayerOnline({
   const diff = now - lastActive;
   const isOnline = diff < FIVE_MINUTES;
 
-  const color = isOnline ? "bg-green-500" : "bg-red-500";
+  const color = isOnline ? "bg-green-500" : "bg-red-700";
 
   return (
     <div className="flex items-center gap-2 text-foreground text-sm font-semibold">
@@ -39,8 +41,8 @@ export function DisplayPlayerOnline({
         <span className={`relative inline-flex size-3 rounded-full ${color}`} />
       </span>
 
-      {isOnline && t && <span>{t("profile.online")}</span>}
-      {!isOnline && t && (
+      {isOnline && text && t && <span>{t("profile.online")}</span>}
+      {!isOnline && text && t && (
         <span className="flex items-center gap-1">
           {t("profile.offline")}:
           <TimeAgo date={lastActive} />

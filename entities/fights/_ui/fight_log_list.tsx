@@ -9,7 +9,7 @@ export const FightLogList = ({ log }: Props) => {
     <div className="max-h-64 overflow-y-auto border p-2 rounded">
       {log.map((step, idx) => (
         <p key={idx} className="text-sm">
-          [{new Date(step.timestamp).toLocaleTimeString()}] {step.text}
+          [{new Date(step.timestamp).toLocaleTimeString()}] {JSON.stringify(step)}
         </p>
       ))}
     </div>

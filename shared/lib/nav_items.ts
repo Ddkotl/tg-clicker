@@ -72,6 +72,11 @@ export const nav_items = {
       href: ui_path.rankings_page(),
       icon: icons.trophy({ className: "h-10 w-10 " }),
     },
+    {
+      label: `${translate("home.navigation.referrals", lang)}`,
+      href: ui_path.referals_page(),
+      icon: icons.user({ className: "h-10 w-10 text-white/80" }),
+    },
   ],
   fight_nav_items: (translate: TranslateFn, lang: SupportedLang): NavItem[] => [
     {
@@ -86,19 +91,19 @@ export const nav_items = {
     translate: TranslateFn,
     lang: SupportedLang,
   ): NavItem[] => {
-    const base = [
-      {
-        label: translate("profile.statistics", lang),
-        href: `/game/profile${userId}`,
-      },
-    ];
-    if (!isMyProfile) return base;
+    // const base = [
+    //   {
+    //     label: translate("profile.statistics", lang),
+    //     href: `/game/profile${userId}`,
+    //   },
+    // ];
+    // if (!isMyProfile) return base;
     return [
       {
         label: translate("profile.development", lang),
         href: `/game/profile/training/${userId}`,
       },
-      ...base,
+      // ...base,
     ];
   },
 };
