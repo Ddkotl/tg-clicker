@@ -101,7 +101,7 @@ export function ProfileStatisticsList({ t, userId, isMyProfile }: Props) {
           </TabsList>
         </Tabs>
       ) : (
-        <Title text={t("ranking.ratings.overall_game_rating")} size="md" align="center" />
+        <Title text={t("profile.stats.overall")} size="sm" align="center" />
       )}
 
       {/* Вывод статистики */}

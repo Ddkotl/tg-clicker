@@ -8,9 +8,11 @@ import { lvl_exp } from "@/shared/game_config/exp/lvl_exp";
 
 export function ProfileParamsList({
   user,
+  isMyProfile,
   t,
 }: {
   user: Profile;
+  isMyProfile: boolean;
   t: (key: TranslationKey, vars?: Record<string, string | number>) => string;
 }) {
   const exp = user?.exp ?? 0;
@@ -19,11 +21,11 @@ export function ProfileParamsList({
   const params = [
     { icon: icons.lvl, text: t("lvl"), value: user.lvl },
     { icon: icons.glory, text: t("glory"), value: user.glory },
-    { icon: icons.exp, text: t("experience"), value: `${user.exp} / ${nextExp}` },
+    ...(isMyProfile ? [{ icon: icons.exp, text: t("experience"), value: `${user.exp} / ${nextExp}` }] : []),
     {
       img: img_paths.params_training.max_hp(),
       text: t("max_hp"),
-      value: `${user.current_hitpoint} / ${user.max_hitpoint}`,
+      value: `${isMyProfile ? `${user.current_hitpoint} / ${user.max_hitpoint}` : user.max_hitpoint}`,
     },
     { img: img_paths.params_training.power(), text: t("training.power"), value: user.power },
     { img: img_paths.params_training.protection(), text: t("training.protection"), value: user.protection },

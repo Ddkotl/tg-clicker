@@ -133,7 +133,7 @@ export function FightResults({ fightId }: { fightId: string }) {
             {log.length > 0 ? (
               log.map((entry, i) => (
                 <div key={i} className="text-sm text-muted-foreground leading-snug">
-                  • {entry.text}
+                  [{new Date(entry.timestamp).toLocaleTimeString()}] {JSON.stringify(entry)}
                 </div>
               ))
             ) : (
