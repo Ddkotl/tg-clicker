@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui
 import { Title } from "@/shared/components/custom_ui/title";
 import { MissionTime } from "@/_generated/prisma/enums";
 import { Counter } from "@/shared/components/custom_ui/counter";
+import { useCheckSubscription } from "@/features/missions/mutations/use_check_subscription";
 
 export function Missions() {
   const { t } = useTranslation();
@@ -16,6 +17,8 @@ export function Missions() {
   const userId = session.data?.data?.user.userId;
 
   const missions = useMissionsQuery(userId || "");
+
+  const check_sub_mutation = useCheckSubscription();
 
   if (session.isLoading || missions.isLoading) {
     return <ComponentSpinner />;
@@ -36,7 +39,7 @@ export function Missions() {
           {daily_missions.length >= 0 && <Counter count={daily_missions.length} className="-top-1 -right-1" />}
         </TabsTrigger>
 
-        <TabsTrigger value="permanents">
+        <TabsTrigger value="permanents" className="relative">
           <Title text={t("headquarter.missions.permanents")} align="center" size="sm" />
           {permanent_missions.length >= 0 && <Counter count={permanent_missions.length} className="-top-1 -right-1" />}
         </TabsTrigger>
@@ -53,8 +56,16 @@ export function Missions() {
       <TabsContent value="permanents">
         <div className="flex flex-col gap-2 items-center ">
           {permanent_missions.length <= 0 && <div>{t("headquarter.missions.no_missions")}</div>}
-          {permanent_missions.length >= 0 &&
-            permanent_missions.map((mission) => <MissionCard key={mission.id} mission={mission} t={t} />)}
+          {permanent_missions.length > 0 &&
+            permanent_missions.map((mission) => (
+              <MissionCard
+                key={mission.id}
+                mission={mission}
+                t={t}
+                mutate={() => check_sub_mutation.mutate({ missionId: mission.id })}
+                isMutatePending={check_sub_mutation.isPending}
+              />
+            ))}
         </div>
       </TabsContent>
     </Tabs>

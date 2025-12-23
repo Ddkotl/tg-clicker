@@ -83,6 +83,7 @@ model Mission {
   path                  String?
   type                  MissionType
   time                  MissionTime
+  lang                  String?
   reward_exp            Int         @default(0)
   reward_qi             Int         @default(0)
   reward_qi_stone       Int         @default(0)

@@ -37,6 +37,7 @@ export const api_path = {
   get_spirit_path_info: (userId: string) => `/api/headquarter/spirit_path?userId=${userId}`,
   get_daily_missions: (userId: string) => `/api/user/mission?userId=${userId}`,
   create_daily_missions: (userId: string) => `/api/user/mission?userId=${userId}`,
+  check_subscribe: () => `/api/user/mission/verify-subscription`,
   get_action_token: () => `/api/auth/action-token`,
   get_facts: (userId: string, page: number, pageSize: number) =>
     `/api/user/facts?userId=${userId}&page=${page}&pageSize=${pageSize}`,

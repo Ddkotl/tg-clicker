@@ -185,13 +185,14 @@ export class SpiritPathServise {
 
       const completed_missions = [];
       if (!break_spirit_path && minutes) {
-        const { updated_mission, updated_profile: updated_profile_for_mission } =
-          await this.missionServ.updateMissionAndFinish({
-            userId: userId,
-            mission_type: MissionType.SPIRIT_PATH,
-            progress: minutes,
-            tx,
-          });
+        const result = await this.missionServ.updateMissionAndFinish({
+          userId: userId,
+          mission_type: MissionType.SPIRIT_PATH,
+          progress: minutes,
+          tx,
+        });
+        if (!result) throw new Error("updateMissionAndFinish error");
+        const { updated_mission, updated_profile: updated_profile_for_mission } = result;
         console.log("updated_mission", updated_mission);
         console.log("updated_profile_for_mission", updated_profile_for_mission);
         if (!updated_mission) throw new Error("updated_mission error");
