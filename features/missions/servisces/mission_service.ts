@@ -6,6 +6,7 @@ import { profileRepository } from "@/entities/profile/index.server";
 import { statisticService, StatisticService } from "@/features/statistic/servise/statistic_servise";
 import { dataBase, TransactionType } from "@/shared/connect/db_connect";
 import { generateDailyMissions } from "@/shared/game_config/missions/generate_daily_missions";
+import { PermanentMission } from "@/shared/game_config/missions/permanent_missions";
 
 export class MissionService {
   constructor(
@@ -13,7 +14,32 @@ export class MissionService {
     private missionRepo: MissionRepository,
     private statisticServ: StatisticService,
   ) {}
-
+  async createPermanentMissions({
+    permanent_missions,
+    userId,
+    tx,
+  }: {
+    permanent_missions: PermanentMission[];
+    userId: string;
+    tx?: TransactionType;
+  }) {
+    const db_client = tx ? tx : dataBase;
+    try {
+      for (const m of permanent_missions) {
+        await db_client.mission.upsert({
+          where: { userId_type: { userId: userId, type: m.type } },
+          update: {},
+          create: {
+            userId: userId,
+            ...m,
+          },
+        });
+      }
+    } catch (error) {
+      console.error("❌ createPermanentMissions error:", error);
+      return null;
+    }
+  }
   async createDailyMissions({ userId, tx }: { userId: string; tx?: TransactionType }) {
     if (tx) {
       return this._runCreate({ userId, tx });
@@ -55,47 +81,28 @@ export class MissionService {
     mission_type,
     progress,
     userId,
+    missionId,
     tx,
   }: {
-    userId: string;
-    mission_type: MissionType;
+    mission_type?: MissionType;
     progress: number;
+    userId?: string;
+    missionId?: string;
     tx?: TransactionType;
   }) {
-    if (tx) {
-      return this._runUpdateMissionAndFinish({
-        mission_type,
-        progress,
-        userId,
-        tx,
-      });
-    }
-
-    return await dataBase.$transaction(async (trx) => {
-      return this._runUpdateMissionAndFinish({
-        mission_type,
-        progress,
-        userId,
-        tx: trx,
-      });
-    });
-  }
-  private async _runUpdateMissionAndFinish({
-    mission_type,
-    progress,
-    userId,
-    tx,
-  }: {
-    userId: string;
-    mission_type: MissionType;
-    progress: number;
-    tx?: TransactionType;
-  }) {
+    console.log(mission_type, progress, userId, missionId, tx);
     let updated_profile;
-    let updated_mission = await this.missionRepo.UpdateProgressMission({ userId, mission_type, progress, tx });
-    if (updated_mission?.is_completed && updated_mission?.is_active) {
+    let updated_mission;
+    if (missionId) {
+      updated_mission = await this.missionRepo.UpdateProgressMissionByMissionId({ missionId, progress, tx });
+    }
+    if (userId && mission_type) {
+      updated_mission = await this.missionRepo.UpdateProgressMission({ userId, mission_type, progress, tx });
+    }
+    console.log("updated_mission", updated_mission);
+    if (updated_mission?.is_completed && updated_mission?.is_active && updated_mission.userId !== undefined) {
       updated_profile = await this.profileRepo.updateResources({
-        userId: userId,
+        userId: updated_mission.userId,
         resources: {
           qi: updated_mission.reward_qi,
           qi_stone: updated_mission.reward_qi_stone,
@@ -107,7 +114,7 @@ export class MissionService {
       });
       if (!updated_profile) throw new Error("Failed to update resources");
       const up_stats = await this.statisticServ.udateUserStatistics({
-        userId,
+        userId: updated_mission.userId,
         tx,
         data: {
           qi_looted: updated_mission.reward_qi,
@@ -121,7 +128,7 @@ export class MissionService {
       if (!up_stats.updated) throw new Error("Cannot update daily stat");
 
       const new_fact = await factsRepository.createFact({
-        userId,
+        userId: updated_mission.userId,
         fact_status: FactsStatus.NO_CHECKED,
         fact_type: FactsType.MISSION,
         exp_reward: updated_mission.reward_exp,

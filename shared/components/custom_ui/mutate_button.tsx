@@ -14,6 +14,7 @@ export const MutateButton = ({
   isMutatePending,
   actionText,
   pendingText,
+  className,
 }: {
   isDisabled?: boolean;
   isCooldown?: boolean;
@@ -25,12 +26,14 @@ export const MutateButton = ({
   isMutatePending: boolean;
   actionText: string;
   pendingText?: string;
+  className?: string;
 }) => {
   return (
     <Button
       className={cn(
         "w-full flex items-center justify-center gap-2 transition-opacity py-4",
         isDisabled && "pointer-events-none opacity-40",
+        className,
       )}
       size="lg"
       disabled={isDisabled}

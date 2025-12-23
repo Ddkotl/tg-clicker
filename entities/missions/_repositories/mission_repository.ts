@@ -1,9 +1,22 @@
-import { MissionType } from "@/_generated/prisma/enums";
+import { MissionTime, MissionType } from "@/_generated/prisma/enums";
 import { dataBase, TransactionType } from "@/shared/connect/db_connect";
 import { DailyMission } from "@/shared/game_config/missions/generate_daily_missions";
 import { getStartOfToday } from "@/shared/lib/date";
 
 export class MissionRepository {
+  async getMissionById({ missionId, tx }: { missionId: string; tx?: TransactionType }) {
+    const db_client = tx ? tx : dataBase;
+    try {
+      const mission = await db_client.mission.findUnique({
+        where: { id: missionId },
+      });
+      return mission;
+    } catch (error) {
+      console.error("❌ getMissionById error:", error);
+      return null;
+    }
+  }
+
   async hasTodayMissions({ userId, tx }: { userId: string; tx?: TransactionType }): Promise<boolean> {
     const db_client = tx ? tx : dataBase;
     try {
@@ -15,6 +28,7 @@ export class MissionRepository {
           createdAt: {
             gte: today,
           },
+          time: MissionTime.DAILY,
         },
       });
       return !!existingMissions;
@@ -32,6 +46,7 @@ export class MissionRepository {
         where: {
           userId,
           createdAt: { lt: today },
+          time: MissionTime.DAILY,
         },
       });
 
@@ -120,6 +135,38 @@ export class MissionRepository {
       if (updated_mission.progress >= updated_mission.target_value) {
         updated_mission = await db_client.mission.update({
           where: { userId_type: { userId, type: mission_type } },
+          data: {
+            is_completed: true,
+          },
+        });
+      }
+      return updated_mission;
+    } catch (error) {
+      console.log("updateptogressMission error", error);
+      return null;
+    }
+  }
+  async UpdateProgressMissionByMissionId({
+    missionId,
+    progress,
+    tx,
+  }: {
+    missionId: string;
+    progress: number;
+    tx?: TransactionType;
+  }) {
+    const db_client = tx ? tx : dataBase;
+    try {
+      let updated_mission = await db_client.mission.update({
+        where: { id: missionId },
+        data: {
+          progress: { increment: progress },
+        },
+      });
+
+      if (updated_mission.progress >= updated_mission.target_value) {
+        updated_mission = await db_client.mission.update({
+          where: { id: missionId },
           data: {
             is_completed: true,
           },

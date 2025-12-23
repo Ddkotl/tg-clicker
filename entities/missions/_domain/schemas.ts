@@ -38,3 +38,15 @@ export const createDailyMissionsResponseSchema = z.object({
   message: z.string(),
   type: z.literal("success"),
 });
+export const checkSubscribeSchema = z.object({
+  missionId: z.string(),
+});
+
+export const checkSubscribeResponseSchema = z.object({
+  message: z.string(),
+  data: z.object({
+    spirit_cristal: z.number(),
+    userId: z.string(),
+  }),
+  type: z.literal("success"),
+});

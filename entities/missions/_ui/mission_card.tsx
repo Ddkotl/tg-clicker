@@ -8,15 +8,20 @@ import { icons } from "@/shared/lib/icons";
 import { TranslationKey } from "@/features/translations/translate_type";
 import { ui_path } from "@/shared/lib/paths";
 import Link from "next/link";
+import { MutateButton } from "@/shared/components/custom_ui/mutate_button";
 
 type Mission = GetDailyMissionsResponseType["data"]["missions"][number];
 
 export function MissionCard({
   mission,
   t,
+  isMutatePending,
+  mutate,
 }: {
   mission: Mission;
   t: (key: TranslationKey, vars?: Record<string, string | number>) => string;
+  mutate?: () => void;
+  isMutatePending?: boolean;
 }) {
   const progressPercent = mission.target_value ? Math.min(100, (mission.progress / mission.target_value) * 100) : 0;
 
@@ -79,6 +84,15 @@ export function MissionCard({
               </div>
             ))}
           </div>
+        )}
+        {mutate && isMutatePending !== undefined && (
+          <MutateButton
+            mutate={mutate}
+            isMutatePending={isMutatePending}
+            isDisabled={isMutatePending}
+            actionText={t("facts.notification.сheck")}
+            className="h-auto px-2 py-1"
+          />
         )}
       </CardContent>
     </Card>

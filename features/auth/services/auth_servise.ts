@@ -9,6 +9,7 @@ import { profileService } from "@/features/profile/services/profile_service";
 import { translate } from "@/features/translations/server/translate_fn";
 import { SupportedLang } from "@/features/translations/translate_type";
 import { dataBase } from "@/shared/connect/db_connect";
+import { permanent_missions } from "@/shared/game_config/missions/generate_permanent_missions";
 import { getDaysAgoDate } from "@/shared/lib/date";
 
 export class AuthService {
@@ -64,13 +65,14 @@ export class AuthService {
         if (referer_id) {
           const referer = await this.userRepo.getUserByTelegramId({ telegramId: referer_id, tx });
           if (!referer) throw new Error(translate("api.invalid_registration_user", lang));
-          const { updated_mission, updated_profile: updated_profile_for_mission } =
-            await this.missionServ.updateMissionAndFinish({
-              userId: referer.id,
-              mission_type: MissionType.INVITE_FRIEND,
-              progress: 1,
-              tx,
-            });
+          const result = await this.missionServ.updateMissionAndFinish({
+            userId: referer.id,
+            mission_type: MissionType.INVITE_FRIEND,
+            progress: 1,
+            tx,
+          });
+          if (!result) throw new Error("updateMissionAndFinish error");
+          const { updated_mission, updated_profile: updated_profile_for_mission } = result;
           console.log("updated_mission", updated_mission);
           console.log("updated_profile_for_mission", updated_profile_for_mission);
           if (!updated_mission) throw new Error("updated_mission error");
@@ -95,6 +97,7 @@ export class AuthService {
 
       await this.statisticRepo.deleteOldUserDailyStats({ beforeDate: getDaysAgoDate(35), tx });
       await this.missionServ.createDailyMissions({ userId: user.id, tx });
+      await this.missionServ.createPermanentMissions({ permanent_missions: permanent_missions, userId: user.id, tx });
       await this.profileRepo.updateOnline({ userId: user.id, tx });
       return user;
     });
