@@ -20,13 +20,13 @@ export const permanent_missions: PermanentMission[] = [
     lang: "en",
     reward_spirit_cristal: 100,
     path: "https://t.me/cripto_digest_en",
-    chanel_title: "Crypto Digest: Short and Clear"
+    chanel_title: "Crypto Digest: Short and Clear",
   },
   {
     ...base_config,
     lang: "ru",
     reward_spirit_cristal: 100,
     path: "https://t.me/cripto_digest",
-    chanel_title: "Крипто-Дайджест: Коротко и Ясно"
+    chanel_title: "Крипто-Дайджест: Коротко и Ясно",
   },
 ];
