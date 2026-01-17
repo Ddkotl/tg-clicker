@@ -13,6 +13,8 @@ export const ui_path = {
   fight_enemy_page: (type: EnemyType) => `/game/fight/${type}`,
   headquarter_page: () => `/game/headquarter`,
   city_page: () => `/game/city`,
+  place_of_power_page: () => `/game/city/place_of_power`,
+  bank_page: () => `/game/city/bank`,
   pet_page: () => `/game/pet`,
   rankings_page: () => `/game/ranking`,
   rankings_type_page: (type: RatingsTypes, metric: RatingsMetrics, page?: number) =>
@@ -54,4 +56,5 @@ export const api_path = {
   get_ratings: (type: RatingsTypes, metric: RatingsMetrics, page: number) =>
     `/api/statistics/rating/${type}/${metric}?page=${page}`,
   get_user_stats: (type: RatingsTypes, userId: string) => `/api/user/statistics/${userId}/${type}`,
+  bank_exchange: () => `/api/city/bank/exchange`,
 };

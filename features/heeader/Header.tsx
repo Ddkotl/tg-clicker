@@ -66,7 +66,7 @@ export function Header() {
             icon={icons.qi_energy({
               className: "h-4 w-4 xs:h-5 xs:w-5",
             })}
-            href={`/game`}
+            href={ui_path.bank_page()}
             isDisabled={isDisabled}
             isLoading={isLoading}
             value={profile?.data?.qi}
