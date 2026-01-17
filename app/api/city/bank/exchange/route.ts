@@ -9,7 +9,6 @@ import { CRISTAL_COST, STONE_COST } from "@/shared/game_config/bank/bank";
 import { makeError } from "@/shared/lib/api_helpers/make_error";
 import { rateLimitRedis } from "@/shared/lib/redis_limiter";
 import { NextRequest, NextResponse } from "next/server";
-import z from "zod";
 
 export async function POST(req: NextRequest) {
   const req_headers = req.headers;
