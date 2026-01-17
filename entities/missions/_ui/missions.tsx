@@ -12,7 +12,7 @@ import { Counter } from "@/shared/components/custom_ui/counter";
 import { useCheckSubscription } from "@/features/missions/mutations/use_check_subscription";
 
 export function Missions() {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const session = useGetSessionQuery();
   const userId = session.data?.data?.user.userId;
 
@@ -26,7 +26,7 @@ export function Missions() {
 
   const missionList = missions.data?.data.missions ?? [];
   const daily_missions = missionList.filter((e) => e.time === MissionTime.DAILY);
-  const permanent_missions = missionList.filter((e) => e.time === MissionTime.PERMANENT);
+  const permanent_missions = missionList.filter((e) => e.time === MissionTime.PERMANENT && e.chanel_lang === language);
   if (missionList.length === 0) {
     return <div>{t("headquarter.missions.no_missions")}</div>;
   }

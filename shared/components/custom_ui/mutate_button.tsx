@@ -31,7 +31,7 @@ export const MutateButton = ({
   return (
     <Button
       className={cn(
-        "w-full flex items-center justify-center gap-2 transition-opacity py-4",
+        "w-full flex items-center justify-center gap-2 transition-opacity py-4 h-auto min-h-6",
         isDisabled && "pointer-events-none opacity-40",
         className,
       )}

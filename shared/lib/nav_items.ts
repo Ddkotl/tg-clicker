@@ -39,6 +39,15 @@ export const nav_items = {
       href: ui_path.city_page(),
       soon: translate("soon", lang),
     },
+    {
+      label: translate("city.place_of_power.title", lang),
+      href: ui_path.place_of_power_page(),
+      soon: translate("soon", lang),
+    },
+    {
+      label: translate("city.bank.title", lang),
+      href: ui_path.bank_page(),
+    },
   ],
   home_nav_items: (translate: TranslateFn, lang: SupportedLang): NavItem[] => [
     {

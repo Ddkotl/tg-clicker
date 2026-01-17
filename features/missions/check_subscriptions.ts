@@ -1,8 +1,7 @@
-export async function checkSubscriptions({ tg_chat, tg_user_id }: { tg_chat: string; tg_user_id: string }) {
-  const chat = tg_chat.replace("https://t.me/", "@");
-
+export async function checkSubscriptions({ chanel_id, tg_user_id }: { chanel_id: string; tg_user_id: string }) {
+  console.log("🔔 checkSubscriptions:", { chanel_id, tg_user_id });
   const resp = await fetch(
-    `https://api.telegram.org/bot${process.env.BOT_TOKEN}/getChatMember?chat_id=${encodeURIComponent(chat)}&user_id=${tg_user_id}`,
+    `https://api.telegram.org/bot${process.env.BOT_TOKEN}/getChatMember?chat_id=${chanel_id}&user_id=${tg_user_id}`,
     {
       method: "GET",
       headers: {

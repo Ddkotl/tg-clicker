@@ -6,7 +6,8 @@ import { profileRepository } from "@/entities/profile/index.server";
 import { statisticService, StatisticService } from "@/features/statistic/servise/statistic_servise";
 import { dataBase, TransactionType } from "@/shared/connect/db_connect";
 import { generateDailyMissions } from "@/shared/game_config/missions/generate_daily_missions";
-import { PermanentMission } from "@/shared/game_config/missions/permanent_missions";
+import { PermanentMission } from "@/shared/game_config/missions/generate_permanent_missions";
+import { getChannelInfo } from "@/shared/lib/get_telegram_chanell_info";
 
 export class MissionService {
   constructor(
@@ -26,14 +27,35 @@ export class MissionService {
     const db_client = tx ? tx : dataBase;
     try {
       for (const m of permanent_missions) {
-        await db_client.mission.upsert({
-          where: { userId_type: { userId: userId, type: m.type } },
-          update: {},
-          create: {
-            userId: userId,
-            ...m,
+        const existingMission = await db_client.mission.findFirst({
+          where: {
+            userId,
+            type: m.type,
+            chanel_id: m.chanel_id || null,
           },
         });
+        const data = await getChannelInfo(m.chanel_id);
+
+        if (existingMission) {
+          await db_client.mission.update({
+            where: { id: existingMission.id },
+            data: {
+              chanel_title: data?.title,
+              chanel_img: data?.img,
+              path: data?.invite_link,
+            },
+          });
+        } else {
+          await db_client.mission.create({
+            data: {
+              userId,
+              ...m,
+              chanel_title: data?.title,
+              chanel_img: data?.img,
+              path: data?.invite_link,
+            },
+          });
+        }
       }
     } catch (error) {
       console.error("❌ createPermanentMissions error:", error);
@@ -142,8 +164,7 @@ export class MissionService {
       });
       if (!new_fact) throw new Error("Failed to create fact");
       updated_mission = await this.missionRepo.InactivateMission({
-        userId: updated_mission.userId,
-        mission_type: updated_mission.type,
+        mission_id: updated_mission.id,
         tx: tx,
       });
       if (!updated_mission) throw new Error("Failed to inactivate mission");

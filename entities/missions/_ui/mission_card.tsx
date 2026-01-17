@@ -9,6 +9,7 @@ import { TranslationKey } from "@/features/translations/translate_type";
 import { ui_path } from "@/shared/lib/paths";
 import Link from "next/link";
 import { MutateButton } from "@/shared/components/custom_ui/mutate_button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/ui/avatar";
 
 type Mission = GetDailyMissionsResponseType["data"]["missions"][number];
 
@@ -59,14 +60,24 @@ export function MissionCard({
       <CardHeader className=" flex gap-2 justify-between items-center">
         <CardTitle className="max-w-full truncate text-sm font-semibold">{title}</CardTitle>
 
-        <Link
-          href={mission.path ?? ui_path.home_page()}
-          className="text-primary hover:text-primary/80 font-medium underline underline-offset-2"
-        >
+        <Link href={mission.path ?? ui_path.home_page()} className="text-primary hover:text-primary/80 font-medium ">
           {icons.arrow_right({})}
         </Link>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
+        {mission.chanel_img && mission.chanel_title && (
+          <Link
+            href={mission.path ?? ui_path.home_page()}
+            className="text-primary hover:text-primary/80 font-medium   gap-2 flex justify-start items-center"
+          >
+            <Avatar>
+              <AvatarImage src={mission.chanel_img} />
+              <AvatarFallback>...</AvatarFallback>
+            </Avatar>
+            <div className="truncate">{mission.chanel_title}</div>
+          </Link>
+        )}
+
         <div className="text-sm text-foreground/60">{t(`headquarter.missions.types.${mission.type}.highlight`)}</div>
         <Progress value={progressPercent} className="h-2" />
         <div className="text-xs text-muted-foreground">
@@ -91,7 +102,7 @@ export function MissionCard({
             isMutatePending={isMutatePending}
             isDisabled={isMutatePending}
             actionText={t("facts.notification.сheck")}
-            className="h-auto px-2 py-1"
+            className=" px-2 py-1"
           />
         )}
       </CardContent>

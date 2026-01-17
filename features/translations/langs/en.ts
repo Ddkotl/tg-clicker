@@ -20,6 +20,8 @@ export const en_lang = {
     next: "Next",
     previous: "Previous",
   },
+  exchange: "Exchange",
+  amount: "Amount",
   soon: "soon",
   qi_energy: "Qi",
   qi_stone: "Qi stone",
@@ -333,6 +335,17 @@ export const en_lang = {
       "The Citadel is the key to all Qi lands! Its gates are open to the strong in spirit, but only the wise become its guardians. Our strategy must be flawless!",
     shop: {
       shop: "Shop",
+    },
+    place_of_power: {
+      title: "Place of Power",
+      description:
+        "The Place of Power is a sacred site where the energy of the world converges. Here, warriors and sages come to recharge their Qi and seek enlightenment. Those who meditate in this hallowed ground find their spiritual strength amplified, allowing them to face greater challenges ahead.",
+    },
+    bank: {
+      title: "Bank",
+      description:
+        "The Bank of Qi is a sanctuary of wealth and security in the heart of the Citadel. Here, cultivators can safeguard their hard-earned Qi stones and spiritual crystals, ensuring their resources are protected from the uncertainties of the outside world. The bank offers not only security but also opportunities for growth, allowing depositors to earn interest on their savings and invest in their future cultivation journeys.",
+      success_exchange: "Exchange successful",
     },
   },
   fight: {

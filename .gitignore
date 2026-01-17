@@ -41,5 +41,5 @@ yarn-error.log*
 next-env.d.ts
 
 /_generated
-/.github
 /dist
+/public/channel-avatars

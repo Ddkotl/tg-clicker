@@ -2,61 +2,61 @@ name: ci_cd
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   tests:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '24'
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "24"
 
-    - name: Install dependencies
-      run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-    - name: Start Docker containers
-      run: docker compose up -d
-      env:
-        POSTGRES_CONTAINER: postgres
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: postgres
-        POSTGRES_DB: postgres
-        POSTGRES_PORT: 5436
-        REDIS_PASSWORD: redis
+      - name: Start Docker containers
+        run: docker compose up -d
+        env:
+          POSTGRES_CONTAINER: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+          POSTGRES_PORT: 5436
+          REDIS_PASSWORD: redis
 
-    - name: Run Prisma migrations
-      run: |
-        npx prisma migrate deploy
-        npx prisma generate
-      env : 
-        DATABASE_URL : postgresql://postgres:postgres@localhost:5436/postgres
+      - name: Run Prisma migrations
+        run: |
+          npx prisma migrate deploy
+          npx prisma generate
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5436/postgres
 
-    - name: Run lint
-      run: npm run lint
+      - name: Run lint
+        run: npm run lint
 
-    - name: Run linttypes
-      run: npm run lint:types
+      - name: Run linttypes
+        run: npm run lint:types
 
-    - name: Run build
-      run: npm run build
-      env: 
-        REDIS_PASSWORD: redis
+      - name: Run build
+        run: npm run build
+        env:
+          REDIS_PASSWORD: redis
 
-    - name: Shutdown Docker
-      run: docker compose down
+      - name: Shutdown Docker
+        run: docker compose down
 
   deploy:
     runs-on: ubuntu-latest
     needs: tests
-    if: github.actor == 'Ddkotl' 
+    if: github.actor == 'Ddkotl'
     steps:
       - name: Show runner IP
         run: curl ifconfig.me
@@ -67,7 +67,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '24'
+          node-version: "24"
 
       - name: Install dependencies
         run: npm ci
@@ -86,8 +86,8 @@ jobs:
         run: |
           npx prisma migrate deploy
           npx prisma generate
-        env : 
-          DATABASE_URL : ${{secrets.DATABASE_URL}}
+        env:
+          DATABASE_URL: ${{secrets.DATABASE_URL}}
 
       - name: Run lint
         run: npm run lint
@@ -97,7 +97,7 @@ jobs:
 
       - name: Run build
         run: npm run build
-        env: 
+        env:
           REDIS_PASSWORD: ${{secrets.REDIS_PASSWORD}}
           BOT_TOKEN: ${{secrets.BOT_TOKEN}}
           JWT_SECRET: ${{secrets.JWT_SECRET}}
@@ -122,14 +122,13 @@ jobs:
       - name: Copy builded files to server
         run: rsync -az --delete .next dist node_modules ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/www/tg-clicker/
 
-      - name: Update server 
+      - name: Update server
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
           cd ~/www/tg-clicker &&
           git fetch --all &&
           git reset --hard origin/main &&
           chmod +x ~/www/tg-clicker/scripts/deploy.sh
-          " 
+          "
       - name: Run deploy script
         run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'bash -l ~/www/tg-clicker/scripts/deploy.sh'
-

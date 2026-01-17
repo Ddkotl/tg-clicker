@@ -19,7 +19,7 @@
     "prepare": "git config core.hooksPath .git-hooks && chmod +x .git-hooks/pre-commit",
     "test": "jest --passWithNoTests",
     "seed": "tsx prisma/seed.ts",
-    "reset": "docker compose down -v && docker compose up -d && prisma migrate reset --force && prisma migrate deploy && prisma generate"
+    "reset": "docker compose down -v && docker compose up -d && sleep 10 && npx prisma migrate deploy && npx prisma generate && npm run seed"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

@@ -16,6 +16,9 @@ fi
 echo "Using Node version:"
 nvm use 24
 
+echo "--- PM2 STOP ---"
+npx pm2 stop all
+
 cd ~/www/tg-clicker
 
 echo "--- PRISMA MIGRATE ---"
