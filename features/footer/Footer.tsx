@@ -11,9 +11,10 @@ import Settings from "@/shared/components/icons/Settings";
 import { FooterItem } from "./_ui/footer_item";
 import { ui_path } from "@/shared/lib/paths";
 import { useMissionsQuery } from "@/entities/missions";
+import { MissionTime } from "@/_generated/prisma/enums";
 
 export function Footer() {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { data: session, isLoading, isFetching } = useGetSessionQuery();
   const userId = session?.data?.user?.userId;
   const {
@@ -21,6 +22,9 @@ export function Footer() {
     isLoading: isLoadingMissions,
     isFetching: isFetchingMissions,
   } = useMissionsQuery(userId || "");
+  const missionList = missions?.data?.missions ?? [];
+  const daily_missions = missionList.filter((e) => e.time === MissionTime.DAILY);
+  const permanent_missions = missionList.filter((e) => e.time === MissionTime.PERMANENT && e.chanel_lang === language);
   const items: FooterItemType[] = [
     {
       id: "home",
@@ -40,7 +44,7 @@ export function Footer() {
       url: ui_path.missions_page(),
       label: t("footer.tasks"),
       Icon: Earn,
-      count: missions?.data.missions.length,
+      count: daily_missions.length + permanent_missions.length,
     },
     {
       id: "leaderboard",

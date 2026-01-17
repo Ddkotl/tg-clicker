@@ -81,6 +81,10 @@ model Mission {
   userId String
 
   path                  String?
+  chanel_id             String?
+  chanel_lang           String?
+  chanel_img            String?
+  chanel_title          String?
   type                  MissionType
   time                  MissionTime
   lang                  String?
@@ -99,7 +103,7 @@ model Mission {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([userId, type])
+  @@unique([userId, type, chanel_id], name: "user_type_chanel_unique")
   @@map("missions")
 }
 

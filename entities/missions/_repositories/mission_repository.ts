@@ -89,19 +89,11 @@ export class MissionRepository {
       return null;
     }
   }
-  async InactivateMission({
-    mission_type,
-    userId,
-    tx,
-  }: {
-    userId: string;
-    mission_type: MissionType;
-    tx?: TransactionType;
-  }) {
+  async InactivateMission({ mission_id, tx }: { mission_id: string; tx?: TransactionType }) {
     const db_client = tx ? tx : dataBase;
     try {
       const mission = await db_client.mission.update({
-        where: { userId_type: { userId: userId, type: mission_type } },
+        where: { id: mission_id },
         data: {
           is_active: false,
         },
@@ -116,17 +108,19 @@ export class MissionRepository {
     mission_type,
     progress,
     userId,
+    chanel_id,
     tx,
   }: {
     userId: string;
     mission_type: MissionType;
     progress: number;
+    chanel_id?: string;
     tx?: TransactionType;
   }) {
     const db_client = tx ? tx : dataBase;
     try {
       let updated_mission = await db_client.mission.update({
-        where: { userId_type: { userId: userId, type: mission_type } },
+        where: { user_type_chanel_unique: { userId: userId, type: mission_type, chanel_id: chanel_id || "-" } },
         data: {
           progress: { increment: progress },
         },
@@ -134,7 +128,7 @@ export class MissionRepository {
 
       if (updated_mission.progress >= updated_mission.target_value) {
         updated_mission = await db_client.mission.update({
-          where: { userId_type: { userId, type: mission_type } },
+          where: { user_type_chanel_unique: { userId: userId, type: mission_type, chanel_id: chanel_id || "-" } },
           data: {
             is_completed: true,
           },

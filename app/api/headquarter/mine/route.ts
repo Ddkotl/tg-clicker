@@ -105,7 +105,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         target: mine_mission.target_value,
         mission_type: mine_mission.type,
       });
-      await missionRepository.InactivateMission({ userId: mine_mission.userId, mission_type: mine_mission.type });
+      await missionRepository.InactivateMission({ mission_id: mine_mission.id });
       completed_missions.push(mine_mission);
     }
     const mine_stone_mission = await missionRepository.UpdateProgressMission({
@@ -145,8 +145,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         mission_type: mine_stone_mission.type,
       });
       await missionRepository.InactivateMission({
-        userId: mine_stone_mission.userId,
-        mission_type: mine_stone_mission.type,
+        mission_id: mine_stone_mission.id,
       });
       completed_missions.push(mine_stone_mission);
     }

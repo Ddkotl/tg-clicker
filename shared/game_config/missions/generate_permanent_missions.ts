@@ -1,14 +1,13 @@
 import { MissionTime, MissionType } from "@/_generated/prisma/enums";
-import { SupportedLang } from "@/features/translations/translate_type";
-
 export type PermanentMission = {
   type: MissionType;
   time: MissionTime;
-  lang: SupportedLang;
   target_value: number;
   reward_spirit_cristal: number;
-  path: string;
+  chanel_id: string;
+  chanel_lang: string;
 };
+
 const base_config = {
   type: MissionType.SUBSCRIBE,
   time: MissionTime.PERMANENT,
@@ -17,16 +16,26 @@ const base_config = {
 export const permanent_missions: PermanentMission[] = [
   {
     ...base_config,
-    lang: "en",
+    chanel_lang: "en",
     reward_spirit_cristal: 100,
-    path: "https://t.me/cripto_digest_en",
-    chanel_title: "Crypto Digest: Short and Clear",
+    chanel_id: "-1003013675509",
   },
   {
     ...base_config,
-    lang: "ru",
+    chanel_lang: "ru",
     reward_spirit_cristal: 100,
-    path: "https://t.me/cripto_digest",
-    chanel_title: "Крипто-Дайджест: Коротко и Ясно",
+    chanel_id: "-1003089289559",
+  },
+  {
+    ...base_config,
+    chanel_lang: "en",
+    reward_spirit_cristal: 100,
+    chanel_id: "-1003622867278",
+  },
+  {
+    ...base_config,
+    chanel_lang: "ru",
+    reward_spirit_cristal: 100,
+    chanel_id: "-1003573331951",
   },
 ];

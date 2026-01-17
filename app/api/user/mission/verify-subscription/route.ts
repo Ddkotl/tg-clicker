@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     const user = await userRepository.getUserById({ userId });
     if (!user) return makeError(translate("api.no_auth", lang), 401);
     const isSubscribed = await checkSubscriptions({
-      tg_chat: mission.path || "",
+      chanel_id: mission.chanel_id || "",
       tg_user_id: user.telegram_id || "",
     });
     if (!isSubscribed) {

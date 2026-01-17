@@ -65,8 +65,7 @@ export async function MeditationRewardService(userId: string, break_meditation?:
         mission_type: meditation_mission.type,
       });
       await missionRepository.InactivateMission({
-        userId: meditation_mission.userId,
-        mission_type: meditation_mission.type,
+        mission_id: meditation_mission.id,
       });
       completed_missions.push(meditation_mission);
     }
